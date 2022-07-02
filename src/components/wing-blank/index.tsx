@@ -32,5 +32,3 @@ export class WingBlank extends React.Component<WingBlankProps, any> {
     );
   }
 }
-
-export default WingBlank;

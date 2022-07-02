@@ -12,9 +12,12 @@ import {
   NativeSyntheticEvent,
   NativeMethods,
 } from 'react-native';
-import DefaultHeader from './DefaultHeader';
+import { SmartRefreshControlDefaultHeader } from './DefaultHeader';
 
-const SPModule = Platform.OS === 'android' ? NativeModules.SpinnerStyleModule : {};
+const SPModule = Platform.OS === 'android' ? (NativeModules.SpinnerStyleModule || {}) : {};
+
+console.log('SPModule', SPModule);
+
 
 const SmartRefreshLayout = Platform.OS === 'android' ? requireNativeComponent('SmartRefreshLayout') as HostComponent<SmartRefreshControlInternalProps> : undefined;
 
@@ -97,7 +100,7 @@ export interface SmartRefreshControlProps extends ViewProps, SmartRefreshControl
 /**
  * Android 的 SmartRefresh 封装组件
  */
-class SmartRefreshControl extends Component<SmartRefreshControlProps> {
+export class SmartRefreshControl extends Component<SmartRefreshControlProps> {
   static constants = {
     TRANSLATE: SPModule.translate,
     SCALE: SPModule.scale,
@@ -151,7 +154,7 @@ class SmartRefreshControl extends Component<SmartRefreshControlProps> {
     const { renderHeader } = this.props;
     if (renderHeader)
       return typeof renderHeader === 'function' ?  renderHeader() : renderHeader;
-    return <DefaultHeader />;
+    return <SmartRefreshControlDefaultHeader />;
   };
   /**
    * 刷新时触发
@@ -216,5 +219,3 @@ class SmartRefreshControl extends Component<SmartRefreshControlProps> {
     );
   }
 }
-
-export default SmartRefreshControl;

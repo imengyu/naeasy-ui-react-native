@@ -141,5 +141,3 @@ export function Badge(props: BadgeProps) {
       (showBadge ? <Text style={{...badgeStyleFinal, position: 'relative' }}>{contentString}</Text> : <></>)
   );
 }
-
-export default Badge;

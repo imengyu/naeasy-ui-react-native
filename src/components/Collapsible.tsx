@@ -53,7 +53,7 @@ interface CollapsibleState {
 /**
  * 可折叠展开组件
  */
-export default class Collapsible extends Component<CollapsibleProps, CollapsibleState> {
+export class Collapsible extends Component<CollapsibleProps, CollapsibleState> {
   static defaultProps = {
     align: 'top',
     collapsed: true,

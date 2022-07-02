@@ -1,8 +1,8 @@
 import React, { createRef } from "react";
-import LoadingPage, { LoadingPageProps } from "../../components/LoadingPage";
-import SmartRefreshControl, { SmartRefreshControlProps } from "../../components/refresh/android-smart-refresh/SmartRefreshControl";
-import WhiteSpace from "../white-space";
-import ClassicsHeader from "../refresh/android-smart-refresh/ClassicsHeader";
+import { LoadingPage, LoadingPageProps } from "../../components/LoadingPage";
+import { SmartRefreshControl, SmartRefreshControlProps } from "../../components/refresh/android-smart-refresh/SmartRefreshControl";
+import { WhiteSpace } from "../white-space";
+import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
 import CheckTools from "../../utils/CheckTools";
 import ArrayUtils from "../../utils/ArrayUtils";
 import { ActivityIndicator, FlatList, FlatListProps, ListRenderItemInfo, RefreshControl, RefreshControlProps, StyleSheet, Text, View, ViewStyle } from "react-native";
@@ -504,7 +504,7 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
       refreshControl: (canPullRefresh ? (isAndroid ?
         <SmartRefreshControl
           ref={this.refreshRef}
-          renderHeader={() => <ClassicsHeader spinnerStyle="fixBehind" />}
+          renderHeader={() => <SmartRefreshControlClassicsHeader spinnerStyle="fixBehind" />}
           onRefresh={this.onRefresh}
           { ...this.props.androidRefreshProps }
         /> :

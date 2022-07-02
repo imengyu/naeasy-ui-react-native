@@ -65,5 +65,3 @@ export function LoadingPage(props: LoadingPageProps) {
     </View>
   );
 }
-
-export default LoadingPage;

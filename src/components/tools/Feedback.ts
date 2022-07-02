@@ -7,7 +7,7 @@ const ToolsManagerIOS = NativeModules.ToolsManagerIOS;
 /**
  * IOS 触摸反馈
  */
-const Feedback = {
+export const FeedbackNative = {
   /**
    * 触发IOS选择反馈 （UISelectionFeedbackGenerator）
    */
@@ -28,5 +28,3 @@ const Feedback = {
       }));
   },
 };
-
-export default Feedback;

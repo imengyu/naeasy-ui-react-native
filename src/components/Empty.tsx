@@ -61,10 +61,10 @@ export function Empty(props: EmptyProp) {
     <ColumnView style={{ ...styles.view, ...props.style}} center pointerEvents={props.pointerEvents}>
       { typeof props.image === 'string' ?
         selectStyleType<JSX.Element, EmptyImageType>(props.image, 'default', {
-          default: <Image source={require('../images/empty-image-default.png')} style={imageStyle} />,
-          error: <Image source={require('../images/empty-image-error.png')} style={imageStyle} />,
-          network: <Image source={require('../images/empty-image-netowok.png')} style={imageStyle} />,
-          search: <Image source={require('../images/empty-image-search.png')} style={imageStyle} />,
+          default: <Image source={require('imengyu-ui-lib/src/images/empty-image-default.png')} style={imageStyle} />,
+          error: <Image source={require('imengyu-ui-lib/src/images/empty-image-error.png')} style={imageStyle} />,
+          network: <Image source={require('imengyu-ui-lib/src/images/empty-image-netowok.png')} style={imageStyle} />,
+          search: <Image source={require('imengyu-ui-lib/src/images/empty-image-search.png')} style={imageStyle} />,
         }) :
         (typeof props.image !== 'undefined' ? <Image source={props.image as ImageSourcePropType} style={imageStyle} /> : <></>)
       }

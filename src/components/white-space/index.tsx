@@ -37,5 +37,3 @@ export class WhiteSpace extends React.Component<WhiteSpaceProps> {
     );
   }
 }
-
-export default WhiteSpace;

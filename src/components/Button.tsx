@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckTools from '../utils/CheckTools';
 import { ActivityIndicator, Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewProps, ViewStyle } from 'react-native';
-import { Color, PressedColor } from '../styles/ColorStyles';
+import { Color, ColorInfo, PressedColor } from '../styles/ColorStyles';
 import { FonstSizes } from '../styles/TextStyles';
 import { border, paddingVH, selectStyleType } from '../utils/StyleTools';
 import { Iconfont } from './Iconfont';
@@ -272,7 +272,7 @@ export function Button(props: ButtonProp) {
         props.pressedColor ||
         ((props.plain || props.type === 'text') ?
           PressedColor.default :
-          selectStyleType<string, string>(props.type, 'default', PressedColor)) }
+          selectStyleType<string, string>(props.type, 'default', PressedColor as unknown as ColorInfo)) }
       style={{
         ...styles.view,
         ...speicalStyle,

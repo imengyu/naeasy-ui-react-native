@@ -105,7 +105,7 @@ export function Image(props: ImageWrapProps) {
   const renderImage = () => {
     let source = props.source;
     if (typeof source === 'object' && typeof (source as ImageURISource).uri === 'string' && CheckTools.isNullOrEmpty((source as ImageURISource).uri))
-      source = props.defaultSource || require('@images/imageFailed.png');
+      source = props.defaultSource || {};
 
     props.height = undefined;
     props.width = undefined;

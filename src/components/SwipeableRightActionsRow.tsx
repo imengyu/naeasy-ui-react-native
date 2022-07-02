@@ -50,7 +50,10 @@ export interface SwipeableRightActionsRowProps extends Omit<SwipeableProps, 'ren
   children?: JSX.Element|JSX.Element[];
 }
 
-export default class SwipeableRightActionsRow extends Component<SwipeableRightActionsRowProps> {
+/**
+ * 可滑动右侧操作的行组件
+ */
+export class SwipeableRightActionsRow extends Component<SwipeableRightActionsRowProps> {
 
   private renderRightAction = (
     item: SwipeableRightActionsRowAction,

@@ -243,5 +243,3 @@ export class ActionSheet extends React.Component<ActionSheetProps> {
 }
 
 //#endregion
-
-export default ActionSheet;

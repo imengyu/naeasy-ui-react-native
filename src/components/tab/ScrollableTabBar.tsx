@@ -114,7 +114,10 @@ const DEFAULT_PROPS = {
   underlineStyle: {},
 };
 
-export default class ScrollableTabBar extends Component<ScrollableTabBarProps, ScrollableTabBarState> {
+/**
+ * 一个TabView 头部组件
+ */
+export class ScrollableTabBar extends Component<ScrollableTabBarProps, ScrollableTabBarState> {
   static defaultProps = DEFAULT_PROPS;
 
   _tabsMeasurements = [] as MeasurementData[];

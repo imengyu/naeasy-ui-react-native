@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
 /**
  * Toast 组件的展示容器
  */
-export default class ToastContainer extends React.Component<ToastProps, any> {
+export class ToastContainer extends React.Component<ToastProps, any> {
   static defaultProps = {
     duration: 3,
     mask: true,

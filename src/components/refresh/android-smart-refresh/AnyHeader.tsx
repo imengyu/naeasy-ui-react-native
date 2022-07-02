@@ -11,10 +11,8 @@ interface AnyHeaderProps extends ViewProps {
 /**
  * SmartRefreshControl 的任意刷新头
  */
-class AnyHeader extends Component<AnyHeaderProps> {
+export class SmartRefreshControlAnyHeader extends Component<AnyHeaderProps> {
   render() {
     return <RCTAnyHeader {...this.props} />;
   }
 }
-
-export default AnyHeader;

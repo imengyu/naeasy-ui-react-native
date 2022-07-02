@@ -2,7 +2,7 @@ import React from "react";
 import { View, ViewStyle } from "react-native";
 import { Button } from "../Button";
 import { Empty, EmptyProp } from "../Empty";
-import WhiteSpace from "../white-space";
+import { WhiteSpace } from "../white-space";
 
 export interface LoadStateObject {
   /**

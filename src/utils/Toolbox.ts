@@ -99,7 +99,10 @@ function clearAppCache(callback: () => void) {
     }, 1000);
 }
 
-export default {
+/**
+ * App 工具类
+ */
+export const ToolBox = {
   clearAppCache,
   getPackageInfo,
   getCacheInfo,

@@ -12,7 +12,7 @@ interface ActionSheetOptions extends ActionSheetIOSOptions {
 /**
  * 对原版的 ActionSheet 封装，提供了Android的支持
  */
-const ActionSheet = {
+export const ActionSheetNative = {
   /**
    * 显示原生 ActionSheet
    * @param options 参数
@@ -34,5 +34,3 @@ const ActionSheet = {
     }
   },
 };
-
-export default ActionSheet;

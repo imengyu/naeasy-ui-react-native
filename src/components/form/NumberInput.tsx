@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 /**
  * 一个数字输入框
  */
-function NumberInput(props: NumberInputProps) {
+export function NumberInput(props: NumberInputProps) {
 
   const numberCount = props.numberCount || 6;
   const isPassword = props.isPassword === true;
@@ -200,5 +200,3 @@ function NumberInput(props: NumberInputProps) {
     </ColumnView>
   );
 }
-
-export default NumberInput;

@@ -12,7 +12,7 @@ interface DefaultHeaderProps extends ViewProps {
 /**
  * SmartRefreshControl 的默认刷新头
  */
-export default class DefaultHeader extends Component<DefaultHeaderProps> {
+export class SmartRefreshControlDefaultHeader extends Component<DefaultHeaderProps> {
   render() {
     return ( < RCTDefaultHeader { ...this.props } />);
   }

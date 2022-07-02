@@ -1,12 +1,12 @@
 import { Alert as RNAlert, AlertButton, AlertOptions, AlertType } from "react-native";
 import { isAndroid, isIOS } from "../utils/PlatformTools";
 import { NativeModules } from 'react-native';
-import Toast from "./Toast";
+import { Toast } from "./Toast";
 
 /**
  * 对原版的 Alert 封装，提供了Android的支持
  */
-const Alert = {
+export const AlertNative = {
   /**
    * 创建并显示弹窗。
    * @param title 标题
@@ -148,5 +148,3 @@ const Alert = {
     }
   },
 };
-
-export default Alert;

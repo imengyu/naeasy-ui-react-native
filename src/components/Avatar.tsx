@@ -41,7 +41,7 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
       <Image
         ref={ref}
         onError={() => setError(true)}
-        source={((error || CheckTools.isNullOrEmpty(props.url))) ? (props.defaultAvatar || require('@images/avatar.png')) : { uri: props.url }}
+        source={((error || CheckTools.isNullOrEmpty(props.url))) ? (props.defaultAvatar || {}) : { uri: props.url }}
         style={{
           borderRadius: props.round ? (props.size || 30) / 2 : 4,
           width: props.size || 30,

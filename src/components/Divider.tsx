@@ -117,5 +117,3 @@ export function Divider(props: DividerProps) {
       </RowView>
   );
 }
-
-export default Divider;

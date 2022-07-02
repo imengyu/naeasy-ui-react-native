@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, StyleSheet, ViewStyle, View } from "react-native";
 import PagerView, { PagerViewProps } from "react-native-pager-view";
-import ScrollableTabBar, { ScrollableTabBarProps } from "./ScrollableTabBar";
+import { ScrollableTabBar, ScrollableTabBarProps } from "./ScrollableTabBar";
 
 export interface ScrollTabViewProps {
   /**

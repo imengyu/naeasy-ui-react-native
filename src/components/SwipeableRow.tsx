@@ -29,7 +29,10 @@ export interface SwipeableRowProps extends Omit<SwipeableProps, 'renderRightActi
   children?: JSX.Element|JSX.Element[];
 }
 
-export default class SwipeableRow extends Component<SwipeableRowProps> {
+/**
+ * 可滑动行组件
+ */
+export class SwipeableRow extends Component<SwipeableRowProps> {
 
   private renderAction = (
     item: SwipeableRowAction,

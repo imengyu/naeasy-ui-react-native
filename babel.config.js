@@ -14,10 +14,6 @@ module.exports = {
         ],
         alias: {
           '@': './',
-          '..': './imengyu-ui-lib',
-          '@components': './components',
-          '@reducers': './reducers',
-          '@images': './images',
         },
       },
     ],

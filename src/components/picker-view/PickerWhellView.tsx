@@ -323,5 +323,3 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
     );
   }
 }
-
-export default PickerWhellView;

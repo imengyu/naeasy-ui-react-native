@@ -12,7 +12,7 @@ interface ClassicsHeaderProps extends ViewProps {
 /**
  * SmartRefreshControl 的经典样式刷新头
  */
-export default class ClassicsHeader extends Component<ClassicsHeaderProps> {
+export class SmartRefreshControlClassicsHeader extends Component<ClassicsHeaderProps> {
   render() {
     return <RCTClassicsHeader {...this.props} />;
   }

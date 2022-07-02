@@ -1,5 +1,5 @@
 import React from "react";
-import PickerWhellView, { PickerWhellViewProps } from "./PickerWhellView";
+import { PickerWhellView, PickerWhellViewProps } from "./PickerWhellView";
 
 /**
  * 级联数据定义

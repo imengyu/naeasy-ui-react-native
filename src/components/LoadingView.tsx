@@ -77,5 +77,3 @@ export function LoadingView(props: LoadingViewProps) {
     </View>
   );
 }
-
-export default LoadingView;

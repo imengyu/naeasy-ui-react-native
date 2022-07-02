@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import Portal from '../portal';
-import ToastContainer, { IToastPosition } from './ToastContainer';
+import { ToastContainer, IToastPosition } from './ToastContainer';
 
 interface IToastConfigurable {
   /**
@@ -125,7 +125,7 @@ function notice(
  *
  * 规则: 有 Icon 的 Toast，字数为 4-6 个；没有 Icon 的 Toast，字数不宜超过 14 个。
  */
-export default {
+export const Toast = {
   /**
    * 短时间显示时长
    */

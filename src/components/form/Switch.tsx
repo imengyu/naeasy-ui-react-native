@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View, ViewStyle, Animated } from "react-native";
 import { Color } from "../../styles/ColorStyles";
-import Feedback from "../tools/Feedback";
+import { FeedbackNative } from "../tools/Feedback";
 
 export interface SwitchProps {
   /**
@@ -106,7 +106,7 @@ export function Switch(props: SwitchProps) {
 
   function change() {
     if (impactFeedback)
-      Feedback.impactSelectionFeedbackGenerator();
+      FeedbackNative.impactSelectionFeedbackGenerator();
     props.onValueChange && props.onValueChange(!props.value);
   }
 

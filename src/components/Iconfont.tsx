@@ -1,8 +1,6 @@
 import React from 'react';
 import { Text, TextStyle } from 'react-native';
 
-const IconFontMap = require('../data/IconFontMap').default;
-
 export interface IconfontProp {
   /**
    * 图标的名称
@@ -46,7 +44,7 @@ export function Iconfont(props: IconfontProp) {
         fontSize: props.size || 20,
         ...props.style,
         fontFamily: 'iconfont',
-      }}>{IconFontMap[props.icon]}</Text>
+      }}>{/*TODO {IconFontMap[props.icon]}  */}</Text>
       : <Text style={props.style} />
     )
   );

@@ -1,7 +1,7 @@
 import { NativeModules } from 'react-native';
 import { isAndroid, isIOS } from '../../utils/PlatformTools';
 
-const ChinaAddress = isAndroid ? require('../../data/ChinaAddress').ChinaAddress as [
+const ChinaAddress = isAndroid ? require('imengyu-ui-lib/src/data/ChinaAddress').ChinaAddress as [
   string[],
   string[][],
   string[][][],
@@ -257,7 +257,10 @@ function convertTimePickerModeToIOSPicker(options?: boolean[]) {
   return PickerViewIOS.BRDatePickerModeDate;
 }
 
-const Picker = {
+/**
+ * 内置选择器
+ */
+export const Picker = {
   /**
    * TimePicker的type参数，预设了只显示日期（年月日）
    */
@@ -435,5 +438,3 @@ const Picker = {
     }
   },
 };
-
-export default Picker;
