@@ -22,6 +22,10 @@ interface AvatarStackProp {
    */
   showOverflowCount?: boolean,
   /**
+   * 设置头像之间的距离。默认：-大小/3
+   */
+  imageMargin?: number,
+  /**
    * 头像的大小，默认30
    */
   size?: number,
@@ -61,7 +65,7 @@ export function AvatarStack(props: AvatarStackProp) {
     const maxCount = props.maxCount || 5;
     const size = props.size || 30;
     const imageStyle = {
-      marginLeft: -(size / 3),
+      marginLeft: props.imageMargin || -(size / 3),
       borderRadius: props.round ? (size / 2) : 4,
       width: size,
       height: size,
@@ -80,8 +84,8 @@ export function AvatarStack(props: AvatarStackProp) {
       } else {
         if (showOverflowCount) {
           array.push(
-            <View key={i} style={{...imageStyle, ...styles.overflowCount}}>
-              <Text style={{...styles.overflowCountText}}>+{props.urls.length - i}</Text>
+            <View key={i} style={[imageStyle, styles.overflowCount]}>
+              <Text style={styles.overflowCountText}>+{props.urls.length - i}</Text>
             </View>
           );
         }

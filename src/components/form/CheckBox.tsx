@@ -23,7 +23,7 @@ export interface CheckBoxProps {
   /**
    * 复选框的文字
    */
-  children?: string;
+  children?: string|JSX.Element;
   /**
    * 复选框的形状
    */
@@ -103,12 +103,16 @@ export function CheckBox(props: CheckBoxProps) {
             checkColor={props.disabled === true ? Color.grey : props.checkColor}
             icon={props.icon} />
       }
-      <Text style={{
-        ...styles.checkText,
-        ...props.textStyle,
-        color: props.disabled === true ? Color.grey : (props.textColor || Color.text),
-        display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
-      }}>{text}</Text>
+      {
+        typeof props.children === 'string' ?
+          <Text style={{
+            ...styles.checkText,
+            ...props.textStyle,
+            color: props.disabled === true ? Color.grey : (props.textColor || Color.text),
+            display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+          }}>{text}</Text> :
+          (props.children || <></>)
+      }
     </RowView>
   );
 }

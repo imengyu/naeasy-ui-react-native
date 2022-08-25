@@ -86,6 +86,7 @@ export function Switch(props: SwitchProps) {
   const inverseColor = props.inverseColor || Color.grey;
   const dotColor = props.dotColor || Color.white;
   const impactFeedback = props.impactFeedback !== true;
+  const disabled = props.disabled === true;
   const dotPadding = 2;
 
   const [ opacityAnim ] = useState(new Animated.Value(0));
@@ -105,6 +106,8 @@ export function Switch(props: SwitchProps) {
   }, [ size, opacityAnim, translateXAnim, props.value ]);
 
   function change() {
+    if (disabled === true || props.loading === true)
+      return;
     if (impactFeedback)
       FeedbackNative.impactSelectionFeedbackGenerator();
     props.onValueChange && props.onValueChange(!props.value);

@@ -16,9 +16,6 @@ import { SmartRefreshControlDefaultHeader } from './DefaultHeader';
 
 const SPModule = Platform.OS === 'android' ? (NativeModules.SpinnerStyleModule || {}) : {};
 
-console.log('SPModule', SPModule);
-
-
 const SmartRefreshLayout = Platform.OS === 'android' ? requireNativeComponent('SmartRefreshLayout') as HostComponent<SmartRefreshControlInternalProps> : undefined;
 
 interface SmartRefreshControlHeaderEventData {

@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, RowView, rpx, Iconfont } from 'imengyu-ui-lib';
-import { FlatList } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { ColumnView, CellGroup, Text, RowView, Iconfont, IconFontMap, rpx } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
+import { FlatList } from 'react-native';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCell'>;
 
@@ -11,20 +10,17 @@ interface TestIconScreenState {
   icons: string[],
 }
 
-const IconFontMap = {};
-
 export class TestIconScreen extends React.PureComponent<Props, TestIconScreenState> {
 
   state: Readonly<TestIconScreenState> = {
     icons: [],
   };
 
-
   componentDidMount() {
     const arr : string[] = [];
     for (const key in IconFontMap) {
       if (Object.prototype.hasOwnProperty.call(IconFontMap, key))
-      arr.push(key);
+        arr.push(key);
     }
     setTimeout(() => {
       this.setState({

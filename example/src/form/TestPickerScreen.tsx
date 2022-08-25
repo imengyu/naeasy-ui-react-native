@@ -1,8 +1,9 @@
 import React from 'react';
+import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Picker, Cell, CellGroup, Toast } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { CellGroup, Cell, Picker, Toast, ColumnView } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
+import StringTools from '../utils/StringTools';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPicker'>;
 
@@ -16,21 +17,21 @@ export class TestPickerScreen extends React.PureComponent<Props> {
               Picker.showTimePickerView({
                 type: Picker.TimePickerTypeDate,
               }, (time) => {
-                Toast.info('选择了' + time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate());
+                Toast.info('选择了' + StringTools.formatTime(time));
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择时间" showArrow onPress={() => {
               Picker.showTimePickerView({
                 type: Picker.TimePickerTypeTime,
               }, (time) => {
-                Toast.info('选择了' + time.getHours() + ':' + time.getMinutes());
+                Toast.info('选择了' + StringTools.formatTime(time));
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择日期和时间" showArrow onPress={() => {
               Picker.showTimePickerView({
                 type: Picker.TimePickerTypeAll,
               }, (time) => {
-                Toast.info('选择了' + time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes());
+                Toast.info('选择了' + StringTools.formatTime(time));
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择选项" showArrow onPress={() => {
@@ -46,7 +47,7 @@ export class TestPickerScreen extends React.PureComponent<Props> {
                 lunarCalendar: true,
                 type: Picker.TimePickerTypeDate,
               }, (time) => {
-                Toast.info('选择了' + time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate());
+                Toast.info('选择了' + StringTools.formatTime(time));
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择地址" showArrow onPress={() => {

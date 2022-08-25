@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import CheckTools from '../utils/CheckTools';
 import { ImageURISource } from 'react-native';
 import { ImageSourcePropType, TouchableOpacity, Image as ReactNativeImage, ImageStyle, ImageProps, View, ViewStyle, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { Color } from '../styles/ColorStyles';
-import CheckTools from '../utils/CheckTools';
 import { deviceWidth } from '../utils/StyleConsts';
 import { topLeft } from '../utils/StyleTools';
 import { ColumnView } from './layout/ColumnView';
+import { isIOS } from '../utils';
 
 export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
   /**
@@ -107,12 +108,15 @@ export function Image(props: ImageWrapProps) {
     if (typeof source === 'object' && typeof (source as ImageURISource).uri === 'string' && CheckTools.isNullOrEmpty((source as ImageURISource).uri))
       source = props.defaultSource || {};
 
-    props.height = undefined;
-    props.width = undefined;
+    if (isIOS) {
+      props.height = undefined;
+      props.width = undefined;
+    }
 
     return (
       <ReactNativeImage
         { ...props as ImageProps }
+        resizeMode={props.resizeMode || "contain"}
         source={source}
         style={style as ImageStyle}
         onLoadStart={() => setLoading(true)}

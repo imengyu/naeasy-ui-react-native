@@ -30,6 +30,10 @@ interface CellProp {
    */
   icon?: string|ImageSourcePropType,
   /**
+   * 图标字体名称
+   */
+  iconFontFamily?: string;
+  /**
    * 当左侧图标未设置时，是否在左侧追加一个占位区域，以和其他单元格对齐
    */
   iconPlaceholder?: boolean,
@@ -37,6 +41,14 @@ interface CellProp {
    * 左侧图标的宽度，默认是 20
    */
   iconWidth?: number|'auto',
+  /**
+   * 左侧图标的大小，默认是 15
+   */
+  iconSize?: number,
+  /**
+   * 右侧图标的大小，默认是 15
+   */
+  rightIconSize?: number,
   /**
    * 右侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
    */
@@ -147,9 +159,6 @@ const styles = StyleSheet.create({
     color: '#999',
     marginHorizontal: 10,
   },
-  icon: {
-    marginHorizontal: 6,
-  },
 });
 
 /**
@@ -214,6 +223,7 @@ export function Cell(props: CellProp) {
   }
   function renderLeftIcon() {
     const leftIconWidth = props.iconWidth || 20;
+    const iconSize = props.iconSize || 15;
 
     return (
       <RowView key="leftIcon" width={(props.iconPlaceholder || props.icon) ? leftIconWidth : 0} justify="center">
@@ -226,24 +236,25 @@ export function Cell(props: CellProp) {
       if (typeof props.icon === 'string' && !CheckTools.isNullOrEmpty(props.icon)) {
         //图标
         if (props.icon.startsWith('http'))
-          return <Image key="leftIcon" style={{...styles.icon, ...props.iconStyle as ImageStyle}} source={{ uri: props.icon }} />;
-        return <Iconfont key="leftIcon" icon={props.icon} style={{...styles.titleIcon, ...props.iconStyle as TextStyle}} />;
+          return <Image key="leftIcon" style={{width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={{ uri: props.icon }} />;
+        return <Iconfont key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle}} />;
       }
-      if (typeof props.icon === 'object')
-        return <Image key="leftIcon" style={{ ...styles.icon, ...props.iconStyle as ImageStyle}} source={props.icon} />;
+      if (typeof props.icon === 'object' || typeof props.icon === 'number')
+        return <Image key="leftIcon" style={{ width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={props.icon} />;
       return <View />;
     }
   }
   function renderRightIcon() {
     if (props.renderIcon)
       return props.renderIcon(false, props.rightIcon);
+    const iconSize = props.rightIconSize || 15;
     if (typeof props.rightIcon === 'string') {
       if (props.rightIcon.startsWith('http'))
-        return <Image key="rightIcon" style={{...styles.icon, ...props.rightIconStyle as ImageStyle }} source={{ uri: props.rightIcon }} />;
-      return <Iconfont key="rightIcon" icon={props.rightIcon} style={{...styles.titleIcon, ...props.rightIconStyle as TextStyle}} />;
+        return <Image key="rightIcon" style={{width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} source={{ uri: props.rightIcon }} />;
+      return <Iconfont key="rightIcon" icon={props.rightIcon} fontFamily={props.iconFontFamily} style={{...styles.titleIcon, fontSize: iconSize, ...props.rightIconStyle as TextStyle}} />;
     }
-    if (typeof props.rightIcon === 'object')
-      return <Image key="rightIcon" style={styles.icon} source={props.rightIcon} />;
+    if (typeof props.rightIcon === 'object' || typeof props.rightIcon === 'number')
+      return <Image style={{ width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} key="rightIcon" source={props.rightIcon} />;
     return <View key="rightIcon" />;
   }
   function renderBase() {
@@ -256,16 +267,16 @@ export function Cell(props: CellProp) {
         <RowView key="left" center>
           {renderLeftIcon()}
           <ColumnView style={styles.leftView}>
-            <Text style={{
-              ...styles.title,
-              ...getTitleStyle(),
-              display: CheckTools.isNullOrEmpty(props.title) ? 'none' : 'flex',
-            }}>{props.title}</Text>
-            <Text style={{
-              ...styles.label,
-              ...textStyle,
-              display: CheckTools.isNullOrEmpty(props.label) ? 'none' : 'flex',
-            }}>{props.label}</Text>
+            <Text style={[
+              styles.title,
+              getTitleStyle(),
+              { display: CheckTools.isNullOrEmpty(props.title) ? 'none' : 'flex' },
+            ]}>{props.title}</Text>
+            <Text style={[
+              styles.label,
+              textStyle,
+              { display: CheckTools.isNullOrEmpty(props.label) ? 'none' : 'flex' },
+            ]}>{props.label}</Text>
           </ColumnView>
         </RowView>
       );
@@ -288,13 +299,13 @@ export function Cell(props: CellProp) {
     <TouchableHighlight
       onPress={props.onPress}
       underlayColor={ props.pressedColor || PressedColor.default }
-      style={{
-        ...styles.view,
-        ...((props.bottomBorder !== false) ? borderBottom(1, 'solid', Color.border) : {}),
-        ...(props.topBorder ? borderTop(1, 'solid', Color.border) : {}),
-        ...getStyle(),
-        ...props.style,
-      }}
+      style={[
+        styles.view,
+        ((props.bottomBorder !== false) ? borderBottom(1, 'solid', Color.border) : {}),
+        (props.topBorder ? borderTop(1, 'solid', Color.border) : {}),
+        getStyle(),
+        props.style,
+      ]}
     >
       <RowView flex={1} align={props.center !== false ? 'center' : 'flex-start'} justify="space-between">
         {renderBase()}

@@ -16,6 +16,10 @@ export interface NoticeBarProps {
    */
   iconStyle?: ImageStyle|TextStyle;
   /**
+   * 图标字体名称
+   */
+  iconFontFamily?: string;
+  /**
    * 内容
    */
   content?: string;
@@ -158,14 +162,14 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
     const icon = this.props.icon || 'notification';
     if (typeof icon === 'string') {
       if (icon.startsWith('http'))
-        return <Image key="leftIcon" style={{...styles.icon, ...this.props.iconStyle as ImageStyle}} source={{ uri: icon }} />;
-      return <Iconfont key="leftIcon" icon={icon} style={{
+        return <Image key="leftIcon" style={[ styles.icon, this.props.iconStyle as ImageStyle ]} source={{ uri: icon }} />;
+      return <Iconfont key="leftIcon" icon={icon} fontFamily={this.props.iconFontFamily} style={{
         ...styles.icon,
         ...this.props.iconStyle,
       }} color={this.props.textColor || Color.orangeDark} />;
     }
-    if (typeof icon === 'object')
-      return <Image key="leftIcon" style={{ ...styles.icon, ...this.props.iconStyle as ImageStyle}} source={icon} />;
+    if (typeof icon === 'object' || typeof icon === 'number')
+      return <Image key="leftIcon" style={[ styles.icon, this.props.iconStyle as ImageStyle ]} source={icon} />;
     return <></>;
   }
   renderClose() {

@@ -27,6 +27,10 @@ export interface SearchBarProp {
    */
   leftIcon?: string;
   /**
+   * 图标字体名称
+   */
+  leftIconFontFamily?: string;
+  /**
    * 取消按钮显示，默认是 show-active
    * * hidden 不显示
    * * show 一直显示
@@ -136,7 +140,11 @@ export function SearchBar(props: SearchBarProp) {
   return (
     <RowView center style={props.style}>
       <RowView center style={{ ...styles.input, ...props.containerStyle}}>
-        { props.renderLeftIcon ? props.renderLeftIcon() : <Iconfont icon={props.leftIcon || "search"} style={styles.leftIcon} /> }
+        {
+          props.renderLeftIcon ?
+            props.renderLeftIcon() :
+            <Iconfont icon={props.leftIcon || "search"} fontFamily={props.leftIconFontFamily} style={styles.leftIcon} />
+        }
         <TextInput
           ref={(input) => { inputRef = input; }}
           style={{...styles.inputInner, ...props.inputStyle}}

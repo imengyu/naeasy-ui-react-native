@@ -62,6 +62,10 @@ export interface RateProps {
    * 评星组件大小
    */
   size?: number;
+  /**
+   * 图标字体名称
+   */
+  iconFontFamily?: string;
 }
 
 const styles = StyleSheet.create({
@@ -135,14 +139,14 @@ export function Rate(props: RateProps) {
     for (let i = 0; i < count; i++) {
       if (i === Math.floor(value) && i < Math.ceil(value)) {
         arr.push(<View style={styles.activeHalf} key={i}>
-          <Iconfont icon={icon} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveHalfStyle} />
-          <Iconfont icon={voidIcon} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />
+          <Iconfont icon={icon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveHalfStyle} />
+          <Iconfont icon={voidIcon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />
         </View>);
       }
       else if (i < value)
-        arr.push(<Iconfont key={i} icon={icon} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />);
+        arr.push(<Iconfont key={i} icon={icon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />);
       else if (i >= value)
-        arr.push(<Iconfont key={i} icon={voidIcon} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />);
+        arr.push(<Iconfont key={i} icon={voidIcon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />);
     }
 
     return arr;

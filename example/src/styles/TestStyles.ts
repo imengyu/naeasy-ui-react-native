@@ -8,4 +8,7 @@ export const TestStyles = StyleSheet.create({
     marginTop: 5,
     color: Color.darkGrey,
   },
+  PaddingS: {
+    padding: 10,
+  },
 });

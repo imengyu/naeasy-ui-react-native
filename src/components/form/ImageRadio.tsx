@@ -53,8 +53,8 @@ interface ImageRadioButtonProps extends ImageRadioProps {
 
 function ImageRadioButton(props: ImageRadioButtonProps) {
   return (
-    <ImageBackground source={props.boxImage || require('imengyu-ui-lib/src/images/check/image-check-box.png')} resizeMode="contain" style={{ ...styles.checkButtonBackground, ...props.boxImageStyle}}>
-      { props.on ? <Image source={props.checkImage || require('imengyu-ui-lib/src/images/check/image-check.png')} resizeMode="contain" style={{ ...styles.checkButtonCheck, ...props.checkImageStyle}} /> : <></> }
+    <ImageBackground source={props.boxImage || require('../../images/check/image-check-box.png')} resizeMode="contain" style={{ ...styles.checkButtonBackground, ...props.boxImageStyle}}>
+      { props.on ? <Image source={props.checkImage || require('../../images/check/image-check.png')} resizeMode="contain" style={{ ...styles.checkButtonCheck, ...props.checkImageStyle}} /> : <></> }
     </ImageBackground>
   );
 }

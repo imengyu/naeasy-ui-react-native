@@ -6,7 +6,7 @@ import { selectStyleType, border as _border, paddingVH } from '../utils/StyleToo
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';
 
-interface BadgeProps {
+export interface BadgeProps {
   /**
    * 徽标内容
    */
@@ -85,14 +85,15 @@ export function Badge(props: BadgeProps) {
       height: badgeSize,
       fontSize: 0,
     } : (typeof content === 'number' || CheckTools.isNumber(content) ? {
-      height: badgeSize + 5,
-      width: badgeSize + 5,
+      height: badgeSize + 6,
+      width: (badgeSize * Math.max(1, ('' + content).length / 2) + 5),
       fontSize: badgeSize,
       borderRadius: (badgeSize + 5) / 2,
+      paddingVertical: 2,
     } : {
       ...paddingVH(2, 4),
       fontSize: badgeSize,
-      borderRadius: badgeSize,
+      borderRadius: badgeSize - 2,
     })),
   };
 

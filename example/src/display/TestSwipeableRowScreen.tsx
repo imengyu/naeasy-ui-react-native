@@ -1,7 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, AlertNative, SwipeableRightActionsRow,
-  SwipeableRow, Cell, Button, Color } from 'imengyu-ui-lib';
+import { CellGroup, Color, AlertNative, SwipeableRightActionsRow, SwipeableRow, Cell, Button, ColumnView } from 'imengyu-ui-lib';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
 import { RootStackParamList } from '../navigation';

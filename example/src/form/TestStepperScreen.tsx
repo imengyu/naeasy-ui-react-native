@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Stepper } from 'imengyu-ui-lib';
-import { Cell } from 'imengyu-ui-lib';
-import { CellGroup } from 'imengyu-ui-lib';
+import { ScrollView } from 'react-native';
+import { ColumnView, Stepper, Cell, CellGroup } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestStepper'>;

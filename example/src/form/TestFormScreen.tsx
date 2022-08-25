@@ -1,10 +1,12 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native';
 import { KeyboardAvoidingView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { ColumnView, Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
-  Rate, Radio, RadioGroup, Stepper, XBarSpace } from 'imengyu-ui-lib';
+import {
+  Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
+  Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView,
+} from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestForm', 'RootStack'>;
@@ -27,6 +29,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
       <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
         <ScrollView>
           <ColumnView padding={10}>
+            
 
             <Text style={TestStyles.TitleText}>基础用法</Text>
             <CellGroup inset>

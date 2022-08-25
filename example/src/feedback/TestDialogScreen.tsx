@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Image, Text } from 'react-native';
-import { Toast, ColumnView, CellGroup, Cell, Dialog } from 'imengyu-ui-lib';
+import { ScrollView, Text, Image } from 'react-native';
+import { Cell, Toast, Dialog, CellGroup, ColumnView } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;
@@ -18,7 +17,6 @@ export function TestDialogScreen(_props: Props) {
   return (
     <ScrollView>
       <ColumnView center>
-
         <Dialog
           show={show1}
           onClose={() => setShow1(false)}

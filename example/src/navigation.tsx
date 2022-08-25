@@ -46,6 +46,20 @@ export type RootStackParamList = {
   TestNumberInput: undefined;
   TestTypography: undefined;
   TestDivider: undefined;
+  TestLayout2: undefined;
+  TestWhiteSpace: undefined;
+  TestWingBlank: undefined;
+  TestNumberKeyBoard: undefined;
+  TestAvatarStack: undefined;
+  TestCountDown: undefined;
+  TestCountTo: undefined;
+  TestImagePreview: undefined;
+  TestNavBar: undefined;
+  TestSideBar: undefined;
+  TestSkeleton: undefined;
+  TestStep: undefined;
+  TestTabBar: undefined;
+  TestNotify: undefined;
 };
 
 /**

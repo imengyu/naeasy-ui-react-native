@@ -1,8 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Tag, RowView } from 'imengyu-ui-lib';
-import { Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { CellGroup, Tag, RowView, ColumnView } from 'imengyu-ui-lib';
+import { Text, ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTag'>;

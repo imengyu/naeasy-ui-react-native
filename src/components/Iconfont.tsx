@@ -22,12 +22,25 @@ export interface IconfontProp {
    * 图标文字样式
    */
   style?: TextStyle,
+  /**
+   * 图标文字字体类名 默认是 iconfont
+   */
+  fontFamily?: string,
+}
+
+let iconFontMap = {} as { [index: string]: string };
+
+/**
+ * 设置 Iconfont 组件的图标名称映射
+ */
+export function configIconfontMap(map: { [index: string]: string }) {
+  iconFontMap = map;
 }
 
 /**
  * IconFont 图标
  *
- * 当前项目使用图标库, 图标的名字请在开发者》测试页面》组件》Icon页面中查看
+ * 可以使用 configIconfontMap 函数设置图标名称映射
  */
 export function Iconfont(props: IconfontProp) {
   return (
@@ -36,15 +49,15 @@ export function Iconfont(props: IconfontProp) {
         color: props.color,
         fontSize: props.size || 20,
         ...props.style,
-        fontFamily: 'iconfont',
+        fontFamily: props.fontFamily || 'iconfont',
       }}>{props.content}</Text>
     ) : (props.icon ?
       <Text style={{
         color: props.color,
         fontSize: props.size || 20,
         ...props.style,
-        fontFamily: 'iconfont',
-      }}>{/*TODO {IconFontMap[props.icon]}  */}</Text>
+        fontFamily: props.fontFamily || 'iconfont',
+      }}>{iconFontMap[props.icon]}</Text>
       : <Text style={props.style} />
     )
   );

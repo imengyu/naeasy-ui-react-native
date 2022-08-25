@@ -1,18 +1,17 @@
 import React, { createRef } from "react";
+import CheckTools from "../../utils/CheckTools";
 import { LoadingPage, LoadingPageProps } from "../../components/LoadingPage";
 import { SmartRefreshControl, SmartRefreshControlProps } from "../../components/refresh/android-smart-refresh/SmartRefreshControl";
 import { WhiteSpace } from "../white-space";
-import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
-import CheckTools from "../../utils/CheckTools";
-import ArrayUtils from "../../utils/ArrayUtils";
 import { ActivityIndicator, FlatList, FlatListProps, ListRenderItemInfo, RefreshControl, RefreshControlProps, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { Button } from "../Button";
+import { Button } from "../button/Button";
 import { XBarSpace } from "../space/XBarSpace";
 import { Empty } from "../../components/Empty";
 import { Color } from "../../styles/ColorStyles";
 import { isAndroid } from "../../utils/PlatformTools";
 import { rpx } from "../../utils/StyleConsts";
+import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
 import { ColumnView } from "../layout/ColumnView";
 
 export interface FlatListWapperListItem {
@@ -204,6 +203,8 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
     lastErrorString: '',
   };
 
+  private loadingLock = false;
+
   private refreshRef = createRef<SmartRefreshControl>();
 
   /**
@@ -213,6 +214,7 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
      */
   async loadData(isRefresh: boolean, wipeData?: boolean) {
     const props = this.props;
+    this.loadingLock = true;
     if (typeof props.loadData === 'function') {
 
       if (this.state.loading)
@@ -285,9 +287,9 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
             let newData = prevState.data.concat();
             //拼接loader占位之前需要移除数据最后一位的loader占位
             if (newData.length > 0 && newData[newData.length - 1].renderType === 'loader')
-              ArrayUtils.removeAt(newData, newData.length - 1);
+              newData.slice(newData.length - 1, 1);
             if (newData.length > 0 && newData[newData.length - 1].renderType === 'empty')
-              ArrayUtils.removeAt(newData, newData.length - 1);
+              newData.slice(newData.length - 1, 1);
 
             props.solveData && (newData = props.solveData(newData));
 
@@ -314,9 +316,9 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
 
           //拼接loader占位之前需要移除数据最后一位的loader占位
           if (newData.length > 0 && newData[newData.length - 1].renderType === 'loader')
-            ArrayUtils.removeAt(newData,newData.length - 1);
+            newData.splice(newData.length - 1, 1);
           if (newData.length > 0 && newData[newData.length - 1].renderType === 'empty')
-            ArrayUtils.removeAt(newData, newData.length - 1);
+            newData.splice(newData.length - 1, 1);
 
           this.currentDataCount = newData.length;
 
@@ -432,17 +434,20 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
       onRetry: this.onRefresh,
     };
     return (
-      this.currentDataCount === 0 && showLoadingPage && showEmptyPage ? <></> : //如果为空并且显示空页，则不显示加载器
+      //如果为空并且显示空页，则不显示加载器
+      (this.currentDataCount !== 0 || (this.currentDataCount === 0 && !showEmptyPage && !showLoadingPage)) ?
       <ColumnView width="100%" key="flatListLoaderAndBottom">
         { props.renderLoader ? props.renderLoader(loaderProps) : <FlatListLoader {...loaderProps} /> }
         { props.addXBarSpace ? <XBarSpace /> : <></> }
         { (props.addBottomSpace && props.addBottomSpace > 0) ? <WhiteSpace size={props.addBottomSpace} /> : <></> }
-      </ColumnView>
+      </ColumnView> : <></>
     );
   }
 
   private onEndReached = () => {
-    if (this.props.canLoadMore && !this.state.error) {
+    if (this.props.canLoadMore !== false && !this.state.error && !this.state.loading
+      && this.currentDataCount >= (this.props.pageSize || 10) - 2 //只有当前数据条数大于一页大小，才可以加载数据
+    ) {
       this.loadData(false);
     }
   }

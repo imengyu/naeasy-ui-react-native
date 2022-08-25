@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CheckTools from "../../utils/CheckTools";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Color } from "../../styles/ColorStyles";
-import { IconButton } from "../IconButton";
+import { IconButton } from "../button/IconButton";
 import { RowView } from "../layout/RowView";
 
 export interface StepperProps {

@@ -1,11 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
-import { Rate } from 'imengyu-ui-lib';
+import { Color, Rate, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { Color } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestRate'>;

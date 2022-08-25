@@ -73,6 +73,10 @@ export interface NumberInputProps {
    */
   disableKeyPad?: boolean;
   /**
+   * 是否在输入完成后自动收起键盘，默认是
+   */
+  finishHideKeyPad?: boolean;
+  /**
    * 文字样式
    */
   textStyle?: TextStyle;
@@ -123,6 +127,7 @@ export function NumberInput(props: NumberInputProps) {
   const numberCount = props.numberCount || 6;
   const isPassword = props.isPassword === true;
   const disableKeyPad = props.disableKeyPad === true;
+  const finishHideKeyPad = props.finishHideKeyPad !== false;
   const borderType = props.borderType || 'box';
   const borderWidth = props.borderWidth || 1;
   const borderColor = props.borderColor || Color.lightBorder;
@@ -142,8 +147,11 @@ export function NumberInput(props: NumberInputProps) {
     props.onChangeText && props.onChangeText(text);
     props.onValueChange && props.onValueChange(text);
 
-    if (text.length === numberCount - 1)
+    if (text.length === numberCount) {
       props.onEnterFinish && props.onEnterFinish(text);
+      if (finishHideKeyPad)
+        inputRef.current?.blur();
+    }
   }
   function onBoxClicked(i: number) {
     lastClickBoxRet = i;

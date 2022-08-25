@@ -1,8 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+
 import { ColumnView, NoticeBar } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNoticeBar', 'RootStack'>;

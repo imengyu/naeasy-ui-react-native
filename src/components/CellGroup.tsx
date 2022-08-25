@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     paddingVertical: rpx(12),
     paddingTop: rpx(24),
     paddingBottom: rpx(12),
-    paddingHorizontal: rpx(48),
   },
 });
 
@@ -63,6 +62,7 @@ const styles = StyleSheet.create({
 export function CellGroup(props: CellGroupProp) {
   const titleStyle = {
     backgroundColor: props.titleDark ? Color.lightBorder : undefined,
+    paddingHorizontal: props.inset ? rpx(48) : rpx(12),
     ...styles.title,
     ...props.titleStyle,
   } as TextStyle;

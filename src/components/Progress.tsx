@@ -84,13 +84,13 @@ export function Progress(props: ProgressProp) {
       sideAnim.current.stop();
     if (props.animate) {
       sideAnim.current = Animated.timing(sideAnimValue, {
-        toValue: props.value * barRealWidth,
+        toValue: (props.value / 100) * barRealWidth,
         duration: animateDuration,
-        useNativeDriver: true,
+        useNativeDriver: false,
       });
       sideAnim.current.start(() => { sideAnim.current = null; });
     } else {
-      sideAnimValue.setValue(props.value * barRealWidth);
+      sideAnimValue.setValue((props.value / 100) * barRealWidth);
     }
     return () => {
       if (sideAnim.current) {
@@ -149,13 +149,20 @@ export function Progress(props: ProgressProp) {
       ...props.style,
     }} onLayout={(e) => setBarRealWidth(
       (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
-        e.nativeEvent.layout.height :
-        e.nativeEvent.layout.width)
+        e.nativeEvent.layout.width :
+        e.nativeEvent.layout.height)
     }>
-      <Animated.View style={[
-        progressStyles,
-        { opacity: sideAnimValue },
-      ]} />
+      {
+        (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
+          <Animated.View style={[
+            progressStyles,
+            { width: sideAnimValue },
+          ]} /> :
+          <Animated.View style={[
+            progressStyles,
+            { height: sideAnimValue },
+          ]} />
+      }
     </View>
   );
 }

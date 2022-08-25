@@ -1,8 +1,7 @@
 import React from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { WhiteSpace, ColumnView, Progress, Color, RowView, Button } from 'imengyu-ui-lib';
+import { Progress, Color, WhiteSpace, RowView, Button, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 

@@ -1,7 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, H1, H2, H3, H4, H5, H6, B, Br, I, S, U, Text } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ColumnView, CellGroup } from 'imengyu-ui-lib';
+import { ScrollView } from 'react-native';
+import { H1, H2, H3, H4, H5, H6 } from 'imengyu-ui-lib';
+import { B, Br, I, S, U, Text } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTypography'>;

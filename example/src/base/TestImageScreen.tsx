@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, RowView, Image, rpx, Avatar, AvatarStack } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ColumnView, CellGroup } from 'imengyu-ui-lib';
+import { ScrollView } from 'react-native';
 import { Text } from 'react-native';
+import { RowView, Image, rpx, Avatar } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCell'>;
@@ -30,30 +31,6 @@ export class TestImageScreen extends React.PureComponent<Props> {
             <Text>通过 Avatar 组件显示头像。</Text>
             <RowView style={{ paddingVertical: 10 }}>
               <Avatar url={"https://imengyu.top/assets/images/test/2.jpg"} size={50} />
-            </RowView>
-          </CellGroup>
-          <CellGroup title="头像组">
-            <Text>通过 AvatarStack 组件显示一组头像。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <AvatarStack urls={[
-                "https://imengyu.top/assets/images/test/2.jpg",
-                "https://imengyu.top/assets/images/test/3.jpg",
-                "https://imengyu.top/assets/images/test/4.jpg",
-                "https://imengyu.top/assets/images/test/5.jpg",
-              ]} round />
-            </RowView>
-            <Text>头像组超出后显示数字。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <AvatarStack urls={[
-                "https://imengyu.top/assets/images/test/2.jpg",
-                "https://imengyu.top/assets/images/test/3.jpg",
-                "https://imengyu.top/assets/images/test/4.jpg",
-                "https://imengyu.top/assets/images/test/5.jpg",
-                "https://imengyu.top/assets/images/test/2.jpg",
-                "https://imengyu.top/assets/images/test/3.jpg",
-                "https://imengyu.top/assets/images/test/4.jpg",
-                "https://imengyu.top/assets/images/test/5.jpg",
-              ]} round maxCount={6} />
             </RowView>
           </CellGroup>
           <CellGroup title="加载中">

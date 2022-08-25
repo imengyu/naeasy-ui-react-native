@@ -39,12 +39,37 @@ export interface TextProps extends ReactNativeTextProps {
    * 是否加删除线
    */
   lineThrough?: boolean;
+  /**
+   * 自动工具文字长短设置大小
+   */
+  autoSize?: boolean;
+  /**
+   * 自动工具文字长短设置大小
+   */
+  autoSizeOption?: {
+    maxLen: number;
+    minLen: number;
+    maxSize: number;
+    minSize: number;
+  };
 }
 
 /**
  * 对Text组件做了一个封装。提供了一些方便开发的属性。
  */
 export function Text(props: TextProps) {
+
+  function getAutoSize() {
+    //自动缩放大小，文字越长，字号越小
+    const autoSizeOption = props.autoSizeOption;
+    if (autoSizeOption) {
+      const text = '' + props.children;
+      return (1 - (text.length - autoSizeOption.minLen) / (autoSizeOption.maxLen - autoSizeOption.minLen))
+        * (autoSizeOption.maxSize - autoSizeOption.minSize) + autoSizeOption.minSize;
+    }
+    return solveSize(props.size);
+  }
+
   let textDecorationLine = 'none';
   if (props.underline && props.lineThrough)
     textDecorationLine = 'underline line-through';
@@ -57,7 +82,7 @@ export function Text(props: TextProps) {
     textAlign: props.align,
     backgroundColor: props.backgroundColor,
     color: props.color,
-    fontSize: solveSize(props.size),
+    fontSize: props.autoSize === true ? getAutoSize() : solveSize(props.size),
     fontStyle: props.italic ? 'italic' : 'normal',
     fontWeight: props.bold ? 'bold' : props.weight,
     textDecorationLine: textDecorationLine,

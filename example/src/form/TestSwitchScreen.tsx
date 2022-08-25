@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { Switch } from 'imengyu-ui-lib';
 import { Switch as NativeSwitch } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';

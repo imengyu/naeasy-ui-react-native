@@ -29,7 +29,7 @@ export interface PopupContainerProps {
   /**
    * 渲染内容回调
    */
-  renderContent: () => JSX.Element|JSX.Element[],
+  renderContent: (close: () => void) => JSX.Element|JSX.Element[],
   /**
    * 弹窗关闭事件
    */
@@ -140,7 +140,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
   close() {
     const timing = Animated.timing;
     const { position } = this.props;
-    const duration = this.props.duration || 250;
+    const duration = this.props.duration || 400;
 
     this.animSideValue.setValue({ x: 0, y: 0});
     this.animScaleValue.setValue(1);
@@ -306,7 +306,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
     const radius = round ? 10 : 0;
     const mask = this.props.mask !== false;
     const safeArea = this.props.safeArea !== false;
-    const size = this.props.size || '30%';
+    const size = this.props.size || '10%';
     const backgroundColor = this.props.backgroundColor || Color.white;
 
     return (
@@ -397,7 +397,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
             top={safeArea && (position === 'top' || position === 'left' || position === 'right')}
             bottom={safeArea && (position === 'bottom' || position === 'left' || position === 'right')}>
             { position !== 'top' ? this.renderTitle(true) : <></> }
-            { this.props.renderContent() as JSX.Element }
+            { this.props.renderContent(() => this.callUpClose()) as JSX.Element }
             { position === 'top' ? this.renderTitle(false) : <></> }
           </SafeAreaMargin>
         </Animated.View>

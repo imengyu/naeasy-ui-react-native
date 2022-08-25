@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
-import { ColumnView, CellGroup, Cell, ActionSheet, Toast, Color } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
+import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestActionSheet'>;
@@ -17,7 +16,6 @@ export function TestActionSheetScreen(_props: Props) {
   return (
     <ScrollView>
       <ColumnView center>
-
         <ActionSheet
           show={showActionSheet1}
           actions={[

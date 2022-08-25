@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Radio, RadioGroup, Color, Cell } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import { CellGroup, Radio, RadioGroup, Color, Cell, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, StyleSheet } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestRadio'>;

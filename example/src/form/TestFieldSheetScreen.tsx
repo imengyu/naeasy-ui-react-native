@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Field, Button } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { CellGroup, Field, Button, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
-import { KeyboardAvoidingView } from 'react-native';
 
 type Props = StackScreenProps<RootStackParamList, 'TestField'>;
 
@@ -24,7 +23,6 @@ export function TestFieldScreen(_props: Props) {
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={60}>
       <ScrollView>
         <ColumnView center>
-
           <CellGroup title="基础用法" inset>
             <Field label="文本" placeholder="请输入文本" value={value1} onChangeText={setValue1} />
           </CellGroup>

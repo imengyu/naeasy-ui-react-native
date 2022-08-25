@@ -1,7 +1,7 @@
 import { NativeModules } from 'react-native';
 import { isAndroid, isIOS } from '../../utils/PlatformTools';
 
-const ChinaAddress = isAndroid ? require('imengyu-ui-lib/src/data/ChinaAddress').ChinaAddress as [
+const ChinaAddress = isAndroid ? require('../../data/ChinaAddress').ChinaAddress as [
   string[],
   string[][],
   string[][][],

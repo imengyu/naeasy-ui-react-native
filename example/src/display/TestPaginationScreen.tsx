@@ -1,8 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
-import { ColumnView, Pagination, DotIndicator } from 'imengyu-ui-lib';
+import { Pagination, DotIndicator, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 
@@ -29,7 +28,7 @@ export class TestPaginationScreen extends React.PureComponent<Props, State> {
           <Pagination simple pageCount={10} currentPage={this.state.page} onCurrentPageChange={(page) => this.setState({ page: page })} />
 
           <Text style={TestStyles.TitleText}>简单页码指示器，只读，不可操作。</Text>
-          <DotIndicator currentIndex={this.state.page} count={10} size={10} />
+          <DotIndicator size={10} currentIndex={this.state.page} count={10} />
 
         </ColumnView>
       </ScrollView>

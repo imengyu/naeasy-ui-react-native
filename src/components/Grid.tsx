@@ -59,6 +59,18 @@ interface GridItemProp {
    */
   icon?: string|ImageSourcePropType,
   /**
+   * 如果填写字段，则在图片位置显示文字。同时icon不生效。
+   */
+  imageAsTtile?: string;
+  /**
+   * 图片位置显示文字的颜色。
+   */
+  imageAsTtileColor?: string;
+  /**
+   * 图片位置显示文字的大小，默认是18。
+   */
+  imageAsTtileStyle?: TextStyle;
+  /**
    * 格子内容排列的方向，可选值为 horizontal
    */
   direction?: 'vetical'|'horizontal',
@@ -75,6 +87,10 @@ interface GridItemProp {
    */
   iconColor?: string,
   /**
+   * 图标字体名称
+   */
+  iconFontFamily?: string;
+  /**
    * 点击事件
    */
   onPress?: () => void,
@@ -88,10 +104,14 @@ interface GridItemProp {
 
 const styles = StyleSheet.create({
   itemView: {
-    padding: 10,
+    padding: 8,
   },
   title: {
-    fontSize: 15,
+    fontSize: 13,
+    color: '#333',
+  },
+  titleImage: {
+    fontSize: 18,
     color: '#333',
   },
   icon: {
@@ -107,18 +127,18 @@ const styles = StyleSheet.create({
 export function GridItem(props: GridItemProp) {
 
   function renderIcon() {
+    if (typeof props.icon === 'object' || typeof props.icon === 'number')
+      return <Image key="leftIcon" style={[ styles.icon, props.iconStyle as ImageStyle ]} resizeMode="contain" source={props.icon} />;
     if (typeof props.icon === 'string') {
       if (props.icon.startsWith('http'))
-        return <Image key="leftIcon" style={{...styles.icon, ...props.iconStyle as ImageStyle}} source={{ uri: props.icon }} />;
-      return <Iconfont key="leftIcon" icon={props.icon} style={{
+        return <Image key="leftIcon" style={[ styles.icon, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
+      return <Iconfont key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{
         ...styles.icon,
         ...props.iconStyle as TextStyle,
         color: props.iconColor,
         fontSize: props.iconSize,
       }} color={(styles.title as TextStyle).color as string} />;
     }
-    if (typeof props.icon === 'object')
-      return <Image key="leftIcon" style={{ ...styles.icon, ...props.iconStyle as ImageStyle}} source={props.icon} />;
     return <View key="leftIcon" />;
   }
 
@@ -126,13 +146,15 @@ export function GridItem(props: GridItemProp) {
     <TouchableHighlight
       underlayColor={props.highlightColor || PressedColor.default}
       onPress={props.onPress}
-      style={{
-        ...styles.itemView,
-        ...props.style,
-      }}
+      style={[
+        styles.itemView,
+        props.style,
+      ]}
     >
       <FlexView style={styles.itemView} center flex={1} direction={props.direction === 'horizontal' ? 'row' : 'column'}>
-        { props.icon ? renderIcon() : <></> }
+        { !CheckTools.isNullOrEmpty(props.imageAsTtile) ?
+          <Text style={{ ...styles.titleImage, color: props.imageAsTtileColor, ...props.imageAsTtileStyle }} >{props.imageAsTtile}</Text> :
+            (props.icon ? renderIcon() : <></>) }
         { !CheckTools.isNullOrEmpty(props.title) ? <Text style={{ ...styles.title, color: props.titleColor }} >{props.title}</Text> : <></> }
         { props.children as JSX.Element }
       </FlexView>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Cell } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ColumnView } from 'imengyu-ui-lib';
+import { CellGroup } from 'imengyu-ui-lib';
+import { Cell } from 'imengyu-ui-lib';
+import { ScrollView } from 'react-native';
 import { Image, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
@@ -38,7 +40,7 @@ export class TestCellScreen extends React.PureComponent<Props> {
           </CellGroup>
           <CellGroup title="自定义渲染">
             <Text style={TestStyles.TitleText}>如以上用法不能满足你的需求，可以使用自定义渲染函数来自定义内容。</Text>
-            <Cell title="右侧是自定义渲染的图片" renderRight={() => <Image source={{ uri: 'https://imengyu.top/assets/images/test/2.jpg' }} key="right" style={{
+            <Cell title="右侧是自定义渲染的图片" renderRight={() => <Image source={require('../images/defaultAvatar.png')} key="right" style={{
                 width: 30,
                 height: 30,
               }} />

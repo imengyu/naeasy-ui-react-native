@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Text, Cell, Toast } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, Text } from 'react-native';
+import { CellGroup, Cell, Toast, ColumnView } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestToast'>;

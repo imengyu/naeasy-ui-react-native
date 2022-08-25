@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Color, Cell } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
-import { CheckBox, CheckBoxGroup, RowView, Button, ImageCheckBox } from 'imengyu-ui-lib';
+
+import { ScrollView, StyleSheet } from 'react-native';
+import { Color, Cell, CheckBox, CheckBoxGroup, RowView, Button, CellGroup, ImageCheckBox, ColumnView } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCheck'>;
@@ -69,9 +68,7 @@ export function TestCheckScreen(_props: Props) {
           <ColumnView style={{ padding: 10 }}>
             <CheckBoxGroup value={checked3} onValueChange={(v) => setChecked3(v)}>
               <ImageCheckBox name="0" text="复选框 1" style={styles.radioStyle} />
-              <ImageCheckBox name="1"
-                boxImage={require('../images/check/image-check-box.png')}
-                checkImage={require('../images/check/image-check.png')} text="复选框 2" style={styles.radioStyle} />
+              <ImageCheckBox name="1" boxImage={require('../images/test/test-check-box.png')} checkImage={require('../images/test/test-check.png')} text="复选框 2" style={styles.radioStyle} />
             </CheckBoxGroup>
           </ColumnView>
         </CellGroup>

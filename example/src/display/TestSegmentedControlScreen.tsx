@@ -1,8 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, SegmentedControl, Color } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { SegmentedControl, Color, ColumnView } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSegmentedControl', 'RootStack'>;
@@ -29,6 +28,8 @@ export class TestSegmentedControlScreen extends React.PureComponent<Props, State
 
           <Text style={{ padding: 10 }}>禁用，用户不能点击更改。</Text>
           <SegmentedControl enabled={false} values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page} onChange={(v) => this.setState({ page: v })} />
+
+
 
         </ColumnView>
       </ScrollView>

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, ViewStyle } from "react-native";
-import { Button } from "../Button";
+import { Button } from "../button/Button";
 import { Empty, EmptyProp } from "../Empty";
 import { WhiteSpace } from "../white-space";
 

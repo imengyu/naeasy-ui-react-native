@@ -1,10 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView } from 'imengyu-ui-lib';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Slider } from 'imengyu-ui-lib';
+import { Color, RowView, Toast, WhiteSpace } from 'imengyu-ui-lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSlider', 'RootStack'>;
 interface State {
@@ -18,7 +19,7 @@ interface State {
 export class TestSliderScreen extends React.PureComponent<Props, State> {
 
   state: Readonly<State> = {
-    value1: 1,
+    value1: 50,
     value2: 20,
     value3: 30,
     value4: 50,
@@ -29,10 +30,38 @@ export class TestSliderScreen extends React.PureComponent<Props, State> {
     return (
       <ScrollView>
         <ColumnView padding={10}>
+          
 
           <Text style={TestStyles.TitleText}>滑动输入条，用于在给定的范围内选择一个值。</Text>
+          <Slider value={this.state.value1} onValueChange={v => this.setState({ value1: v })} />
 
-          <Text style={TestStyles.TitleText}>其他类型的 Slider TODO</Text>
+          <Text style={TestStyles.TitleText}>指定选择范围。</Text>
+          <Slider value={this.state.value2} onValueChange={v => this.setState({ value2: v })} minValue={-50} maxValue={50} onEndChange={(v) => Toast.info(`当前值：${v}`)} />
+
+          <Text style={TestStyles.TitleText}>禁用</Text>
+          <Slider value={this.state.value3} onValueChange={v => this.setState({ value3: v })} touchable={false} />
+
+          <Text style={TestStyles.TitleText}>指定步长</Text>
+          <Slider value={this.state.value3} onValueChange={v => this.setState({ value3: v })} step={20} />
+
+          <Text style={TestStyles.TitleText}>自定义样式</Text>
+          <Slider
+            value={this.state.value4}
+            onValueChange={v => this.setState({ value4: v })}
+            activeColor={Color.success}
+            inactiveColor={Color.orangeLight}
+            trackStyle={{
+              backgroundColor: '#5fa',
+              borderRadius: 0,
+            }}
+          />
+
+          <Text style={TestStyles.TitleText}>垂直方向</Text>
+          <RowView justify="center">
+            <Slider value={this.state.value5} onValueChange={v => this.setState({ value5: v })} vertical style={{ height: 200 }} />
+          </RowView>
+
+          <WhiteSpace size={400} />
 
         </ColumnView>
       </ScrollView>
