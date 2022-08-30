@@ -51,12 +51,13 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
    * 指令式打开弹出框
    * @param showProps 对话框参数, 类型同普通 Popup ，但不支持传入 show 属性。
    */
-  static show(showProps: PopupContainerProps) : PopupStaticHandle {
+  static show(showProps: Omit<PopupContainerProps, 'show'|'onClose'>) : PopupStaticHandle {
     //创建PopupContainer
     let refPopupContainer : PopupContainer|null = null;
     let key = Portal.add(
       <PopupContainer
         { ...showProps }
+        show={true}
         ref={(r) => {refPopupContainer = r;}}
         onCloseAnimFinished={() => {
           refPopupContainer = null;
