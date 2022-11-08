@@ -1,3 +1,5 @@
+# 主题与颜色
+
 ## 主题
 
 本组件库大部分的组件支持动态切换主题，您只需要在 Provider 中传入当前主题，即可实现动态切换。
@@ -76,7 +78,7 @@ ThemeUtils.configFonstSizes({
 用于空白占位组件。
 
 ```js
-ThemeUtils.configFonstSizes({
+ThemeUtils.configSpaceDefines({
   xs: 5,
   sm: 10,
   md: 20,

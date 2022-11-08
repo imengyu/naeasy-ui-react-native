@@ -5,7 +5,9 @@ nav:
 
 # 组件一览
 
-# 组件
+非常抱歉，因为组件库暂时不支持 react-native-web , 因此无法在文档中预览组件，你可以下载 Demo 程序体验效果。
+
+## 组件列表
 
 * [Button](./Button.md)
 * [ActionSheet](./ActionSheet.md)
@@ -80,7 +82,6 @@ nav:
 * [ThemedStatusBar](./button.md)
 * [ThemeRender](./button.md)
 * [ThemeWrapper](./button.md)
-
 
 ## 工具函数参考
 
