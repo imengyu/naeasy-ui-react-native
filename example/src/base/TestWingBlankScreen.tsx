@@ -1,22 +1,23 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, CellGroup } from 'imengyu-ui-lib';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { Color, CellGroup, DynamicThemeStyleSheet, DynamicColor } from 'imengyu-ui-lib';
+import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { ColumnView, WingBlank } from 'imengyu-ui-lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestWingBlank'>;
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   title: {
-    backgroundColor: Color.warning,
-    color: Color.white,
+    backgroundColor: DynamicColor(Color.warning),
+    color: DynamicColor(Color.white),
     padding: 5,
     marginVertical: 15,
   },
   text: {
-    backgroundColor: Color.lightGrey,
+    color: DynamicColor(Color.text),
+    backgroundColor: DynamicColor(Color.lightGrey),
   },
 });
 

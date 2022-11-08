@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from "react";
+import { splitMillSeconds } from "../../utils/TimeUtils";
+import { useMemo, useRef, useState, useCallback } from "react";
 
 interface CountDownComposeOptions {
   /**
@@ -55,11 +56,7 @@ export function useCountDown(options: CountDownComposeOptions) {
 
   const current = useMemo(() => {
 
-    let nowSub = now;
-    const days = Math.floor(nowSub / 86400000); nowSub -= days * 86400000;
-    const hours = Math.floor(nowSub / 3600000); nowSub -= hours * 3600000;
-    const minutes = Math.floor(nowSub / 60000); nowSub -= minutes * 60000;
-    const seconds = Math.floor(nowSub / 1000); nowSub -= seconds * 1000;
+    const {days,hours,minutes,seconds,milliseconds} = splitMillSeconds(now);
 
     return {
       total: now,
@@ -67,11 +64,21 @@ export function useCountDown(options: CountDownComposeOptions) {
       hours,
       minutes,
       seconds,
-      milliseconds: nowSub,
+      milliseconds,
     };
   }, [ now ]);
 
   const timer = useRef<number>(0);
+
+  const checkCallback = useCallback((v: number) => {
+    if (v <= 0) {
+      //小于0，结束
+      stop();
+      setNow(0);
+      options.onFinish && options.onFinish();
+    }
+    options.onChange && options.onChange(current);
+  }, [ current, options ]);
 
   /**
    * 开始倒计时
@@ -80,14 +87,11 @@ export function useCountDown(options: CountDownComposeOptions) {
     if (timer.current <= 0) {
       const subTime = options.millisecond ? 40 : 1000;
       timer.current = setInterval(() => {
-        setNow((prev) => prev - subTime);
-        if (now <= 0) {
-          //小于0，结束
-          stop();
-          setNow(0);
-          options.onFinish && options.onFinish();
-        }
-        options.onChange && options.onChange(current);
+        setNow((prev) => {
+          const nowValue = prev - subTime;
+          checkCallback(nowValue);
+          return nowValue;
+        });
       }, subTime) as unknown as number;
     }
   }

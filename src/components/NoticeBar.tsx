@@ -1,10 +1,11 @@
 import React from 'react';
+import MeasureText from '@newbanker/react-native-measure-text';
 import { Animated, Easing, Image, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color } from '../styles/ColorStyles';
-import { Iconfont } from './Iconfont';
+import { Iconfont } from './Icon';
 import { RowView } from './layout/RowView';
-import MeasureText from '@newbanker/react-native-measure-text';
+import { Color, ThemeColor, ThemeSelector, ThemeUtils } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 export interface NoticeBarProps {
   /**
@@ -30,11 +31,11 @@ export interface NoticeBarProps {
   /**
    * 背景颜色
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 文字颜色
    */
-  textColor?: string;
+  textColor?: ThemeColor;
   /**
    * 是否滚动播放，默认是。
    */
@@ -82,10 +83,8 @@ const styles = StyleSheet.create({
   },
 });
 
-/**
- * 通知栏组件。用于循环播放展示一组消息通知。
- */
-export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarState> {
+
+class NoticeBarComponent extends React.PureComponent<NoticeBarProps, NoticeBarState> {
 
 
   state: Readonly<NoticeBarState> = {
@@ -166,7 +165,7 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
       return <Iconfont key="leftIcon" icon={icon} fontFamily={this.props.iconFontFamily} style={{
         ...styles.icon,
         ...this.props.iconStyle,
-      }} color={this.props.textColor || Color.orangeDark} />;
+      }} color={this.props.textColor || Color.warning} />;
     }
     if (typeof icon === 'object' || typeof icon === 'number')
       return <Image key="leftIcon" style={[ styles.icon, this.props.iconStyle as ImageStyle ]} source={icon} />;
@@ -186,7 +185,7 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
       <Text numberOfLines={this.props.wrap ? undefined : 1} style={{
         width: 'auto',
         flex: 1,
-        color: this.props.textColor || Color.orangeDark,
+        color: ThemeSelector.color(this.props.textColor || Color.warning),
         alignSelf: 'auto',
       }}>{this.props.content}</Text>
     );
@@ -202,7 +201,7 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
           left: 0,
           top: 0,
           width: this.state.mesuredTextWidth + 20,
-          color: this.props.textColor || Color.orangeDark,
+          color: ThemeSelector.color(this.props.textColor || Color.warning),
           transform: [{
             translateX: this.scrollAnimValue,
           }],
@@ -213,10 +212,14 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
 
   render(): React.ReactNode {
     return (
-      <RowView touchable style={{
-        ...styles.view,
-        backgroundColor: this.props.backgroundColor || Color.notice,
-      }} onPress={this.props.onPress}>
+      <RowView touchable style={[
+        styles.view,
+        {
+          backgroundColor: this.props.backgroundColor ?
+            ThemeSelector.color(this.props.backgroundColor) :
+            ThemeUtils.makeAplhaColor(ThemeSelector.colorNoNull(Color.warning), 0.15),
+        },
+      ]} onPress={this.props.onPress}>
         { this.renderLeftIcon() }
         { this.props.scroll === false ? this.renderText() : this.renderScrollText() }
         { this.renderClose() }
@@ -224,3 +227,8 @@ export class NoticeBar extends React.PureComponent<NoticeBarProps, NoticeBarStat
     );
   }
 }
+
+/**
+ * 通知栏组件。用于循环播放展示一组消息通知。
+ */
+export const NoticeBar = ThemeWrapper(NoticeBarComponent);

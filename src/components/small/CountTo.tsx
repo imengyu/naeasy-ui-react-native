@@ -1,7 +1,7 @@
-import { useDidMountEffect, useWillUnMountEffect } from "../../hooks/CommonHooks";
 import StringTools from "../../utils/StringTools";
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Text, TextProps } from "react-native";
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { TextProps } from "react-native";
+import { Text } from "../typography/Text";
 
 export interface CountToProps extends Omit<TextProps, 'children'> {
   /**
@@ -25,6 +25,9 @@ export interface CountToInstance {
   restart: () => void;
 }
 
+/**
+ * 数字滚动至指定数字组件
+ */
 export const CountTo = forwardRef<CountToInstance, CountToProps>((props, ref) => {
 
   const startValue = props.startValue || 0;
@@ -36,28 +39,7 @@ export const CountTo = forwardRef<CountToInstance, CountToProps>((props, ref) =>
   const interval = useRef(0);
   const speed = useRef(0);
 
-  useImperativeHandle(ref, () => ({
-    restart() {
-      setValueNow(startValue);
-      startAnim();
-    },
-  }));
-
-  useDidMountEffect(() => {
-    setValueNow(startValue);
-    startAnim();
-  });
-
-  useWillUnMountEffect(() => {
-    if (interval.current > 0)
-      clearInterval(interval.current);
-  });
-
-  useEffect(() => {
-    speed.current = Math.max(1, Math.floor(Math.abs(startValue - endValue) / (duration / 50)));
-  }, [ startValue, endValue, duration ]);
-
-  function startAnim() {
+  const startAnim = useCallback(() => {
     if (interval.current > 0)
       clearInterval(interval.current);
     if (startValue < endValue) {
@@ -85,7 +67,27 @@ export const CountTo = forwardRef<CountToInstance, CountToProps>((props, ref) =>
         });
       }, 50) as unknown as number;
     }
-  }
+  }, [ endValue, startValue ]);
+
+  useImperativeHandle(ref, () => ({
+    restart() {
+      setValueNow(startValue);
+      startAnim();
+    },
+  }));
+
+  useEffect(() => {
+    setValueNow(startValue);
+    startAnim();
+    return () => {
+      if (interval.current > 0)
+        clearInterval(interval.current);
+    };
+  }, [ startValue, startAnim ]);
+
+  useEffect(() => {
+    speed.current = Math.max(1, Math.floor(Math.abs(startValue - endValue) / (duration / 50)));
+  }, [ startValue, endValue, duration ]);
 
   return (
     <Text>{ thousand ? StringTools.numberWithCommas(valueNow.toFixed(2)) : valueNow }</Text>

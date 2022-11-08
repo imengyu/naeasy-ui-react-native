@@ -1,13 +1,14 @@
 import React, { createRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Portal from '../../portal';
 import CheckTools from '../../utils/CheckTools';
-import { ActivityIndicator, Animated, ListRenderItemInfo, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { ActivityIndicator, Animated, ListRenderItemInfo, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { deviceHeight, selectStyleType } from '../../utils';
-import { Iconfont } from '../Iconfont';
+import { Iconfont } from '../Icon';
 import { Button } from '../button/Button';
-import { Color } from '../../styles';
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
 import { useDidMountEffect } from '../../hooks/CommonHooks';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ThemeRender, ThemeWrapper } from '../../theme/Theme';
 
 //#region 创建容器与删除
 
@@ -80,21 +81,21 @@ function destroyAllNotify() {
 
 //#region 通知渲染容器
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   container:  {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     maxHeight: deviceHeight * 0.3,
-    backgroundColor: Color.transparent,
+    backgroundColor: 'transparent',
   },
   containerInner:  {
     position: 'relative',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: Color.transparent,
+    backgroundColor: 'transparent',
     paddingBottom: 5,
   },
   notifyClickable: {
@@ -107,10 +108,10 @@ const styles = StyleSheet.create({
   notify: {
     marginTop: 10,
     marginHorizontal: 20,
-    backgroundColor: Color.white,
+    backgroundColor: DynamicColor(Color.light),
     borderRadius: 25,
     elevation: 5,
-    shadowColor: Color.black,
+    shadowColor: DynamicColor(Color.black),
     shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 2 },
     flexDirection: 'row',
@@ -121,8 +122,18 @@ const styles = StyleSheet.create({
   notifyText: {
     marginHorizontal: 5,
     fontSize: 14,
-    color: Color.black,
+    color: DynamicColor(Color.black),
   },
+  messageItemStyle: { backgroundColor: DynamicColor(Color.light) },
+  loadingItemStyle: { backgroundColor: DynamicColor(Color.light) },
+  errorItemStyle: { backgroundColor: DynamicColor(Color.danger) },
+  successItemStyle: { backgroundColor: DynamicColor(Color.success) },
+  waringItemStyle: { backgroundColor: DynamicColor(Color.warning) },
+  messageTextStyle: { color: DynamicColor(Color.text) },
+  loadingTextStyle: { color: DynamicColor(Color.text) },
+  errorTextStyle: { color: Color.white.light },
+  successTextStyle: { color: Color.white.light },
+  waringTextStyle: { color: Color.white.light },
 });
 
 export interface NotifyInstance {
@@ -153,7 +164,7 @@ interface NotifyContainerProps {
 }
 
 //条目组件
-function NotifyItemControl(props: {
+const NotifyItemControl = ThemeWrapper(function (props: {
   item: NotifyItem,
   first: boolean,
   removeFlag: boolean,
@@ -174,18 +185,18 @@ function NotifyItemControl(props: {
   const animOpacityValue = useRef(new Animated.Value(first ? 1 : 0));
 
   const colorStyle = selectStyleType(item.type, 'message', {
-    message: {},
-    loading: {},
-    error: { backgroundColor: Color.danger },
-    success: { backgroundColor: Color.success },
-    waring: { backgroundColor: Color.warning },
+    message: styles.messageItemStyle,
+    loading: styles.loadingItemStyle,
+    error:  styles.errorItemStyle,
+    success: styles.successItemStyle,
+    waring: styles.waringItemStyle,
   });
   const textStyle = selectStyleType(item.type, 'message', {
-    message: {},
-    loading: {},
-    error: { color: Color.white },
-    success: { color: Color.white },
-    waring: { color: Color.white },
+    message: styles.messageTextStyle,
+    loading: styles.loadingTextStyle,
+    error: styles.errorTextStyle,
+    success: styles.successTextStyle,
+    waring: styles.waringTextStyle,
   });
 
   useDidMountEffect(() => {
@@ -246,13 +257,13 @@ function NotifyItemControl(props: {
       opacity: animOpacityValue.current,
     }]}>
       <TouchableOpacity style={styles.notifyClickable} activeOpacity={0.8} onPress={canRemove ? onClick : undefined}>
-        { (item.showIcon && icon !== '') ? (icon === 'loading' ? <ActivityIndicator size="small" color={textStyle.color || Color.primary} /> : <Iconfont icon={icon} fontFamily={item.iconFontFamily} style={{ ...textStyle, ...item.textStyle}} />) : <></> }
-        { typeof item.content === 'string' ? <Text style={{ ...styles.notifyText, ...textStyle, ...item.textStyle }}>{item.content}</Text> : item.content }
+        { (item.showIcon && icon !== '') ? (icon === 'loading' ? <ActivityIndicator size="small" color={(textStyle as TextStyle).color || ThemeSelector.color(Color.primary)} /> : <Iconfont icon={icon} fontFamily={item.iconFontFamily} style={{ ...textStyle, ...item.textStyle}} />) : <></> }
+        { typeof item.content === 'string' ? <Text style={[ styles.notifyText, textStyle, item.textStyle ]}>{item.content}</Text> : item.content }
         { !CheckTools.isNullOrEmpty(item.button) ? <Button type="text" padding={0} onPress={onButtonClick}>{item.button}</Button> : <></> }
       </TouchableOpacity>
     </Animated.View>
   );
-}
+});
 //条目容器组件
 const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps>((props, ref) => {
 
@@ -349,19 +360,21 @@ const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps
   }
 
   return (
-    <Animated.FlatList
-      style={[
-        styles.container,
-        {
-          transform: [{ translateY: animSideValue.current }],
-          marginTop: insets.top,
-        },
-      ]}
-      contentContainerStyle={styles.containerInner}
-      pointerEvents="box-none"
-      data={notifys}
-      renderItem={renderNotifyItem}
-    />
+    <ThemeRender>{() => (
+      <Animated.FlatList
+        style={[
+          styles.container,
+          {
+            transform: [{ translateY: animSideValue.current }],
+            marginTop: insets.top,
+          },
+        ]}
+        contentContainerStyle={styles.containerInner}
+        pointerEvents="box-none"
+        data={notifys}
+        renderItem={renderNotifyItem}
+      />
+    )}</ThemeRender>
   );
 });
 

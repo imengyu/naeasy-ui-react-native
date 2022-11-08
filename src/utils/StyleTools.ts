@@ -1,6 +1,8 @@
-import { StyleSheet, ViewStyle } from 'react-native';
 import CheckTools from './CheckTools';
+import { ThemeColor, ThemeSelector } from './../styles/ThemeSelector';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { rpx } from './StyleConsts';
+import { DynamicColor } from '../styles';
 
 export type StringSize = number | string;
 
@@ -58,9 +60,9 @@ export function displayIf(show: boolean|undefined) {
  * @param type 线类型
  * @param color 线颜色
  */
-export function border(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: string) {
+export function border(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: ThemeColor|undefined, dynamic = false) {
   return {
-    borderColor: color,
+    borderColor: dynamic && typeof color === 'object' ? DynamicColor(color) : ThemeSelector.color(color),
     borderStyle: type,
     borderWidth: width === 0 ? StyleSheet.hairlineWidth : solveSize(width),
   } as ViewStyle;
@@ -68,40 +70,40 @@ export function border(width: StringSize, type: 'solid' | 'dotted' | 'dashed', c
 /**
  * border-top 的简写
  */
-export function borderTop(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: string) {
+export function borderTop(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: ThemeColor|undefined, dynamic = false) {
   return {
-    borderTopColor: color,
-    borderTopStyle: type,
+    borderTopColor: dynamic && typeof color === 'object' ? DynamicColor(color) : ThemeSelector.color(color),
+    borderStyle: type,
     borderTopWidth: width === 0 ? StyleSheet.hairlineWidth : solveSize(width),
   } as ViewStyle;
 }
 /**
  * border-bottom 的简写
  */
-export function borderBottom(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: string) {
+export function borderBottom(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: ThemeColor|undefined, dynamic = false) {
   return {
-    borderBottomColor: color,
-    borderBottomStyle: type,
+    borderBottomColor: dynamic && typeof color === 'object' ? DynamicColor(color) : ThemeSelector.color(color),
+    borderStyle: type,
     borderBottomWidth: width === 0 ? StyleSheet.hairlineWidth : solveSize(width),
   } as ViewStyle;
 }
 /**
  * border-left 的简写
  */
-export function borderLeft(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: string) {
+export function borderLeft(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: ThemeColor|undefined, dynamic = false) {
   return {
-    borderLeftColor: color,
-    borderLeftStyle: type,
+    borderLeftColor: dynamic && typeof color === 'object' ? DynamicColor(color) : ThemeSelector.color(color),
+    borderStyle: type,
     borderLeftWidth: width === 0 ? StyleSheet.hairlineWidth : solveSize(width),
   } as ViewStyle;
 }
 /**
  * border-right 的简写
  */
-export function borderRight(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: string) {
+export function borderRight(width: StringSize, type: 'solid' | 'dotted' | 'dashed', color: ThemeColor|undefined, dynamic = false) {
   return {
-    borderRightColor: color,
-    borderRightStyle: type,
+    borderRightColor: dynamic && typeof color === 'object' ? DynamicColor(color) : ThemeSelector.color(color),
+    borderStyle: type,
     borderRightWidth: width === 0 ? StyleSheet.hairlineWidth : solveSize(width),
   } as ViewStyle;
 }
@@ -236,4 +238,51 @@ export function bottomRight(b: StringSize, r: StringSize) {
  */
 export function selectStyleType<T, K extends string>(type: K|undefined, defaultTypeName: K, styleObject: { [P in K]: T }) {
   return type ? styleObject[type] : styleObject[defaultTypeName];
+}
+
+/**
+ * 通过字符串参数选择指定类型的对象
+ * @param type 字符串参数
+ * @param object 对象，子对象key是名称。
+ */
+export function selectObjectByType<T, K extends string>(type: K|undefined, defaultTypeName: K, object: { [index: string]: T }) {
+  return type ? object[type] : object[defaultTypeName];
+}
+
+
+export function styleConfigPadding(style: ViewStyle, padding: number|number[]|undefined) {
+  if (typeof padding === 'number') {
+    style.padding = padding;
+    style.paddingVertical = padding;
+    style.paddingHorizontal = padding;
+  } else if (padding instanceof Array) {
+    style.padding = undefined;
+    if (padding.length === 2) {
+      style.paddingVertical = padding[0];
+      style.paddingHorizontal = padding[1];
+    } else if (padding.length === 4) {
+      style.paddingTop = padding[0];
+      style.paddingRight = padding[1];
+      style.paddingBottom = padding[2];
+      style.paddingLeft = padding[3];
+    }
+  }
+}
+export function styleConfigMargin(style: ViewStyle, margin: number|number[]|undefined) {
+  if (typeof margin === 'number') {
+    style.margin = margin;
+    style.marginVertical = margin;
+    style.marginHorizontal = margin;
+  } else if (margin instanceof Array) {
+    style.margin = undefined;
+    if (margin.length === 2) {
+      style.marginVertical = margin[0];
+      style.marginHorizontal = margin[1];
+    } else if (margin.length === 4) {
+      style.marginTop = margin[0];
+      style.marginRight = margin[1];
+      style.marginBottom = margin[2];
+      style.marginLeft = margin[3];
+    }
+  }
 }

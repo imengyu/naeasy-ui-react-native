@@ -4,6 +4,7 @@ import { ColumnView } from "../layout/ColumnView";
 import Schema, { Rule, Rules } from "async-validator";
 import CheckTools from "../../utils/CheckTools";
 import { Field, FieldProps } from "./Field";
+import ArrayUtils from "../../utils/ArrayUtils";
 
 export type FormValueType = number|string|boolean|number[]|string[]|boolean[];
 
@@ -117,7 +118,7 @@ export class Form extends React.Component<FormProps, FormState> {
       this.activeName.forEach((key) => {
         //筛选指定名字
         const k = this.makeValidStateKey(key);
-        if (name.indexOf(key) >= 0)
+        if (name.includes(key))
           return;
         this.setState({ [k]: undefined });
       });
@@ -142,7 +143,7 @@ export class Form extends React.Component<FormProps, FormState> {
         if (typeof name === 'string') {
           if (name === key) filteredRules[key] = rule;
         } else if (typeof name === 'object') {
-          if (name.indexOf(key) >= 0) filteredRules[key] = rule;
+          if (name.includes(key)) filteredRules[key] = rule;
         } else
           filteredRules[key] = rule;
       }
@@ -259,8 +260,7 @@ export class Form extends React.Component<FormProps, FormState> {
         if (typeof visibleIf === 'function' && visibleIf(this) === false)
           return;
 
-        if (this.activeName.indexOf(name as string) === -1)
-          this.activeName.push(name as string); //添加名称进入数组
+        ArrayUtils.addOnce(this.activeName, name as string); //添加名称进入数组
 
         //劫持 value 和 onValueChange ，把数据同步到当前表单组件
         items.push(React.cloneElement(

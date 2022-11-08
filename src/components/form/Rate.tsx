@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, View, TextStyle, GestureResponderEvent } from "react-native";
-import { Color } from "../../styles/ColorStyles";
-import { Iconfont } from "../Iconfont";
+import { Color, ThemeColor } from "../../styles";
+import { Iconfont } from "../Icon";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface RateProps {
   /**
@@ -28,11 +29,11 @@ export interface RateProps {
   /**
    * 星星激活的颜色
    */
-  starActiveColor?: string;
+  starActiveColor?: ThemeColor;
   /**
    * 星星未激活的颜色
    */
-  starColor?: string;
+  starColor?: ThemeColor;
   /**
    * 选中时的图标
    */
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
 /**
  * 评星组件组件。用于对事物进行评级操作。
  */
-export function Rate(props: RateProps) {
+export const Rate = ThemeWrapper(function (props: RateProps) {
 
   const size = props.size || 24;
   const value = props.value || 0;
@@ -166,4 +167,4 @@ export function Rate(props: RateProps) {
       { renderStars() }
     </View>
   );
-}
+});

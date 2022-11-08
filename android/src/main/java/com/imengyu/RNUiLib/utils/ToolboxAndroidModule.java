@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -25,6 +28,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,9 +52,85 @@ public class ToolboxAndroidModule extends ReactContextBaseJavaModule {
     return constants;
   }
 
+  private void sendEvent(String eventName, @Nullable WritableMap params) {
+    reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
+  }
+  @ReactMethod
+  public void addListener(String eventName) {
+    // Set up any upstream listeners or background tasks as necessary
+  }
+  @ReactMethod
+  public void removeListeners(Integer count) {
+    // Remove upstream listeners, stop unnecessary background tasks
+  }
+
+  private static ToolboxAndroidModule singleton = null;
+
   public ToolboxAndroidModule(ReactApplicationContext context) {
     super(context);
+    singleton = this;
     reactContext = context;
+  }
+
+  /**
+   * 获取是不是深色模式
+   */
+  @ReactMethod
+  public void isDarkMode(Callback callback) {
+    int flag = reactContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    callback.invoke(flag == Configuration.UI_MODE_NIGHT_YES);
+  }
+
+  /**
+   * 此回调需要在 MainActivity 的 onConfigurationChanged 回调，以为 js 环境中提供主题切换事件。
+   *
+   * https://developer.android.google.cn/guide/topics/ui/look-and-feel/darktheme?hl=zh-cn
+   *
+   * 还需要在manifests中声明uiMode，以自行处理深色主题背景的实现：
+   * <activity
+   *     android:name=".MainActivity"
+   *     android:configChanges="uiMode" />
+   */
+  public static void onConfigurationChanged(Configuration configuration) {
+    int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    WritableMap param = new WritableNativeMap();
+    switch (currentNightMode) {
+      case Configuration.UI_MODE_NIGHT_NO: param.putString("theme", "light"); break;
+      case Configuration.UI_MODE_NIGHT_YES: param.putString("theme", "dark"); break;
+    }
+    singleton.sendEvent("onThemeChange", param);
+  }
+
+  /**
+   * 输出Log至android logcat
+   * @param options
+   * {
+   *     tag?: string,
+   *     level?: 'verbose'|'debug'|'info'|'warn'|'error',
+   *     message: string,
+   * }
+   */
+  @ReactMethod
+  public void androidLog(ReadableMap options) {
+    String message = options.getString("message");
+
+    if (message == null)
+      return;
+
+    String level = options.getString("level");
+    String tag = options.getString("tag");
+
+    if (level == null) level = "debug";
+    if (tag == null) tag = "MToolboxModule";
+
+    switch (level) {
+      case "verbose": Log.v(tag, message); break;
+      case "info": Log.i(tag, message); break;
+      case "warn": Log.w(tag, message); break;
+      case "error": Log.e(tag, message); break;
+      default:
+      case "debug": Log.d(tag, message); break;
+    }
   }
 
   //清除缓存

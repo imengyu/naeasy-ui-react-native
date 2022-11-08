@@ -1,0 +1,860 @@
+@font-face {
+  font-family: "AppCommonIcons"; /* Project id 3757583 */
+  src: url('iconfont.woff2?t=1667893761767') format('woff2'),
+       url('iconfont.woff?t=1667893761767') format('woff'),
+       url('iconfont.ttf?t=1667893761767') format('truetype'),
+       url('iconfont.svg?t=1667893761767#AppCommonIcons') format('svg');
+}
+
+.AppCommonIcons {
+  font-family: "AppCommonIcons" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.warning:before {
+  content: "\e6e4";
+}
+
+.zoom-in:before {
+  content: "\e6e5";
+}
+
+.zoom-out:before {
+  content: "\e6e6";
+}
+
+.add-bold:before {
+  content: "\e6e7";
+}
+
+.arrow-left-bold:before {
+  content: "\e6e8";
+}
+
+.arrow-up-bold:before {
+  content: "\e6e9";
+}
+
+.close-bold:before {
+  content: "\e6ea";
+}
+
+.arrow-down-bold:before {
+  content: "\e6eb";
+}
+
+.minus-bold:before {
+  content: "\e6ec";
+}
+
+.arrow-right-bold:before {
+  content: "\e6ed";
+}
+
+.select-bold:before {
+  content: "\e6ee";
+}
+
+.arrow-up-filling:before {
+  content: "\e6ef";
+}
+
+.arrow-down-filling:before {
+  content: "\e6f0";
+}
+
+.arrow-left-filling:before {
+  content: "\e6f1";
+}
+
+.arrow-right-filling:before {
+  content: "\e6f2";
+}
+
+.caps-unlock-filling:before {
+  content: "\e6f3";
+}
+
+.comment-filling:before {
+  content: "\e6f4";
+}
+
+.check-item-filling:before {
+  content: "\e6f5";
+}
+
+.clock-filling:before {
+  content: "\e6f6";
+}
+
+.delete-filling:before {
+  content: "\e6f7";
+}
+
+.decline-filling:before {
+  content: "\e6f8";
+}
+
+.dynamic-filling:before {
+  content: "\e6f9";
+}
+
+.intermediate-filling:before {
+  content: "\e6fa";
+}
+
+.favorite-filling:before {
+  content: "\e6fb";
+}
+
+.layout-filling:before {
+  content: "\e6fc";
+}
+
+.help-filling:before {
+  content: "\e6fd";
+}
+
+.history-filling:before {
+  content: "\e6fe";
+}
+
+.filter-filling:before {
+  content: "\e6ff";
+}
+
+.file-common-filling:before {
+  content: "\e700";
+}
+
+.news-filling:before {
+  content: "\e701";
+}
+
+.edit-filling:before {
+  content: "\e702";
+}
+
+.fullscreen-expand-filling:before {
+  content: "\e703";
+}
+
+.smile-filling:before {
+  content: "\e704";
+}
+
+.rise-filling:before {
+  content: "\e705";
+}
+
+.picture-filling:before {
+  content: "\e706";
+}
+
+.notification-filling:before {
+  content: "\e707";
+}
+
+.user-filling:before {
+  content: "\e708";
+}
+
+.setting-filling:before {
+  content: "\e709";
+}
+
+.switch-filling:before {
+  content: "\e70a";
+}
+
+.work-filling:before {
+  content: "\e70b";
+}
+
+.task-filling:before {
+  content: "\e70c";
+}
+
+.success-filling:before {
+  content: "\e70d";
+}
+
+.warning-filling:before {
+  content: "\e70e";
+}
+
+.folder-filling:before {
+  content: "\e70f";
+}
+
+.map-filling:before {
+  content: "\e710";
+}
+
+.prompt-filling:before {
+  content: "\e711";
+}
+
+.meh-filling:before {
+  content: "\e712";
+}
+
+.cry-filling:before {
+  content: "\e713";
+}
+
+.top-filling:before {
+  content: "\e714";
+}
+
+.home-filling:before {
+  content: "\e715";
+}
+
+.sorting:before {
+  content: "\e716";
+}
+
+.brand-huawei:before {
+  content: "\e621";
+}
+
+.brand-vivo:before {
+  content: "\e622";
+}
+
+.brand-xiaomi:before {
+  content: "\e623";
+}
+
+.apple:before {
+  content: "\e945";
+}
+
+.android:before {
+  content: "\e946";
+}
+
+.brand-microsoft:before {
+  content: "\e947";
+}
+
+.brand-google-color:before {
+  content: "\e94e";
+}
+
+.googlep-play:before {
+  content: "\e950";
+}
+
+.safari:before {
+  content: "\e951";
+}
+
+.wechat:before {
+  content: "\e717";
+}
+
+.qqzone:before {
+  content: "\e718";
+}
+
+.weibo:before {
+  content: "\e719";
+}
+
+.wechat-moments:before {
+  content: "\e71a";
+}
+
+.qq:before {
+  content: "\e71b";
+}
+
+.wxpay:before {
+  content: "\e71c";
+}
+
+.alipay:before {
+  content: "\e71d";
+}
+
+.applepay:before {
+  content: "\e71e";
+}
+
+.paypal:before {
+  content: "\e71f";
+}
+
+.yinlian:before {
+  content: "\e720";
+}
+
+.yunshanfu:before {
+  content: "\e721";
+}
+
+.facebook:before {
+  content: "\e722";
+}
+
+.tumblr:before {
+  content: "\e723";
+}
+
+.twitter:before {
+  content: "\e724";
+}
+
+.linkedin:before {
+  content: "\e726";
+}
+
+.skype:before {
+  content: "\e727";
+}
+
+.line:before {
+  content: "\e728";
+}
+
+.pinterest:before {
+  content: "\e729";
+}
+
+.github:before {
+  content: "\e72a";
+}
+
+.dingding:before {
+  content: "\e72b";
+}
+
+.FaceID:before {
+  content: "\e72c";
+}
+
+.TouchID:before {
+  content: "\e72d";
+}
+
+.column-4:before {
+  content: "\e664";
+}
+
+.add:before {
+  content: "\e665";
+}
+
+.add-circle:before {
+  content: "\e666";
+}
+
+.adjust:before {
+  content: "\e667";
+}
+
+.arrow-up-circle:before {
+  content: "\e668";
+}
+
+.arrow-right-circle:before {
+  content: "\e669";
+}
+
+.arrow-down:before {
+  content: "\e66a";
+}
+
+.ashbin:before {
+  content: "\e66b";
+}
+
+.arrow-right:before {
+  content: "\e66c";
+}
+
+.browse:before {
+  content: "\e66d";
+}
+
+.bottom:before {
+  content: "\e66e";
+}
+
+.back:before {
+  content: "\e66f";
+}
+
+.bad:before {
+  content: "\e670";
+}
+
+.arrow-double-left:before {
+  content: "\e671";
+}
+
+.arrow-left-circle:before {
+  content: "\e672";
+}
+
+.arrow-double-right:before {
+  content: "\e673";
+}
+
+.caps-lock:before {
+  content: "\e674";
+}
+
+.camera:before {
+  content: "\e675";
+}
+
+.chart-bar:before {
+  content: "\e676";
+}
+
+.attachment:before {
+  content: "\e677";
+}
+
+.code:before {
+  content: "\e678";
+}
+
+.close:before {
+  content: "\e679";
+}
+
+.check-item:before {
+  content: "\e67a";
+}
+
+.calendar:before {
+  content: "\e67b";
+}
+
+.comment:before {
+  content: "\e67c";
+}
+
+.column-vertical:before {
+  content: "\e67d";
+}
+
+.column-horizontal:before {
+  content: "\e67e";
+}
+
+.complete:before {
+  content: "\e67f";
+}
+
+.chart-pie:before {
+  content: "\e680";
+}
+
+.cry:before {
+  content: "\e681";
+}
+
+.customer-service:before {
+  content: "\e682";
+}
+
+.delete:before {
+  content: "\e683";
+}
+
+.direction-down:before {
+  content: "\e684";
+}
+
+.copy:before {
+  content: "\e685";
+}
+
+.cut:before {
+  content: "\e686";
+}
+
+.data-view:before {
+  content: "\e687";
+}
+
+.direction-down-circle:before {
+  content: "\e688";
+}
+
+.direction-right:before {
+  content: "\e689";
+}
+
+.direction-up:before {
+  content: "\e68a";
+}
+
+.discount:before {
+  content: "\e68b";
+}
+
+.direction-left:before {
+  content: "\e68c";
+}
+
+.download:before {
+  content: "\e68d";
+}
+
+.electronics:before {
+  content: "\e68e";
+}
+
+.drag:before {
+  content: "\e68f";
+}
+
+.elipsis:before {
+  content: "\e690";
+}
+
+.export:before {
+  content: "\e691";
+}
+
+.explain:before {
+  content: "\e692";
+}
+
+.edit:before {
+  content: "\e693";
+}
+
+.eye-close:before {
+  content: "\e694";
+}
+
+.email:before {
+  content: "\e695";
+}
+
+.error:before {
+  content: "\e696";
+}
+
+.favorite:before {
+  content: "\e697";
+}
+
+.file-common:before {
+  content: "\e698";
+}
+
+.file-delete:before {
+  content: "\e699";
+}
+
+.file-add:before {
+  content: "\e69a";
+}
+
+.film:before {
+  content: "\e69b";
+}
+
+.fabulous:before {
+  content: "\e69c";
+}
+
+.file:before {
+  content: "\e69d";
+}
+
+.folder-close:before {
+  content: "\e69e";
+}
+
+.filter:before {
+  content: "\e69f";
+}
+
+.good:before {
+  content: "\e6a0";
+}
+
+.hide:before {
+  content: "\e6a1";
+}
+
+.home:before {
+  content: "\e6a2";
+}
+
+.history:before {
+  content: "\e6a3";
+}
+
+.file-open:before {
+  content: "\e6a4";
+}
+
+.forward:before {
+  content: "\e6a5";
+}
+
+.import:before {
+  content: "\e6a6";
+}
+
+.image-text:before {
+  content: "\e6a7";
+}
+
+.keyboard-26:before {
+  content: "\e6a8";
+}
+
+.keyboard-9:before {
+  content: "\e6a9";
+}
+
+.link:before {
+  content: "\e6aa";
+}
+
+.layout:before {
+  content: "\e6ab";
+}
+
+.fullscreen-shrink:before {
+  content: "\e6ac";
+}
+
+.layers:before {
+  content: "\e6ad";
+}
+
+.lock:before {
+  content: "\e6ae";
+}
+
+.fullscreen-expand:before {
+  content: "\e6af";
+}
+
+.map:before {
+  content: "\e6b0";
+}
+
+.meh:before {
+  content: "\e6b1";
+}
+
+.menu:before {
+  content: "\e6b2";
+}
+
+.loading:before {
+  content: "\e6b3";
+}
+
+.help:before {
+  content: "\e6b4";
+}
+
+.minus-circle:before {
+  content: "\e6b5";
+}
+
+.modular:before {
+  content: "\e6b6";
+}
+
+.notification:before {
+  content: "\e6b7";
+}
+
+.huawei-copy:before {
+  content: "\e952";
+}
+
+.mic:before {
+  content: "\e6b8";
+}
+
+.more:before {
+  content: "\e6b9";
+}
+
+.pad:before {
+  content: "\e6ba";
+}
+
+.operation:before {
+  content: "\e6bb";
+}
+
+.play:before {
+  content: "\e6bc";
+}
+
+.print:before {
+  content: "\e6bd";
+}
+
+.mobile-phone:before {
+  content: "\e6be";
+}
+
+.minus:before {
+  content: "\e6bf";
+}
+
+.navigation:before {
+  content: "\e6c0";
+}
+
+.pdf:before {
+  content: "\e6c1";
+}
+
+.prompt:before {
+  content: "\e6c2";
+}
+
+.move:before {
+  content: "\e6c3";
+}
+
+.refresh:before {
+  content: "\e6c4";
+}
+
+.run-up:before {
+  content: "\e6c5";
+}
+
+.picture:before {
+  content: "\e6c6";
+}
+
+.run-in:before {
+  content: "\e6c7";
+}
+
+.pin:before {
+  content: "\e6c8";
+}
+
+.save:before {
+  content: "\e6c9";
+}
+
+.search:before {
+  content: "\e6ca";
+}
+
+.share:before {
+  content: "\e6cb";
+}
+
+.scanning:before {
+  content: "\e6cc";
+}
+
+.security:before {
+  content: "\e6cd";
+}
+
+.sign-out:before {
+  content: "\e6ce";
+}
+
+.select:before {
+  content: "\e6cf";
+}
+
+.stop:before {
+  content: "\e6d0";
+}
+
+.success:before {
+  content: "\e6d1";
+}
+
+.smile:before {
+  content: "\e6d2";
+}
+
+.switch:before {
+  content: "\e6d3";
+}
+
+.setting:before {
+  content: "\e6d4";
+}
+
+.survey:before {
+  content: "\e6d5";
+}
+
+.task:before {
+  content: "\e6d6";
+}
+
+.skip:before {
+  content: "\e6d7";
+}
+
+.text:before {
+  content: "\e6d8";
+}
+
+.time:before {
+  content: "\e6d9";
+}
+
+.telephone-out:before {
+  content: "\e6da";
+}
+
+.toggle-left:before {
+  content: "\e6db";
+}
+
+.toggle-right:before {
+  content: "\e6dc";
+}
+
+.telephone:before {
+  content: "\e6dd";
+}
+
+.top:before {
+  content: "\e6de";
+}
+
+.unlock:before {
+  content: "\e6df";
+}
+
+.user:before {
+  content: "\e6e0";
+}
+
+.upload:before {
+  content: "\e6e1";
+}
+
+.work:before {
+  content: "\e6e2";
+}
+
+.training:before {
+  content: "\e6e3";
+}
+

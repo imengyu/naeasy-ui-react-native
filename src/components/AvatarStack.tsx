@@ -1,8 +1,10 @@
 import React from 'react';
-import { ImageSourcePropType, StyleSheet, Text, View } from 'react-native';
+import { ImageSourcePropType, Text, View } from 'react-native';
 import { Color } from '../styles/ColorStyles';
 import { Avatar } from './Avatar';
 import { RowView } from './layout/RowView';
+import { DynamicColor, DynamicThemeStyleSheet } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 interface AvatarStackProp {
   /**
@@ -40,9 +42,9 @@ interface AvatarStackProp {
 }
 
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   overflowCount: {
-    backgroundColor: Color.mask,
+    backgroundColor: DynamicColor(Color.mask),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
   },
   overflowCountText: {
     fontSize: 12,
-    color: Color.white,
+    color: DynamicColor(Color.white),
   },
 });
 
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
 /**
  * 头像堆叠组件，用于显示一组圆的头像
  */
-export function AvatarStack(props: AvatarStackProp) {
+export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
 
   function renderImages() {
     const array : Array<JSX.Element> = [];
@@ -97,4 +99,4 @@ export function AvatarStack(props: AvatarStackProp) {
   }
 
   return (<RowView center>{renderImages()}</RowView>);
-}
+});

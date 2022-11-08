@@ -1,6 +1,8 @@
-import React from 'react';
-import { Animated, Easing, LayoutChangeEvent, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MeasureText from '@newbanker/react-native-measure-text';
+import { Animated, Easing, LayoutChangeEvent, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import { isIOS } from '../utils';
+import { ThemeWrapper } from '../theme/Theme';
 
 export interface TextScrollableProps {
   children?: string;
@@ -21,123 +23,113 @@ export interface TextScrollableProps {
    */
   scrollDuration?: number;
 }
-interface TextScrollableState {
-  mesuredTextWidth: number;
-}
 
 const styles = StyleSheet.create({
   contentView: {
     flex: 1,
     overflow: 'hidden',
   },
+  text: {
+    position: 'absolute',
+    left: 0,
+    zIndex: 10,
+    top: 0,
+  },
 });
 
 /**
  * 可以滚动的文字组件。
  */
-export class TextScrollable extends React.PureComponent<TextScrollableProps, TextScrollableState> {
+export const TextScrollable = ThemeWrapper(function (props: TextScrollableProps) {
 
-  state: Readonly<TextScrollableState> = {
-    mesuredTextWidth: 100,
-  };
-  scrollAnimValue = new Animated.Value(0);
-  scrollAnim: Animated.CompositeAnimation | null = null;
-  scrollState = false;
+  const [ mesuredTextWidth, setMesuredTextWidth ] = useState(300);
+  const [ scrollParentWidth, setScrollParentWidth ] = useState(0);
+  const scrollAnimValue = useRef(new Animated.Value(0));
+  const scrollAnim = useRef<Animated.CompositeAnimation|null>(null);
+  const scrollState = useRef(false);
 
-  children: string | undefined = '';
+  const scrollParentHeight = useRef(0);
 
-  componentDidMount() {
-    if (this.props.scroll !== false) {
-      setTimeout(() => this.startScroll(), 500);
+
+  const stopScroll = useCallback(() => {
+    scrollState.current = false;
+    if (scrollAnim.current) {
+      scrollAnim.current.stop();
+      scrollAnim.current = null;
     }
-  }
-  componentWillUnmount() {
-    this.stopScroll();
-  }
-  componentDidUpdate() {
-    if (this.props.scroll !== false && !this.scrollState) {
-      this.startScroll();
-    } else if (this.props.scroll === false && this.scrollState) {
-      this.stopScroll();
-    }
-    //文字更改，重新开始
-    if (this.scrollState && this.children !== this.props.children) {
-      this.children = this.props.children;
-      this.stopScroll();
-      this.startScroll();
-    }
-  }
-
-  scrollParentWidth = 0;
-  scrollParentHeight = 0;
-
-  startScroll() {
+  }, []);
+  const startScroll = useCallback(() => {
 
     MeasureText.width({
-      fontSize: this.props.textStyle?.fontSize || 14,
-      text: this.props.children || '',
-      height: this.scrollParentHeight,
+      fontSize: props.textStyle?.fontSize || 14,
+      text: props.children || '',
+      height: scrollParentHeight.current,
     }).then((textWidth) => {
 
       //文字宽度没有超出外层，不需要滚动
-      if (textWidth < this.scrollParentWidth) {
-        this.scrollAnimValue.setValue(this.scrollParentWidth / 2 - textWidth / 2);
-        this.setState({ mesuredTextWidth: textWidth });
+      if (textWidth < scrollParentWidth) {
+        stopScroll();
+        setMesuredTextWidth(textWidth);
+        scrollAnimValue.current.setValue(scrollParentWidth / 2 - textWidth / 2);
+        //console.log('MeasureText noscroll', scrollParentWidth / 2 - textWidth / 2, textWidth);
         return;
       }
 
-      this.scrollAnimValue.setValue(this.scrollParentWidth);
-      this.scrollAnim = Animated.timing(this.scrollAnimValue, {
+      scrollAnimValue.current.setValue(scrollParentWidth);
+      scrollAnim.current = Animated.timing(scrollAnimValue.current, {
         toValue: -textWidth,
-        duration: this.props.scrollDuration || 10000,
+        duration: props.scrollDuration || 10000,
         useNativeDriver: true,
         easing: Easing.linear,
       });
       const startAnim = () => {
-        if (this.scrollAnim) {
-          this.scrollState = true;
-          this.scrollAnim.start(() => {
-            this.scrollAnimValue.setValue(this.scrollParentWidth);
-            if (this.scrollState)
+        if (scrollAnim.current) {
+          scrollState.current = true;
+          scrollAnim.current.start(() => {
+            scrollAnimValue.current.setValue(scrollParentWidth);
+            if (scrollState.current)
               startAnim();
           });
         }
       };
-
-      if (!this.scrollState)
+      //console.log('MeasureText scroll', textWidth);
+      if (!scrollState.current)
         startAnim();
 
-      this.setState({ mesuredTextWidth: textWidth });
+      setMesuredTextWidth(textWidth);
     });
-  }
-  stopScroll() {
-    if (this.scrollAnim) {
-      this.scrollState = false;
-      this.scrollAnim.stop();
-      this.scrollAnim = null;
+  }, [ scrollParentWidth, props.children, props.scrollDuration, props.textStyle, stopScroll ]);
+
+
+  useEffect(() => {
+    if (props.scroll !== false) {
+      setTimeout(() => startScroll(), 20);
     }
+    return () => {
+      stopScroll();
+    };
+  }, [ scrollParentWidth, props.scroll, stopScroll, startScroll ]);
+
+
+  function onScrollParentLayout(e: LayoutChangeEvent) {
+    setScrollParentWidth(e.nativeEvent.layout.width);
+    scrollParentHeight.current = e.nativeEvent.layout.height;
   }
 
-  onScrollParentLayout(e: LayoutChangeEvent) {
-    this.scrollParentWidth = e.nativeEvent.layout.width;
-    this.scrollParentHeight = e.nativeEvent.layout.height;
-  }
-
-  render(): React.ReactNode {
-    return (
-      <View onLayout={(e)=>this.onScrollParentLayout(e)} style={{...styles.contentView, ...this.props.style}}>
-        <Text style={this.props.textStyle} />
-        <Animated.Text style={{
-          ...this.props.textStyle,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: this.state.mesuredTextWidth + 20,
-          transform: [{
-            translateX: this.scrollAnimValue,
-          }],
-        }}>{this.props.children}</Animated.Text>
-      </View>
-    );
-  }
-}
+  return (
+    <View
+      onLayout={(e)=> onScrollParentLayout(e)}
+      style={[
+        styles.contentView,
+        props.style,
+        { minHeight: (props.textStyle?.fontSize || 14) + (isIOS ? 6 : 4) },
+      ]}>
+      <Animated.Text style={[
+        styles.text,
+        props.textStyle,
+        { width: mesuredTextWidth + 20 },
+        { transform: [{ translateX: scrollAnimValue.current }] },
+      ]}>{props.children}</Animated.Text>
+    </View>
+  );
+});

@@ -80,7 +80,7 @@ export class SwipeableRightActionsRow extends Component<SwipeableRightActionsRow
           <Text style={{
             ...styles.actionText,
             fontSize: item.textSize || 13,
-            color: item.textColor || Color.white,
+            color: item.textColor || Color.white.light,
           }}>{item.text}</Text>
         </RectButton>
       </Animated.View>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Color } from 'imengyu-ui-lib';
+import { CellGroup } from 'imengyu-ui-lib';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { ColumnView, WhiteSpace } from 'imengyu-ui-lib';
@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
   box: {
     width: '100%',
     textAlign: 'center',
-    backgroundColor: Color.lightGrey,
+    backgroundColor: '#f00',
   },
   box2: {
     width: '100%',
     textAlign: 'center',
-    backgroundColor: Color.grey,
+    backgroundColor: '#ff0',
   },
 });
 

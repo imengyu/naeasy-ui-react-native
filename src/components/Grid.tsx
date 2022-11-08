@@ -1,13 +1,15 @@
 import React from 'react';
-import { Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { TouchableHighlight } from 'react-native';
-import { Color, PressedColor } from '../styles/ColorStyles';
 import CheckTools from '../utils/CheckTools';
 import ObjectUtils from '../utils/ObjectUtils';
 import { borderTop } from '../utils/StyleTools';
-import { Iconfont } from './Iconfont';
+import { Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { TouchableHighlight } from 'react-native';
+import { ThemeSelector, Color, ThemeColor, PressedColor } from '../styles';
+import { Iconfont } from './Icon';
 import { FlexView } from './layout/FlexView';
 import { RowView } from './layout/RowView';
+import { DynamicColor, DynamicThemeStyleSheet } from '../styles/DynamicThemeStyleSheet';
+import { ThemeWrapper } from '../theme/Theme';
 
 interface GridProp {
   /**
@@ -33,7 +35,11 @@ interface GridProp {
   /**
    * 边框颜色
    */
-  borderColor?: string;
+  borderColor?: ThemeColor;
+  /**
+   * 统一设置条目的自定义属性
+   */
+  itemProps?: GridItemProp;
 
   children?: JSX.Element[],
 }
@@ -45,15 +51,15 @@ interface GridItemProp {
   /**
    * 文字颜色
    */
-  titleColor?: string,
+  titleColor?: ThemeColor,
   /**
    * 背景颜色
    */
-  backgroundColor?: string,
+  backgroundColor?: ThemeColor,
   /**
    * 点击高亮颜色
    */
-  highlightColor?: string,
+  highlightColor?: ThemeColor,
   /**
    * 图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
    */
@@ -65,7 +71,7 @@ interface GridItemProp {
   /**
    * 图片位置显示文字的颜色。
    */
-  imageAsTtileColor?: string;
+  imageAsTtileColor?: ThemeColor;
   /**
    * 图片位置显示文字的大小，默认是18。
    */
@@ -85,7 +91,7 @@ interface GridItemProp {
   /**
    * 图标颜色
    */
-  iconColor?: string,
+  iconColor?: ThemeColor,
   /**
    * 图标字体名称
    */
@@ -102,17 +108,17 @@ interface GridItemProp {
   children?: JSX.Element|JSX.Element[],
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   itemView: {
     padding: 8,
   },
   title: {
     fontSize: 13,
-    color: '#333',
+    color: DynamicColor(Color.text),
   },
   titleImage: {
     fontSize: 18,
-    color: '#333',
+    color: DynamicColor(Color.text),
   },
   icon: {
     marginHorizontal: 6,
@@ -124,7 +130,7 @@ const styles = StyleSheet.create({
  *
  * ![示意图](https://imengyu.top/assets/images/cui/cui-block-button.png)
  */
-export function GridItem(props: GridItemProp) {
+export const GridItem = ThemeWrapper(function (props: GridItemProp) {
 
   function renderIcon() {
     if (typeof props.icon === 'object' || typeof props.icon === 'number')
@@ -135,7 +141,7 @@ export function GridItem(props: GridItemProp) {
       return <Iconfont key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{
         ...styles.icon,
         ...props.iconStyle as TextStyle,
-        color: props.iconColor,
+        color: ThemeSelector.color(props.iconColor, Color.black),
         fontSize: props.iconSize,
       }} color={(styles.title as TextStyle).color as string} />;
     }
@@ -144,7 +150,7 @@ export function GridItem(props: GridItemProp) {
 
   return (
     <TouchableHighlight
-      underlayColor={props.highlightColor || PressedColor.default}
+      underlayColor={ThemeSelector.color(props.highlightColor || PressedColor(Color.white))}
       onPress={props.onPress}
       style={[
         styles.itemView,
@@ -152,21 +158,27 @@ export function GridItem(props: GridItemProp) {
       ]}
     >
       <FlexView style={styles.itemView} center flex={1} direction={props.direction === 'horizontal' ? 'row' : 'column'}>
-        { !CheckTools.isNullOrEmpty(props.imageAsTtile) ?
-          <Text style={{ ...styles.titleImage, color: props.imageAsTtileColor, ...props.imageAsTtileStyle }} >{props.imageAsTtile}</Text> :
-            (props.icon ? renderIcon() : <></>) }
-        { !CheckTools.isNullOrEmpty(props.title) ? <Text style={{ ...styles.title, color: props.titleColor }} >{props.title}</Text> : <></> }
+        {
+          !CheckTools.isNullOrEmpty(props.imageAsTtile) ?
+            <Text style={[ styles.titleImage, { color: ThemeSelector.color(props.imageAsTtileColor, Color.text) }, props.imageAsTtileStyle ]} >{props.imageAsTtile}</Text> :
+            (props.icon ? renderIcon() : <></>)
+        }
+        {
+          !CheckTools.isNullOrEmpty(props.title) ?
+            <Text style={[ styles.title, { color: ThemeSelector.color(props.titleColor, Color.text) } ]} >{props.title}</Text> :
+            <></>
+        }
         { props.children as JSX.Element }
       </FlexView>
     </TouchableHighlight>
   );
-}
+});
 
 /**
  * 单元格组件, 为列表中的单个展示项。
  */
-export function Grid(props: GridProp) {
-  const borderColor = props.borderColor || Color.darkBorder;
+export const Grid = ThemeWrapper(function (props: GridProp) {
+  const borderColor = ThemeSelector.color(props.borderColor || Color.border);
   const borderWidth = props.borderWidth || StyleSheet.hairlineWidth;
 
   function renderChildren() {
@@ -187,9 +199,12 @@ export function Grid(props: GridProp) {
         //对 GridItem 进行处理
         if (element) {
           //添加样式
-          const style = ObjectUtils.clone(element.props.style || {}) as ViewStyle;
+          const style = ObjectUtils.clone({
+            ...(props.itemProps?.style || {}),
+            ...element.props.style,
+          }) as ViewStyle;
           const key = index;
-          const backgroundColor = element.props.backgroundColor || Color.white;
+          const backgroundColor = element.props.backgroundColor || style.backgroundColor || Color.white;
           const directionInner = element.props.direction || direction;
 
           style.flexBasis = `${flexBasis}%`;
@@ -207,7 +222,9 @@ export function Grid(props: GridProp) {
           }
 
           arr.push(
-            <GridItem { ...element.props }
+            <GridItem
+              { ...props.itemProps }
+              { ...element.props }
               direction={directionInner}
               key={element.key || key}
               style={style} >
@@ -225,4 +242,4 @@ export function Grid(props: GridProp) {
   };
 
   return (<RowView wrap style={hostStyle}>{renderChildren()}</RowView>);
-}
+});

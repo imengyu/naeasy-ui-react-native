@@ -1,7 +1,8 @@
-import { Color } from "../../styles";
 import CheckTools from "../../utils/CheckTools";
 import React, { useRef } from "react";
-import { GestureResponderEvent, LayoutChangeEvent, PanResponder, StyleSheet, View, ViewStyle } from "react-native";
+import { GestureResponderEvent, LayoutChangeEvent, PanResponder, View, ViewStyle } from "react-native";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface SliderProps {
   /**
@@ -39,11 +40,11 @@ export interface SliderProps {
   /**
    * 进度条激活态颜色，默认：primary
    */
-  activeColor?: string;
+  activeColor?: ThemeColor;
   /**
    * 进度条非激活态颜色，默认：grey
    */
-  inactiveColor?: string;
+  inactiveColor?: ThemeColor;
   /**
    * 滑块的样式
    */
@@ -66,7 +67,7 @@ export interface SliderProps {
   renderButton?: (valuepos: number) => JSX.Element;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   barContainer: {
     position: 'relative',
     flexDirection: 'row',
@@ -84,15 +85,15 @@ const styles = StyleSheet.create({
   },
   track: {
     position: 'absolute',
-    backgroundColor: Color.white,
+    backgroundColor: '#fff',
     elevation: 2,
-    shadowColor: Color.black,
+    shadowColor: DynamicColor(Color.black),
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
   },
 });
 
-export function Slider(props: SliderProps) {
+export const Slider = ThemeWrapper(function (props: SliderProps) {
 
   const vertical = props.vertical === true;
   const barHeight = props.barHeight || 5;
@@ -177,7 +178,7 @@ export function Slider(props: SliderProps) {
           opacity: touch ? 1 : 0.5,
           width: vertical ? barHeight : '100%',
           height: vertical ? '100%' : barHeight,
-          backgroundColor: inactiveColor,
+          backgroundColor: ThemeSelector.color(inactiveColor),
         },
       ]}>
         <View style={[
@@ -186,7 +187,7 @@ export function Slider(props: SliderProps) {
             opacity: touch ? 1 : 0.5,
             width: vertical ? barHeight : `${valuePos}%`,
             height: vertical ? `${valuePos}%` : barHeight,
-            backgroundColor: activeColor,
+            backgroundColor: ThemeSelector.color(activeColor),
           },
         ]} />
       </View>
@@ -206,4 +207,4 @@ export function Slider(props: SliderProps) {
       ]} /> }
     </View>
   );
-}
+});

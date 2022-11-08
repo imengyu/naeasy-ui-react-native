@@ -42,13 +42,20 @@ export class ScrollTabView extends React.Component<ScrollTabViewProps, State> {
   };
 
   pagerScrollValue = new Animated.Value(0);
+  pagerScrollValueOffset = new Animated.Value(0);
   pagerRef : PagerView|null = null;
+
+  selectTab(tab: number) {
+    this.pagerRef?.setPage(tab);
+  }
 
   render(): React.ReactNode {
     return (
       <View style={{ ...styles.pager, ...this.props.style }}>
         <ScrollableTabBar
           { ...this.props.tabBarProps }
+          scrollValue={this.pagerScrollValue}
+          scrollValueOffset={this.pagerScrollValueOffset}
           activeTab={this.state.currentTab}
           goToPage={(t) => {
             this.setState({ currentTab: t });
@@ -61,7 +68,10 @@ export class ScrollTabView extends React.Component<ScrollTabViewProps, State> {
           { ...this.props.pagerProps }
           ref={(v) => { this.pagerRef = v;}}
           onPageSelected={(e) => this.setState({ currentTab: e.nativeEvent.position })}
-          onPageScroll={(e) => this.pagerScrollValue.setValue(e.nativeEvent.position + e.nativeEvent.offset)}
+          onPageScroll={Animated.event(
+            [ { nativeEvent: { position: this.pagerScrollValue, offset: this.pagerScrollValueOffset } } ],
+            { useNativeDriver: false }
+          )}
         >
           { this.props.children }
         </PagerView>

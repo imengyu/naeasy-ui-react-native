@@ -1,9 +1,10 @@
+
 import React from "react";
-import { StyleSheet, Text } from "react-native";
-import { TouchableHighlight } from "react-native";
-import { Color, PressedColor } from "../styles/ColorStyles";
+import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { Color, PressedColor, ThemeColor, ThemeSelector } from "../styles";
 import { border } from "../utils/StyleTools";
 import { RowView } from "./layout/RowView";
+import { ThemeWrapper } from "../theme/Theme";
 
 const styles = StyleSheet.create({
   item: {
@@ -44,11 +45,11 @@ export interface SegmentedControlProps {
   /**
    * 控制器的主颜色。
    */
-  tintColor?: string | undefined;
+  tintColor?: ThemeColor | undefined;
   /**
    * 条目激活时的文字颜色。
    */
-  activeTextColor?: string | undefined;
+  activeTextColor?: ThemeColor | undefined;
 
   /**
    * 控件段按钮的标签按顺序排列。
@@ -59,7 +60,7 @@ export interface SegmentedControlProps {
 /**
  * 分段控制器组件。
  */
-export function SegmentedControl(props: SegmentedControlProps) {
+export const SegmentedControl = ThemeWrapper(function (props: SegmentedControlProps) {
 
   const enabled = props.enabled !== false;
   const activeColor = props.tintColor || Color.primary;
@@ -73,29 +74,29 @@ export function SegmentedControl(props: SegmentedControlProps) {
   }) {
     return (
       <TouchableHighlight
-        style={{
-          ...styles.item,
-          ...(border(1, 'solid', activeColor)),
-          ...(itemProps.index === 0 ? {
+        style={[
+          styles.item,
+          border(1, 'solid', ThemeSelector.color(activeColor)),
+          (itemProps.index === 0 ? {
             borderTopLeftRadius: 5,
             borderBottomLeftRadius: 5,
           } : {}),
-          ...(itemProps.index !== values.length - 1 ? {
+          (itemProps.index !== values.length - 1 ? {
             borderRightWidth: 0,
           } : {}),
-          ...(itemProps.index === values.length - 1 ? {
+          (itemProps.index === values.length - 1 ? {
             borderTopRightRadius: 5,
             borderBottomRightRadius: 5,
           } : {}),
-          backgroundColor: itemProps.active ? activeColor : undefined,
-        }}
-        underlayColor={PressedColor.default}
+          { backgroundColor: itemProps.active ? ThemeSelector.color(activeColor) : undefined },
+        ]}
+        underlayColor={ThemeSelector.color(PressedColor(Color.white))}
         onPress={enabled ? () => onItemPress(itemProps.index) : undefined}
       >
-        <Text style={{
-          ...styles.itemText,
-          color: itemProps.active ? activeTextColor : activeColor,
-        }}>{itemProps.label}</Text>
+        <Text style={[
+          styles.itemText,
+          { color: ThemeSelector.color(itemProps.active ? activeTextColor : activeColor) },
+        ]}>{itemProps.label}</Text>
       </TouchableHighlight>
     );
   }
@@ -121,4 +122,4 @@ export function SegmentedControl(props: SegmentedControlProps) {
       }
     </RowView>
   );
-}
+});

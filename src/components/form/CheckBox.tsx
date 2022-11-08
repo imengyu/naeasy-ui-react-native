@@ -1,11 +1,12 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import ArrayUtils from "../../utils/ArrayUtils";
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color } from "../../styles/ColorStyles";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
+import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { border, selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
-import { Iconfont } from "../Iconfont";
+import { Iconfont } from "../Icon";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface CheckBoxProps {
   /**
@@ -31,11 +32,11 @@ export interface CheckBoxProps {
   /**
    * 复选框未选择时的边框颜色
    */
-  borderColor?: string|undefined;
+  borderColor?: ThemeColor|undefined;
   /**
    * 复选框选中时的颜色，默认是 primary
    */
-  checkColor?: string|undefined;
+  checkColor?: ThemeColor|undefined;
   /**
    * 复选框按钮大小，默认是 20dp
    */
@@ -43,7 +44,7 @@ export interface CheckBoxProps {
   /**
    * 复选框的颜色，默认是 primary
    */
-  color?: string|undefined;
+  color?: ThemeColor|undefined;
   /**
    * 是否禁用复选框
    */
@@ -55,7 +56,7 @@ export interface CheckBoxProps {
   /**
    * 文字颜色
    */
-  textColor?: string;
+  textColor?: ThemeColor;
   /**
    * 自定义文字样式
    */
@@ -77,7 +78,7 @@ export interface CheckBoxProps {
 /**
  * 复选框
  */
-export function CheckBox(props: CheckBoxProps) {
+export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
 
   function switchOn() {
     if (props.disabled)
@@ -89,7 +90,7 @@ export function CheckBox(props: CheckBoxProps) {
   const text = props.children || props.text;
 
   return (
-    <RowView touchable onPress={switchOn} style={{ ...styles.checkBox, ...props.style }} center>
+    <RowView touchable activeOpacity={0.85} onPress={switchOn} style={{ ...styles.checkBox, ...props.style }} center>
       {
         props.renderButton ?
           props.renderButton(props.value || false) :
@@ -98,24 +99,26 @@ export function CheckBox(props: CheckBoxProps) {
             disabled={props.disabled || false}
             shape={props.shape}
             size={props.checkSize}
-            color={props.disabled === true ? Color.lightBorder : props.color}
-            borderColor={props.borderColor}
-            checkColor={props.disabled === true ? Color.grey : props.checkColor}
+            color={ThemeSelector.color(props.disabled === true ? Color.border : props.color)}
+            borderColor={ThemeSelector.color(props.borderColor || Color.border)}
+            checkColor={ThemeSelector.color(props.disabled === true ? Color.textSecond : props.checkColor)}
             icon={props.icon} />
       }
       {
-        typeof props.children === 'string' ?
-          <Text style={{
-            ...styles.checkText,
-            ...props.textStyle,
-            color: props.disabled === true ? Color.grey : (props.textColor || Color.text),
-            display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
-          }}>{text}</Text> :
-          (props.children || <></>)
+        (typeof text === 'string' && text) ?
+          (<Text style={[
+            styles.checkText,
+            props.textStyle,
+            {
+              color: ThemeSelector.color(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
+              display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+            },
+          ]}>{text}</Text>) :
+          (text as JSX.Element || <></>)
       }
     </RowView>
   );
-}
+});
 
 export interface CheckBoxGroupProps {
   /**
@@ -261,46 +264,56 @@ export class CheckBoxGroup extends React.PureComponent<CheckBoxGroupProps> {
 }
 
 export interface CheckBoxDefaultButtonProps {
-  on: boolean;
-  borderColor: string|undefined;
-  checkColor: string|undefined;
-  color: string|undefined;
-  size: number|undefined;
+  on?: boolean;
+  borderColor?: string|undefined;
+  checkColor?: string|undefined;
+  color?: string|undefined;
+  size?: number|undefined;
   icon?: string;
-  disabled: boolean;
+  disabled?: boolean;
+  style?: ViewStyle,
   shape?: "square"|"round";
 }
 
 /**
  * 默认的复选框按钮样式
  */
-export function CheckBoxDefaultButton(props: CheckBoxDefaultButtonProps) {
+export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefaultButtonProps) {
   const size = props.size || 20;
 
   return (
-    <View style={{
-      ...styles.checkButtonOutView,
-      ...selectStyleType(props.shape, 'round', {
+    <View style={[
+      styles.checkButtonOutView,
+      selectStyleType(props.shape, 'round', {
         round: { borderRadius: size / 2 },
         square: { borderRadius: 0 },
       }),
-      width: size,
-      height: size,
-      borderColor: (props.on && props.disabled !== true) ? (props.color || Color.primary) : (props.borderColor || Color.darkBorder),
-    }}>
-      { props.on ? <View style={{
-        ...styles.checkButtonInnerView,
+      {
         width: size,
         height: size,
-        backgroundColor: (props.color || Color.primary),
-      }}>
-        <Iconfont icon={props.icon || 'select'} color={props.checkColor || Color.white} size={size} />
-      </View> : <></> }
+        borderColor: ThemeSelector.color((props.on && props.disabled !== true) ? (props.color || Color.primary) : (props.borderColor || Color.border)),
+      },
+      props.style,
+    ]}>
+      {
+        props.on ?
+          <View style={[
+            styles.checkButtonInnerView,
+            {
+              width: size,
+              height: size,
+              backgroundColor: ThemeSelector.color(props.color || Color.primary),
+            },
+          ]}>
+            <Iconfont icon={props.icon || 'select'} color={props.checkColor || Color.white} size={size} />
+          </View> :
+          <></>
+      }
     </View>
   );
-}
+});
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   checkBox: {
     alignSelf: 'flex-start',
     marginHorizontal: 4,
@@ -308,7 +321,7 @@ const styles = StyleSheet.create({
   checkButtonOutView: {
     overflow: 'hidden',
     marginRight: 4,
-    ...border(1, 'solid', Color.primary),
+    ...border(1, 'solid', Color.primary, true),
   },
   checkButtonInnerView: {
     overflow: 'hidden',

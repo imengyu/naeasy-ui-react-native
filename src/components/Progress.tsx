@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, View, ViewStyle } from 'react-native';
-import { Color } from '../styles/ColorStyles';
+import { Color, ThemeColor, ThemeSelector } from '../styles';
 import { selectStyleType } from '../utils/StyleTools';
+import { ThemeWrapper } from '../theme/Theme';
 
 type ProgressTypes = 'left-right'|'right-left'|'top-bottom'|'bottom-top';
 
@@ -13,11 +14,11 @@ export interface ProgressProp {
   /**
    * 背景的颜色, 默认 gray
    */
-  backgroundColor?: string,
+  backgroundColor?: ThemeColor,
   /**
    * 进度的颜色，默认 primary
    */
-  progressColor?: string,
+  progressColor?: ThemeColor,
   /**
    * 进度条的方向
    * * left-right 横向，从左到右
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
 /**
  * 进度条
  */
-export function Progress(props: ProgressProp) {
+export const Progress = ThemeWrapper(function (props: ProgressProp) {
   const type = props.type || 'left-right';
   const width = props.height || 10;
   const barWidth = props.width || '100%';
@@ -100,21 +101,21 @@ export function Progress(props: ProgressProp) {
     };
   }, [ sideAnimValue, barRealWidth, animateDuration, props.value, props.animate ]);
 
-  const progressStyles = {
-    ...styles.progress,
-    backgroundColor: props.progressColor || Color.primary,
-    ...selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
+  const progressStyles = [
+    styles.progress,
+    { backgroundColor: ThemeSelector.color(props.progressColor || Color.primary) },
+    selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
       'left-right': { left: 0, height: width },
       'right-left': { right: 0, height: width },
       'top-bottom': { top: 0, width: width },
       'bottom-top': { bottom: 0, width: width },
     }),
-  };
+  ];
 
   return (
-    <View style={{
-      ...styles.view,
-      ...selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
+    <View style={[
+      styles.view,
+      selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
         'left-right': {
           height: width,
           width: barWidth,
@@ -144,10 +145,12 @@ export function Progress(props: ProgressProp) {
           alignSelf: 'flex-start',
         },
       }),
-      borderRadius: props.round === false ? 0 : width,
-      backgroundColor: props.backgroundColor || Color.grey,
-      ...props.style,
-    }} onLayout={(e) => setBarRealWidth(
+      {
+        borderRadius: props.round === false ? 0 : width,
+        backgroundColor: ThemeSelector.color(props.backgroundColor || Color.grey),
+      },
+      props.style,
+    ]} onLayout={(e) => setBarRealWidth(
       (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
         e.nativeEvent.layout.width :
         e.nativeEvent.layout.height)
@@ -155,14 +158,14 @@ export function Progress(props: ProgressProp) {
       {
         (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
           <Animated.View style={[
-            progressStyles,
+            ...progressStyles,
             { width: sideAnimValue },
           ]} /> :
           <Animated.View style={[
-            progressStyles,
+            ...progressStyles,
             { height: sideAnimValue },
           ]} />
       }
     </View>
   );
-}
+});

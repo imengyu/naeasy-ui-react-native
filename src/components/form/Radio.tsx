@@ -1,10 +1,11 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color } from "../../styles/ColorStyles";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
+import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { border, selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
-import { Iconfont } from "../Iconfont";
+import { Iconfont } from "../Icon";
+import { ThemeWrapper } from "../../theme/Theme";
 
 
 export interface RadioProps {
@@ -45,15 +46,15 @@ export interface RadioProps {
   /**
    * 单选框的颜色，默认是 primary
    */
-  color?: string;
+  color?: ThemeColor;
   /**
    * 禁用时的颜色，默认是 grey
    */
-  disabledColor?: string|undefined;
+  disabledColor?: ThemeColor|undefined;
   /**
    * 文字颜色
    */
-  textColor?: string;
+  textColor?: ThemeColor;
   /**
    * 自定义文字样式
    */
@@ -75,7 +76,7 @@ export interface RadioProps {
 /**
  * 单选框
  */
-export function Radio(props: RadioProps) {
+export const Radio = ThemeWrapper(function (props: RadioProps) {
 
   function switchOn() {
     if (props.disabled)
@@ -95,19 +96,21 @@ export function Radio(props: RadioProps) {
             on={props.value || false}
             disabled={props.disabled || false}
             shape={props.shape}
-            color={props.color}
-            disabledColor={props.disabledColor}
+            color={ThemeSelector.color(props.color)}
+            disabledColor={ThemeSelector.color(props.disabledColor)}
           />
       }
-      <Text style={{
-        ...styles.radioText,
-        ...props.textStyle,
-        color: props.disabled === true ? Color.grey : (props.textColor || Color.text),
-        display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
-      }}>{text}</Text>
+      <Text style={[
+        styles.radioText,
+        props.textStyle,
+        {
+          color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.textColor || Color.text)),
+          display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+        },
+      ]}>{text}</Text>
     </RowView>
   );
-}
+});
 
 export interface RadioGroupProps {
   /**
@@ -203,7 +206,7 @@ export interface RadioDefaultButtonProps {
 /**
  * 默认的单选框按钮样式
  */
-export function RadioDefaultButton(props: RadioDefaultButtonProps) {
+export const RadioDefaultButton = ThemeWrapper(function (props: RadioDefaultButtonProps) {
 
   return (
     <View style={{
@@ -212,7 +215,7 @@ export function RadioDefaultButton(props: RadioDefaultButtonProps) {
         round: { borderRadius: 10 },
         square: { borderRadius: 0 },
       }),
-      borderColor: props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary),
+      borderColor: ThemeSelector.color(props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary)),
     }}>
       {
         props.on ?
@@ -227,15 +230,15 @@ export function RadioDefaultButton(props: RadioDefaultButtonProps) {
               round: { borderRadius: 8 },
               square: { borderRadius: 0 },
             }),
-            backgroundColor: props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary),
+            backgroundColor: ThemeSelector.color(props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary)),
           }} />
         ) : <></>
       }
     </View>
   );
-}
+});
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   radioButtonOutView: {
     width: 20,
     height: 20,
@@ -244,7 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     marginRight: 4,
-    ...border(1, 'solid', Color.primary),
+    ...border(1, 'solid', Color.primary, true),
   },
   radioButtonInnerView: {
     width: 12,

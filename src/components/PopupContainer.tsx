@@ -1,13 +1,14 @@
 import React from 'react';
 import { Animated, BackHandler, Easing, NativeEventSubscription, StyleSheet, ViewStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color } from '../styles/ColorStyles';
+import { Color, ThemeColor, ThemeSelector } from '../styles';
 import { isAndroid } from '../utils/PlatformTools';
 import { deviceHeight, deviceWidth } from '../utils/StyleConsts';
 import { displayIf, selectStyleType, solveSize } from '../utils/StyleTools';
-import { Iconfont } from './Iconfont';
+import { Iconfont } from './Icon';
 import { RowView } from './layout/RowView';
 import { SafeAreaMargin } from './space/SafeAreaMargin';
+import { ThemeRender } from '../theme/Theme';
 
 /**
  * 说明：
@@ -67,15 +68,19 @@ export interface PopupContainerProps {
   /**
    * 遮罩的颜色
    */
-  maskColor?: string,
+  maskColor?: ThemeColor,
   /**
    * 是否显示遮罩，默认是
    */
   mask?: boolean,
   /**
+   * 对话框偏移边距，默认为0，0，0，0
+   */
+  margin?: number[],
+  /**
    * 弹出层背景颜色，默认是 白色
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 从侧边弹出时，是否自动设置安全区，默认是
    */
@@ -284,17 +289,22 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
   renderTitle(top: boolean) {
     const { closeable, closeIcon, closeIconPosition } = this.props;
     return (
-      <RowView style={{
-        ...styles.dialogTitle,
-        top: top ? 0 : undefined,
-        bottom: top ? undefined : 0,
-        justifyContent: selectStyleType(closeIconPosition, 'right', { left: 'flex-start', right: 'flex-end' }),
-        ...displayIf(closeable === true && closeIcon !== false),
-      }}>
+      <RowView
+        pointerEvents="box-none"
+        style={[ styles.dialogTitle, displayIf(closeable === true && closeIcon !== false), {
+          top: top ? 0 : undefined,
+          bottom: top ? undefined : 0,
+          justifyContent: selectStyleType(closeIconPosition, 'right', { left: 'flex-start', right: 'flex-end' }),
+        }]}
+      >
         {
           closeable === true && closeIcon !== false ?
           <TouchableOpacity onPress={() => this.callUpClose()}>
-            <Iconfont icon={closeIcon || 'close'} size={this.props.closeIconSize || 25} />
+            <Iconfont
+              icon={closeIcon || 'close'}
+              size={this.props.closeIconSize || 25}
+              color={ThemeSelector.color(Color.text)}
+            />
           </TouchableOpacity> : <></>
         }
       </RowView>
@@ -308,100 +318,111 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
     const safeArea = this.props.safeArea !== false;
     const size = this.props.size || '10%';
     const backgroundColor = this.props.backgroundColor || Color.white;
+    const margin = this.props.margin;
 
     return (
-      <View
-        style={{
-          ...styles.mask,
-          ...selectStyleType(position, 'bottom', {
-            center: {
-              justifyContent: 'center',
-              alignItems: 'center',
-            },
-            top: {
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-            },
-            bottom: {
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            },
-            left: {
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-            },
-            right: {
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-            },
-          }),
-        }}
-        pointerEvents={mask ? 'auto' : 'box-none'}
-      >
-        { mask ? <Animated.View
-          style={{
-            ...styles.mask,
-            opacity: this.animFadeValue,
-            backgroundColor: maskColor || Color.mask,
-          }}
-          onTouchEnd={() => {
-            if (closeable)
-              this.callUpClose();
-          }}
-        /> : <></> }
-        <Animated.View
-          style={{
-            ...styles.dialog,
-            ...style,
-            ...selectStyleType(position, 'bottom', {
-              center: {
-                flexDirection: 'row',
-                borderRadius: radius,
-              },
-              top: {
-                borderBottomLeftRadius: radius,
-                borderBottomRightRadius: radius,
-                width: deviceWidth,
-                minHeight: solveSize(size),
-              },
-              bottom: {
-                borderTopLeftRadius: radius,
-                borderTopRightRadius: radius,
-                width: deviceWidth,
-                minHeight: solveSize(size),
-              },
-              left: {
-                borderTopRightRadius: radius,
-                borderBottomRightRadius: radius,
-                height: deviceHeight,
-                minWidth: solveSize(size),
-              },
-              right: {
-                borderTopLeftRadius: radius,
-                borderBottomLeftRadius: radius,
-                height: deviceHeight,
-                minWidth: solveSize(size),
-              },
-            }),
-            backgroundColor: backgroundColor,
-            transform: position !== 'center' && this.animSideValue ? [
-              { translateX: this.animSideValue.x },
-              { translateY: this.animSideValue.y },
-            ] : [
-              { scale: this.animScaleValue },
-            ],
-            opacity: position === 'center' ? this.animFadeValue : undefined,
-          }}
-        >
-          <SafeAreaMargin
-            top={safeArea && (position === 'top' || position === 'left' || position === 'right')}
-            bottom={safeArea && (position === 'bottom' || position === 'left' || position === 'right')}>
-            { position !== 'top' ? this.renderTitle(true) : <></> }
-            { this.props.renderContent(() => this.callUpClose()) as JSX.Element }
-            { position === 'top' ? this.renderTitle(false) : <></> }
-          </SafeAreaMargin>
-        </Animated.View>
-      </View>
+      <ThemeRender>
+        {() => (
+          <View
+            style={[
+              styles.mask,
+              selectStyleType(position, 'bottom', {
+                center: {
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+                top: {
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                },
+                bottom: {
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                },
+                left: {
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                },
+                right: {
+                  alignItems: 'flex-end',
+                  justifyContent: 'center',
+                },
+              }),
+            ]}
+            pointerEvents={mask ? 'auto' : 'box-none'}
+          >
+            { mask ? <Animated.View
+              style={[styles.mask, {
+                opacity: this.animFadeValue,
+                backgroundColor: ThemeSelector.color(maskColor || Color.mask),
+              }]}
+              onTouchEnd={() => {
+                if (closeable)
+                  this.callUpClose();
+              }}
+            /> : <></> }
+            <Animated.View
+              style={[
+                styles.dialog,
+                style,
+                selectStyleType(position, 'bottom', {
+                  center: {
+                    flexDirection: 'row',
+                    borderRadius: radius,
+                  },
+                  top: {
+                    borderBottomLeftRadius: radius,
+                    borderBottomRightRadius: radius,
+                    width: deviceWidth,
+                    minHeight: solveSize(size),
+                  },
+                  bottom: {
+                    borderTopLeftRadius: radius,
+                    borderTopRightRadius: radius,
+                    width: deviceWidth,
+                    minHeight: solveSize(size),
+                  },
+                  left: {
+                    borderTopRightRadius: radius,
+                    borderBottomRightRadius: radius,
+                    height: deviceHeight,
+                    minWidth: solveSize(size),
+                  },
+                  right: {
+                    borderTopLeftRadius: radius,
+                    borderBottomLeftRadius: radius,
+                    height: deviceHeight,
+                    minWidth: solveSize(size),
+                  },
+                }),
+                {
+                  backgroundColor: ThemeSelector.color(backgroundColor),
+                  transform: position !== 'center' && this.animSideValue ? [
+                    { translateX: this.animSideValue.x },
+                    { translateY: this.animSideValue.y },
+                  ] : [
+                    { scale: this.animScaleValue },
+                  ],
+                  opacity: position === 'center' ? this.animFadeValue : undefined,
+                  marginTop: margin?.[0],
+                  marginRight: margin?.[1],
+                  marginBottom: margin?.[2],
+                  marginLeft: margin?.[3],
+                },
+              ]}
+            >
+              <SafeAreaMargin
+                top={safeArea && (position === 'top' || position === 'left' || position === 'right')}
+                bottom={safeArea && (position === 'bottom' || position === 'left' || position === 'right')}>
+                { position !== 'top' ? this.renderTitle(true) : <></> }
+                { this.props.renderContent(() => this.callUpClose()) as JSX.Element }
+                { position === 'top' ? this.renderTitle(false) : <></> }
+              </SafeAreaMargin>
+            </Animated.View>
+          </View>
+        )}
+      </ThemeRender>
     );
   }
 }
+

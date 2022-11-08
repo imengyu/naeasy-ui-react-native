@@ -195,11 +195,26 @@ export interface PickerOptionsProps<T> extends PickerBaseProps  {
     cyclicThree: boolean,
   },
   /**
+   * 当传入数据是对象时，需要填写此字段用于显示
+   */
+  objectType?: {
+    /**
+     * 当传入数据是对象时，用于显示的键名称
+     */
+    labelKey: string;
+    /**
+     * 当传入数据是对象时，用于选中索引判断的键名称
+     */
+    valueKey: string;
+  }
+  /**
    * 不联动数据
+   * 注意：nPicker 和 picker只能二选一
    */
   nPicker?: [ T[] ]|[ T[], T[] ]|[ T[], T[], T[] ],
   /**
    * 联动数据
+   * 注意：nPicker 和 picker只能二选一
    */
   picker?: [
     T[]
@@ -212,7 +227,7 @@ export interface PickerOptionsProps<T> extends PickerBaseProps  {
     T[][][]
   ],
   /**
-   * 初始选中的条目
+   * 初始选中的条目索引
    */
   selectOptions?: number[],
 }
@@ -256,6 +271,8 @@ function convertTimePickerModeToIOSPicker(options?: boolean[]) {
     return PickerViewIOS.BRDatePickerModeY;
   return PickerViewIOS.BRDatePickerModeDate;
 }
+
+type OptionsPickerViewSelectCallback = (option1: number, option2: number, option3: number) => void;
 
 /**
  * 内置选择器
@@ -307,10 +324,12 @@ export const Picker = {
    * @param options 参数配置
    * @param selectCallback 选择回调
    * @param dismissCallback 取消回调
+   * TODO: 自定义选择器支持传入对象数据
    */
-  showOptionsPickerView<T>(options: PickerOptionsProps<T>, selectCallback: (option1: number, option2: number, option3: number) => void, dismissCallback?: () => void) {
-    if (isAndroid)
+  showOptionsPickerView<T>(options: PickerOptionsProps<T>, selectCallback: OptionsPickerViewSelectCallback, dismissCallback?: () => void) {
+    if (isAndroid) {
       PickerViewAndroid.showOptionsPickerView(options, selectCallback, dismissCallback || (() => {}));
+    }
     else if (isIOS) {
       const finalOptions = {
         pickerMode: 0,
@@ -320,7 +339,6 @@ export const Picker = {
         selectIndexs: [] as number[]|undefined,
         selectIndex: 0,
       };
-
       if (options.nPicker) {
         if (options.nPicker.length === 1) {
           finalOptions.pickerMode = PickerViewIOS.BRStringPickerComponentSingle;

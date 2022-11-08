@@ -1,5 +1,5 @@
 import { rpx } from '../../utils/StyleConsts';
-import React, { Component } from 'react';
+import React from 'react';
 import {
   View,
   Animated,
@@ -8,12 +8,13 @@ import {
   Text,
   Platform,
   Dimensions,
-  StyleSheet,
   ViewStyle,
   TextStyle,
   LayoutChangeEvent,
   LayoutRectangle,
 } from 'react-native';
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../../styles';
+import { ThemeWrapper } from '../../theme/Theme';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
@@ -41,11 +42,11 @@ export interface ScrollableTabBarProps {
   /**
   * 激活时tab的文字颜色
   */
-  activeTextColor?: string;
+  activeTextColor?: ThemeColor;
   /**
   * 未激活时tab的文字颜色
   */
-  inactiveTextColor?: string;
+  inactiveTextColor?: ThemeColor;
   /**
   * 滚动偏移
   */
@@ -107,7 +108,7 @@ const DEFAULT_PROPS = {
   scrollOffset: 52,
   activeTextColor: 'navy',
   inactiveTextColor: 'black',
-  backgroundColor: null,
+  backgroundColor: 'transparent',
   style: {},
   tabStyle: {},
   tabsContainerStyle: {},
@@ -117,7 +118,7 @@ const DEFAULT_PROPS = {
 /**
  * 一个TabView 头部组件
  */
-export class ScrollableTabBar extends Component<ScrollableTabBarProps, ScrollableTabBarState> {
+class ScrollableTabBarComponent extends React.Component<ScrollableTabBarProps, ScrollableTabBarState> {
   static defaultProps = DEFAULT_PROPS;
 
   _tabsMeasurements = [] as MeasurementData[];
@@ -269,7 +270,7 @@ export class ScrollableTabBar extends Component<ScrollableTabBarProps, Scrollabl
         onPress={() => onPressHandler(page)}
         onLayout={onLayoutHandler}>
         <View style={[styles.tab, this.props.tabStyle]}>
-          <Text style={[{ color: textColor, fontWeight }, isTabActive ? activeTextStyle : textStyle]}>
+          <Text style={[{ color: ThemeSelector.color(textColor), fontWeight }, isTabActive ? activeTextStyle : textStyle]}>
             {name}
           </Text>
         </View>
@@ -376,7 +377,12 @@ export class ScrollableTabBar extends Component<ScrollableTabBarProps, Scrollabl
   }
 }
 
-const styles = StyleSheet.create({
+/**
+ * 一个TabView 头部组件
+ */
+export const ScrollableTabBar = ThemeWrapper(ScrollableTabBarComponent);
+
+const styles = DynamicThemeStyleSheet.create({
   tab: {
     height: 49,
     alignItems: 'center',
@@ -389,7 +395,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderColor: '#ccc',
+    borderColor: DynamicColor(Color.border),
   },
   tabs: {
     flexDirection: 'row',

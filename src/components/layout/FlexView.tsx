@@ -1,6 +1,9 @@
+import ArrayUtils from '../../utils/ArrayUtils';
 import React from 'react';
 import { FlexAlignType, TouchableHighlight, View, ViewProps, ViewStyle, TouchableOpacity, StyleSheet } from 'react-native';
-import ArrayUtils from '../../utils/ArrayUtils';
+import { ThemeColor, ThemeSelector } from '../../styles';
+import { styleConfigMargin, styleConfigPadding } from '../../utils';
+import { ThemeWrapper } from '../../theme/Theme';
 
 export interface FlexViewProp extends ViewProps {
 
@@ -40,6 +43,14 @@ export interface FlexViewProp extends ViewProps {
    */
   flex?: number,
   /**
+   * flexGrow参数
+   */
+  flexGrow?: number,
+  /**
+   * flexShrink参数
+   */
+  flexShrink?: number,
+  /**
    * 内边距参数。支持数字或者数组
    * * 如果是数字，则设置所有方向边距
    * * 两位数组 [vetical,horizontal]
@@ -64,13 +75,13 @@ export interface FlexViewProp extends ViewProps {
   /**
    * 背景颜色
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 按下时的颜色，默认无颜色（使用 TouchableOpacity）
    * 设置了这个值，则使用 TouchableHighlight
    * 没有设置这个值，则使用 TouchableOpacity
    */
-  pressedColor?: string;
+  pressedColor?: ThemeColor;
   /**
    * 按下时的透明度（仅在pressedColor未设置时有效）
    */
@@ -104,56 +115,30 @@ const styles = StyleSheet.create({
 /**
  * Flex组件，用于一些布局中快速写容器
  */
-export class FlexView extends React.PureComponent<FlexViewProp> {
+class FlexViewComponent extends React.PureComponent<FlexViewProp> {
   render(): React.ReactNode {
 
     const style = {
       flexDirection: this.props.direction,
       flex: this.props.flex,
+      flexGrow: this.props.flexGrow,
+      flexShrink: this.props.flexShrink,
       justifyContent: this.props.center ? 'center' : this.props.justify,
       alignItems: this.props.center ? 'center' : this.props.align,
       position: this.props.position,
       alignSelf: this.props.alignSelf,
       flexWrap: this.props.wrap ? 'wrap' : 'nowrap',
-      backgroundColor: this.props.backgroundColor,
+      backgroundColor: ThemeSelector.color(this.props.backgroundColor),
       width: this.props.width,
       height: this.props.height,
-      ...(this.props.style || {}),
+      ...(this.props.style && !(this.props.style instanceof Array) ? this.props.style : {}),
     } as ViewStyle;
 
-    //内边距样式
-    const padding = this.props.padding;
-    if (typeof padding === 'number') {
-      style.padding = padding;
-    } else if (padding instanceof Array) {
-      style.padding = undefined;
-      if (padding.length === 2) {
-        style.paddingVertical = padding[0];
-        style.paddingHorizontal = padding[1];
-      } else if (padding.length === 4) {
-        style.paddingTop = padding[0];
-        style.paddingRight = padding[1];
-        style.paddingBottom = padding[2];
-        style.paddingLeft = padding[3];
-      }
-    }
 
+    //内边距样式
+    styleConfigPadding(style, this.props.padding);
     //外边距样式
-    const margin = this.props.margin;
-    if (typeof margin === 'number') {
-      style.margin = margin;
-    } else if (margin instanceof Array) {
-      style.margin = undefined;
-      if (margin.length === 2) {
-        style.marginVertical = margin[0];
-        style.marginHorizontal = margin[1];
-      } else if (margin.length === 4) {
-        style.marginTop = margin[0];
-        style.marginRight = margin[1];
-        style.marginBottom = margin[2];
-        style.marginLeft = margin[3];
-      }
-    }
+    styleConfigMargin(style, this.props.margin);
 
     //绝对距样式
     if (typeof this.props.left === 'number')
@@ -172,19 +157,42 @@ export class FlexView extends React.PureComponent<FlexViewProp> {
         (viewProps as { [index: string]: unknown })[key] = (this.props as { [index: string]: unknown })[key];
       }
     }
+    /*
+    const propsFromOutside = (this.props as { [index: string]: unknown });
+    for (const muteKey of muteProps) {
+      if (typeof propsFromOutside[muteKey] !== 'undefined')
+        propsFromOutside[muteKey] = undefined;
+    }
+    */
+
+    //处理传入style是数组的情况
+    const finalStyle = this.props.style instanceof Array ? [ style ].concat(this.props.style) : style;
 
     return (
       this.props.touchable ?
         (
           this.props.pressedColor ?
-          <TouchableHighlight underlayColor={this.props.pressedColor} style={[ { position: 'relative' }, style ]} onPress={this.props.onPress}>
+          <TouchableHighlight
+            underlayColor={ThemeSelector.color(this.props.pressedColor)}
+            style={[ { position: 'relative' }, style ]}
+            onPress={this.props.onPress}
+          >
             <View {...viewProps} style={styles.ghostView}  />
           </TouchableHighlight> :
-          <TouchableOpacity style={style} onPress={this.props.onPress} activeOpacity={this.props.activeOpacity}>
+          <TouchableOpacity
+            style={finalStyle}
+            onPress={this.props.onPress}
+            activeOpacity={this.props.activeOpacity}
+          >
             { this.props.children }
           </TouchableOpacity>
         ) :
-        <View style={style} {...viewProps} />
+        <View {...viewProps} style={finalStyle}  />
     );
   }
 }
+
+/**
+ * Flex组件，用于一些布局中快速写容器
+ */
+export const FlexView = ThemeWrapper(FlexViewComponent);

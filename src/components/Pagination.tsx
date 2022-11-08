@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { Text } from 'react-native';
 import { TouchableHighlight } from 'react-native';
-import { Color, PressedColor } from '../styles/ColorStyles';
+import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../styles';
 import { RowView } from "./layout/RowView";
+import { ThemeWrapper } from '../theme/Theme';
 
 interface PaginationProps {
   /**
@@ -37,6 +38,30 @@ interface PaginationProps {
    * 下一页按钮文字
    */
   nextText?: string;
+  /**
+   * 按钮按下颜色
+   */
+  pressedColor?: ThemeColor;
+  /**
+   * 按钮按下时文字的颜色
+   */
+  pressedTextColor?: ThemeColor;
+  /**
+   * 按钮激活时（为当前页码）颜色
+   */
+  activeColor?: ThemeColor;
+  /**
+   * 按钮为非当前页码下颜色
+   */
+  deactiveColor?: ThemeColor;
+  /**
+   * 按钮激活时（为当前页码）文字颜色
+   */
+  activeTextColor?: ThemeColor;
+  /**
+   * 按钮为非当前页码下文字颜色
+   */
+  deactiveTextColor?: ThemeColor;
 }
 interface PaginationItemProps {
   text?: string;
@@ -45,7 +70,7 @@ interface PaginationItemProps {
   onPress?: () => void;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   simpleText: {
     paddingHorizontal: 10,
     paddingVertical: 3,
@@ -55,7 +80,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   itemButton: {
-    backgroundColor: Color.white,
+    backgroundColor: DynamicColor(Color.white),
     flexGrow: 1,
     alignSelf: 'auto',
     justifyContent: 'center',
@@ -65,6 +90,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   itemText: {
+    color: DynamicColor(Color.text),
     fontSize: 13,
     textAlign: 'center',
   },
@@ -73,7 +99,7 @@ const styles = StyleSheet.create({
 /**
  * 分页指示器组件
  */
-export function Pagination(props: PaginationProps) {
+export const Pagination = ThemeWrapper(function (props: PaginationProps) {
 
   const showNextPrev = props.showNextPrev || true;
   const nextText = props.nextText || '下一张';
@@ -82,6 +108,12 @@ export function Pagination(props: PaginationProps) {
   const canNext = currentPage < props.pageCount - 1;
   const canPrev = currentPage > 0;
   const showPageCount = props.showPageCount || 5;
+  const pressedColor = ThemeSelector.color(props.pressedColor || PressedColor(Color.white));
+  const pressedTextColor = ThemeSelector.color(props.pressedTextColor || Color.textSecond);
+  const activeColor = ThemeSelector.color(props.activeColor || Color.primary);
+  const deactiveColor = ThemeSelector.color(props.deactiveColor || Color.white);
+  const activeTextColor = ThemeSelector.color(props.activeTextColor || Color.white);
+  const deactiveTextColor = ThemeSelector.color(props.deactiveTextColor || Color.text);
 
   function renderItems() {
     const arr = [] as JSX.Element[];
@@ -122,10 +154,10 @@ export function Pagination(props: PaginationProps) {
 
     return (
       <TouchableHighlight
-        underlayColor={Color.primary}
+        underlayColor={pressedColor}
         style={{
           ...styles.itemButton,
-          backgroundColor: active ? Color.primary : (touchable ? Color.white : PressedColor.default),
+          backgroundColor: active ? activeColor : (touchable ? deactiveColor : pressedColor),
         }}
         onPress={touchable && !active ? thisProps.onPress : undefined}
         onHideUnderlay={() => setPressed(false)}
@@ -133,7 +165,7 @@ export function Pagination(props: PaginationProps) {
       >
         <Text style={{
           ...styles.itemText,
-          color: touchable ? (pressed || active ? Color.white : Color.primary) : Color.grey,
+          color: touchable ? (pressed ? pressedTextColor : (active ? activeTextColor : deactiveTextColor)) : pressedTextColor,
         }}>{thisProps.text}</Text>
       </TouchableHighlight>
     );
@@ -146,4 +178,4 @@ export function Pagination(props: PaginationProps) {
       { showNextPrev ? <PaginationItem text={nextText} touchable={canNext} onPress={() => emitChange(currentPage + 1)} /> : <></> }
     </RowView>
   );
-}
+});

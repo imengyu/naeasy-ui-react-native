@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import CheckTools from "../../utils/CheckTools";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { Color } from "../../styles/ColorStyles";
+import { Text, TextInput, View } from "react-native";
+import { Color, DynamicColor, DynamicThemeStyleSheet } from "../../styles";
 import { IconButton } from "../button/IconButton";
 import { RowView } from "../layout/RowView";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface StepperProps {
   /**
@@ -52,10 +53,10 @@ export interface StepperProps {
   integer?: boolean;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   button: {
     borderRadius: 0,
-    backgroundColor: Color.light,
+    backgroundColor: DynamicColor(Color.light),
   },
   input: {
     paddingVertical: 0,
@@ -63,17 +64,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     textAlign: 'center',
     justifyContent: 'center',
-    backgroundColor: Color.light,
+    backgroundColor: DynamicColor(Color.light),
+    color: DynamicColor(Color.text),
   },
   inputText: {
     textAlign: 'center',
+    color: DynamicColor(Color.text),
   },
 });
 
 /**
  * 步进器。步进器由增加按钮、减少按钮和输入框组成，用于在一定范围内输入、调整数字。
  */
-export function Stepper(props: StepperProps) {
+export const Stepper = ThemeWrapper(function (props: StepperProps) {
 
   const { onValueChange, maxValue } = props;
   const value = props.value || 0;
@@ -161,4 +164,4 @@ export function Stepper(props: StepperProps) {
       <IconButton icon="add-bold" disabled={disabled || (maxValue ? value >= maxValue : undefined)} onPress={add} buttonStyle={styles.button} padding={5} />
     </RowView>
   );
-}
+});

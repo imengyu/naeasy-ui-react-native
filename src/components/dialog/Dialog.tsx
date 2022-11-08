@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { ActivityIndicator, TouchableHighlight, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, TouchableHighlight, Text } from "react-native";
 import { ScrollView } from "react-native";
-import { Color, PressedColor } from "../../styles/ColorStyles";
+import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { deviceHeight, deviceWidth } from "../../utils/StyleConsts";
 import { borderRight, borderTop, displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
 import { RowView } from "../layout/RowView";
 import { Popup } from "../Popup";
 import { PopupContainerProps } from "../PopupContainer";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**
@@ -27,9 +28,13 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
    */
   confirmText?: string|undefined;
   /**
-   * 按扭文字的颜色
+   * 确认按扭文字的颜色
    */
-  buttonColor?: string|undefined;
+  confirmColor?: ThemeColor|undefined;
+  /**
+   * 取消按扭文字的颜色
+   */
+  cancelColor?: ThemeColor|undefined;
   /**
    * 是否显示取消按扭
    */
@@ -73,9 +78,13 @@ export interface DialogConfirmProps {
    */
   confirmText?: string|undefined;
   /**
-   * 按扭文字的颜色
+   * 确认按扭文字的颜色
    */
-  buttonColor?: string|undefined;
+  confirmColor?: ThemeColor|undefined;
+  /**
+   * 取消按扭文字的颜色
+   */
+  cancelColor?: ThemeColor|undefined;
   /**
    * 是否显示取消按扭
    */
@@ -90,8 +99,7 @@ export interface DialogConfirmProps {
   onConfirm?: () => void|Promise<void>;
 }
 
-
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   dialog: {
     minWidth: deviceWidth - deviceWidth / 3,
     maxWidth: deviceWidth - deviceWidth / 10,
@@ -105,27 +113,27 @@ const styles = StyleSheet.create({
   },
   bottomView: {
     position: 'relative',
-    ...borderTop(1, 'solid', Color.lightBorder),
+    ...borderTop(1, 'solid', Color.divider, true),
   },
-  button: {
+  dialogButton: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
     flex: 1,
-    ...borderRight(1, 'solid', Color.lightBorder),
+    ...borderRight(1, 'solid', Color.divider, true),
   },
   buttonText: {
     fontSize: 16,
   },
   title: {
     fontSize: 20,
-    color: Color.text,
+    color: DynamicColor(Color.text),
     textAlign: 'center',
     marginBottom: 10,
   },
   contentText: {
     fontSize: 14,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
     textAlign: 'center',
   },
 });
@@ -133,22 +141,28 @@ const styles = StyleSheet.create({
 /**
  * 对话框底部按扭组件
  */
-export function DialogButton(props: {
+export const DialogButton = ThemeWrapper(function (props: {
   text: string|undefined,
   loading: boolean,
-  buttonColor: string|undefined,
+  buttonColor: ThemeColor|undefined,
+  pressedColor?: ThemeColor|undefined,
   onPress: () => void;
 }) {
   return (
-    <TouchableHighlight style={styles.button} underlayColor={PressedColor.default} onPress={props.loading ? undefined : props.onPress}>
-      { props.loading ?
-        <ActivityIndicator color={props.buttonColor || Color.primary} /> :
-        <Text style={{ ...styles.buttonText, color: props.buttonColor || Color.primary }}>{props.text}</Text>
+    <TouchableHighlight
+      style={styles.dialogButton}
+      underlayColor={ThemeSelector.color(props.pressedColor || PressedColor(Color.white))}
+      onPress={props.loading ? undefined : props.onPress}
+    >
+      {
+        props.loading ?
+          <ActivityIndicator color={ThemeSelector.color(props.buttonColor || Color.primary)} /> :
+          <Text style={[ styles.buttonText, { color: ThemeSelector.color(props.buttonColor || Color.primary) } ]}>{props.text}</Text>
       }
     </TouchableHighlight>
   );
-}
-export function DialogInner(props: {
+});
+export const DialogInner = ThemeWrapper(function (props: {
   onClose?: () => void;
   onCancel?: () => void|Promise<void>;
   onConfirm?: () => void|Promise<void>;
@@ -156,7 +170,8 @@ export function DialogInner(props: {
   content?: string|React.ReactNode;
   cancelText?: string|undefined;
   confirmText?: string|undefined;
-  buttonColor?: string|undefined;
+  confirmColor?: ThemeColor|undefined;
+  cancelColor?: ThemeColor|undefined;
   width?: number|undefined;
   showCancel?: boolean;
 }) {
@@ -210,23 +225,23 @@ export function DialogInner(props: {
   }
 
   return (
-    <ColumnView style={{
-      ...styles.dialog,
-      width: props.width,
-    }}>
+    <ColumnView style={[
+      styles.dialog,
+      { width: props.width },
+    ]}>
       <ColumnView style={styles.dialogContent}>
-        <Text style={{...styles.title, ...displayNoneIfEmpty(props.title)}}>{props.title}</Text>
+        <Text style={[ styles.title, displayNoneIfEmpty(props.title) ]}>{props.title}</Text>
         <ScrollView style={styles.dialogContentScroll}>
           { typeof props.content === 'string' ? <Text style={styles.contentText}>{props.content}</Text> : props.content }
         </ScrollView>
       </ColumnView>
-      <RowView style={styles.bottomView}>
-        { props.showCancel ? <DialogButton text={props.cancelText || '取消'} loading={cancelLoading} buttonColor={props.buttonColor} onPress={onCancelClick} /> : <></> }
-        <DialogButton text={props.confirmText || '确定'} loading={confirmLoading} buttonColor={props.buttonColor} onPress={onConfirmClick} />
+      <RowView style={styles.bottomView} accessibilityLabel="test">
+        { props.showCancel ? <DialogButton text={props.cancelText || '取消'} loading={cancelLoading} buttonColor={props.cancelColor || Color.text} onPress={onCancelClick} /> : <></> }
+        <DialogButton text={props.confirmText || '确定'} loading={confirmLoading} buttonColor={props.confirmColor || Color.primary} onPress={onConfirmClick} />
       </RowView>
     </ColumnView>
   );
-}
+});
 
 /**
  * 一个对话框组件，允许你在弹出简单的对话框，或者在对话框中插入自定义内容。
@@ -239,12 +254,10 @@ export class Dialog extends React.Component<DialogProps> {
    */
   static show(showProps: Omit<DialogProps, 'show'>) {
     const handle = Popup.show({
-      show: true,
       round: true,
       closeIcon: false,
       position: "center",
       ...showProps,
-      onClose: () => {},
       renderContent: () => <DialogInner { ...showProps } onClose={() => handle.close()} />,
     });
   }
@@ -255,12 +268,10 @@ export class Dialog extends React.Component<DialogProps> {
   static alert(showProps: Omit<DialogConfirmProps, 'cancelText'|'showCancel'|'onCancel'|'onConfirm'>) {
     return new Promise<void>((resolve) => {
       const handle = Popup.show({
-        show: false,
         round: true,
         closeIcon: false,
         position: "center",
         ...showProps,
-        onClose: () => resolve(),
         renderContent: () => <DialogInner { ...showProps }
           onClose={() => handle.close()}
           onConfirm={() => resolve()}
@@ -275,12 +286,10 @@ export class Dialog extends React.Component<DialogProps> {
   static confirm(showProps: Omit<DialogConfirmProps, 'showCancel'|'onCancel'|'onConfirm'>) {
     return new Promise<boolean>((resolve) => {
       const handle = Popup.show({
-        show: false,
         round: true,
         closeIcon: false,
         position: "center",
         ...showProps,
-        onClose: () => resolve(false),
         renderContent: () => <DialogInner { ...showProps } showCancel
           onClose={() => handle.close()}
           onConfirm={() => resolve(true)}

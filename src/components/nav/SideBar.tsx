@@ -1,17 +1,18 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { StyleSheet, Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../Badge";
-import { Color } from "../../styles";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { ThemeWrapper } from "../../theme/Theme";
 
 //公共的SideBarItem
 //==================================
 
 export interface SideBarItemProps {
   /**
-   * 标签名称，必填
+   * 标签名称，必填, 请保证不重复
    */
-  name: string;
+  name: string|number;
   /**
     * 标签文字
     */
@@ -43,6 +44,10 @@ export interface SideBarItemProps {
     */
   renderText?: (selected: boolean, textProps: TextProps) => JSX.Element;
 }
+
+/**
+ * 侧边导航的条目组件
+ */
 export function SideBarItem(_props: SideBarItemProps) {
   return (<></>);
 }
@@ -53,15 +58,15 @@ export function SideBarItem(_props: SideBarItemProps) {
 interface InternalSideBarItemProps extends SideBarItemProps {
   active?: boolean;
   activeBadgeStyle?: ViewStyle;
-  activeColor?: string;
-  inactiveColor?: string;
+  activeColor?: ThemeColor;
+  inactiveColor?: ThemeColor;
   activeStyle?: ViewStyle;
   inactiveStyle?: ViewStyle;
   onPress: () => void;
 }
 function InternalSideBarItem(props: InternalSideBarItemProps) {
   const active = props.active === true;
-  const color = props.active ? (props.activeColor || Color.primary) : (props.inactiveColor || Color.grey);
+  const color = props.active ? ThemeSelector.color(props.activeColor || Color.primary) : ThemeSelector.color(props.inactiveColor || Color.textSecond);
   const touchable = props.touchable !== false;
   const textProps = {
     style: {
@@ -92,7 +97,7 @@ export interface SideBarProps {
   /**
     * 选中文字颜色
     */
-  activeColor?: string;
+  activeColor?: ThemeColor;
   /**
     * 选中时条目的样式
     */
@@ -102,9 +107,9 @@ export interface SideBarProps {
     */
   activeBadgeStyle?: ViewStyle;
   /**
-    * 未选中文字样式
+    * 未选中文字颜色
     */
-  inactiveColor?: string;
+  inactiveColor?: ThemeColor;
   /**
     * 未选中时条目的样式
     */
@@ -120,31 +125,36 @@ export interface SideBarProps {
   /**
     * 选中的条目，这是一个受控属性，请与 onSelectItem 配合。
     */
-  selectedItemName?: string,
+  selectedItemName?: string|number,
   /**
     * 选中条目时发出此事件。
     */
-  onSelectItem?: (name: string) => void;
+  onSelectItem?: (name: string|number) => void;
   /**
     * 当点击已选中的 Tab 时发出此事件。
     */
-  onClickItem?: (name: string) => void;
+  onClickItem?: (name: string|number) => void;
   /**
     * 可以用于自定义渲染背景图片
     */
   renderBackground?: () => JSX.Element;
 }
 
-export function SideBar(props: SideBarProps) {
+/**
+ * 侧边导航
+ * 介绍：
+ * 垂直展示的导航栏，用于在不同的内容区域之间进行切换。
+ */
+export const SideBar = ThemeWrapper(function (props: SideBarProps) {
 
-  const selectedItemName = props.selectedItemName || '';
+  const selectedItemName = CheckTools.returnDefinedValueOrdefault(props.selectedItemName, '');
   const activeStyle = props.activeStyle || styles.activeStyle;
   const inactiveStyle = props.inactiveStyle || styles.inactiveStyle;
 
   function renderItems() {
     const arr = [] as JSX.Element[];
     props.children.forEach(element => {
-      const name = element.props.name as string;
+      const name = element.props.name as string|number;
       arr.push(
         <InternalSideBarItem
           { ...element.props }
@@ -177,9 +187,9 @@ export function SideBar(props: SideBarProps) {
       { renderItems() }
     </View>
   );
-}
+});
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',
@@ -193,7 +203,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   sideActiveBadge: {
-    backgroundColor: Color.primary,
+    backgroundColor: DynamicColor(Color.primary),
     position: 'absolute',
     left: 0,
     top: '100%',
@@ -204,9 +214,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   activeStyle: {
-    backgroundColor: Color.white,
+    backgroundColor: DynamicColor(Color.white),
   },
   inactiveStyle: {
-    backgroundColor: Color.light,
+    backgroundColor: DynamicColor(Color.light),
   },
 });

@@ -1,12 +1,14 @@
 import React from 'react';
 import CheckTools from '../utils/CheckTools';
-import { Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
+import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../styles/ColorStyles';
 import { rpx } from '../utils/StyleConsts';
-import { borderBottom, borderTop } from '../utils/StyleTools';
-import { Iconfont } from './Iconfont';
+import { borderBottom, borderTop, styleConfigPadding } from '../utils/StyleTools';
+import { Iconfont } from './Icon';
 import { ColumnView } from './layout/ColumnView';
 import { RowView } from './layout/RowView';
+import { DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 interface CellProp {
   /**
@@ -31,6 +33,7 @@ interface CellProp {
   icon?: string|ImageSourcePropType,
   /**
    * 图标字体名称
+   * TODO: icon fix
    */
   iconFontFamily?: string;
   /**
@@ -38,7 +41,7 @@ interface CellProp {
    */
   iconPlaceholder?: boolean,
   /**
-   * 左侧图标的宽度，默认是 20
+   * 左侧图标区域的宽度，默认是 20
    */
   iconWidth?: number|'auto',
   /**
@@ -72,13 +75,13 @@ interface CellProp {
   /**
    * 背景颜色
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 自定义右侧渲染(会覆盖原有右侧内容)
    */
   renderRight?: () => JSX.Element|JSX.Element[],
   /**
-   * 自定义右侧渲染(不会覆盖原有内容)
+   * 自定义右侧渲染(在原有内容之前，不会覆盖原有内容)
    */
   renderRightPrepend?: () => JSX.Element,
   /**
@@ -101,13 +104,13 @@ interface CellProp {
   /**
    * 按下的背景颜色
    */
-  pressedColor?: string,
+  pressedColor?: ThemeColor,
   /**
    * 自定义样式
    */
   style?: ViewStyle,
   /**
-   * 自定义图标样式
+   * 自定义左侧图标样式
    */
   iconStyle?: TextStyle|ImageStyle,
   /**
@@ -128,7 +131,7 @@ interface CellProp {
   onPress?: () => void,
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -144,19 +147,19 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
-    color: '#333',
+    color: DynamicColor(Color.text),
   },
   titleIcon: {
     fontSize: 18,
-    color: '#000',
+    color: DynamicColor(Color.black),
   },
   label: {
     fontSize: 14,
-    color: '#999',
+    color: DynamicColor(Color.textSecond),
   },
   value: {
     fontSize: 14,
-    color: '#999',
+    color: DynamicColor(Color.textSecond),
     marginHorizontal: 10,
   },
 });
@@ -164,11 +167,11 @@ const styles = StyleSheet.create({
 /**
  * 单元格组件, 为列表中的单个展示项。
  */
-export function Cell(props: CellProp) {
+ export const Cell = ThemeWrapper(function (props: CellProp) {
   function getStyle() {
 
     const style = {
-      backgroundColor: props.backgroundColor || Color.white,
+      backgroundColor: ThemeSelector.color(props.backgroundColor || Color.white),
     } as ViewStyle;
 
     switch (props.size) {
@@ -187,23 +190,7 @@ export function Cell(props: CellProp) {
     }
 
     //内边距样式的强制设置
-    const padding = props.padding;
-    if (typeof padding === 'number') {
-      style.padding = padding;
-      style.paddingVertical = padding;
-      style.paddingHorizontal = padding;
-    } else if (padding instanceof Array) {
-      style.padding = undefined;
-      if (padding.length === 2) {
-        style.paddingVertical = padding[0];
-        style.paddingHorizontal = padding[1];
-      } else if (padding.length === 4) {
-        style.paddingTop = padding[0];
-        style.paddingRight = padding[1];
-        style.paddingBottom = padding[2];
-        style.paddingLeft = padding[3];
-      }
-    }
+    styleConfigPadding(style, props.padding);
 
     return style;
   }
@@ -288,22 +275,35 @@ export function Cell(props: CellProp) {
         <RowView key="right" center>
           { props.renderRightPrepend ? props.renderRightPrepend() : <></> }
           { (!props.value || (typeof props.value === 'string' && props.value === '')) ? <></> : <Text key="value" selectable={props.valueSelectable === true} style={{...styles.value,...getTextStyle()}}>{'' + props.value}</Text> }
-          { (props.showArrow ? <Iconfont key="rightIcon" icon="arrow-right" size={(textStyle.fontSize || 16)} /> : renderRightIcon()) }
+          {
+            props.showArrow ?
+              <Iconfont
+                key="rightIcon"
+                icon="arrow-right"
+                size={(textStyle.fontSize || 16)}
+                color={(textStyle.color || styles.titleIcon.color) as string}
+              /> :
+              renderRightIcon()
+          }
         </RowView>
       );
     }
     return arr.flat();
   }
 
+  const pressedColor = ThemeSelector.color(props.pressedColor || PressedColor(Color.white));
+
   return (
     <TouchableHighlight
       onPress={props.onPress}
-      underlayColor={ props.pressedColor || PressedColor.default }
+      underlayColor={pressedColor}
       style={[
         styles.view,
-        ((props.bottomBorder !== false) ? borderBottom(1, 'solid', Color.border) : {}),
-        (props.topBorder ? borderTop(1, 'solid', Color.border) : {}),
         getStyle(),
+        {
+          ...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.divider)) : {}),
+          ...(props.topBorder === true ? borderTop(1, 'solid', ThemeSelector.color(Color.divider)) : {}),
+        },
         props.style,
       ]}
     >
@@ -312,4 +312,4 @@ export function Cell(props: CellProp) {
       </RowView>
     </TouchableHighlight>
   );
-}
+});

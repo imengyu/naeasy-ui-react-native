@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup } from 'imengyu-ui-lib';
+import { ColumnView, CellGroup, A } from 'imengyu-ui-lib';
 import { ScrollView } from 'react-native';
 import { H1, H2, H3, H4, H5, H6 } from 'imengyu-ui-lib';
 import { B, Br, I, S, U, Text } from 'imengyu-ui-lib';
@@ -32,12 +32,17 @@ export class TestTypographyScreen extends React.PureComponent<Props> {
           <CellGroup title="文字线" inset >
             <ColumnView padding={10}>
               <S>这段字符串中间有条删除线</S>
-              <U>这段字符串中间有条下划线</U>
+              <U>这段字符串有条下划线</U>
             </ColumnView>
           </CellGroup>
           <CellGroup title="换行" inset >
             <ColumnView padding={10}>
               <Text>Br用于将文字换行。<Br />这一行文字在这里换行。</Text>
+            </ColumnView>
+          </CellGroup>
+          <CellGroup title="链接" inset >
+            <ColumnView padding={10}>
+              <A href="https://www.bing.com">点击我打开 www.bing.com</A>
             </ColumnView>
           </CellGroup>
           <CellGroup title="组合组件" inset >

@@ -1,10 +1,12 @@
-import { Color, PressedColor } from '../../styles/ColorStyles';
+import React, { createRef, useEffect, useState, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
+import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { border, borderBottom, borderRight, selectStyleType } from '../../utils/StyleTools';
-import React, { createRef } from 'react';
-import { StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
+import { Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { TextInput } from 'react-native';
 import { ColumnView } from '../layout/ColumnView';
+import { NumberKeyBoard } from '../keyboard/NumberKeyBoard';
+import { ThemeWrapper } from '../../theme/Theme';
 
 export type NumberInputBorderType = 'underline'|'box';
 export interface NumberInputProps {
@@ -41,6 +43,14 @@ export interface NumberInputProps {
    */
   isPassword?: boolean;
   /**
+   * 是否在组件初始化时激活键盘，默认否
+   */
+  startFocus?: boolean;
+  /**
+   * 使用系统输入键盘，否则使用NumberInput，默认是
+   */
+  useSystemInput?: boolean;
+  /**
    * 输入框下方文字提示
    */
   info?: string;
@@ -55,7 +65,7 @@ export interface NumberInputProps {
   /**
    * 格子的边框颜色
    */
-  borderColor?: string;
+  borderColor?: ThemeColor;
   /**
    * 格子的边框宽度
    */
@@ -63,7 +73,7 @@ export interface NumberInputProps {
   /**
    * 已输入格子的边框颜色，仅在underline模式下有效
    */
-  activeBorderColor?: string;
+  activeBorderColor?: ThemeColor;
   /**
    * 格子样式
    */
@@ -87,7 +97,7 @@ export interface NumberInputProps {
 }
 
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     position: 'relative',
     flexDirection: 'row',
@@ -100,16 +110,17 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     textAlign: 'center',
+    color: DynamicColor(Color.text),
   },
   info: {
     marginTop: 5,
     textAlign: 'center',
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
   },
   errorMessage: {
     marginTop: 5,
     textAlign: 'center',
-    color: Color.danger,
+    color: DynamicColor(Color.danger),
   },
   invisibleInput: {
     opacity: 0,
@@ -122,40 +133,70 @@ const styles = StyleSheet.create({
 /**
  * 一个数字输入框
  */
-export function NumberInput(props: NumberInputProps) {
+export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
 
+  const useSystemInput = props.useSystemInput !== false;
   const numberCount = props.numberCount || 6;
   const isPassword = props.isPassword === true;
   const disableKeyPad = props.disableKeyPad === true;
+  const startFocus = props.startFocus === true;
   const finishHideKeyPad = props.finishHideKeyPad !== false;
   const borderType = props.borderType || 'box';
   const borderWidth = props.borderWidth || 1;
-  const borderColor = props.borderColor || Color.lightBorder;
+  const borderColor = props.borderColor || Color.border;
   const activeBorderColor = props.activeBorderColor || borderColor;
   const valueArr = props.value.split('');
 
   let lastClickBoxRet = -1;
   const inputRef = createRef<TextInput>();
+  const textShadow = useRef(props.value);
+  const [ showInput, setShowInput ] = useState(startFocus);
+
+  function focusInput() {
+    if (useSystemInput)
+      inputRef.current?.focus();
+    else
+      setShowInput(true);
+  }
+  function blurInput() {
+    if (useSystemInput)
+      inputRef.current?.blur();
+    else
+      setShowInput(false);
+  }
+
+  useEffect(() => {
+    if (startFocus) {
+      focusInput();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ startFocus ]);
 
   function onInputChangeText(text: string) {
     //点击了前面的方格输入，需要清除方格后面的文字
-    if (lastClickBoxRet >= 0 && text.length > lastClickBoxRet)
+    if (lastClickBoxRet >= 0 && text.length > lastClickBoxRet) {
       text = (text.substring(0, lastClickBoxRet) + text.charAt(text.length - 1));
+      lastClickBoxRet = -1;
+    }
     if (text.length > numberCount)
       return;
 
     props.onChangeText && props.onChangeText(text);
     props.onValueChange && props.onValueChange(text);
 
+    textShadow.current = text;
+
     if (text.length === numberCount) {
+      console.log(text.length, numberCount);
       props.onEnterFinish && props.onEnterFinish(text);
       if (finishHideKeyPad)
-        inputRef.current?.blur();
+        blurInput();
     }
   }
   function onBoxClicked(i: number) {
     lastClickBoxRet = i;
-    inputRef.current?.focus();
+    if (props.useSystemInput !== false)
+      inputRef.current?.focus();
   }
 
   function renderBoxs() {
@@ -169,21 +210,28 @@ export function NumberInput(props: NumberInputProps) {
         ...selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
           box: {
             ...( i !== numberCount - 1 ? borderRight(borderWidth, 'dotted', borderColor) : {}),
-            backgroundColor: Color.white,
+            backgroundColor: ThemeSelector.color(Color.white),
           },
           underline: {
-            ...borderBottom(borderWidth, 'dotted', valueThis ? activeBorderColor : borderColor),
+            ...borderBottom(borderWidth, 'solid', valueThis ? activeBorderColor : borderColor),
           },
         }),
       } as ViewStyle;
 
       arr.push(
-        <TouchableHighlight key={i} style={boxStyle} underlayColor={PressedColor.default} onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}>
+        <TouchableHighlight key={i} style={boxStyle} underlayColor={ThemeSelector.color(PressedColor(Color.white))} onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}>
           <Text style={styles.text}>{(valueThis ? (isPassword ? '●' : valueThis) : ' ')}</Text>
         </TouchableHighlight>
       );
     }
     return arr;
+  }
+
+  function onInput(str: string) {
+    onInputChangeText(textShadow.current + str);
+  }
+  function onDelete() {
+    onInputChangeText(textShadow.current.substring(0, textShadow.current.length - 1));
   }
 
   return (
@@ -205,6 +253,12 @@ export function NumberInput(props: NumberInputProps) {
       />
       { CheckTools.isNullOrEmpty(props.info) ? <></> : <Text style={styles.info}>{props.info}</Text> }
       { CheckTools.isNullOrEmpty(props.errorMessage) ? <></> : <Text style={styles.errorMessage}>{props.errorMessage}</Text> }
+
+      <NumberKeyBoard
+        show={showInput}
+        onInput={onInput}
+        onDelete={onDelete}
+      />
     </ColumnView>
   );
-}
+});

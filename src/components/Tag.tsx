@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color } from '../styles/ColorStyles';
-import { FonstSizes } from '../styles/TextStyles';
+import { Color, FonstSizes, ThemeColor, ThemeSelector } from '../styles';
 import { border, paddingVH, selectStyleType } from '../utils/StyleTools';
-import { Iconfont } from './Iconfont';
+import { Iconfont } from './Icon';
 import { RowView } from './layout/RowView';
+import { ThemeWrapper } from '../theme/Theme';
 
 type TagTypes = 'default'|'primary'|'success'|'warning'|'danger';
 
@@ -39,7 +39,7 @@ interface TagProp {
   /**
    * 自定义文字的颜色。
    */
-  textColor?: string;
+  textColor?: ThemeColor;
   /**
    * 自定义颜色。
    */
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 /**
  * 标记组件。用于标记关键词和概括主要内容。
  */
-export function Tag(props: TagProp) {
+export const Tag = ThemeWrapper(function (props: TagProp) {
   function getStyle() {
     return {
       ...selectStyleType(props.shape, 'round', {
@@ -88,45 +88,45 @@ export function Tag(props: TagProp) {
       }),
       ...selectStyleType<ViewStyle|TextStyle, TagTypes>(props.type, 'default', props.plain ? {
         default: {
-          ...border(1, 'solid', Color.darkBorder),
-          color: Color.text,
+          ...border(1, 'solid', ThemeSelector.color(Color.border)),
+          color: ThemeSelector.color(Color.text),
         },
         primary: {
-          ...border(1, 'solid', Color.primary),
-          color: Color.primary,
+          ...border(1, 'solid', ThemeSelector.color(Color.primary)),
+          color: ThemeSelector.color(Color.primary),
         },
         success: {
-          ...border(1, 'solid', Color.success),
-          color: Color.success,
+          ...border(1, 'solid', ThemeSelector.color(Color.success)),
+          color: ThemeSelector.color(Color.success),
         },
         warning: {
-          ...border(1, 'solid', Color.warning),
-          color: Color.warning,
+          ...border(1, 'solid', ThemeSelector.color(Color.warning)),
+          color: ThemeSelector.color(Color.warning),
         },
         danger: {
-          ...border(1, 'solid', Color.danger),
-          color: Color.danger,
+          ...border(1, 'solid', ThemeSelector.color(Color.danger)),
+          color: ThemeSelector.color(Color.danger),
         },
       } : {
         default: {
-          ...border(1, 'solid', Color.darkBorder),
-          color: Color.text,
+          ...border(1, 'solid', ThemeSelector.color(Color.border)),
+          color: ThemeSelector.color(Color.text),
         },
         primary: {
-          backgroundColor: Color.primary,
-          color: Color.white,
+          backgroundColor: ThemeSelector.color(Color.primary),
+          color: ThemeSelector.color(Color.white),
         },
         success: {
-          backgroundColor: Color.success,
-          color: Color.white,
+          backgroundColor: ThemeSelector.color(Color.success),
+          color: ThemeSelector.color(Color.white),
         },
         warning: {
-          backgroundColor: Color.warning,
-          color: Color.white,
+          backgroundColor: ThemeSelector.color(Color.warning),
+          color: ThemeSelector.color(Color.white),
         },
         danger: {
-          backgroundColor: Color.danger,
-          color: Color.white,
+          backgroundColor: ThemeSelector.color(Color.danger),
+          color: ThemeSelector.color(Color.white),
         },
       }),
       ...selectStyleType<ViewStyle, TagSizes>(props.size, 'medium', {
@@ -145,16 +145,18 @@ export function Tag(props: TagProp) {
 
   const speicalStyle = getStyle();
   return (
-    <RowView center style={{
-      ...styles.view,
-      ...speicalStyle,
-      ...props.style,
-    }}>
-      <Text style={{
-        ...styles.title,
-        color: props.textColor || (speicalStyle as TextStyle).color,
-        fontSize: selectStyleType(props.size, 'medium', FonstSizes) - 2,
-      }}>{props.text}</Text>
+    <RowView center style={[
+      styles.view,
+      speicalStyle,
+      props.style as ViewStyle,
+    ]}>
+      <Text style={[
+        styles.title,
+        {
+          color: ThemeSelector.color(props.textColor) || (speicalStyle as TextStyle).color,
+          fontSize: selectStyleType(props.size, 'medium', FonstSizes) - 2,
+        },
+      ]}>{props.text}</Text>
       {
         props.closeable ?
           <TouchableOpacity onPress={props.onClose}><Iconfont icon="close" size={15} color={props.textColor || (speicalStyle as TextStyle).color as string} /></TouchableOpacity>
@@ -162,4 +164,4 @@ export function Tag(props: TagProp) {
       }
     </RowView>
   );
-}
+});

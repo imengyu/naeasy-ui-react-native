@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View, ViewStyle, Animated } from "react-native";
-import { Color } from "../../styles/ColorStyles";
+import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated } from "react-native";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { FeedbackNative } from "../tools/Feedback";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface SwitchProps {
   /**
@@ -16,11 +17,11 @@ export interface SwitchProps {
   /**
    * 开关的颜色
    */
-  color?: string;
+  color?: ThemeColor;
   /**
    * 开关的反色
    */
-  inverseColor?: string;
+  inverseColor?: ThemeColor;
   /**
    * 开关点的颜色
    */
@@ -35,6 +36,7 @@ export interface SwitchProps {
   disabled?: boolean;
   /**
    * 是否有触感反馈，默认是
+   * @platform iOS
    */
   impactFeedback?: boolean;
   /**
@@ -43,7 +45,7 @@ export interface SwitchProps {
   size?: number;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   toggleOut: {
     position: 'relative',
     overflow: 'hidden',
@@ -70,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
-    shadowColor: Color.black,
+    shadowColor: DynamicColor(Color.black),
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
   },
@@ -79,11 +81,11 @@ const styles = StyleSheet.create({
 /**
  * 开关组件。用于在打开和关闭状态之间进行切换。
  */
-export function Switch(props: SwitchProps) {
+export const Switch = ThemeWrapper(function (props: SwitchProps) {
 
   const size = props.size || 30;
   const color = props.color || Color.primary;
-  const inverseColor = props.inverseColor || Color.grey;
+  const inverseColor = props.inverseColor || Color.switch;
   const dotColor = props.dotColor || Color.white;
   const impactFeedback = props.impactFeedback !== true;
   const disabled = props.disabled === true;
@@ -127,21 +129,19 @@ export function Switch(props: SwitchProps) {
       }}
       onPress={change}
     >
-      <View style={{
-        backgroundColor: inverseColor,
-        opacity: props.disabled ? 0.8 : 1,
-        ...styles.toggleOutView,
-        ...style,
-      }}>
+      <View style={[
+        {
+          backgroundColor: ThemeSelector.color(inverseColor),
+          opacity: props.disabled ? 0.8 : 1,
+        },
+        styles.toggleOutView,
+        style,
+      ]}>
         <Animated.View
           style={[
-            {
-              backgroundColor: color,
-              ...styles.toggleActiveColor,
-            },
-            {
-              opacity: opacityAnim,
-            },
+            { backgroundColor: ThemeSelector.color(color) },
+            styles.toggleActiveColor,
+            { opacity: opacityAnim },
           ]}
         />
         <Animated.View
@@ -158,17 +158,19 @@ export function Switch(props: SwitchProps) {
             },
           ]}
         >
-          <View style={{
-            ...styles.toggleDotInner,
-            backgroundColor: dotColor,
-            borderRadius: size / 2,
-            width: size - dotPadding * 2,
-            height: size - dotPadding * 2,
-          }}>
-            { props.loading ? <ActivityIndicator color={props.value ? color : inverseColor} /> : <></> }
+          <View style={[
+            styles.toggleDotInner,
+            {
+              backgroundColor: ThemeSelector.color(dotColor),
+              borderRadius: size / 2,
+              width: size - dotPadding * 2,
+              height: size - dotPadding * 2,
+            },
+          ]}>
+            { props.loading ? <ActivityIndicator color={ThemeSelector.color(props.value ? color : inverseColor)} /> : <></> }
           </View>
         </Animated.View>
       </View>
     </TouchableWithoutFeedback>
   );
-}
+});

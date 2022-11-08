@@ -1,12 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, TouchableHighlight } from "react-native";
+import { Text, TouchableHighlight } from "react-native";
 import { ScrollView } from "react-native";
-import { Color, PressedColor } from "../../styles/ColorStyles";
+import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { deviceHeight, rpx } from "../../utils/StyleConsts";
-import { borderBottom, displayNoneIfEmpty } from "../../utils/StyleTools";
+import { displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
 import { Popup } from "../Popup";
 import { PopupContainerProps } from "../PopupContainer";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**
@@ -46,6 +47,10 @@ export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'p
    */
   centerWidth?: string|number;
   /**
+   * 条目文字颜色
+   */
+  textColor?: ThemeColor;
+  /**
    * 关闭事件
    */
   onClose: () => void;
@@ -70,14 +75,14 @@ export interface ActionSheetItem {
   /**
    * 选项文字颜色
    */
-  color?: string;
+  color?: ThemeColor;
   /**
    * 是否禁用当前选项
    */
   disabled?: boolean;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   topScroll: {
     maxHeight: deviceHeight - 200,
   },
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
   },
   viewCancel: {
     position: 'relative',
-    backgroundColor: Color.light,
+    backgroundColor: DynamicColor(Color.light),
     paddingTop: 10,
   },
   item: {
@@ -94,28 +99,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Color.white,
+    backgroundColor: DynamicColor(Color.white),
   },
   itemTitle: {
     fontSize: 16,
-    color: Color.text,
+    color: DynamicColor(Color.text),
   },
   itemSubTitle: {
     fontSize: 13,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
     marginTop: 4,
   },
   titleView: {
     paddingVertical: 10,
-    ...borderBottom(1, 'solid', Color.border),
+    borderColor: DynamicColor(Color.white),
+    borderBottomColor: DynamicColor(Color.border),
+    borderWidth: 1,
   },
   title: {
     fontSize: 16,
-    color: Color.text,
+    color: DynamicColor(Color.text),
   },
   description: {
     fontSize: 13,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
   },
 });
 
@@ -132,22 +139,26 @@ export interface ActionSheetItemProps {
 /**
  * 动作面板条目按扭组件
  */
-export function ActionSheetItem(props: ActionSheetItemProps) {
+export const ActionSheetItem = ThemeWrapper(function (props: ActionSheetItemProps) {
   return (
-    <TouchableHighlight style={styles.item} underlayColor={PressedColor.default} onPress={props.disabled === true ? undefined : props.onPress}>
+    <TouchableHighlight
+      style={styles.item}
+      underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+      onPress={props.disabled === true ? undefined : props.onPress}
+    >
       <ColumnView center>
-        <Text style={{ ...styles.itemTitle, color: props.disabled === true ? Color.grey : (props.color || Color.text) }}>{props.name}</Text>
-        <Text style={{ ...styles.itemSubTitle, ...displayNoneIfEmpty(props.subname) }}>{props.subname}</Text>
+        <Text style={[ styles.itemTitle, { color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.color || Color.text)) } ]}>{props.name}</Text>
+        <Text style={[ styles.itemSubTitle, displayNoneIfEmpty(props.subname) ]}>{props.subname}</Text>
       </ColumnView>
     </TouchableHighlight>
   );
-}
+});
 
 //#endregion
 
 //#region ActionSheet
 
-function ActionSheetInner(props: ActionSheetProps) {
+const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
 
   function onItemClick(item: ActionSheetItem, index: number) {
     if (typeof props.onSelect === 'function')
@@ -166,18 +177,18 @@ function ActionSheetInner(props: ActionSheetProps) {
       { width: props.center ? (props.centerWidth || rpx(600)) : undefined },
     ]} bounces={false}>
       <ColumnView>
-        <ColumnView center style={{
-          ...styles.titleView,
-          ...displayNoneIfEmpty(props.title, props.description),
-        }}>
-          <Text style={{...styles.title, ...displayNoneIfEmpty(props.title)}}>{props.title}</Text>
-          <Text style={{...styles.description, ...displayNoneIfEmpty(props.description)}}>{props.description}</Text>
+        <ColumnView center style={[
+          styles.titleView,
+          displayNoneIfEmpty(props.title, props.description),
+        ]}>
+          <Text style={[ styles.title, displayNoneIfEmpty(props.title) ]}>{props.title}</Text>
+          <Text style={[ styles.description, displayNoneIfEmpty(props.description) ]}>{props.description}</Text>
         </ColumnView>
         <ColumnView style={styles.view}>
           { props.actions?.map((item, index) => <ActionSheetItem
             key={index}
             name={item.name}
-            color={item.color}
+            color={ThemeSelector.color(item.color || props.textColor || Color.text)}
             subname={item.subname}
             disabled={item.disabled}
             onPress={() => onItemClick(item, index)}
@@ -186,7 +197,7 @@ function ActionSheetInner(props: ActionSheetProps) {
         { props.showCancel === true ? <ColumnView style={styles.viewCancel}>
           <ActionSheetItem
             name={props.cancelText || '取消'}
-            color={Color.text}
+            color={ThemeSelector.color(props.textColor || Color.text)}
             subname={''}
             disabled={false}
             onPress={onCancelClick}
@@ -195,7 +206,7 @@ function ActionSheetInner(props: ActionSheetProps) {
       </ColumnView>
     </ScrollView>
   );
-}
+});
 
 /**
  * 动作面板。底部弹起的模态面板，包含与当前情境相关的多个选项。
@@ -209,13 +220,11 @@ export class ActionSheet extends React.Component<ActionSheetProps> {
   static show(showProps: Omit<ActionSheetProps, 'show'|'onClose'>) {
     const handle = Popup.show({
       round: true,
-      show: true,
       closeable: showProps.showCancel,
       closeIcon: showProps.showCancel ? false : undefined,
       ...showProps,
       position: showProps.center ? "center" : "bottom",
       size: showProps.center ? (showProps.centerWidth || "80%") : "auto",
-      onClose: () => {},
       renderContent: () => <ActionSheetInner
         { ...showProps }
         show

@@ -57,8 +57,8 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
     let key = Portal.add(
       <PopupContainer
         { ...showProps }
-        show={true}
         ref={(r) => {refPopupContainer = r;}}
+        show={true}
         onCloseAnimFinished={() => {
           refPopupContainer = null;
           popupStaticHandle.key = null;

@@ -1,16 +1,16 @@
 import React from 'react';
-import { Image, ImageSourcePropType, ImageStyle, ViewStyle } from 'react-native';
-import { TouchableHighlight } from "react-native";
-import { PressedColor } from "../../styles/ColorStyles";
+import { Image, ImageSourcePropType, ImageStyle, ViewStyle, Text, TextStyle } from 'react-native';
+import { TouchableOpacity } from "react-native";
 import { selectStyleType } from '../../utils/StyleTools';
+import { ThemeWrapper } from '../../theme/Theme';
 
 export type ImageButtonShapeType = 'round'|'square-full'|'custom';
 
 export interface ImageButtonProps {
   /**
-   * 按钮按下时的背景颜色
+   * 按钮按下时的透明度
    */
-  pressedBackgroundColor?: string,
+  activeOpacity?: number,
   /**
    * 图片样式
    */
@@ -43,20 +43,28 @@ export interface ImageButtonProps {
    * 图片
    */
   source: ImageSourcePropType;
+  /**
+   * 在下方显示文字
+   */
+  text?: string;
+  /**
+   * 下方文字的样式
+   */
+  textStyle?: TextStyle;
 }
 
 /**
  * 显示图片的按钮
  */
-export function ImageButton(props: ImageButtonProps) {
+export const ImageButton = ThemeWrapper(function (props: ImageButtonProps) {
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       style={{
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: props.padding,
-        ...selectStyleType(props.shape, 'round', {
+        ...selectStyleType(props.shape, 'custom', {
           "round": {
             borderRadius: 50,
           },
@@ -70,7 +78,7 @@ export function ImageButton(props: ImageButtonProps) {
         ...props.style,
         opacity: props.disabled ? 0.3 : 1,
       }}
-      underlayColor={props.pressedBackgroundColor || PressedColor.light}
+      activeOpacity={props.activeOpacity || 0.75}
       onPress={props.disabled ? undefined : props.onPress}
     >
       <Image
@@ -81,6 +89,7 @@ export function ImageButton(props: ImageButtonProps) {
           height: props.size,
         }}
       />
-    </TouchableHighlight>
+      { props.text ? <Text style={props.textStyle}>{props.text}</Text> : <></> }
+    </TouchableOpacity>
   );
-}
+});

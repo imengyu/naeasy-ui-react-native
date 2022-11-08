@@ -3,6 +3,8 @@ import CheckTools from '../utils/CheckTools';
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { Color } from "../styles/ColorStyles";
 import { selectStyleType, border as _border, paddingVH } from '../utils/StyleTools';
+import { ThemeSelector } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';
 
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
     zIndex: 100,
-    color: Color.white,
+    color: Color.white.light,
     borderRadius: 5,
     minWidth: 10,
     textAlign: 'center',
@@ -70,7 +72,8 @@ const styles = StyleSheet.create({
 /**
  * 徽标组件。通常用于在头像，某些按钮上显示小红点或者数量
  */
-export function Badge(props: BadgeProps) {
+
+export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
 
   const { content, children, border, position, badgeStyle, containerStyle, offset } = props;
   const badgeSize = props.badgeSize || 10;
@@ -79,8 +82,8 @@ export function Badge(props: BadgeProps) {
   const badgeStyleFinal = {
     ...styles.badge,
     ...badgeStyle,
-    backgroundColor: props.color || Color.danger,
-    ...(border ? _border(1, 'solid', Color.white) : {}),
+    backgroundColor: ThemeSelector.color(props.color || Color.danger),
+    ...(border ? _border(1, 'solid', ThemeSelector.color(Color.white)) : {}),
     ...(CheckTools.isNullOrEmpty(content) ? {
       height: badgeSize,
       fontSize: 0,
@@ -119,26 +122,38 @@ export function Badge(props: BadgeProps) {
         ...styles.view,
         ...containerStyle,
       }}>
-        { showBadge ? (<Text style={{ ...badgeStyleFinal, ...selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
-          topRight: {
-            top: -offsetY,
-            right: -offsetX,
-          },
-          topLeft: {
-            top: -offsetY,
-            left: -offsetX,
-          },
-          bottomRight: {
-            bottom: -offsetY,
-            right: -offsetX,
-          },
-          bottomLeft: {
-            bottom: -offsetY,
-            left: -offsetX,
-          },
-        }) }}>{contentString}</Text>) : <></> }
+        {
+          showBadge ?
+            (<Text style={[
+              badgeStyleFinal,
+              selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
+                topRight: {
+                  top: -offsetY,
+                  right: -offsetX,
+                },
+                topLeft: {
+                  top: -offsetY,
+                  left: -offsetX,
+                },
+                bottomRight: {
+                  bottom: -offsetY,
+                  right: -offsetX,
+                },
+                bottomLeft: {
+                  bottom: -offsetY,
+                  left: -offsetX,
+                },
+              }),
+            ]}>{contentString}</Text>) :
+            <></>
+          }
         {children}
-      </View> :
-      (showBadge ? <Text style={{...badgeStyleFinal, position: 'relative' }}>{contentString}</Text> : <></>)
+        </View> :
+        (
+          showBadge ?
+            <Text style={{...badgeStyleFinal, position: 'relative' }}>{contentString}</Text> :
+            <></>
+        )
   );
-}
+});
+

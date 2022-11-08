@@ -1,10 +1,12 @@
 import React from 'react';
-import { ImageSourcePropType, ImageStyle, StyleSheet, Text, ViewStyle, Image } from 'react-native';
+import CheckTools from '../utils/CheckTools';
+import { ImageSourcePropType, ImageStyle, Text, ViewStyle, Image } from 'react-native';
 import { Color } from '../styles/ColorStyles';
 import { rpx } from '../utils/StyleConsts';
 import { ColumnView } from './layout/ColumnView';
 import { selectStyleType } from '../utils/StyleTools';
-import CheckTools from '../utils/CheckTools';
+import { DynamicColor, DynamicThemeStyleSheet } from '../styles/DynamicThemeStyleSheet';
+import { ThemeWrapper } from '../theme/Theme';
 
 
 type EmptyImageType = 'default'|'error'|'network'|'search';
@@ -33,7 +35,7 @@ export interface EmptyProp {
   children?: JSX.Element|JSX.Element[],
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     width: '100%',
     flexDirection: 'column',
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
   descriptionStyle: {
     paddingVertical: rpx(8),
     fontSize: 14,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
     textAlign: 'center',
   },
 });
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
 /**
  * 空状态组件。提供空状态时的占位提示。
  */
-export function Empty(props: EmptyProp) {
+export const Empty = ThemeWrapper(function (props: EmptyProp) {
   const imageStyle = {
     width: props.imageSize || 100,
     height: props.imageSize || 100,
@@ -72,4 +74,4 @@ export function Empty(props: EmptyProp) {
       { props.children as JSX.Element }
     </ColumnView>
   );
-}
+});

@@ -3,16 +3,18 @@ import { ImageSourcePropType, ImageStyle, ViewStyle } from "react-native";
 import { Image } from "../Image";
 import { RowView } from "../layout/RowView";
 import { Text } from "../typography/Text";
+import { ThemeColor } from "../../styles";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface BadgeWithIconProps {
   /**
    * 外层背景颜色
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 文字颜色
    */
-  textColor?: string;
+  textColor?: ThemeColor;
   /**
    * 文字大小
    */
@@ -42,7 +44,7 @@ export interface BadgeWithIconProps {
 /**
  * 一个可以显示数量，图标，背景的标记
  */
-export function BadgeWithIcon(props: BadgeWithIconProps) {
+export const BadgeWithIcon = ThemeWrapper(function (props: BadgeWithIconProps) {
   return (
     <RowView backgroundColor={props.backgroundColor} center alignSelf="center" style={{
       paddingHorizontal: 4,
@@ -63,4 +65,4 @@ export function BadgeWithIcon(props: BadgeWithIconProps) {
       <Text color={props.textColor} size={props.textSize}>{props.text}</Text>
     </RowView>
   );
-}
+});

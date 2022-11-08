@@ -1,9 +1,10 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../Badge";
-import { Color } from "../../styles";
-import { Iconfont } from "../Iconfont";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Iconfont } from "../Icon";
+import { ThemeWrapper } from "../../theme/Theme";
 
 //公用的TabBarItem
 //==================================
@@ -76,12 +77,12 @@ export function TabBarItem(_props: TabBarItemProps) {
 
 interface InternalTabBarItemProps extends TabBarItemProps {
   active?: boolean;
-  activeColor?: string;
-  inactiveColor?: string;
+  activeColor?: ThemeColor;
+  inactiveColor?: ThemeColor;
   onPress?: () => void;
 }
 function InternalTabBarItem(props: InternalTabBarItemProps) {
-  const color = props.active ? (props.activeColor || Color.primary) : (props.inactiveColor || Color.grey);
+  const color = props.active ? ThemeSelector.color(props.activeColor || Color.primary) : ThemeSelector.color(props.inactiveColor || Color.textSecond);
   const iconSize = props.iconSize || 23;
   const humpHeight = props.humpHeight || [ iconSize, iconSize ];
   const iconProps = {
@@ -115,11 +116,11 @@ export interface TabBarProps {
   /**
    * 选中颜色
    */
-  activeColor?: string;
+  activeColor?: ThemeColor;
   /**
    * 未选中样式
    */
-  inactiveColor?: string;
+  inactiveColor?: ThemeColor;
   /**
    * 标签文字样式
    */
@@ -148,7 +149,7 @@ export interface TabBarProps {
 /**
  * 底部导航栏组件，用于在不同页面之间进行切换。
  */
-export function TabBar(props: TabBarProps) {
+export const TabBar = ThemeWrapper(function (props: TabBarProps) {
 
   const selectedTabName = props.selectedTabName || '';
 
@@ -190,14 +191,14 @@ export function TabBar(props: TabBarProps) {
       { renderItems() }
     </View>
   );
-}
+});
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   tabBar: {
     position: 'relative',
-    backgroundColor: Color.white,
+    backgroundColor: DynamicColor(Color.white),
     borderTopWidth: 1,
-    borderTopColor: Color.lightBorder,
+    borderTopColor: DynamicColor(Color.border),
     paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',

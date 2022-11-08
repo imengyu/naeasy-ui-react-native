@@ -1,10 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color } from '../styles/ColorStyles';
+import { Color } from '../styles';
 import { rpx } from '../utils/StyleConsts';
 import { selectStyleType } from '../utils/StyleTools';
-import { Iconfont } from './Iconfont';
+import { Iconfont } from './Icon';
 
 export type IToastPosition = 'top'|'bottom'|'center';
 
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   content: {
-    color: Color.white,
+    color: Color.white.light,
     fontSize: 14,
   },
   image: {

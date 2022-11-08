@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, TextStyle, View } from "react-native";
-import { Color } from "../styles/ColorStyles";
 import { selectStyleType } from "../utils/StyleTools";
 import { ColumnView } from "./layout/ColumnView";
 import { RowView } from "./layout/RowView";
+import { Color, ThemeColor, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 type DividerOrientationTypes = 'left' | 'right' | 'center';
 
@@ -15,11 +16,11 @@ export interface DividerProps {
   /**
    * 线的颜色，默认 gray
    */
-  color?: string;
+  color?: ThemeColor;
   /**
    * 线的颜色，默认 无
    */
-  backgroundColor?: string;
+  backgroundColor?: ThemeColor;
   /**
    * 分割线标题的位置，默认 center
    */
@@ -46,7 +47,7 @@ export interface DividerProps {
   size?: number;
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   horizontalView: {
     position: 'relative',
     justifyContent: 'center',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   text: {
-    color: Color.text,
+    color: DynamicColor(Color.text),
     fontSize: 14,
   },
 });
@@ -74,12 +75,12 @@ const styles = StyleSheet.create({
 /**
  * 分割线组件
  */
-export function Divider(props: DividerProps) {
+export const Divider = ThemeWrapper(function(props: DividerProps) {
 
   const { type, orientation, text } = props;
-  const color = props.color || Color.darkBorder;
+  const color = props.color || Color.divider;
   const backgroundColor = props.backgroundColor || Color.transparent;
-  const width = props.width || 1;
+  const width = props.width || StyleSheet.hairlineWidth;
   const size = props.size || 20;
   const direction = selectStyleType<"flex-start"|"center"| "flex-end", DividerOrientationTypes>(orientation, 'center', {
     left: "flex-start",
@@ -91,29 +92,33 @@ export function Divider(props: DividerProps) {
     type === 'vertical' ?
       <ColumnView style={{
         ...styles.verticalView,
-        backgroundColor: backgroundColor,
+        backgroundColor: ThemeSelector.color(backgroundColor),
         width: size,
         height: size,
       }} justify="center" align={direction}>
         <View style={{
           ...styles.verticalLine,
-          backgroundColor: color,
+          backgroundColor: ThemeSelector.color(color),
           width: width,
           left: size / 2 - width / 2,
         }} />
       </ColumnView> :
       <RowView style={{
         ...styles.horizontalView,
-        backgroundColor: backgroundColor,
+        backgroundColor: ThemeSelector.color(backgroundColor),
         height: size,
       }} justify={direction} align="center">
         <View style={{
           ...styles.horizontalLine,
-          backgroundColor: color,
+          backgroundColor: ThemeSelector.color(color),
           height: width,
           top: size / 2 - width / 2,
         }} />
-        <Text style={{ ...styles.text, backgroundColor: backgroundColor, ...props.textStyle }}>{text}</Text>
+        <Text style={[
+          styles.text,
+          { backgroundColor: ThemeSelector.color(backgroundColor) },
+          props.textStyle,
+        ]}>{text}</Text>
       </RowView>
   );
-}
+});

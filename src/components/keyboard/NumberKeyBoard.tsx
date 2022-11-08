@@ -1,12 +1,14 @@
 import CheckTools from "../../utils/CheckTools";
 import React, { forwardRef, useImperativeHandle } from "react";
-import { StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewStyle } from "react-native";
+import { Text, TextStyle, TouchableHighlight, View, ViewStyle } from "react-native";
 import { Button } from "../button/Button";
-import { Iconfont } from "../Iconfont";
+import { Iconfont } from "../Icon";
 import { RowView } from "../layout/RowView";
 import { Popup } from "../Popup";
-import { WhiteSpace } from "../white-space";
-import { Color, PressedColor } from "../../styles";
+import { FeedbackNative } from "../tools/Feedback";
+import { WhiteSpace } from "../space/WhiteSpace";
+import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { ThemeWrapper } from "../../theme/Theme";
 
 export interface NumberKeyBoardProps extends NumberKeyBoardInnerProps {
   /**
@@ -62,23 +64,28 @@ export interface NumberKeyBoardInnerProps {
   /**
    * 完成按键的文字颜色。默认black
    */
-  keyTextColor?: string;
+  keyTextColor?: ThemeColor;
   /**
    * 完成按键的背景颜色。默认primary
    */
-  keyFinishColor?: string;
+  keyFinishColor?: ThemeColor;
   /**
    * 完成按键的文字颜色。默认white
    */
-  keyFinishTextColor?: string;
+  keyFinishTextColor?: ThemeColor;
   /**
    * 完成按键的按下时的颜色
    */
-  keyFinishPressedColor?: string;
+  keyFinishPressedColor?: ThemeColor;
   /**
    * 自定义按键按下时的颜色
    */
-  keyPressedColor?: string;
+  keyPressedColor?: ThemeColor;
+  /**
+   * 按键按下时是否有触感反馈，默认是
+   * @platform iOS
+   */
+  keyPressedImpactFeedback?: boolean;
   /**
    * 键盘点击按键时发出事件
    */
@@ -99,7 +106,7 @@ export interface NumberKeyBoardInstance {
 const NumberKeyBoardKeys = [
   '1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '',
 ];
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',
@@ -128,7 +135,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    color: Color.black,
+    color: DynamicColor(Color.black),
     fontSize: 16,
   },
   keyText: {
@@ -139,28 +146,29 @@ const styles = StyleSheet.create({
 /**
  * 虚拟数字键盘的键盘内容组件，可单独嵌入其他对话框或者页面中。
  */
-export function NumberKeyBoardInner(props: NumberKeyBoardInnerProps) {
+export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardInnerProps) {
 
   const showSideButtons = props.showSideButtons === true;
   const keyFinishColor = props.keyFinishColor || Color.primary;
-  const keyFinishPressedColor = props.keyFinishPressedColor || PressedColor.primary;
+  const keyFinishPressedColor = props.keyFinishPressedColor || PressedColor(Color.white);
   const keyColor = props.keyColor || Color.white;
-  const keyPressedColor = props.keyPressedColor || PressedColor.default;
+  const keyPressedColor = props.keyPressedColor || PressedColor(Color.white);
   const keyFinishTextColor = props.keyFinishTextColor || Color.white;
   const keyTextColor = props.keyTextColor || Color.black;
   const finishButtonText = props.finishButtonText || '完成';
   const keyHeight = props.keyHeight || 51;
   const extraKey = props.extraKey || [];
+  const keyPressedImpactFeedback = props.keyPressedImpactFeedback !== false;
   const keyTextStyle = {
     ...styles.keyText,
     ...props.keyTextStyle,
-    color: keyTextColor,
+    color: ThemeSelector.color(keyTextColor),
   };
   const keyTextStyleFinish = {
     ...styles.keyText,
     fontSize: 20,
     ...props.keyTextStyle,
-    color: keyFinishTextColor,
+    color: ThemeSelector.color(keyFinishTextColor),
   };
 
   function onFinish() {
@@ -171,7 +179,7 @@ export function NumberKeyBoardInner(props: NumberKeyBoardInnerProps) {
 
     const keyStyle = {
       ...styles.key,
-      backgroundColor: action === 'finish' ? keyFinishColor : keyColor,
+      backgroundColor: ThemeSelector.color(action === 'finish' ? keyFinishColor : keyColor),
       flexBasis: `${width === 0 ? 33 : width}%`,
       width: `${width === 0 ? 33 : width}%`,
       height: keyHeight * height,
@@ -189,8 +197,10 @@ export function NumberKeyBoardInner(props: NumberKeyBoardInnerProps) {
         <TouchableHighlight
           key={text + action}
           style={keyStyle}
-          underlayColor={action === 'finish' ? keyFinishPressedColor : keyPressedColor}
+          underlayColor={ThemeSelector.color(action === 'finish' ? keyFinishPressedColor : keyPressedColor)}
           onPress={() => {
+            if (keyPressedImpactFeedback)
+              FeedbackNative.impactSelectionFeedbackGenerator();
             //键盘点击事件
             if (action === 'delete')
               props.onDelete && props.onDelete();
@@ -271,7 +281,7 @@ export function NumberKeyBoardInner(props: NumberKeyBoardInnerProps) {
       <WhiteSpace size="sm" />
     </View>
   );
-}
+});
 
 /**
  * 虚拟数字键盘，可以配合密码输入框组件或自定义的输入框组件使用。

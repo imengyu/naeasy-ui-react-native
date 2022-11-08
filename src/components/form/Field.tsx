@@ -1,16 +1,17 @@
 import React from "react";
+import CheckTools from "../../utils/CheckTools";
 import { TextInputFocusEventData, View } from "react-native";
 import { NativeSyntheticEvent } from "react-native";
-import { Text, StyleSheet, TextInput, TextInputProps, TextStyle, ViewStyle } from "react-native";
+import { Text, TextInput, TextInputProps, TextStyle, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { Color } from "../../styles/ColorStyles";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { selectStyleType } from "../../utils/StyleTools";
-import { Iconfont } from "../Iconfont";
+import { Iconfont } from "../Icon";
 import { ColumnView } from "../layout/ColumnView";
 import { RowView } from "../layout/RowView";
 import { Platform } from "react-native";
 import { Form } from "./Form";
-import CheckTools from "../../utils/CheckTools";
+import { ThemeRender } from "../../theme/Theme";
 
 export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**
@@ -84,11 +85,11 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**
    * 左侧文本的颜色
    */
-  labelColor?: string;
+  labelColor?: ThemeColor;
   /**
    * 左侧文本的禁用颜色
    */
-  labelDisableColor?: string;
+  labelDisableColor?: ThemeColor;
   /**
    * 输入框样式
    */
@@ -100,11 +101,11 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**
    * 输入框颜色
    */
-  inputColor?: string;
+  inputColor?: ThemeColor;
   /**
    * 输入框禁用颜色
    */
-  inputDisableColor?: string;
+  inputDisableColor?: ThemeColor;
   /**
    * 外壳样式
    */
@@ -263,12 +264,8 @@ export class Field extends React.Component<FieldProps, State> {
   }
 
   onChangeText = (text: string) => {
-    if (this.props.formatTrigger !== 'onBlur') { //格式化字符串
+    if (this.props.formatTrigger !== 'onBlur') //格式化字符串
       text = this.doFormatter(text);
-      this.inputRef?.setNativeProps({
-        value: text,
-      });
-    }
     this.emitChangeText(text);
   };
   onClear = () => {
@@ -333,86 +330,93 @@ export class Field extends React.Component<FieldProps, State> {
     const error = this.props.error === true;
 
     return (
-      <RowView
-        touchable={typeof onPress === 'function'} onPress={onPress}
-        style={{ ...styles.field, ...fieldStyle, ...(this.state.focused ? activeFieldStyle : {}) }}
-        center={center}
-      >
-        { /* 左边的标签区域 */ }
-        { (showLabel === false || (CheckTools.isNullOrEmpty(label) && !renderLeftIcon)) ? <></> : <RowView flex={labelFlex}>
-          { renderLeftIcon ? renderLeftIcon() : <></> }
-          { required && showRequiredBadge ? <Text style={styles.requiredMark}>*</Text> : <></> }
-          {
-            CheckTools.isNullOrEmpty(label) ?
-              <View style={labelStyle} /> :
-              <Text style={{
-                ...styles.labelText,
-                width: labelWidth,
-                textAlign: labelAlign || 'center',
-                color: disabled ? labelDisableColor : labelColor,
-                ...labelStyle,
-              }}>{ label + (colon ? ': ' : '') }</Text>
-          }
-        </RowView> }
+      <ThemeRender>
+        {() => (
+          <RowView
+            touchable={typeof onPress === 'function'} onPress={onPress}
+            style={{ ...styles.field, ...fieldStyle, ...(this.state.focused ? activeFieldStyle : {}) }}
+            center={center}
+          >
+            { /* 左边的标签区域 */ }
+            { (showLabel === false || (CheckTools.isNullOrEmpty(label) && !renderLeftIcon)) ? <></> : <RowView flex={labelFlex}>
+              { renderLeftIcon ? renderLeftIcon() : <></> }
+              { required && showRequiredBadge ? <Text style={styles.requiredMark}>*</Text> : <></> }
+              {
+                CheckTools.isNullOrEmpty(label) ?
+                  <View style={labelStyle} /> :
+                  <Text style={[
+                    styles.labelText,
+                    {
+                      width: labelWidth,
+                      textAlign: labelAlign || 'center',
+                      color: ThemeSelector.color(disabled ? labelDisableColor : labelColor),
+                    },
+                    labelStyle,
+                  ]}>{ label + (colon ? ': ' : '') }</Text>
+              }
+            </RowView> }
 
-        { /* 输入框区域 */ }
-        <ColumnView flex={inputFlex}>
-          <RowView align="center" style={styles.inputWapper2}>
-            { renderLeftButton ? renderLeftButton() : <></> }
+            { /* 输入框区域 */ }
+            <ColumnView flex={inputFlex}>
+              <RowView align="center" style={styles.inputWapper2}>
+                { renderLeftButton ? renderLeftButton() : <></> }
+                {
+                  this.props.renderInput ?
+                    React.cloneElement(this.props.renderInput(), {
+                      //劫持子元素的数据更改事件
+                      value: this.props.value,
+                      onValueChange: this.props.onValueChange,
+                      onBlurValid: this.props.onBlurValid,
+                    }) : <TextInput
+                      ref={(input) => {this.inputRef = input;}}
+                      style={[
+                        styles.input,
+                        inputStyle,
+                        (this.state.focused ? activeInputStyle : {}),
+                        { color: ThemeSelector.color(disabled ? inputDisableColor : (error ? Color.danger : inputColor)) },
+                      ]}
+                      placeholderTextColor={error ? ThemeSelector.color(Color.danger) : (this.props.placeholderTextColor || ThemeSelector.color(Color.textSecond) )}
+                      keyboardType={selectStyleType(type, 'text', {
+                        text: 'default',
+                        password: 'default',
+                        number: 'number-pad',
+                        decimal: 'decimal-pad',
+                        tel: 'phone-pad',
+                        email: 'email-address',
+                      })}
+                      secureTextEntry={type === 'password'}
+                      textContentType={type === 'password' ? 'password' : undefined}
+                      editable={disabled === true ? false : editable}
+                      { ...this.props }
+                      value={this.props.value as string}
+                      onChangeText={this.onChangeText}
+                      onBlur={this.onBlur}
+                      onFocus={this.onFocus}
+                    />
+                }
+                { renderRightButton ? renderRightButton() : <></> }
+              </RowView>
+              { CheckTools.isNullOrEmpty(errorMessage) ? <></> : <Text style={styles.errorMessage}>{errorMessage}</Text> }
+              { showWordLimit ? this.renderWordLimit() : <></> }
+            </ColumnView>
+
+            { /* 清除按钮 */ }
             {
-              this.props.renderInput ?
-                React.cloneElement(this.props.renderInput(), {
-                  //劫持子元素的数据更改事件
-                  value: this.props.value,
-                  onValueChange: this.props.onValueChange,
-                  onBlurValid: this.props.onBlurValid,
-                }) : <TextInput
-                  ref={(input) => {this.inputRef = input;}}
-                  style={{
-                    ...styles.input,
-                    ...inputStyle,
-                    ...(this.state.focused ? activeInputStyle : {}),
-                    color: disabled ? inputDisableColor : (error ? Color.danger : inputColor),
-                  }}
-                  placeholderTextColor={error ? Color.danger : this.props.placeholderTextColor}
-                  keyboardType={selectStyleType(type, 'text', {
-                    text: 'default',
-                    password: 'default',
-                    number: 'number-pad',
-                    decimal: 'decimal-pad',
-                    tel: 'phone-pad',
-                    email: 'email-address',
-                  })}
-                  secureTextEntry={type === 'password'}
-                  textContentType={type === 'password' ? 'password' : undefined}
-                  editable={disabled === true ? false : editable}
-                  { ...this.props }
-                  value={this.props.value as string}
-                  onChangeText={this.onChangeText}
-                  onBlur={this.onBlur}
-                  onFocus={this.onFocus}
-                />
+              clearable ?
+                <TouchableOpacity style={styles.clearIcon} onPress={this.onClear}>
+                  <Iconfont icon="delete-filling" />
+                </TouchableOpacity> :
+                <></>
             }
-            { renderRightButton ? renderRightButton() : <></> }
           </RowView>
-          { CheckTools.isNullOrEmpty(errorMessage) ? <></> : <Text style={styles.errorMessage}>{errorMessage}</Text> }
-          { showWordLimit ? this.renderWordLimit() : <></> }
-        </ColumnView>
-
-        { /* 清除按钮 */ }
-        {
-          clearable ?
-            <TouchableOpacity style={styles.clearIcon} onPress={this.onClear}>
-              <Iconfont icon="delete-filling" />
-            </TouchableOpacity> :
-            <></>
-        }
-      </RowView>
+        )}
+      </ThemeRender>
     );
   }
 }
 
-const styles = StyleSheet.create({
+
+const styles = DynamicThemeStyleSheet.create({
   field: {
     ...Platform.select({
       android: {
@@ -427,7 +431,7 @@ const styles = StyleSheet.create({
   requiredMark: {
     fontSize: 14,
     alignSelf: 'flex-start',
-    color: Color.danger,
+    color: DynamicColor(Color.danger),
     ...Platform.select({
       android: {
         paddingVertical: 4,
@@ -463,12 +467,12 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     fontSize: 12,
-    color: Color.danger,
+    color: DynamicColor(Color.danger),
     marginTop: 4,
   },
   wordLimitText: {
     fontSize: 12,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
     width: '100%',
     textAlign: 'right',
   },

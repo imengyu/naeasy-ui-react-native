@@ -52,14 +52,6 @@ export function rpx(num : number) {
 }
 
 /**
- * 计算像素 返回实际dp。
- * @param num px
- */
-export function px(num : number) {
-  return px2dp(num);
-}
-
-/**
  * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
  */
 export function dp2px(dpValue: number) {
@@ -67,7 +59,7 @@ export function dp2px(dpValue: number) {
 }
 
 /**
- * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+ * 根据手机的分辨率从 px(像素) 转成为 dp
  */
  export function px2dp(pxValue: number) {
   return (pxValue / deviceScale + 0.5);

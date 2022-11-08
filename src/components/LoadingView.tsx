@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color } from "../styles/ColorStyles";
 import CheckTools from '../utils/CheckTools';
+import { ActivityIndicator, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../styles";
+import { ThemeWrapper } from '../theme/Theme';
 
 interface LoadingViewProps {
   /**
@@ -19,7 +20,7 @@ interface LoadingViewProps {
   /**
    * 加载器颜色
    */
-  indicatorColor?: string,
+  indicatorColor?: ThemeColor,
   /**
    * 加载器样式
    */
@@ -32,7 +33,7 @@ interface LoadingViewProps {
   children?: JSX.Element,
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     position: 'relative',
   },
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: Color.maskWhite,
+    backgroundColor: DynamicColor(Color.mask),
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,
@@ -50,14 +51,14 @@ const styles = StyleSheet.create({
   loadingText: {
     marginVertical: 10,
     fontSize: 15,
-    color: Color.primary,
+    color: DynamicColor(Color.primary),
   },
 });
 
 /**
  * 一个加载中视图，可以用来包裹需要加载的内容
  */
-export function LoadingView(props: LoadingViewProps) {
+export const LoadingView = ThemeWrapper(function (props: LoadingViewProps) {
 
   const { style, children, loading, indicatorColor, indicatorStyle, loadingText, loadingTextStyle } = props;
   return (
@@ -66,7 +67,7 @@ export function LoadingView(props: LoadingViewProps) {
       ...style,
     }}>
       { loading ? <View style={styles.loadingView}>
-        <ActivityIndicator color={indicatorColor || Color.primary} size="large" style={indicatorStyle} />
+        <ActivityIndicator color={ThemeSelector.color(indicatorColor || Color.primary)} size="large" style={indicatorStyle} />
         <Text style={{
           ...styles.loadingText,
           ...loadingTextStyle,
@@ -76,4 +77,4 @@ export function LoadingView(props: LoadingViewProps) {
       {children}
     </View>
   );
-}
+});

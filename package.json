@@ -2,8 +2,8 @@
   "bundleDependencies": false,
   "deprecated": false,
   "license": "MIT",
-  "types": "src/index.ts",
-  "main": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "name": "imengyu-ui-lib",
   "description": "A simple ui lib for react native",
   "devDependencies": {
@@ -13,13 +13,15 @@
     "babel-jest": "^26.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "fast-xml-parser": "^4.0.11",
+    "fs-extra": "^10.1.0",
     "jest": "^26.1.0",
     "metro-react-native-babel-preset": "^0.64.0",
+    "mri": "^1.2.0",
     "prettier": "^2.4.1",
     "react": "17.0.1",
     "react-native": "0.64.1",
     "react-test-renderer": "16.9.0",
-    "fs-extra": "^10.1.0",
     "typescript": "^4.4.3"
   },
   "dependencies": {
@@ -27,7 +29,8 @@
     "async-validator": "^4.2.5",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-pager-view": "^5.4.24",
-    "react-native-safe-area-context": "^4.3.1"
+    "react-native-safe-area-context": "^4.3.1",
+    "react-native-svg": "^13.5.0"
   },
   "resolutions": {
     "@types/react": "^17"
@@ -51,6 +54,9 @@
     "lint": "eslint src --ext .ts,.tsx --cache",
     "test": "jest",
     "type-check": "tsc --noEmit"
+  },
+  "bin": {
+    "imengyu-ui-lib-tools": "scripts/imengyu-tools.js"
   },
   "keywords": [
     "react-native"

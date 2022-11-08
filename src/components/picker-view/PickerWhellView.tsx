@@ -1,6 +1,7 @@
-import { isAndroid, isIOS } from '../../utils/PlatformTools';
 import React, { createRef } from 'react';
 import { findNodeHandle, HostComponent, NativeSyntheticEvent, requireNativeComponent, StyleSheet, UIManager, View, ViewStyle } from 'react-native';
+import { Color, ThemeColor, ThemeSelector } from '../../styles';
+import { isAndroid, isIOS } from '../../utils/PlatformTools';
 
 interface PickerWhellViewSelectEvent {
   /**
@@ -32,11 +33,11 @@ interface PickerWhellViewAndroidProps {
   /**
   * 选中项文字颜色设置
   */
-  textColorCenter?: string;
+  textColorCenter?: ThemeColor;
   /**
   * 未选中项文字颜色设置
   */
-  textColorOut?: string;
+  textColorOut?: ThemeColor;
   /**
    * 文字大小
    */
@@ -58,7 +59,7 @@ interface PickerWhellViewAndroidProps {
    *
    * @platform Android
    */
-  dividerColor?: string;
+  dividerColor?: ThemeColor;
   /**
     * 分隔线类型
     *
@@ -232,6 +233,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
     }
     return (
       <PickerWhellViewIOS
+        { ...this.props.iosProps }
         ref={this.iosViewRef as any}
         style={this.props.style}
         data={this.props.options}
@@ -296,6 +298,9 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
     for (let i = 0; i < data.length; i++) {
       arr.push(
         <PickerWhellViewAndroid
+          { ...this.props.androidProps }
+          textColorCenter={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.black)}
+          textColorOut={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.text)}
           key={'PickerWhellView' + i}
           style={{ ...styles.item, width: width }}
           options={data[i] as string[]}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { Color } from '../styles/ColorStyles';
+import { Color, ThemeColor, ThemeSelector } from '../styles';
+import { ThemeWrapper } from '../theme/Theme';
 
 /**
  * 指示器的参数
@@ -21,11 +22,11 @@ interface DotIndicatorProp {
   /**
    * 指示器圆点激活时的颜色
    */
-  activeColor?: string,
+  activeColor?: ThemeColor,
   /**
    * 指示器圆点的颜色
    */
-  deactiveColor?: string,
+  deactiveColor?: ThemeColor,
   /**
    * 指示器圆点激活时的样式
    */
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
 /**
  * 一个显示圆点的指示器，不可操作
  */
-export function DotIndicator(props: DotIndicatorProp) {
+export const DotIndicator = ThemeWrapper(function (props: DotIndicatorProp) {
   const size = props.size || 10;
   const deactiveColor = props.deactiveColor || Color.grey;
   const activeColor = props.activeColor || Color.primary;
@@ -67,17 +68,17 @@ export function DotIndicator(props: DotIndicatorProp) {
       <View key={index} style={index === props.currentIndex ? {
           width: size,
           height: size,
-          backgroundColor: activeColor,
+          backgroundColor: ThemeSelector.color(activeColor),
           ...styles.activeDot,
           ...props.activeDotStyle,
         } : {
           width: size,
           height: size,
-          backgroundColor: deactiveColor,
+          backgroundColor: ThemeSelector.color(deactiveColor),
           ...styles.dot,
           ...props.dotStyle,
         }}
       />) }
     </View>
   );
-}
+});

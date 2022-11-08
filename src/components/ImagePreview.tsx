@@ -1,9 +1,9 @@
 import Portal from "../portal";
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect, useCallback } from "react";
 import PagerView from "react-native-pager-view";
-import { ActivityIndicator, Animated, BackHandler, GestureResponderEvent, PanResponder, PanResponderGestureState, StyleSheet, Text, View } from "react-native";
-import { Color } from "../styles";
-import { useDidMountEffect, useWillUnMountEffect } from "../hooks/CommonHooks";
+import { ActivityIndicator, Animated, BackHandler, GestureResponderEvent, PanResponder, PanResponderGestureState, Text, View, StyleSheet } from "react-native";
+import { Color } from "../styles/ColorStyles";
+import { deviceWidth } from "../utils";
 
 const styles = StyleSheet.create({
   container: {
@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     top: 0,
-    backgroundColor: Color.black,
+    backgroundColor: Color.black.light,
   },
   pager: {
     position: 'absolute',
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   defaultIndicator: {
-    backgroundColor: Color.mask,
+    backgroundColor: Color.mask.light,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
     textAlign: 'center',
-    color: Color.white,
+    color: Color.white.light,
     marginTop: 40,
   },
   imageZoomContainer: {
@@ -47,12 +47,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     minHeight: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageZoomImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    minHeight: '100%',
+    width: deviceWidth,
+    height: 1,
+    //backgroundColor: '#0f0',
   },
   imageZoomLoadingCon: {
     position: 'absolute',
@@ -64,7 +65,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 5,
   },
-
+  absTouchView: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    //backgroundColor: '#F00',
+    zIndex: 0,
+  },
 });
 
 export interface ImagePreviewZoomProps{
@@ -77,6 +86,7 @@ export interface ImagePreviewZoomProps{
 export function ImageZoomControl(props: ImagePreviewZoomProps) {
 
   const loadingOpacityValue = useRef(new Animated.Value(1));
+  const [ imageHeightValue, setImageHeightValue ] = useState(1);
   const imageScaleValue = useRef(new Animated.Value(1));
   const imageScaleValueCurrent = useRef(1);
   const imagePositionValue = useRef(new Animated.ValueXY({ x: 0, y: 0 }));
@@ -89,23 +99,21 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
     imagePositionValueCurrentX.current = v.x;
     imagePositionValueCurrentY.current = v.y;
   });
-  useWillUnMountEffect(() => {
-    imageScaleValue.current.removeAllListeners();
-    imagePositionValue.current.removeAllListeners();
-  });
+  useEffect(() => {
+    const imageScaleValueV = imageScaleValue.current;
+    const imagePositionValueV = imagePositionValue.current;
+    return () => {
+      if (imageScaleValueV)
+        imageScaleValueV.removeAllListeners();
+      if (imagePositionValueV)
+        imagePositionValueV.removeAllListeners();
+    };
+  }, []);
 
-  function checkPanGestureSet(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
-    if ((gestureState.numberActiveTouches === 1 && imageScaleValueCurrent.current !== 1)
-      || (imageScaleValueCurrent.current === 1)
-      || gestureState.numberActiveTouches === 2) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
   function checkPanGestureMove(evt: GestureResponderEvent, gestureState: PanResponderGestureState) {
     if ((gestureState.numberActiveTouches === 1 && imageScaleValueCurrent.current !== 1)
-      || (imageScaleValueCurrent.current === 1 && (Math.abs(gestureState.dy) > 2 && Math.abs(gestureState.dx) < 2))
+      || (imageScaleValueCurrent.current === 1 && (Math.abs(gestureState.dy) > 10 && Math.abs(gestureState.dx) < 5))
       || gestureState.numberActiveTouches === 2) {
       return true;
     } else {
@@ -123,22 +131,22 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
 
   const panResponder = useRef(PanResponder.create({
     // 要求成为响应者：
-    onStartShouldSetPanResponder: checkPanGestureSet,
-    onStartShouldSetPanResponderCapture: checkPanGestureSet,
+    onStartShouldSetPanResponder: () => false,
+    onStartShouldSetPanResponderCapture: () => false,
     onMoveShouldSetPanResponder: checkPanGestureMove,
     onMoveShouldSetPanResponderCapture: checkPanGestureMove,
-    onPanResponderGrant: (evt) => {
+    onPanResponderGrant: (evt, gestureState) => {
       const touch0 = evt.nativeEvent.touches[0];
       const touch1 = evt.nativeEvent.touches[1];
 
-      if (evt.nativeEvent.touches.length >= 1) {
+      if (gestureState.numberActiveTouches >= 1) {
         //移动之前设置下图片初始距离
         panPosStart.current.x = imagePositionValueCurrentX.current;
         panPosStart.current.y = imagePositionValueCurrentY.current;
       }
 
       //开始缩放时记录两指距离
-      if (evt.nativeEvent.touches.length >= 2) {
+      if (gestureState.numberActiveTouches >= 2) {
         panScaleStartLen.current = (Math.sqrt(Math.pow(touch0.pageX - touch1.pageX, 2) + Math.pow(touch0.pageY - touch1.pageY, 2)));
         //如果有两个点，则计算两个点的中点作为起始点
         panTouchStart.current.x = (touch0.pageX + touch1.pageX) / 2;
@@ -150,12 +158,11 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
         panTouchStart.current.y = touch0.pageY;
       }
 
-      panLastTouchCount.current = evt.nativeEvent.touches.length;
+      panLastTouchCount.current = gestureState.numberActiveTouches;
     },
     onPanResponderMove: (evt, gestureState) => {
       let scaleNow = imageScaleValueCurrent.current;
-
-      if (panLastTouchCount.current === 1 && evt.nativeEvent.touches.length === 2) {
+      if (panLastTouchCount.current === 1 && gestureState.numberActiveTouches >= 2) {
         const touch0 = evt.nativeEvent.touches[0];
         const touch1 = evt.nativeEvent.touches[1];
         //由一个点变两个点，再算一下两指距离
@@ -163,14 +170,15 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
         //再算一下起始点
         panTouchStart.current.x = (touch0.pageX + touch1.pageX) / 2;
         panTouchStart.current.y = (touch0.pageY + touch1.pageY) / 2;
-      } else if (panLastTouchCount.current === 2 && evt.nativeEvent.touches.length === 1) {
+        panLastTouchCount.current = gestureState.numberActiveTouches;
+        return;
+      } else if (panLastTouchCount.current === 2 && gestureState.numberActiveTouches === 1) {
         const touch0 = evt.nativeEvent.touches[0];
         //由两个点变一个点，再算一下起始点
         panTouchStart.current.x = touch0.pageX;
         panTouchStart.current.y = touch0.pageY;
+        panLastTouchCount.current = 1;
       }
-
-      panLastTouchCount.current = evt.nativeEvent.touches.length;
 
       if (gestureState.numberActiveTouches === 2) {
         //现在两指距离-开始两指距离，算出缩放比率
@@ -236,7 +244,7 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
       if (panLastTouchCount.current === 1 && Math.abs(gestureState.dx) < 4 && Math.abs(gestureState.dy) < 4) {
         props.onEmitClose && props.onEmitClose();
       } else {
-        if (imageScaleValueCurrent.current < 0.3) {
+        if (imageScaleValueCurrent.current < 0.6) {
           //缩放太小，关闭
           props.onEmitClose && props.onEmitClose();
         } else if (imageScaleValueCurrent.current === 1) {
@@ -258,7 +266,6 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
 
   return (
     <View
-      { ...panResponder.current.panHandlers }
       style={styles.imageZoomContainer}
       onLayout={(e) => {
         containerSize.current = {
@@ -268,15 +275,26 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
       }}
     >
       <Animated.View pointerEvents="none" style={[styles.imageZoomLoadingCon, { opacity: loadingOpacityValue.current }]}>
-        <ActivityIndicator color={Color.white} />
+        <ActivityIndicator color={Color.white.light} />
       </Animated.View>
+      <Animated.View
+        style={styles.absTouchView}
+        onMoveShouldSetResponder={() => false}
+        onStartShouldSetResponder={() => true}
+        onResponderRelease={() => {
+          props.onEmitClose && props.onEmitClose();
+        }}
+      />
       <Animated.Image
+        { ...panResponder.current.panHandlers }
         resizeMode="contain"
         source={{ uri: props.imageUrl }}
-        onLayout={(e) => {
+        onLoad={(e) => {
+          const height = deviceWidth / (e.nativeEvent.source.width / e.nativeEvent.source.height);
+          setImageHeightValue(height);
           imageSize.current = {
-            x: e.nativeEvent.layout.width,
-            y: e.nativeEvent.layout.height,
+            x: deviceWidth,
+            y: height,
           };
         }}
         onLoadStart={() => loadingOpacityValue.current.setValue(1)}
@@ -284,6 +302,7 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
         style={[
           styles.imageZoomImage,
           {
+            height: imageHeightValue,
             transform: [
               { translateX: imagePositionValue.current.x },
               { translateY: imagePositionValue.current.y },
@@ -334,8 +353,17 @@ export function ImagePreviewControl(props: ImagePreviewControlProps) {
   const animFadeValue = useRef(new Animated.Value(0));
   const refIndicator = useRef<ImagePreviewIndicatorControlInstance>(null);
 
+  //隐藏动画
+  const doCloseAnim = useCallback(() => {
+    Animated.timing(animFadeValue.current, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => props.onCloseAnimFnished());
+  }, [ props ]);
+
   //显示动画
-  useDidMountEffect(() => {
+  useEffect(() => {
     Animated.timing(animFadeValue.current, {
       toValue: 1,
       duration: 300,
@@ -350,16 +378,8 @@ export function ImagePreviewControl(props: ImagePreviewControlProps) {
     return () => {
       backSubscription.remove();
     };
-  });
+  }, [ doCloseAnim ]);
 
-  //隐藏动画
-  function doCloseAnim() {
-    Animated.timing(animFadeValue.current, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => props.onCloseAnimFnished());
-  }
 
   function renderImages() {
     return props.imageUrls.map((url, i) => (

@@ -27,32 +27,44 @@ function numberWithCommas(x: number|string) {
   return x;
 }
 
+export interface PySegSortItem {
+  letter: string;
+  data: string[];
+}
+
 /**
- * 格式化日期
- * @param time 日期
- * @param formatStr YYYY-MM-dd HH:ii:ss
+ * 汉字按拼音首字母分组拼序
+ * @param arr
  * @returns
  */
-function formatTime(time: Date, formatStr: string) {
-  let str = formatStr ? formatStr : "YYYY-MM-dd HH:ii:ss";
-  str = str.replace(/yyyy|YYYY/, '' + time.getFullYear());
-  str = str.replace(/MM/, pad(time.getMonth() + 1, 2));
-  str = str.replace(/M/, '' + time.getMonth() + 1);
-  str = str.replace(/dd|DD/, pad(time.getDate(), 2));
-  str = str.replace(/d/, '' + time.getDate());
-  str = str.replace(/HH/, pad(time.getHours(), 2));
-  str = str.replace(
-    /hh/,
-    pad(time.getHours() > 12 ? time.getHours() - 12 : time.getHours(), 2)
-  );
-  str = str.replace(/mm/, pad(time.getMinutes(), 2));
-  str = str.replace(/ii/, pad(time.getMinutes(), 2));
-  str = str.replace(/ss/, pad(time.getSeconds(), 2));
-  return str;
+function pySegSort(arr: string[]) : PySegSortItem[] {
+  if (!String.prototype.localeCompare)
+    throw new Error("Not found localeCompare! ");
+
+  const letters = "*abcdefghjklmnopqrstwxyz".split('');
+  const zh = "阿八嚓哒妸发旮哈讥咔垃痳拏噢妑七呥扨它穵夕丫帀".split('');
+
+  const segs = [] as PySegSortItem[];
+  let curr : PySegSortItem|null = null;
+  letters.forEach(function(item,i){
+    curr = { letter: item, data:[] };
+    arr.forEach(function(item2){
+      if ((!zh[i - 1] || zh[i - 1].localeCompare(item2) <= 0) && item2.localeCompare(zh[i]) === -1) {
+        curr?.data.push(item2);
+      }
+    });
+    if (curr.data.length) {
+      segs.push(curr);
+      curr.data.sort(function(a,b){
+        return a.localeCompare(b);
+      });
+    }
+  });
+  return segs;
 }
 
 export default {
-  formatTime,
   pad,
   numberWithCommas,
+  pySegSort,
 };

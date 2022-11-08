@@ -1,9 +1,8 @@
-import { useDidMountEffect, useWillUnMountEffect } from "../../hooks/CommonHooks";
 import StringTools from "../../utils/StringTools";
-import React, { forwardRef, useImperativeHandle } from "react";
-import { Text, TextProps } from "react-native";
+import React, { useEffect, forwardRef, useImperativeHandle } from "react";
+import { TextProps } from "react-native";
+import { Text } from "../typography/Text";
 import { CurrentTime, useCountDown } from "./CountdownHook";
-
 
 export interface CountDownProps extends TextProps {
   /**
@@ -26,6 +25,10 @@ export interface CountDownProps extends TextProps {
    * 自定义渲染
    */
   renderText?: (time: CurrentTime) => JSX.Element;
+  /**
+   * 倒计时结束事件
+   */
+  onFinish?: () => void;
 }
 
 export interface CountDownInstance {
@@ -42,15 +45,22 @@ export const CountDown = forwardRef<CountDownInstance, CountDownProps>((props, r
   const countdown = useCountDown({
     time: props.time || 0,
     millisecond: props.millisecond || false,
+    onFinish: props.onFinish,
   });
 
-  useDidMountEffect(() => {
+  useEffect(() => {
+    countdown.reset(props.time);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ props.time ]);
+
+  useEffect(() => {
     if (props.autoStart !== false)
       countdown.start();
-  });
-  useWillUnMountEffect(() => {
-    countdown.stop();
-  });
+    return () => {
+      countdown.stop();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useImperativeHandle(ref, () => ({
     start() { countdown.start(); },

@@ -1,10 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from 'imengyu-ui-lib';
-import { CellGroup } from 'imengyu-ui-lib';
-import { Button } from 'imengyu-ui-lib';
-import { RowView } from 'imengyu-ui-lib';
-import { ScrollView, Text } from 'react-native';
+import { ColumnView, CellGroup, Button, RowView, Text } from 'imengyu-ui-lib';
+import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestButton'>;
@@ -21,7 +18,7 @@ export class TestButtonScreen extends React.PureComponent<Props> {
               <Button text="success" type="success" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
               <Button text="default" type="default" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
               <Button text="danger" type="danger" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
-              <Button text="warning" type="warning" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5, marginTop: 10 }} />
+              <Button text="warning" type="warning" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
             </RowView>
           </CellGroup>
           <CellGroup title="朴素按钮">
@@ -31,20 +28,20 @@ export class TestButtonScreen extends React.PureComponent<Props> {
               <Button plain text="success" type="success" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
               <Button plain text="default" type="default" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
               <Button plain text="danger" type="danger" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
-              <Button plain text="warning" type="warning" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5, marginTop: 10 }} />
+              <Button plain text="warning" type="warning" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
             </RowView>
           </CellGroup>
           <CellGroup title="禁用状态">
-            <Text>通过 touchable=false 属性来禁用按钮，禁用状态下按钮不可点击。</Text>
+            <Text>通过 touchable=false 属性来禁用按钮，禁用状态下按钮不可点击。也可不提供 onPress 函数，此时按钮也无法响应点击。</Text>
             <RowView wrap style={{ padding: 10 }}>
-              <Button touchable={false} text="primary" type="primary" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
-              <Button touchable={false} text="success" type="success" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
-              <Button touchable={false} text="default" type="default" onPress={()=>console.log('点击了！')} style={{ marginLeft: 5 }} />
+              <Button touchable={false} text="primary" type="primary" style={{ marginLeft: 5 }} />
+              <Button touchable={false} text="success" type="success" style={{ marginLeft: 5 }} />
+              <Button touchable={false} text="default" type="default" style={{ marginLeft: 5 }} />
             </RowView>
           </CellGroup>
           <CellGroup title="自定义颜色">
             <RowView wrap style={{ padding: 10 }}>
-              <Button text="自定义颜色" type="custom" color="#f00" pressedColor="#0f0" textColor="#fff" onPress={()=>console.log('点击了！')} />
+              <Button text="自定义颜色" type="custom" color="#f00" pressedColor="#ff0" textColor="#fff" onPress={()=>console.log('点击了！')} />
             </RowView>
           </CellGroup>
           <CellGroup title="加载状态">

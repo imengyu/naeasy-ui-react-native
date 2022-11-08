@@ -1,18 +1,20 @@
 import React, { createRef } from "react";
-import CheckTools from "../../utils/CheckTools";
-import { LoadingPage, LoadingPageProps } from "../../components/LoadingPage";
-import { SmartRefreshControl, SmartRefreshControlProps } from "../../components/refresh/android-smart-refresh/SmartRefreshControl";
-import { WhiteSpace } from "../white-space";
-import { ActivityIndicator, FlatList, FlatListProps, ListRenderItemInfo, RefreshControl, RefreshControlProps, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { LoadingPage, LoadingPageProps } from "../LoadingPage";
+import { SmartRefreshControl, SmartRefreshControlProps } from "../refresh/android-smart-refresh/SmartRefreshControl";
+import { WhiteSpace } from "../space/WhiteSpace";
+import { ActivityIndicator, FlatList, FlatListProps, ImageSourcePropType, ListRenderItemInfo, RefreshControl, RefreshControlProps, Text, View, ViewStyle } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button } from "../button/Button";
 import { XBarSpace } from "../space/XBarSpace";
-import { Empty } from "../../components/Empty";
-import { Color } from "../../styles/ColorStyles";
-import { isAndroid } from "../../utils/PlatformTools";
+import { Empty } from "../Empty";
+import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from "../../styles";
+import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { rpx } from "../../utils/StyleConsts";
 import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
 import { ColumnView } from "../layout/ColumnView";
+import CheckTools from "../../utils/CheckTools";
+import { ToolBox } from "../../utils";
+import ArrayUtils from "../../utils/ArrayUtils";
 
 export interface FlatListWapperListItem {
   /**
@@ -81,7 +83,7 @@ export interface FlatListWapperProps<T extends FlatListWapperListItem> extends O
   /**
    * 渲染空页面
    */
-  renderEmptyPage?: (state: 'empty'|'error'|'loading', text: string, retry: () => void, err: unknown) => JSX.Element;
+  renderEmptyPage?: (state: 'empty'|'error'|'loading', text: string, retry: () => void, err: unknown) => JSX.Element|undefined;
   /**
    * 自定义渲染列表
    */
@@ -154,6 +156,10 @@ export interface FlatListWapperProps<T extends FlatListWapperListItem> extends O
    * 空页样式
    */
   emptyStyle?: ViewStyle;
+  /**
+   * 空页显示图片, 如果指定了 renderEmptyPage 自定义渲染，则此属性无效。
+   */
+  emptyImage?: ImageSourcePropType,
   /**
    * android 下拉刷新样式
    */
@@ -287,9 +293,9 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
             let newData = prevState.data.concat();
             //拼接loader占位之前需要移除数据最后一位的loader占位
             if (newData.length > 0 && newData[newData.length - 1].renderType === 'loader')
-              newData.slice(newData.length - 1, 1);
+              ArrayUtils.removeAt(newData, newData.length - 1);
             if (newData.length > 0 && newData[newData.length - 1].renderType === 'empty')
-              newData.slice(newData.length - 1, 1);
+              ArrayUtils.removeAt(newData, newData.length - 1);
 
             props.solveData && (newData = props.solveData(newData));
 
@@ -311,14 +317,15 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
         return dataRet;
       } catch (e) {
         //加载失败
+        const errorString = '' + e;
         this.setState((prevState) => {
           const newData = prevState.data.concat();
 
           //拼接loader占位之前需要移除数据最后一位的loader占位
           if (newData.length > 0 && newData[newData.length - 1].renderType === 'loader')
-            newData.splice(newData.length - 1, 1);
+            ArrayUtils.removeAt(newData, newData.length - 1);
           if (newData.length > 0 && newData[newData.length - 1].renderType === 'empty')
-            newData.splice(newData.length - 1, 1);
+            ArrayUtils.removeAt(newData, newData.length - 1);
 
           this.currentDataCount = newData.length;
 
@@ -329,7 +336,7 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
             newData.push({ renderType: 'empty' } as T);
           return {
             data: newData,
-            lastErrorString: (this.props.errorPrefix || FlatListWapper.defaultProps.errorPrefix) + e,
+            lastErrorString: (this.props.errorPrefix || FlatListWapper.defaultProps.errorPrefix) + errorString,
             error: true,
             loading: false,
           };
@@ -372,15 +379,24 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
   /**
    * 手动触发刷新
    * @param wipeData 刷新时是保留之前数据还是清除全部数据
+   * @param setState 刷新时是否设置下拉组件的状态，默认是
    */
-  async refresh(wipeData?: boolean) {
+  async refresh(wipeData?: boolean, setState?: boolean) {
     if (this.state.loading)
       return null;
 
-    //设置刷新状态
-    this.setState({ refreshing: true });
+    if (setState !== false) {
+      //设置刷新状态
+      this.setState({ refreshing: true });
+    }
     const retData = await this.loadData(true, wipeData);
-    this.setState({ refreshing: false });
+
+    await ToolBox.waitTimeOut(isIOS ? 600 : 300);
+
+    if (setState !== false) {
+      //设置刷新状态
+      this.setState({ refreshing: false });
+    }
     return retData;
   }
 
@@ -482,18 +498,31 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
     const loadFinishNoneText = CheckTools.emptyOrNullToDefault(props.loadFinishNoneText, FlatListWapper.defaultProps.loadFinishNoneText);
     const retryText = CheckTools.emptyOrNullToDefault(props.retryText, FlatListWapper.defaultProps.retryText);
 
-    if (!error && showEmptyPage)
-      return props.renderEmptyPage ? props.renderEmptyPage('empty', loadFinishNoneText, this.onRefresh, null) : (
-        <Empty key="emptyPage" style={{...styles.emptyView,...props.emptyStyle}} pointerEvents="none" image="default" description={loadFinishNoneText} />
+    if (!error && showEmptyPage) {
+      const customElement = props.renderEmptyPage ? props.renderEmptyPage('empty', loadFinishNoneText, this.onRefresh, null) : undefined;
+      if (customElement)
+        return customElement;
+      return (
+        <Empty
+          key="emptyPage"
+          style={{...styles.emptyView,...props.emptyStyle}}
+          pointerEvents="none"
+          image={props.emptyImage || "default"}
+          description={loadFinishNoneText}
+        />
       );
-    if (error && showLoadErrorPage)
-      return props.renderEmptyPage ? props.renderEmptyPage('empty', lastErrorString, this.onRefresh, null) : (
+    }
+    if (error && showLoadErrorPage) {
+      const customElement = props.renderEmptyPage ? props.renderEmptyPage('empty', lastErrorString, this.onRefresh, null) : undefined;
+      if (customElement)
+        return customElement;
+      return (
         <Empty key="errorPage" style={{...styles.emptyView,...props.emptyStyle}} pointerEvents="box-none" image="error" description={lastErrorString}>
           <WhiteSpace />
           <Button shape="round" radius={10} type="primary" onPress={this.onRefresh}>{retryText}</Button>
         </Empty>
       );
-    return undefined;
+    }
   }
 
   //渲染
@@ -537,8 +566,7 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
         {
           //渲染全屏加载中页面
           (this.state.loading && showLoadingPage && this.currentDataCount === 0) ?
-            (props.renderEmptyPage ? props.renderEmptyPage('loading', loadingText, this.onRefresh, null) :
-              <LoadingPage style={styles.absView} { ...props.loadingPageProps} loadingText={loadingText} />)
+            (props.renderEmptyPage?.('loading', loadingText, this.onRefresh, null) || <LoadingPage style={styles.absView} { ...props.loadingPageProps} loadingText={loadingText} />)
            : <></>
         }
         { this.props.renderList ? this.props.renderList(listProps) : <FlatList<T> {...listProps} /> }
@@ -565,7 +593,7 @@ export interface FlatListLoaderProps {
  */
 export function FlatListLoader(props: FlatListLoaderProps) {
   return (<View style={styles.loaderView}>
-    { props.loading ? <ActivityIndicator color={Color.primary} size={20} /> : <></> }
+    { props.loading ? <ActivityIndicator color={ThemeSelector.color(Color.primary)} size={20} /> : <></> }
     <Text style={styles.loaderText}>{
       (props.loading) ?
         props.loadingText :
@@ -578,7 +606,7 @@ export function FlatListLoader(props: FlatListLoaderProps) {
   </View>);
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     flex: 1,
     position: 'relative',
@@ -610,14 +638,14 @@ const styles = StyleSheet.create({
   loaderText: {
     marginHorizontal: 10,
     fontSize: 14,
-    color: Color.grey,
+    color: DynamicColor(Color.textSecond),
   },
   loaderRetry: {
 
   },
   loaderRetryText: {
     fontSize: 14,
-    color: Color.primary,
+    color: DynamicColor(Color.primary),
   },
 });
 

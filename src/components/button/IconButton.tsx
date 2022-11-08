@@ -1,10 +1,11 @@
-import { selectStyleType } from '../../utils/StyleTools';
 import React from 'react';
 import { ViewStyle } from 'react-native';
 import { TouchableHighlight } from "react-native";
-import { PressedColor } from "../../styles/ColorStyles";
-import { Iconfont, IconfontProp } from "../Iconfont";
+import { selectStyleType } from '../../utils/StyleTools';
+import { Color, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Iconfont, IconfontProp } from "../Icon";
 import { ImageButtonShapeType } from './ImageButton';
+import { ThemeWrapper } from '../../theme/Theme';
 
 export interface IconButtonProps extends IconfontProp {
   /**
@@ -14,7 +15,7 @@ export interface IconButtonProps extends IconfontProp {
   /**
    * 按钮按下时的背景颜色
    */
-  pressedBackgroundColor?: string,
+  pressedBackgroundColor?: ThemeColor,
   /**
    * 按钮边距
    */
@@ -42,7 +43,7 @@ export interface IconButtonProps extends IconfontProp {
  *
  * 当前项目使用图标库, 图标的名字请在开发者》测试页面》组件》Icon页面中查看
  */
-export function IconButton(props: IconButtonProps) {
+export const IconButton = ThemeWrapper(function (props: IconButtonProps) {
   return (
     <TouchableHighlight
       style={{
@@ -64,10 +65,10 @@ export function IconButton(props: IconButtonProps) {
         ...props.buttonStyle,
         opacity: props.disabled ? 0.3 : 1,
       }}
-      underlayColor={props.pressedBackgroundColor || PressedColor.light}
+      underlayColor={ThemeSelector.color(props.pressedBackgroundColor || PressedColor(Color.white))}
       onPress={props.disabled ? undefined : props.onPress}
     >
       <Iconfont {...props} />
     </TouchableHighlight>
   );
-}
+});
