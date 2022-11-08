@@ -80,7 +80,7 @@
 </RowView>
 ```
 
-## 自定义颜色
+## 图标
 
 通过 icon 属性设置按钮图标，支持 Icon 组件里的所有图标，也可以传入图标 URL。
 
@@ -114,8 +114,8 @@
 |text|按钮文字(同children)|string|-|
 |children|按钮文字|string|-|
 |type|按钮支持 default、primary、success、warning、danger、custom 自定义 六种类型|`ButtomType`|`default`|
-|block|占满父级主轴|string|`false`|
-|plain|通过 plain 属性将按钮设置为朴素按钮，朴素按钮的文字为按钮颜色，背景为白色。|string|`false`|
+|block|占满父级主轴|boolean|`false`|
+|plain|通过 plain 属性将按钮设置为朴素按钮，朴素按钮的文字为按钮颜色，背景为白色。|boolean|`false`|
 |loading|通过 loading 属性设置按钮为加载状态，加载状态下默认会隐藏按钮文字，可以通过 loadingText 设置加载状态下的文字。|boolean|`false`|
 |loadingText|加载状态下的文字。|string|-|
 |loadingColor|加载状态圆圈颜色|ThemeColor|-|
