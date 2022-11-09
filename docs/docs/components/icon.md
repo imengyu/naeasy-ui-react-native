@@ -89,7 +89,7 @@ IconUtils.configIconMap({
 4. 转换完成后会输出一个 iconfont.js.output.json 文件至源目录，请将其复制到你的项目中，并导入到 Icon 组件中：
 
     ```js
-    IconUtils.configIconMap(require('你的路径/iconfont.js.output.json'));
+    IconUtils.configIconMap(require('你的存放路径/iconfont.js.output.json'));
     ```
 
 5. 然后就可以在 Icon 组件中通过图标名称使用图标库了，图标的名称与你在 iconfont 项目上设置的 classname 相同。
