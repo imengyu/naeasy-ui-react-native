@@ -120,7 +120,8 @@
 |loadingText|加载状态下的文字。|string|-|
 |loadingColor|加载状态圆圈颜色|ThemeColor|-|
 |shape|按钮形状 通过 square 设置方形按钮，通过 round 设置圆形按钮。|`'square'`&#124;`'round'`|`square`|
-|icon|左侧图标。支持 IconFont 组件里的所有图标，也可以传入图标的图片 URL（http/https）。|`string`,`ImageSourcePropType`|-|
+|icon|左侧图标。支持 Icon 组件里的所有图标，也可以传入图标的图片 URL（http/https）。|`string`,`ImageSourcePropType`|-|
+|iconProps|当使用图标时，图标的附加属性|`IconProp`|-|
 |text|按钮文字|string|-|
 |touchable|是否可以点击|boolean|`true`|
 |radius|当按扭为round圆形按扭时的圆角大小|number|`normal`|

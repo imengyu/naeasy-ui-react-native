@@ -106,8 +106,8 @@ interface MeasurementData {
 
 const DEFAULT_PROPS = {
   scrollOffset: 52,
-  activeTextColor: 'navy',
-  inactiveTextColor: 'black',
+  activeTextColor: Color.primary,
+  inactiveTextColor: Color.text,
   backgroundColor: 'transparent',
   style: {},
   tabStyle: {},
@@ -285,13 +285,6 @@ class ScrollableTabBarComponent extends React.Component<ScrollableTabBarProps, S
   }
 
   render() {
-    const tabUnderlineStyle = {
-      position: 'absolute',
-      height: 4,
-      backgroundColor: 'navy',
-      bottom: 0,
-    } as ViewStyle;
-
     const dynamicTabUnderline = {
       left: this.state._leftTabUnderline,
       width: this.state._widthTabUnderline,
@@ -339,7 +332,7 @@ class ScrollableTabBarComponent extends React.Component<ScrollableTabBarProps, S
             }
             <Animated.View
               style={[
-                tabUnderlineStyle,
+                styles.tabUnderlineStyle,
                 dynamicTabUnderline,
                 this.props.underlineStyle,
               ]}
@@ -400,5 +393,12 @@ const styles = DynamicThemeStyleSheet.create({
   tabs: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  tabUnderlineStyle: {
+    position: 'absolute',
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: DynamicColor(Color.primary),
+    bottom: 0,
   },
 });

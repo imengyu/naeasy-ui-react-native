@@ -4,9 +4,11 @@ import { ActivityIndicator, Image, ImageSourcePropType, ImageStyle, StyleSheet, 
 import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines } from '../../styles';
 import { FonstSizes } from '../../styles/TextStyles';
 import { border, paddingVH, selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
-import { Icon } from '../Icon';
+import { Icon, IconProp } from '../Icon';
 import { RowView } from '../layout/RowView';
 import { ThemeWrapper } from '../../theme/Theme';
+
+//TODO: 优化代码样式
 
 type ButtomType = 'default'|'primary'|'success'|'warning'|'danger'|'custom'|'text';
 type ButtomSizeType = 'small'|'medium'|'large'|'larger'|'mini';
@@ -49,9 +51,9 @@ export interface ButtonProp {
    */
   icon?: string|ImageSourcePropType,
   /**
-   * 当使用图标字体时，图标字体的名称 TODO: Fix
+   * 当使用图标时，图标的附加属性
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
   /**
    * 是否可以点击
    */
@@ -230,7 +232,7 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
     if (typeof props.icon === 'string') {
       if (props.icon.startsWith('http'))
         return <Image key="leftIcon" style={[ styles.icon, marginStyle, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
-      return <Icon key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{
+      return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{
         ...styles.titleIcon,
         ...marginStyle,
         ...props.iconStyle as TextStyle,

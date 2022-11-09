@@ -4,11 +4,13 @@ import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, TouchableHighl
 import { Color, PressedColor } from '../styles/ColorStyles';
 import { rpx } from '../utils/StyleConsts';
 import { borderBottom, borderTop, styleConfigPadding } from '../utils/StyleTools';
-import { Icon } from './Icon';
+import { Icon, IconProp } from './Icon';
 import { ColumnView } from './layout/ColumnView';
 import { RowView } from './layout/RowView';
 import { DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../styles';
 import { ThemeWrapper } from '../theme/Theme';
+
+//TODO: 优化代码样式
 
 interface CellProp {
   /**
@@ -32,10 +34,9 @@ interface CellProp {
    */
   icon?: string|ImageSourcePropType,
   /**
-   * 图标字体名称
-   * TODO: icon fix
+   * 当使用图标时，左图标的附加属性
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
   /**
    * 当左侧图标未设置时，是否在左侧追加一个占位区域，以和其他单元格对齐
    */
@@ -56,6 +57,10 @@ interface CellProp {
    * 右侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
    */
   rightIcon?: string|ImageSourcePropType,
+  /**
+   * 当使用图标时，右图标的附加属性
+   */
+  rightIconProps?: IconProp;
   /**
    * 是否可以点击
    */
@@ -224,7 +229,7 @@ const styles = DynamicThemeStyleSheet.create({
         //图标
         if (props.icon.startsWith('http'))
           return <Image key="leftIcon" style={{width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={{ uri: props.icon }} />;
-        return <Icon key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle}} />;
+        return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle}} />;
       }
       if (typeof props.icon === 'object' || typeof props.icon === 'number')
         return <Image key="leftIcon" style={{ width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={props.icon} />;
@@ -238,7 +243,7 @@ const styles = DynamicThemeStyleSheet.create({
     if (typeof props.rightIcon === 'string') {
       if (props.rightIcon.startsWith('http'))
         return <Image key="rightIcon" style={{width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} source={{ uri: props.rightIcon }} />;
-      return <Icon key="rightIcon" icon={props.rightIcon} fontFamily={props.iconFontFamily} style={{...styles.titleIcon, fontSize: iconSize, ...props.rightIconStyle as TextStyle}} />;
+      return <Icon key="rightIcon" icon={props.rightIcon} {...props.rightIconProps} style={{...styles.titleIcon, fontSize: iconSize, ...props.rightIconStyle as TextStyle}} />;
     }
     if (typeof props.rightIcon === 'object' || typeof props.rightIcon === 'number')
       return <Image style={{ width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} key="rightIcon" source={props.rightIcon} />;
