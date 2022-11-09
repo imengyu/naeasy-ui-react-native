@@ -8,6 +8,10 @@ Icon 支持基于字体的图标集、Svg 图标、图片，你只需要预先�
 
 ![示例图1](../images/icon.png)
 
+## 内置图标列表
+
+[查看内置图标列表](https://imengyu.top/pages/imengyu-ui-lib/demo_index.html)
+
 ## 基础用法
 
 通过 name 属性来指定需要使用的图标，我们内置了一套图标库（见图标列表），可以直接传入对应的名称来使用。
@@ -66,6 +70,30 @@ IconUtils.configIconMap({
 <Icon icon="custom2" size={40} />
 ```
 
+## 引入 iconfont 图标
+
+库允许你加载 iconfont 导出的图标，你可以方便的将 iconfont 图标库使用在项目中。
+
+1. 你需要在 iconfont 网站上导出并下载你的图标。
+
+    ![图片1](../images/iconfont1.png)
+2. 解压其中的 iconfont.js 文件
+
+    ![图片2](../images/iconfont2.png)
+3. 使用命令行工具转换
+
+    ```shell
+    npx imengyu-tools iconfont 下载的js路径
+    ```
+
+4. 转换完成后会输出一个 iconfont.js.output.json 文件至源目录，请将其复制到你的项目中，并导入到 Icon 组件中：
+
+    ```js
+    IconUtils.configIconMap(require('你的路径/iconfont.js.output.json'));
+    ```
+
+5. 然后就可以在 Icon 组件中通过图标名称使用图标库了，图标的名称与你在 iconfont 项目上设置的 classname 相同。
+
 ## API 参考
 
 |参数|说明|类型|默认值|
@@ -77,7 +105,3 @@ IconUtils.configIconMap({
 |svgProps|渲染Svg时使用的额外属性，具体请参考 react-native-svg 的配置|`SvgProps`|-|
 |imageProps|渲染Image时使用的额外属性|`ImageProps`|-|
 |fontFamily|图标文字字体类名|`string`|`'iconfont'`|
-
-## 内置图标列表
-
-[查看内置图标列表]()
