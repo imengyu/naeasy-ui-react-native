@@ -20,7 +20,7 @@ export interface IconProp {
    */
   color?: ThemeColor|undefined,
   /**
-   * 图标文字样式
+   * 图标文字样式，注意，不同图标会使用不同的组件呈现，所以样式类型不能弄错。
    */
   style?: TextStyle|ViewStyle|ImageStyle,
   /**
