@@ -68,7 +68,6 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="SwipeableRow 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
             <Cell title="Tabbar 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTabBar')} />
             <Cell title="Tag 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
-            <Cell title="[TODO] Uploader 文件上传" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
           </CellGroup>
           <CellGroup inset title="反馈组件">
             <Cell title="原生 Alert/ActionSheet 示例" touchable showArrow onPress={() => this.props.navigation.push('TestAlert')} />
