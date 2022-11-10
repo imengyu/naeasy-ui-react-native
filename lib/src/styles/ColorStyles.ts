@@ -99,7 +99,7 @@ export const Color = {
     pressed_dark: 'rgba(255,255,255,0.2)',
   },
   primary: {
-    light: '#57b0ff',
+    light: '#33a3dc',
     dark: '#2779c0',
     pressed_light: '#043a69',
     pressed_dark: '#043a69',

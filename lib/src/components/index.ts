@@ -50,6 +50,7 @@ export * from './layout/Layout';
 export * from './list/FlatListWapper';
 export * from './list/IndexBar';
 export * from './list/IndexedList';
+export * from './list/SimpleList';
 export * from './picker/Picker';
 export * from './picker-view/CascadePickerWhellView';
 export * from './picker-view/PickerWhellView';

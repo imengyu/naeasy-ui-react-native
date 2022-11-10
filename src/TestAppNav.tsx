@@ -54,6 +54,8 @@ import { TestWingBlankScreen } from './base/TestWingBlankScreen';
 import { TestWhiteSpaceScreen } from './base/TestWiteSpaceScreen';
 import { TestCarouselScreen } from './display/TestCarouselScreen';
 import { TestLayout2Screen } from './base/TestLayout2Screen';
+import { TestSimpleListScreen } from './list/TestSimpleListScreen';
+import { TestIndexedListScreen } from './list/TestIndexedListScreen';
 
 const Stack = createStackNavigator();
 
@@ -145,6 +147,8 @@ export class TestAppNav extends React.Component {
           component={TestAvatarStackScreen}
         />
         <Stack.Screen name="TestIndexBar" component={TestIndexBarScreen} />
+        <Stack.Screen name="TestSimpleList" component={TestSimpleListScreen} />
+        <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen} />
       </Stack.Navigator>
     );
   }

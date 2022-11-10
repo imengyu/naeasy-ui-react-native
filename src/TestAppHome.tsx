@@ -55,11 +55,12 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="[TODO 好难] Collapse 可折叠组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
             <Cell title="[TODO 好难] Carousel 轮播组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
             <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
-            <Cell title="[TODO] IndexBar 索引栏" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
+            <Cell title="IndexedList 索引列表" touchable showArrow onPress={() => this.props.navigation.push('TestIndexedList')} />
             <Cell title="Pagination 分页组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestPagination')} />
             <Cell title="NavBar 导航栏" touchable showArrow onPress={() => this.props.navigation.push('TestNavBar')} />
             <Cell title="NoticeBar 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestNoticeBar')} />
             <Cell title="Progress 进度条示例" touchable showArrow onPress={() => this.props.navigation.push('TestProgress')} />
+            <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />
             <Cell title="SegmentedControl 分段器组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSegmentedControl')} />
             <Cell title="Sidebar 侧边导航" touchable showArrow onPress={() => this.props.navigation.push('TestSideBar')} />
             <Cell title="[TODO] Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />

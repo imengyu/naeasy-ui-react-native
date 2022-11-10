@@ -5,8 +5,11 @@ import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeSelecto
 import { ThemeRender } from '../../theme/Theme';
 
 const styles = DynamicThemeStyleSheet.create({
+  list: {
+    backgroundColor: DynamicColor(Color.white),
+  },
   header: {
-    backgroundColor: DynamicColor(Color.border),
+    backgroundColor: DynamicColor(Color.background),
     paddingHorizontal: 20,
     fontSize: 12,
   },
@@ -54,17 +57,27 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
    */
   groupDataBy: (item: T) => string,
   /**
+   * 对组进行排序
+   */
+  sortGroup?: (headers: string[]) => string[],
+  /**
    * 自定义条目key
    */
   keyExtractor?: (item: T) => string,
   /**
    * 当用户点击列表条目时发出此事件
    */
-  onItemPress: (item: T) => void,
+  onItemPress?: (item: T) => void,
   /**
    * 当用户滑动列表，当前显示的组位置更改时发出此事件
    */
   onActiveGroupChange?: (index: number) => void,
+  /**
+   * 自定义渲染条目
+   * * 当 isHeader 为 true 时，此时渲染分组头部，item 是 string 类型。
+   * * 当 isHeader 为 false 时，此时条目，item 是 T 类型。
+   */
+  renderItem?: (item: T|string, index: number, isHeader: boolean) => JSX.Element,
 }
 
 /**
@@ -72,11 +85,8 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
  */
 export function IndexedList<T>(props: IndexedListProps<T>) {
 
-  const dataSource = props.data;
-  const groupDataBy = props.groupDataBy;
-  const dataDisplayProp = props.dataDisplayProp;
-  const keyExtractor = props.keyExtractor;
-  const onItemPress = props.onItemPress;
+  const { data: dataSource, groupDataBy, dataDisplayProp, keyExtractor, sortGroup } = props;
+  const onItemPress = props.onItemPress || (() => {});
 
   const groupHeight = props.groupHeight || 35;
   const itemHeight = props.itemHeight || 50;
@@ -125,8 +135,17 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
     //填充数据
     const arr = [] as IndexedListGrouperedData<T>[];
     const arrIndex = [] as string[];
+
+    //排序分组
+    const mapKeys = Array.from(map.keys());
+    const groups = sortGroup ? sortGroup(mapKeys) : mapKeys;
+
     let currentY = 0;
-    map.forEach((v, k) => {
+
+    for (const k of groups) {
+      const v = map.get(k);
+      if (!v) continue;
+
       arr.push({
         isTitle: true,
         data: k,
@@ -143,10 +162,11 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
         currentY += itemHeight;
       });
       arrIndex.push(k);
-    });
+    }
+
     setData(arr);
     setDataIndex(arrIndex);
-  }, [ dataSource, groupDataBy, groupHeight, itemHeight ]);
+  }, [ dataSource, groupDataBy, groupHeight, itemHeight, sortGroup ]);
 
   function onScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
     if (isUserDragging.current && !isScrollLock.current) {
@@ -198,26 +218,27 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
       />
       <ThemeRender>
         {() => <FlatList<IndexedListGrouperedData<T>>
+          style={styles.list}
           { ...props }
           ref={refList}
           data={data}
           keyExtractor={(item, i) => {
             if (keyExtractor) {
-              if (typeof item.data === 'string')
+              if (typeof item.isTitle)
                 return ('group' + i);
-              keyExtractor(item.data);
+              keyExtractor(item.data as T);
             }
             return ('' + i);
           }}
-          renderItem={({ item }) => (
-            typeof item.data === 'string' ?
-              <Text style={groupStyle}>{item.data}</Text> :
+          renderItem={({ item, index }) => (
+            (props.renderItem ? props.renderItem(item.data, index, item.isTitle === true) : (item.isTitle ?
+              <Text style={groupStyle}>{item.data as string}</Text> :
               <TouchableHighlight
                 underlayColor={ThemeSelector.color(PressedColor(Color.white))}
                 onPress={() => onItemPress(item.data as T)}
               >
                 <Text style={itemStyle}>{dataDisplayProp ? (item.data as unknown as Record<string, string>)[dataDisplayProp] : (item.data as unknown as string) }</Text>
-              </TouchableHighlight>
+              </TouchableHighlight>))
           )}
           onScroll={onScroll}
           onScrollBeginDrag={onScrollStartDrag}

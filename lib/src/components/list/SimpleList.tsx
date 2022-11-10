@@ -55,19 +55,19 @@ export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"rende
   /**
    * 自定义渲染条目
    */
-  renderItem?: (item: T) => JSX.Element,
+  renderItem?: (item: T, index: number) => JSX.Element,
   /**
    * 自定义渲染条目内容
    */
-  renderItemContent?: (item: T) => JSX.Element,
+  renderItemContent?: (item: T, index: number) => JSX.Element,
   /**
    * 自定义条目key
    */
-  keyExtractor?: (item: T) => string,
+  keyExtractor?: (item: T, index: number) => string,
   /**
    * 当用户点击列表条目时发出此事件
    */
-  onItemPress?: (item: T) => void,
+  onItemPress?: (item: T, index: number) => void,
   /**
    * 当用使用选择框模式时，选中条目更改时发出此事件
    */
@@ -85,7 +85,7 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
 
   const [ checkedList, setCheckedList ] = useState<T[]>(props.defaultSelect || []);
 
-  function onItemPress(item: T) {
+  function onItemPress(item: T, index: number) {
     if (mode === 'single-check') {
       setCheckedList([ item ]);
 
@@ -104,7 +104,7 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
         return arr;
       });
     }
-    props.onItemPress && props.onItemPress(item);
+    props.onItemPress && props.onItemPress(item, index);
   }
 
   const itemStyle = {
@@ -130,15 +130,15 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
         <FlatList<T>
           { ...props }
           data={data}
-          renderItem={({ item }) => (props.renderItem ? props.renderItem(item) :
+          renderItem={({ item, index }) => (props.renderItem ? props.renderItem(item, index) :
             <TouchableHighlight
               underlayColor={ThemeSelector.color(PressedColor(Color.white))}
-              onPress={() => onItemPress(item as T)}
+              onPress={() => onItemPress(item as T, index)}
             >
               <View style={itemStyle}>
                 {
                   props.renderItemContent ?
-                    props.renderItemContent(item) :
+                    props.renderItemContent(item, index) :
                     <Text style={textStyle}>{dataDisplayProp ? (item as unknown as Record<string, string>)[dataDisplayProp] : (item as unknown as string) }</Text>
                 }
                 {
