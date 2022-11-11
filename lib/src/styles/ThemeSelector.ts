@@ -27,8 +27,8 @@ export class ThemeSelector {
     * 根据当前主题选择不同的颜色
     * @param object 类型预定义
     */
-  public static colorNoNull(object: ThemeColor) {
-    return ThemeSelector.color(object) as string;
+  public static colorNoNull(object: ThemeColor|undefined, defaultValue?: ThemeColor|string) {
+    return ThemeSelector.color(object, defaultValue) as string;
   }
   /**
    * 根据当前主题选择不同的变量

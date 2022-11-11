@@ -56,6 +56,7 @@ import { TestCarouselScreen } from './display/TestCarouselScreen';
 import { TestLayout2Screen } from './base/TestLayout2Screen';
 import { TestSimpleListScreen } from './list/TestSimpleListScreen';
 import { TestIndexedListScreen } from './list/TestIndexedListScreen';
+import { TestStepScreen } from './display/TestStepScreen';
 
 const Stack = createStackNavigator();
 
@@ -66,7 +67,6 @@ export class TestAppNav extends React.Component {
         screenOptions={{
           presentation: 'card',
           headerTitleAlign: 'center',
-          gestureEnabled: true,
           ...TransitionPresets.SlideFromRightIOS,
           ...Platform.select<StackNavigationOptions>({
             android: {
@@ -149,6 +149,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestIndexBar" component={TestIndexBarScreen} />
         <Stack.Screen name="TestSimpleList" component={TestSimpleListScreen} />
         <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen} />
+        <Stack.Screen name="TestStep" component={TestStepScreen} />
       </Stack.Navigator>
     );
   }

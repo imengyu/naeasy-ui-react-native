@@ -83,6 +83,8 @@ export * from './space/WhiteSpace';
 export * from './space/WingBlank';
 export * from './nav';
 export * from './ImagePreview';
+export * from './Step';
+export * from './Skeleton';
 
 
 
