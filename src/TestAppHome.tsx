@@ -64,7 +64,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="SegmentedControl 分段器组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSegmentedControl')} />
             <Cell title="Sidebar 侧边导航" touchable showArrow onPress={() => this.props.navigation.push('TestSideBar')} />
             <Cell title="[TODO] Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />
-            <Cell title="[TODO] Step 步骤条组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
+            <Cell title="Step 步骤条组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
             <Cell title="SwipeableRow 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
             <Cell title="Tabbar 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTabBar')} />
             <Cell title="Tag 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />

@@ -26,7 +26,7 @@ export interface StepProps {
    */
   lineItemWidth?: number,
   /**
-   * 分隔线的边距偏移
+   * 当为水平模式时，分隔线的边距偏移
    */
   lineOffset?: number,
   /**
@@ -41,6 +41,10 @@ export interface StepProps {
    * 步骤子组件，请使用 StepItem
    */
   children?: JSX.Element[]|JSX.Element;
+  /**
+   * 线段粗细，默认是 1
+   */
+  lineWidth?: number;
 
   /**
    * 同 StepItemProps.activeIcon 此项用于所有子条目的设置
@@ -92,7 +96,11 @@ export interface StepItemProps {
   /**
    * 当前步骤的文字
    */
-  text?: string|JSX.Element;
+  text?: string;
+  /**
+   * 垂直模式下，允许你渲染附加内容
+   */
+  extra?: string|JSX.Element;
   /**
    * 自定义渲染
    */
@@ -119,6 +127,8 @@ const styles = StyleSheet.create({
   itemVertical: {
     position: 'relative',
     flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     marginVertical: 5,
   },
   itemHorizontal: {
@@ -130,12 +140,18 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 13,
+  },
+  content: {
     marginTop: 3,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   iconContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -143,10 +159,12 @@ interface StepItemInternalProps extends StepItemProps {
   state: StepItemState,
   direction: 'vertical'|'horizontal',
   index: number,
+  isLast: boolean,
   style: ViewStyle,
   activeColor: string,
   inactiveColor: string,
   textColor: string,
+  lineWidth: number,
   onPress: () => void,
 }
 
@@ -183,9 +201,10 @@ function StepItemInternalDotNumberIcon(props: { color: string, size: number, ind
 function StepItemInternal(props: StepItemInternalProps) {
 
   const {
-    state, style, direction, index,
+    state, style, direction, index, isLast,
     iconProps = { size: 24 },
-    activeColor, inactiveColor, textColor, text, textStyle,
+    lineWidth,
+    activeColor, inactiveColor, textColor, text, textStyle, extra,
     activeIcon,
     finishIcon = 'success-filling',
     inactiveIcon = direction === 'horizontal' ? '__default_number' : '__default_dot',
@@ -193,9 +212,10 @@ function StepItemInternal(props: StepItemInternalProps) {
   } = props;
 
   function renderIcon() {
-    if (state !== 'finish' && inactiveIcon === '__default_number')
+    const useDefaultIcon = (state === 'inactive' || (state === 'active' && activeIcon === undefined));
+    if (useDefaultIcon && inactiveIcon === '__default_number')
       return <StepItemInternalDotNumberIcon index={index} size={iconProps.size as number} color={state === 'inactive' ? inactiveColor : activeColor} />;
-    if (state !== 'finish' && inactiveIcon === '__default_dot')
+    if (useDefaultIcon && inactiveIcon === '__default_dot')
       return <StepItemInternalDotIcon size={iconProps.size as number} color={state === 'inactive' ? inactiveColor : activeColor} />;
     return (<Icon
       color={state === 'active' || state === 'finish' ? activeColor : inactiveColor}
@@ -204,19 +224,44 @@ function StepItemInternal(props: StepItemInternalProps) {
     />);
   }
 
+  const iconConSize = iconProps.size as number + 15;
+  const iconSize = iconProps.size as number;
+
+  //渲染垂直线段
+  function renderVeticalLine() {
+    return (<View
+      key={'line' + index}
+      style={{
+        position: 'absolute',
+        left: iconConSize / 2 - lineWidth / 2,
+        top: iconConSize / 2,
+        bottom: -iconConSize / 2,
+        backgroundColor: state === 'finish' ? activeColor : inactiveColor,
+        width: lineWidth,
+      }}
+    />);
+  }
+
+
   return (
     renderItem ? renderItem(props, state) :
     <View style={[ style, direction === 'vertical' ? styles.itemVertical : styles.itemHorizontal ]}>
-      <View style={[ styles.iconContainer, { width: iconProps.size as number + 15 }]}>{renderIcon()}</View>
-      {
-        typeof text === 'string' ?
-          <Text style={[
-            { color: textColor },
-            styles.text,
-            textStyle,
-          ]}>{text}</Text> :
-          text
-      }
+      <View style={[ styles.iconContainer, { width: iconConSize, height: iconSize }]}>{renderIcon()}</View>
+
+      <View style={styles.content}>
+        <Text style={[ { color: textColor }, styles.text, textStyle ]}>{text}</Text>
+        {
+          typeof extra === 'string' ?
+            <Text style={[
+              { color: textColor },
+              styles.text,
+              textStyle,
+            ]}>{extra}</Text> :
+            extra
+        }
+      </View>
+
+      { direction === 'vertical' && !isLast ? renderVeticalLine() : <></> }
     </View>
   );
 }
@@ -238,6 +283,7 @@ export function Step(props: StepProps) {
     direction = 'horizontal',
     lineItemWidth = rpx(150),
     lineOffset = 10,
+    lineWidth = 1,
     onActiveIndexChange,
   } = props;
 
@@ -252,17 +298,17 @@ export function Step(props: StepProps) {
     }
   }, [ activeIndex, direction, lineItemWidth ]);
 
-  //渲染间隔线
+  //渲染水平间隔线
   function renderLine(index: number) {
     return (<View
       key={'line' + index}
       style={{
         position: 'absolute',
-        left: direction === 'horizontal' ? ((index + 1) * lineItemWidth - lineItemWidth / 4) : lineOffset,
-        top: direction === 'horizontal' ? lineOffset : 0,
+        left: ((index + 1) * lineItemWidth - lineItemWidth / 4),
+        top: lineOffset,
         backgroundColor: activeIndex > index ? activeColor : inactiveColor,
-        height: direction === 'horizontal' ? 1 : 100,
-        width: direction === 'horizontal' ? lineItemWidth / 2 : 1,
+        height: lineWidth,
+        width: lineItemWidth / 2 ,
       }}
     />);
   }
@@ -274,12 +320,14 @@ export function Step(props: StepProps) {
     const result = [] as JSX.Element[];
 
     //通过传入的children创建真实的条目
-    function createChild(oldProps: StepItemProps, index: number) {
+    function createChild(oldProps: StepItemProps, index: number, isLast: boolean) {
       return React.createElement(StepItemInternal, {
         ...props,
         ...oldProps,
         key: index,
         index: index + 1,
+        isLast,
+        lineWidth,
         state: activeIndex === index ? 'active' : (activeIndex > index ? 'finish' : 'inactive'),
         style: {
           width: direction === 'horizontal' ? lineItemWidth : undefined,
@@ -295,13 +343,13 @@ export function Step(props: StepProps) {
     if (children instanceof Array) {
       const count = children.length;
       for (let index = 0; index < count; index++) {
-        result.push(createChild(children[index].props, index));
-        //条目之间还需要渲染线段
-        if (index !== count - 1)
+        result.push(createChild(children[index].props, index,  index === count - 1));
+        //水平条目之间还需要渲染线段
+        if (direction === 'horizontal' && index !== count - 1)
           result.push(renderLine(index));
       }
     } else if (children) {
-      result.push(createChild(children.props, 0));
+      result.push(createChild(children.props, 0, true));
     }
     return result;
   }
