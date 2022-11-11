@@ -115,7 +115,7 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
     if (iconData.length === 1) return renderText();
     else if (iconData.startsWith('<svg')) return renderSvgXml();
     else if (iconData.startsWith('http')) return iconData.endsWith('.svg') ? renderSvgUri() : renderImage({ uri: iconData });
-  } else {
+  } else if (iconData) {
     if (iconData.svg)
       return <LocalSvg asset={iconData.source} width={size} height={size} {...svgProps} />;
     else
