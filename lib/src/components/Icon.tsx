@@ -84,6 +84,10 @@ export const IconUtils = {
 export const Icon = ThemeWrapper(function (props: IconProp) {
 
   const { icon, svgProps, imageProps, style, color } = props;
+
+  if (!icon)
+    return <></>;
+
   const size = props.size || 20;
 
   const iconData = iconMap[icon || ''];

@@ -68,7 +68,7 @@ export const IconButton = ThemeWrapper(function (props: IconButtonProps) {
       underlayColor={ThemeSelector.color(props.pressedBackgroundColor || PressedColor(Color.white))}
       onPress={props.disabled ? undefined : props.onPress}
     >
-      <Icon {...props} />
+      { props.icon ? <Icon {...props} /> : <></> }
     </TouchableHighlight>
   );
 });
