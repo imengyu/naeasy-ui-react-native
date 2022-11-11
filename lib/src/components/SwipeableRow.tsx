@@ -38,7 +38,7 @@ export class SwipeableRow extends Component<SwipeableRowProps> {
     item: SwipeableRowAction,
     x: number,
     width: number,
-    progress: Animated.AnimatedInterpolation
+    progress: Animated.AnimatedInterpolation<number>
   ) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
@@ -53,8 +53,8 @@ export class SwipeableRow extends Component<SwipeableRowProps> {
   };
 
   private renderRightActions = (
-    progress: Animated.AnimatedInterpolation,
-    _dragAnimatedValue: Animated.AnimatedInterpolation
+    progress: Animated.AnimatedInterpolation<number>,
+    _dragAnimatedValue: Animated.AnimatedInterpolation<number>
   ) => {
     let width = 0;
     this.props.rightActions.forEach((item) => { width += (item.width || 64); });
@@ -75,8 +75,8 @@ export class SwipeableRow extends Component<SwipeableRowProps> {
     </View>);
   };
   private renderLeftActions = (
-    progress: Animated.AnimatedInterpolation,
-    _dragAnimatedValue: Animated.AnimatedInterpolation
+    progress: Animated.AnimatedInterpolation<number>,
+    _dragAnimatedValue: Animated.AnimatedInterpolation<number>
   ) => {
     let width = 0;
     this.props.leftActions.forEach((item) => { width += (item.width || 64); });
