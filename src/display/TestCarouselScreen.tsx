@@ -2,27 +2,10 @@ import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView } from '@imengyu-ui-lib-debug';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
-import { StyleSheet, View } from 'react-native';
-import { deviceWidth, WhiteSpace, DotIndicator } from '@imengyu-ui-lib-debug';
+import { WhiteSpace, DotIndicator } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCarousel'>;
-
-const styles = StyleSheet.create({
-  topCarousel: {
-    marginTop: 15,
-    zIndex: 10,
-  },
-  topCarouselItemImage: {
-    width: deviceWidth - 30,
-    height: 200,
-    borderRadius: 10,
-  },
-  topCarouselItemImage2: {
-    width: deviceWidth,
-    height: 200,
-  },
-});
 
 interface HerbalHomeCarouselItem {
   src: string

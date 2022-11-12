@@ -18,7 +18,7 @@ export class TestSwipeableRowScreen extends React.PureComponent<Props> {
               actions={[
                 {
                   text: '标为未读',
-                  color: Color.primary,
+                  color: Color.primary.light,
                   width: 80,
                   onPress: () => {
                     AlertNative.alert('提示', '点击了：标为未读');
@@ -26,7 +26,7 @@ export class TestSwipeableRowScreen extends React.PureComponent<Props> {
                 },
                 {
                   text: '不显示',
-                  color: Color.warning,
+                  color: Color.warning.light,
                   width: 70,
                   onPress: () => {
                     AlertNative.alert('提示', '点击了：不显示');
@@ -34,7 +34,7 @@ export class TestSwipeableRowScreen extends React.PureComponent<Props> {
                 },
                 {
                   text: '删除',
-                  color: Color.danger,
+                  color: Color.danger.light,
                   width: 60,
                   onPress: () => {
                     AlertNative.alert('提示', '点击了：删除');
@@ -60,7 +60,7 @@ export class TestSwipeableRowScreen extends React.PureComponent<Props> {
                 {
                   width: 100,
                   renderAction: () => (
-                    <View style={{ flex: 1, backgroundColor: Color.orangeLight, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 1, backgroundColor: Color.warning.light, justifyContent: 'center', alignItems: 'center' }}>
                       <Text>自定义侧边区域</Text>
                     </View>
                   ),

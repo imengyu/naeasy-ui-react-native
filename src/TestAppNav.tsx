@@ -40,7 +40,6 @@ import { TestTypographyScreen } from './base/TestTypographyScreen';
 import { TestDividerScreen } from './display/TestDividerScreen';
 import { Platform } from 'react-native';
 import { TestAppHome } from './TestAppHome';
-import { TestIndexBarScreen } from './nav/TestIndexBarScreen';
 import { TestAvatarStackScreen } from './base/TestAvatarStackScreen';
 import { TestSideBarScreen } from './nav/TestSideBarScreen';
 import { TestTabBarScreen } from './nav/TestTabBarScreen';
@@ -74,82 +73,81 @@ export class TestAppNav extends React.Component {
             },
           }),
         }}>
-        <Stack.Screen name="Components" component={TestAppHome} />
-        <Stack.Screen name="TestButton" component={TestButtonScreen} />
-        <Stack.Screen name="TestCell" component={TestCellScreen} />
-        <Stack.Screen name="TestIcon" component={TestIconScreen} />
-        <Stack.Screen name="TestImage" component={TestImageScreen} />
-        <Stack.Screen name="TestLayout" component={TestLayoutScreen} />
-        <Stack.Screen name="TestLayout2" component={TestLayout2Screen} />
-        <Stack.Screen name="TestPopup" component={TestPopupScreen} />
-        <Stack.Screen name="TestToast" component={TestToastScreen} />
-        <Stack.Screen name="TestBadge" component={TestBadgeScreen} />
-        <Stack.Screen name="TestCollapse" component={TestCollapseScreen} />
-        <Stack.Screen name="TestEmpty" component={TestEmptyScreen} />
-        <Stack.Screen name="TestTag" component={TestTagScreen} />
-        <Stack.Screen name="TestGrid" component={TestGridScreen} />
-        <Stack.Screen name="TestPagination" component={TestPaginationScreen} />
+        <Stack.Screen name="Components" component={TestAppHome as any} />
+        <Stack.Screen name="TestButton" component={TestButtonScreen as any} />
+        <Stack.Screen name="TestCell" component={TestCellScreen as any} />
+        <Stack.Screen name="TestIcon" component={TestIconScreen as any} />
+        <Stack.Screen name="TestImage" component={TestImageScreen as any} />
+        <Stack.Screen name="TestLayout" component={TestLayoutScreen as any} />
+        <Stack.Screen name="TestLayout2" component={TestLayout2Screen as any} />
+        <Stack.Screen name="TestPopup" component={TestPopupScreen as any} />
+        <Stack.Screen name="TestToast" component={TestToastScreen as any} />
+        <Stack.Screen name="TestBadge" component={TestBadgeScreen as any} />
+        <Stack.Screen name="TestCollapse" component={TestCollapseScreen as any} />
+        <Stack.Screen name="TestEmpty" component={TestEmptyScreen as any} />
+        <Stack.Screen name="TestTag" component={TestTagScreen as any} />
+        <Stack.Screen name="TestGrid" component={TestGridScreen as any} />
+        <Stack.Screen name="TestPagination" component={TestPaginationScreen as any} />
         <Stack.Screen
           name="TestSegmentedControl"
-          component={TestSegmentedControlScreen}
+          component={TestSegmentedControlScreen as any}
         />
-        <Stack.Screen name="TestNoticeBar" component={TestNoticeBarScreen} />
-        <Stack.Screen name="TestCarousel" component={TestCarouselScreen} />
-        <Stack.Screen name="TestPicker" component={TestPickerScreen} />
+        <Stack.Screen name="TestNoticeBar" component={TestNoticeBarScreen as any} />
+        <Stack.Screen name="TestCarousel" component={TestCarouselScreen as any} />
+        <Stack.Screen name="TestPicker" component={TestPickerScreen as any} />
         <Stack.Screen
           name="TestPickerWhellView"
-          component={TestPickerWhellViewScreen}
+          component={TestPickerWhellViewScreen as any}
         />
         <Stack.Screen
           name="TestSwipeableRow"
-          component={TestSwipeableRowScreen}
+          component={TestSwipeableRowScreen as any}
         />
-        <Stack.Screen name="TestRadio" component={TestRadioScreen} />
-        <Stack.Screen name="TestCheck" component={TestCheckScreen} />
-        <Stack.Screen name="TestAlert" component={TestAlertScreen} />
-        <Stack.Screen name="TestProgress" component={TestProgressScreen} />
+        <Stack.Screen name="TestRadio" component={TestRadioScreen as any} />
+        <Stack.Screen name="TestCheck" component={TestCheckScreen as any} />
+        <Stack.Screen name="TestAlert" component={TestAlertScreen as any} />
+        <Stack.Screen name="TestProgress" component={TestProgressScreen as any} />
         <Stack.Screen
           name="TestActionSheet"
-          component={TestActionSheetScreen}
+          component={TestActionSheetScreen as any}
         />
-        <Stack.Screen name="TestDialog" component={TestDialogScreen} />
-        <Stack.Screen name="TestField" component={TestFieldScreen} />
-        <Stack.Screen name="TestSwitch" component={TestSwitchScreen} />
-        <Stack.Screen name="TestStepper" component={TestStepperScreen} />
-        <Stack.Screen name="TestSlider" component={TestSliderScreen} />
-        <Stack.Screen name="TestSearchBar" component={TestSearchBarScreen} />
-        <Stack.Screen name="TestRate" component={TestRateScreen} />
-        <Stack.Screen name="TestForm" component={TestFormScreen} />
+        <Stack.Screen name="TestDialog" component={TestDialogScreen as any} />
+        <Stack.Screen name="TestField" component={TestFieldScreen as any} />
+        <Stack.Screen name="TestSwitch" component={TestSwitchScreen as any} />
+        <Stack.Screen name="TestStepper" component={TestStepperScreen as any} />
+        <Stack.Screen name="TestSlider" component={TestSliderScreen as any} />
+        <Stack.Screen name="TestSearchBar" component={TestSearchBarScreen as any} />
+        <Stack.Screen name="TestRate" component={TestRateScreen as any} />
+        <Stack.Screen name="TestForm" component={TestFormScreen as any} />
         <Stack.Screen
           name="TestNumberInput"
-          component={TestNumberInputScreen}
+          component={TestNumberInputScreen as any}
         />
-        <Stack.Screen name="TestTypography" component={TestTypographyScreen} />
-        <Stack.Screen name="TestDivider" component={TestDividerScreen} />
-        <Stack.Screen name="TestWhiteSpace" component={TestWhiteSpaceScreen} />
-        <Stack.Screen name="TestWingBlank" component={TestWingBlankScreen} />
-        <Stack.Screen name="TestCountDown" component={TestCountDownScreen} />
+        <Stack.Screen name="TestTypography" component={TestTypographyScreen as any} />
+        <Stack.Screen name="TestDivider" component={TestDividerScreen as any} />
+        <Stack.Screen name="TestWhiteSpace" component={TestWhiteSpaceScreen as any} />
+        <Stack.Screen name="TestWingBlank" component={TestWingBlankScreen as any} />
+        <Stack.Screen name="TestCountDown" component={TestCountDownScreen as any} />
         <Stack.Screen
           name="TestNumberKeyBoard"
-          component={TestNumberKeyBoardScreen}
+          component={TestNumberKeyBoardScreen as any}
         />
-        <Stack.Screen name="TestCountTo" component={TestCountToScreen} />
-        <Stack.Screen name="TestNotify" component={TestNotifyScreen} />
+        <Stack.Screen name="TestCountTo" component={TestCountToScreen as any} />
+        <Stack.Screen name="TestNotify" component={TestNotifyScreen as any} />
         <Stack.Screen
           name="TestImagePreview"
-          component={TestImagePreviewScreen}
+          component={TestImagePreviewScreen as any}
         />
-        <Stack.Screen name="TestNavBar" component={TestNavBarScreen} />
-        <Stack.Screen name="TestTabBar" component={TestTabBarScreen} />
-        <Stack.Screen name="TestSideBar" component={TestSideBarScreen} />
+        <Stack.Screen name="TestNavBar" component={TestNavBarScreen as any} />
+        <Stack.Screen name="TestTabBar" component={TestTabBarScreen as any} />
+        <Stack.Screen name="TestSideBar" component={TestSideBarScreen as any} />
         <Stack.Screen
           name="TestAvatarStack"
-          component={TestAvatarStackScreen}
+          component={TestAvatarStackScreen as any}
         />
-        <Stack.Screen name="TestIndexBar" component={TestIndexBarScreen} />
-        <Stack.Screen name="TestSimpleList" component={TestSimpleListScreen} />
-        <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen} />
-        <Stack.Screen name="TestStep" component={TestStepScreen} />
+        <Stack.Screen name="TestSimpleList" component={TestSimpleListScreen as any} />
+        <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen as any} />
+        <Stack.Screen name="TestStep" component={TestStepScreen as any} />
       </Stack.Navigator>
     );
   }

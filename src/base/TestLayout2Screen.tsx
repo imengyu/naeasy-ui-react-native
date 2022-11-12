@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
   box: {
     height: 30,
     textAlign: 'center',
-    backgroundColor: Color.primary,
+    backgroundColor: Color.primary.light,
   },
   box2: {
     height: 30,
     textAlign: 'center',
-    backgroundColor: Color.success,
+    backgroundColor: Color.success.light,
   },
 });
 

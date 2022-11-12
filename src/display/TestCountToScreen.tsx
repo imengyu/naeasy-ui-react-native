@@ -15,7 +15,6 @@ export function TestCountToScreen(_props: Props) {
   return (
     <ScrollView>
       <ColumnView padding={10}>
-        
 
         <Text style={TestStyles.TitleText}>基础用法</Text>
         <CountTo endValue={9999} />
