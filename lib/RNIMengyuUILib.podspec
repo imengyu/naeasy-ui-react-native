@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.homepage         = package['homepage']
   s.platforms        = { :ios => "9.0" }
 
-  s.source           = { :git => "https://github.com/imengyu/imengyu-ui-lib", :tag => "v#{s.version}" }
+  s.source           = { :git => "https://github.com/imengyu/imengyu-ui-lib.git", :tag => "v#{s.version}" }
   s.ios.source_files = "src/ios/**/*.{h,m,mm}"
   s.osx.source_files = "src/macos/**/*.{h,m,mm}"
 
