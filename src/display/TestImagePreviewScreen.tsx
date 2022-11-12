@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, ImagePreview, ColumnView } from '@imengyu-ui-lib-debug';
+import { Cell, CellGroup, ImagePreview, ColumnView } from '../../lib/src/index';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
-import { Cell } from '@imengyu-ui-lib-debug';
 
 type Props = StackScreenProps<RootStackParamList, 'TestImagePreview'>;
 interface State {
@@ -24,11 +23,11 @@ export class TestImagePreviewScreen extends React.PureComponent<Props, State> {
             <Cell title="底部弹出" showArrow onPress={() => {
               ImagePreview.show({
                 imageUrls: [
-                  "https://imengyu.top/assets/images/test/1.jpg",
-                  "https://imengyu.top/assets/images/test/2.jpg",
-                  "https://imengyu.top/assets/images/test/3.jpg",
-                  "https://imengyu.top/assets/images/test/4.jpg",
-                  "https://imengyu.top/assets/images/test/5.jpg",
+                  'https://imengyu.top/assets/images/test/1.jpg',
+                  'https://imengyu.top/assets/images/test/2.jpg',
+                  'https://imengyu.top/assets/images/test/3.jpg',
+                  'https://imengyu.top/assets/images/test/4.jpg',
+                  'https://imengyu.top/assets/images/test/5.jpg',
                 ],
               });
             }} />

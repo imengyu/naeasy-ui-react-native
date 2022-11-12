@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { ColumnView, Switch, Color } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
-import { Switch } from '@imengyu-ui-lib-debug';
 import { Switch as NativeSwitch } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { Color } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSwitch'>;

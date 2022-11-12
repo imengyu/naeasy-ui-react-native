@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace } from '@imengyu-ui-lib-debug';
+import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace } from '../lib/src/index';
 import { RootStackParamList } from './navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'Components'>;

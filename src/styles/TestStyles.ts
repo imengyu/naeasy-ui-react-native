@@ -1,4 +1,4 @@
-import { Color, DynamicColor, DynamicThemeStyleSheet } from "@imengyu-ui-lib-debug";
+import { Color, DynamicColor, DynamicThemeStyleSheet } from '../../lib/src/index';
 
 export const TestStyles = DynamicThemeStyleSheet.create({
   TitleText: {

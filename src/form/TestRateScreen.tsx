@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, Rate, ColumnView } from '@imengyu-ui-lib-debug';
+import { Color, Rate, ColumnView } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';

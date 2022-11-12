@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestActionSheet'>;
@@ -102,7 +102,7 @@ export function TestActionSheetScreen(_props: Props) {
             ActionSheet.show({
               showCancel: false,
               center: true,
-              description: "请选择",
+              description: '请选择',
               actions: [
                 { name: '选项1' },
                 { name: '选项2' },
@@ -125,7 +125,7 @@ export function TestActionSheetScreen(_props: Props) {
           <Cell title="指令式打开 ActionSheet" showArrow onPress={() => {
             ActionSheet.show({
               showCancel: true,
-              description: "请选择",
+              description: '请选择',
               actions: [
                 { name: '正常选项' },
                 { name: '危险选项', color: Color.danger, subname: '删除后无法恢复' },

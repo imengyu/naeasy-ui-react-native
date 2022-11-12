@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup } from '@imengyu-ui-lib-debug';
+import { CellGroup, ColumnView, WhiteSpace } from '../../lib/src/index';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { ColumnView, WhiteSpace } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestWhiteSpace'>;

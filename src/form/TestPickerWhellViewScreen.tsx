@@ -1,10 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
-import { CellGroup } from '@imengyu-ui-lib-debug';
-import { Toast } from '@imengyu-ui-lib-debug';
-import { PickerWhellView } from '@imengyu-ui-lib-debug';
-import { CascadePickerWhellItem, CascadePickerWhellView } from '@imengyu-ui-lib-debug';
+import { ColumnView, CellGroup, Toast, PickerWhellView, CascadePickerWhellItem, CascadePickerWhellView } from '../../lib/src/index';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

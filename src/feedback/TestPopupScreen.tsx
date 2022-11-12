@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPopup'>;

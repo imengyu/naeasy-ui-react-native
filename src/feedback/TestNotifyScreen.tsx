@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Notify, Cell, CellGroup, ColumnView } from '@imengyu-ui-lib-debug';
+import { AlertNative, CheckBox, RowView, Notify, Cell, CellGroup, ColumnView } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
-import { AlertNative, CheckBox, RowView } from '@imengyu-ui-lib-debug';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNotify'>;
 

@@ -1,12 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { ColumnView, NavBar, Button, Color, Toast } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { NavBar } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
-import { Button, Color, Toast } from '@imengyu-ui-lib-debug';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNavBar', 'RootStack'>;
 
@@ -23,8 +20,6 @@ export class TestNavBarScreen extends React.PureComponent<Props> {
     return (
       <ScrollView>
         <ColumnView>
-          
-
           <Text style={TestStyles.TitleText}>基础用法</Text>
           <NavBar title="标题" backgroundColor={Color.white} onLeftButtonPressed={this.onLeftPressed} />
 

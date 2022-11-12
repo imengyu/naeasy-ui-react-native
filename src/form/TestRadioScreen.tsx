@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Radio, RadioGroup, Color, Cell, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Radio, RadioGroup, Color, Cell, ColumnView } from '../../lib/src/index';
 import { ScrollView, StyleSheet } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

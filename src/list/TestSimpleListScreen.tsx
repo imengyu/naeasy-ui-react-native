@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, ScrollTabView, SimpleList, Text, Color } from '@imengyu-ui-lib-debug';
+import { ColumnView, ScrollTabView, SimpleList, Text, Color } from '../../lib/src/index';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSimpleList'>;
 

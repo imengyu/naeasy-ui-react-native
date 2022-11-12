@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native';
 import { Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, CountTo, CountToInstance, Button, RowView, WhiteSpace } from '@imengyu-ui-lib-debug';
+import { ColumnView, CountTo, CountToInstance, Button, RowView, WhiteSpace } from '../../lib/src/index';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCountTo'>;
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
-import { WhiteSpace, DotIndicator } from '@imengyu-ui-lib-debug';
+import { ColumnView, WhiteSpace, DotIndicator } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCarousel'>;

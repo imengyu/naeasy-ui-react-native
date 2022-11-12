@@ -1,12 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { ColumnView, SideBar, SideBarItem, Toast } from '../../lib/src/index';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { SideBar, SideBarItem } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
-import { Toast } from '@imengyu-ui-lib-debug';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSideBar', 'RootStack'>;
 interface State {
@@ -34,8 +31,6 @@ export class TestSideBarScreen extends React.PureComponent<Props> {
     return (
       <ScrollView>
         <ColumnView padding={20}>
-          
-
           <Text style={TestStyles.TitleText}>基础用法</Text>
           <SideBar
             style={styles.sideStyle}

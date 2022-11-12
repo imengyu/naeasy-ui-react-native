@@ -22,7 +22,7 @@ npm i -S @newbanker/react-native-measure-text async-validator react-native-gestu
 1. 安装
 
     ```shell
-    npm i -S @imengyu/imengyu-ui-lib
+    npm i -S imengyu-ui-lib
     ```
 
 2. iOS 安装

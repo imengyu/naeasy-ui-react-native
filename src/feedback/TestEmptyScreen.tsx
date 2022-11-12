@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
@@ -39,7 +39,7 @@ export class TestEmptyScreen extends React.PureComponent<Props, State> {
           <CellGroup title="加载中状态" inset>
             <Text style={{ padding: 10 }}>可以使用一个加载中状态视图，来包裹正在加载的内容。</Text>
             <RowView style={{ padding: 10 }}>
-              <Button text={"切换加载中状态: " + (this.state.loading ? 'true' : 'false')} onPress={() => this.setState((prev) => ({ loading: !prev.loading })) } />
+              <Button text={'切换加载中状态: ' + (this.state.loading ? 'true' : 'false')} onPress={() => this.setState((prev) => ({ loading: !prev.loading })) } />
             </RowView>
             <LoadingView loading={this.state.loading} loadingText="加载中，请稍后">
               <WingBlank size="sm">

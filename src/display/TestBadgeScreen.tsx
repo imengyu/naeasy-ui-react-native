@@ -1,8 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, DynamicColor, DynamicThemeStyleSheet } from '@imengyu-ui-lib-debug';
+import { ColumnView, DynamicColor, DynamicThemeStyleSheet, CellGroup, Badge, RowView, Color } from '../../lib/src/index';
 import { ScrollView, Text, View } from 'react-native';
-import { CellGroup, Badge, RowView, Color } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestBadge', 'RootStack'>;

@@ -1,21 +1,21 @@
 import React from 'react';
-//import { Provider } from '@imengyu-ui-lib-debug';
+import { Provider } from '../lib/src/index';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { NavigationContainer } from '@react-navigation/native';
-//import { TestAppNav } from './TestAppNav';
+import { TestAppNav } from './TestAppNav';
 
 class App extends React.Component {
   render() {
     return (
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          {/* <Provider> */}
+          <Provider>
             <NavigationContainer>
-              {/* <TestAppNav /> */}
+              <TestAppNav />
             </NavigationContainer>
-          {/* </Provider> */}
+          </Provider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     );

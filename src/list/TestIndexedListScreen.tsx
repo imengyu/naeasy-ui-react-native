@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, ScrollTabView, Text, Color, IndexedList, IndexBar, WhiteSpace } from '@imengyu-ui-lib-debug';
+import { ColumnView, ScrollTabView, Text, Color, IndexedList, IndexBar, WhiteSpace } from '../../lib/src/index';
 
 type Props = StackScreenProps<RootStackParamList, 'TestIndexedList'>;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Tag, RowView, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Tag, RowView, ColumnView } from '../../lib/src/index';
 import { Text, ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

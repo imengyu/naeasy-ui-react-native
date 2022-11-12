@@ -6,7 +6,7 @@ import { TestStyles } from '../styles/TestStyles';
 import {
   Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
   Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView,
-} from '@imengyu-ui-lib-debug';
+} from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestForm', 'RootStack'>;
@@ -29,7 +29,6 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
       <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
         <ScrollView>
           <ColumnView padding={10}>
-            
 
             <Text style={TestStyles.TitleText}>基础用法</Text>
             <CellGroup inset>

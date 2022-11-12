@@ -1,10 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { ColumnView, SearchBar } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { SearchBar } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 
@@ -31,7 +29,6 @@ export class TestSearchBarScreen extends React.PureComponent<Props, State> {
     return (
       <ScrollView>
         <ColumnView padding={10}>
-          
 
           <Text style={TestStyles.TitleText}>基础用法</Text>
           <SearchBar placeholder="请输入搜索关键词" onValueChange={(s) => this.setState({ value1: s })} />

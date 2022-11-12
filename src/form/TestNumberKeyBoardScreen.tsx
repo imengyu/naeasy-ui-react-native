@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
 import { ScrollView, TextInput } from 'react-native';
-import { NumberKeyBoard, Cell, CellGroup, ColumnView } from '@imengyu-ui-lib-debug';
+import { NumberKeyBoard, Cell, CellGroup, ColumnView } from '../../lib/src/index';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNumberKeyBoard'>;
 
@@ -60,14 +60,14 @@ export function TestNumberKeyBoardScreen(_props: Props) {
         />
         <NumberKeyBoard
           show={check4}
-          extraKey={["X"]}
+          extraKey={[ 'X' ]}
           onInput={onInput}
           onDelete={onDelete}
           onBlur={() => setCheck4(false)}
         />
         <NumberKeyBoard
           show={check5}
-          extraKey={["Y", "X"]}
+          extraKey={[ 'Y', 'X' ]}
           showSideButtons
           onInput={onInput}
           onDelete={onDelete}

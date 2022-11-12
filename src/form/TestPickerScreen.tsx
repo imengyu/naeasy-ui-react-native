@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Cell, Picker, Toast, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Cell, Picker, Toast, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 import StringTools from '../utils/StringTools';
 

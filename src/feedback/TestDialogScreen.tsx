@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text, Image } from 'react-native';
-import { Cell, Toast, Dialog, CellGroup, ColumnView } from '@imengyu-ui-lib-debug';
+import { Cell, Toast, Dialog, CellGroup, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;
@@ -107,10 +107,12 @@ export function TestDialogScreen(_props: Props) {
               title: '提示',
               content: '这是一个 confirm 对话框',
             }).then((confirm) => {
-              if (confirm)
+              if (confirm) {
                 Toast.info('点击了确定');
-              else
+              }
+              else {
                 Toast.info('点击了取消');
+              }
             });
           }} />
         </CellGroup>

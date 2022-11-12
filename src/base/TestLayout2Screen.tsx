@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, Col, Row, CellGroup } from '@imengyu-ui-lib-debug';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { Color, Col, Row, CellGroup, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestLayout2'>;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Field, Button, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Field, Button, ColumnView } from '../../lib/src/index';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

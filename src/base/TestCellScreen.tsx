@@ -1,8 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
-import { CellGroup } from '@imengyu-ui-lib-debug';
-import { Cell } from '@imengyu-ui-lib-debug';
+import { ColumnView, CellGroup, Cell } from '../../lib/src/index';
 import { ScrollView } from 'react-native';
 import { Image, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';

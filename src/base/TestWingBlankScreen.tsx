@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, CellGroup, DynamicThemeStyleSheet, DynamicColor } from '@imengyu-ui-lib-debug';
+import { ColumnView, WingBlank, Color, CellGroup, DynamicThemeStyleSheet, DynamicColor } from '../../lib/src/index';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { ColumnView, WingBlank } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestWingBlank'>;

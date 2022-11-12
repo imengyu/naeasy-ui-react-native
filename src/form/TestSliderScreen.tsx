@@ -1,11 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { Slider } from '@imengyu-ui-lib-debug';
-import { Color, RowView, Toast, WhiteSpace } from '@imengyu-ui-lib-debug';
+import { ColumnView, Slider, Color, RowView, Toast, WhiteSpace } from '../../lib/src/index';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSlider', 'RootStack'>;
 interface State {
@@ -30,7 +28,6 @@ export class TestSliderScreen extends React.PureComponent<Props, State> {
     return (
       <ScrollView>
         <ColumnView padding={10}>
-          
 
           <Text style={TestStyles.TitleText}>滑动输入条，用于在给定的范围内选择一个值。</Text>
           <Slider value={this.state.value1} onValueChange={v => this.setState({ value1: v })} />

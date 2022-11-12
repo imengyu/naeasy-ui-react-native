@@ -1,9 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { SearchBar } from '@imengyu-ui-lib-debug';
+import { SearchBar, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSearchBar', 'RootStack'>;

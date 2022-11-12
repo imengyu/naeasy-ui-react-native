@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { ScrollView, StyleSheet } from 'react-native';
-import { Color, Cell, CheckBox, CheckBoxGroup, RowView, Button, CellGroup, ImageCheckBox, ColumnView } from '@imengyu-ui-lib-debug';
+import { Color, Cell, CheckBox, CheckBoxGroup, RowView, Button, CellGroup, ImageCheckBox, ColumnView } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCheck'>;

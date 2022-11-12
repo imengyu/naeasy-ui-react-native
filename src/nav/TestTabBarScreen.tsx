@@ -1,12 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '@imengyu-ui-lib-debug';
+import { ColumnView, Icon, Image, TabBar, TabBarItem } from '../../lib/src/index';
 import { ScrollView } from 'react-native';
 import { StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { TabBar, TabBarItem } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
-import { Icon, Image } from '@imengyu-ui-lib-debug';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabBar', 'RootStack'>;
 interface State {
