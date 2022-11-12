@@ -9,8 +9,9 @@
 #define ToolsManager_h
 
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface ToolsManager : NSObject <RCTBridgeModule>
+@interface ToolsManager : RCTEventEmitter <RCTBridgeModule>
 @end
 
 #endif /* ToolsManager_h */

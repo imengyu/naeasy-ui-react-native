@@ -98,7 +98,7 @@ public class ToolboxAndroidModule extends ReactContextBaseJavaModule {
       case Configuration.UI_MODE_NIGHT_NO: param.putString("theme", "light"); break;
       case Configuration.UI_MODE_NIGHT_YES: param.putString("theme", "dark"); break;
     }
-    singleton.sendEvent("onThemeChange", param);
+    singleton.sendEvent("onThemeChanged", param);
   }
 
   /**
