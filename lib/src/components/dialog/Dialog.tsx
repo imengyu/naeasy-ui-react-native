@@ -9,12 +9,25 @@ import { RowView } from "../layout/RowView";
 import { Popup } from "../Popup";
 import { PopupContainerProps } from "../PopupContainer";
 import { ThemeWrapper } from "../../theme/Theme";
+import { Icon } from "../Icon";
 
 export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**
    * 对话框的标题
    */
   title?: string;
+  /**
+   * 对话框的图标，显示在标题上方，同 Icon 组件的图标名字。
+   */
+  icon?: string|JSX.Element;
+  /**
+   * 图标的颜色
+   */
+  iconColor?: ThemeColor|undefined;
+  /**
+   * 图标大小，默认40
+   */
+  iconSize?: number;
   /**
    * 对话框的内容
    */
@@ -56,48 +69,7 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
    */
   onConfirm?: () => void|Promise<void>;
 }
-export interface DialogConfirmProps {
-  /**
-   * 对话框的标题
-   */
-  title?: string;
-  /**
-   * 对话框的内容
-   */
-  content?: string|React.ReactNode;
-  /**
-   * 对话框宽度
-   */
-  width?: number|undefined;
-  /**
-   * 取消按扭的文字
-   */
-  cancelText?: string|undefined;
-  /**
-   * 确认按扭的文字
-   */
-  confirmText?: string|undefined;
-  /**
-   * 确认按扭文字的颜色
-   */
-  confirmColor?: ThemeColor|undefined;
-  /**
-   * 取消按扭文字的颜色
-   */
-  cancelColor?: ThemeColor|undefined;
-  /**
-   * 是否显示取消按扭
-   */
-  showCancel?: boolean;
-  /**
-   * 当对话框点击取消时的回调
-   */
-  onCancel?: () => void|Promise<void>;
-  /**
-   * 当对话框点击确定的回调
-   */
-  onConfirm?: () => void|Promise<void>;
-}
+export type DialogConfirmProps = Omit<DialogProps, 'show'|'showCancel'|'onClose'>;
 
 const styles = DynamicThemeStyleSheet.create({
   dialog: {
@@ -124,10 +96,18 @@ const styles = DynamicThemeStyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  icon: {
+    marginTop: 8,
+    marginBottom: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 20,
     color: DynamicColor(Color.text),
+    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -167,6 +147,9 @@ export const DialogInner = ThemeWrapper(function (props: {
   onCancel?: () => void|Promise<void>;
   onConfirm?: () => void|Promise<void>;
   title?: string;
+  icon?: string|JSX.Element;
+  iconColor?: ThemeColor;
+  iconSize?: number,
   content?: string|React.ReactNode;
   cancelText?: string|undefined;
   confirmText?: string|undefined;
@@ -230,11 +213,24 @@ export const DialogInner = ThemeWrapper(function (props: {
       { width: props.width },
     ]}>
       <ColumnView style={styles.dialogContent}>
+        {/* 图标 */}
+        {
+          props.icon ?
+            (<ColumnView style={styles.icon}>
+            {
+              typeof props.icon === 'string' ?
+                <Icon icon={props.icon} color={props.iconColor} size={props.iconSize || 40} />
+                : props.icon
+            }</ColumnView>) : <></>
+        }
+        {/* 标题 */}
         <Text style={[ styles.title, displayNoneIfEmpty(props.title) ]}>{props.title}</Text>
+        {/* 内容 */}
         <ScrollView style={styles.dialogContentScroll}>
           { typeof props.content === 'string' ? <Text style={styles.contentText}>{props.content}</Text> : props.content }
         </ScrollView>
       </ColumnView>
+      {/* 底部按钮 */}
       <RowView style={styles.bottomView} accessibilityLabel="test">
         { props.showCancel ? <DialogButton text={props.cancelText || '取消'} loading={cancelLoading} buttonColor={props.cancelColor || Color.text} onPress={onCancelClick} /> : <></> }
         <DialogButton text={props.confirmText || '确定'} loading={confirmLoading} buttonColor={props.confirmColor || Color.primary} onPress={onConfirmClick} />

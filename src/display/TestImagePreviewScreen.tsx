@@ -20,7 +20,7 @@ export class TestImagePreviewScreen extends React.PureComponent<Props, State> {
       <ScrollView>
         <ColumnView center>
           <CellGroup title="基础用法" inset>
-            <Cell title="底部弹出" showArrow onPress={() => {
+            <Cell title="基础用法" showArrow onPress={() => {
               ImagePreview.show({
                 imageUrls: [
                   'https://imengyu.top/assets/images/test/1.jpg',

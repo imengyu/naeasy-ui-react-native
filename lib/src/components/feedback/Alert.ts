@@ -1,7 +1,7 @@
 import { Alert as RNAlert, AlertButton, AlertOptions, AlertType } from "react-native";
 import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { NativeModules } from 'react-native';
-import { Toast } from "../feedback/Toast";
+import { Notify } from "../feedback/Notify";
 
 /**
  * 对原版的 Alert 封装，提供了Android的支持
@@ -137,12 +137,18 @@ export const AlertNative = {
           options.onTipClicked && options.onTipClicked();
       });
     else if (isIOS) {
-      //TODO 支持ios顶部提示图标和按钮和点击事件
-      Toast.info({
+      Notify.show({
+        icon: options.icon,
+        duration: options.duration,
         content: options.title,
-      }, options.duration, 'top', () => {
-
-      }, false);
+        button: options.buttonText,
+        onClick() {
+          options.onTipClicked && options.onTipClicked();
+        },
+        onButtonClick() {
+          options.onButtonClicked && options.onButtonClicked();
+        },
+      });
     } else {
       throw new Error('Not support');
     }

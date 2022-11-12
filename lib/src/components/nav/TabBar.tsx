@@ -3,7 +3,7 @@ import CheckTools from "../../utils/CheckTools";
 import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../Badge";
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
-import { Icon } from "../Icon";
+import { Icon, IconProp } from "../Icon";
 import { ThemeWrapper } from "../../theme/Theme";
 
 //公用的TabBarItem
@@ -19,9 +19,9 @@ export interface TabBarItemProps {
    */
   icon?: string;
   /**
-   * 标签图标字体名称
+   * 图标透传样式
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
   /**
    * 标签图标大小。默认：23
    */
@@ -86,7 +86,7 @@ function InternalTabBarItem(props: InternalTabBarItemProps) {
   const iconSize = props.iconSize || 23;
   const humpHeight = props.humpHeight || [ iconSize, iconSize ];
   const iconProps = {
-    fontFamily: props.iconFontFamily,
+    ...props.iconProps,
     icon: props.icon,
     size: iconSize,
     color: color,

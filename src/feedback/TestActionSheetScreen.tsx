@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView } from '../../lib/src/index';
+import { ScrollView } from 'react-native';
+import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, SimpleList, ActionSheetTitle } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestActionSheet'>;
@@ -12,6 +12,7 @@ export function TestActionSheetScreen(_props: Props) {
   const [ showActionSheet3, setShowActionSheet3] = useState(false);
   const [ showActionSheet4, setShowActionSheet4] = useState(false);
   const [ showActionSheet5, setShowActionSheet5] = useState(false);
+  const choosedItem = useRef<string[]>([]);
 
   return (
     <ScrollView>
@@ -89,8 +90,25 @@ export function TestActionSheetScreen(_props: Props) {
         <ActionSheet
           show={showActionSheet5}
           closeable
+          closeIcon={false}
           onClose={() => setShowActionSheet5(false)}
-          renderContent={() => <Text>战式厂思省空面马六前, 做造识强等, 道派B无标两育。 合目治中做图是定, 易斗必至听究地, 入江记H两速。查少四老规影外公, 方地更G集性。包, 员能级干理达历中, 很便F节府员里直。 业意量叫位美深J基。</Text>}
+          renderContent={(close) => <ColumnView>
+            <ActionSheetTitle
+              title="请选择选项"
+              cancelText="取消"
+              confirmText="确定"
+              onCancelPressed={close}
+              onConfirmPressed={() => {
+                Toast.info('你选择了:' + JSON.stringify(choosedItem.current));
+                close();
+              }}
+            />
+            <SimpleList<string>
+              mode="mulit-check"
+              onSelectedItemChanged={(v) => { choosedItem.current = v; }}
+              data={[ '选项1', '选项2', '选项3', '选项4' ]}
+            />
+          </ColumnView>}
         />
 
         <CellGroup title="基础用法" inset>

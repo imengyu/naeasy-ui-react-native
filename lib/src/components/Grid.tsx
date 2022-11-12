@@ -5,7 +5,7 @@ import { borderTop } from '../utils/StyleTools';
 import { Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 import { ThemeSelector, Color, ThemeColor, PressedColor } from '../styles';
-import { Icon } from './Icon';
+import { Icon, IconProp } from './Icon';
 import { FlexView } from './layout/FlexView';
 import { RowView } from './layout/RowView';
 import { DynamicColor, DynamicThemeStyleSheet } from '../styles/DynamicThemeStyleSheet';
@@ -93,9 +93,9 @@ interface GridItemProp {
    */
   iconColor?: ThemeColor,
   /**
-   * 图标字体名称
+   * 图标自定义属性
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
   /**
    * 点击事件
    */
@@ -138,7 +138,7 @@ export const GridItem = ThemeWrapper(function (props: GridItemProp) {
     if (typeof props.icon === 'string') {
       if (props.icon.startsWith('http'))
         return <Image key="leftIcon" style={[ styles.icon, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
-      return <Icon key="leftIcon" icon={props.icon} fontFamily={props.iconFontFamily} style={{
+      return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{
         ...styles.icon,
         ...props.iconStyle as TextStyle,
         color: ThemeSelector.color(props.iconColor, Color.black),

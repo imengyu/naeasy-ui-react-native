@@ -43,7 +43,7 @@ const styles = DynamicThemeStyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: DynamicColor(Color.mask),
+    backgroundColor: DynamicColor(Color.ghost),
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,
@@ -62,17 +62,17 @@ export const LoadingView = ThemeWrapper(function (props: LoadingViewProps) {
 
   const { style, children, loading, indicatorColor, indicatorStyle, loadingText, loadingTextStyle } = props;
   return (
-    <View style={{
-      ...styles.view,
-      ...style,
-    }}>
+    <View style={[
+      styles.view,
+      style,
+    ]}>
       { loading ? <View style={styles.loadingView}>
         <ActivityIndicator color={ThemeSelector.color(indicatorColor || Color.primary)} size="large" style={indicatorStyle} />
-        <Text style={{
-          ...styles.loadingText,
-          ...loadingTextStyle,
-          display: CheckTools.isNullOrEmpty(loadingText) ? 'none' : 'flex',
-        }}>{loadingText}</Text>
+        <Text style={[
+          styles.loadingText,
+          loadingTextStyle,
+          { display: CheckTools.isNullOrEmpty(loadingText) ? 'none' : 'flex' },
+        ]}>{loadingText}</Text>
       </View> : <></> }
       {children}
     </View>

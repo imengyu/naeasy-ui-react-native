@@ -58,7 +58,7 @@ export const IconUtils = {
   },
   /**
    * 获取图标名称映射集
-   * @returns 
+   * @returns
    */
   getIconMap() {
     return iconMap;
@@ -94,10 +94,10 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   const colorFinal = ThemeSelector.color(color, Color.black);
 
   function renderSvgUri() {
-    return <SvgFromUri uri={iconData as string} width={size} height={size} fill={colorFinal} {...svgProps} />;
+    return <SvgFromUri uri={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
   function renderSvgXml() {
-    return <SvgFromXml xml={iconData as string} width={size} height={size} fill={colorFinal} {...svgProps} />;
+    return <SvgFromXml xml={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
 
   function renderImage(source: ImageSourcePropType) {
@@ -121,7 +121,7 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
     else if (iconData.startsWith('http')) return iconData.endsWith('.svg') ? renderSvgUri() : renderImage({ uri: iconData });
   } else if (iconData) {
     if (iconData.svg)
-      return <LocalSvg asset={iconData.source} width={size} height={size} {...svgProps} />;
+      return <LocalSvg asset={iconData.source} width={size} height={size} style={style} {...svgProps} />;
     else
       return renderImage(iconData.source);
   }

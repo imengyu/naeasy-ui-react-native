@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text, Image } from 'react-native';
-import { Cell, Toast, Dialog, CellGroup, ColumnView } from '../../lib/src/index';
+import { Cell, Toast, Dialog, CellGroup, ColumnView, Color } from '../../lib/src/index';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;
@@ -13,6 +13,7 @@ export function TestDialogScreen(_props: Props) {
   const [ show3, setShow3 ] = useState(false);
   const [ show4, setShow4 ] = useState(false);
   const [ show5, setShow5 ] = useState(false);
+  const [ show6, setShow6 ] = useState(false);
 
   return (
     <ScrollView>
@@ -23,6 +24,14 @@ export function TestDialogScreen(_props: Props) {
           closeable
           title="提示"
           content="这是一个对话框"
+        />
+        <Dialog
+          show={show6}
+          onClose={() => setShow6(false)}
+          icon="success-filling"
+          iconColor={Color.success}
+          closeable
+          content="已成功提交，请注意查收信息"
         />
         <Dialog
           show={show2}
@@ -68,8 +77,8 @@ export function TestDialogScreen(_props: Props) {
           onClose={() => setShow5(false)}
           showCancel
           closeable
-          title="提示"
-          content="确认执行操作? 返回一个 Promise 可以异步关闭对话框"
+          title="确认执行操作? "
+          content="返回一个 Promise 可以异步关闭对话框"
           onConfirm={() => new Promise<void>((resolve) => {
             setTimeout(() => {
               resolve();
@@ -80,6 +89,7 @@ export function TestDialogScreen(_props: Props) {
         <CellGroup title="对话框" inset>
           <Text style={{ padding: 10 }}>一个对话框封装组件。</Text>
           <Cell title="简单对话框" showArrow onPress={() => setShow1(true)} />
+          <Cell title="图标对话框" showArrow onPress={() => setShow6(true)} />
           <Cell title="确认对话框" showArrow onPress={() => setShow2(true)} />
           <Cell title="超长文字" showArrow onPress={() => setShow3(true)} />
           <Cell title="自定义对话框内容" showArrow onPress={() => setShow4(true)} />

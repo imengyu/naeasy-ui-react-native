@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace } from '../lib/src/index';
+import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace, A, AlertNative } from '../lib/src/index';
 import { RootStackParamList } from './navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'Components'>;
@@ -14,6 +14,7 @@ export class TestAppHome extends React.Component<Props> {
           <CellGroup inset>
             <ColumnView padding={10}>
               <Text size={30} weight="bold">imengyu-ui-lib</Text>
+              <A href="https://github.com/imengyu/imengyu-ui-lib">https://github.com/imengyu/imengyu-ui-lib</A>
             </ColumnView>
           </CellGroup>
           <CellGroup inset title="基础组件">
@@ -36,6 +37,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Form 表单示例" touchable showArrow onPress={() => this.props.navigation.push('TestForm')} />
             <Cell title="NumberInput 示例" touchable showArrow onPress={() => this.props.navigation.push('TestNumberInput')} />
             <Cell title="NumberKeyBoard 数字键盘示例" touchable showArrow onPress={() => this.props.navigation.push('TestNumberKeyBoard')} />
+            <Cell title="PlateKeyBoard 车牌号键盘示例" touchable showArrow onPress={() => this.props.navigation.push('TestPlateKeyBoard')} />
             <Cell title="Picker 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
@@ -51,7 +53,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="CountDown 倒计时" touchable showArrow onPress={() => this.props.navigation.push('TestCountDown')} />
             <Cell title="CountTo 数字滚动" touchable showArrow onPress={() => this.props.navigation.push('TestCountTo')} />
             <Cell title="Divider 分割线组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
-            <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
+            <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => AlertNative.alert('提示', '未完成，敬请期待')} />
             <Cell title="[未完成] Collapse 可折叠组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
             <Cell title="[未完成] Carousel 轮播组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
             <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
@@ -63,7 +65,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />
             <Cell title="SegmentedControl 分段器组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSegmentedControl')} />
             <Cell title="Sidebar 侧边导航" touchable showArrow onPress={() => this.props.navigation.push('TestSideBar')} />
-            <Cell title="[未完成] Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />
+            <Cell title="[未完成] Skeleton 骨架屏" touchable showArrow onPress={() => AlertNative.alert('提示', '未完成，敬请期待')} />
             <Cell title="Step 步骤条组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
             <Cell title="SwipeableRow 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
             <Cell title="Tabbar 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTabBar')} />

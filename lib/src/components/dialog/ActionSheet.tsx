@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableHighlight } from "react-native";
+import { Text, TouchableHighlight, View } from "react-native";
 import { ScrollView } from "react-native";
 import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { deviceHeight, rpx } from "../../utils/StyleConsts";
@@ -8,6 +8,8 @@ import { ColumnView } from "../layout/ColumnView";
 import { Popup } from "../Popup";
 import { PopupContainerProps } from "../PopupContainer";
 import { ThemeWrapper } from "../../theme/Theme";
+import { RowView } from "../layout/RowView";
+import { Button } from "../button/Button";
 
 export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**
@@ -61,7 +63,7 @@ export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'p
   /**
    * 自定义渲染内容回调，设置后 actions 无效
    */
-  renderContent?: () => JSX.Element|JSX.Element[],
+  renderContent?: (close: () => void) => JSX.Element|JSX.Element[],
 }
 export interface ActionSheetItem {
   /**
@@ -111,10 +113,13 @@ const styles = DynamicThemeStyleSheet.create({
     marginTop: 4,
   },
   titleView: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderColor: DynamicColor(Color.white),
     borderBottomColor: DynamicColor(Color.border),
     borderWidth: 1,
+  },
+  titleTextView: {
+    paddingVertical: 5,
   },
   title: {
     fontSize: 16,
@@ -158,6 +163,61 @@ export const ActionSheetItem = ThemeWrapper(function (props: ActionSheetItemProp
 
 //#region ActionSheet
 
+/**
+ * ActionSheet 标题组件
+ */
+export function ActionSheetTitle(props: {
+  /**
+   * 标题
+   */
+  title?: string,
+  /**
+   * 说明
+   */
+  description?: string,
+  /**
+   * 取消按钮文字，如果不为空则会在左边添加一个取消按钮
+   */
+  cancelText?: string,
+  /**
+   * 确定按钮文字，如果不为空则会在右边添加一个确定按钮
+   */
+  confirmText?: string,
+  /**
+   * 取消按钮文字颜色
+   */
+  cancelTextColor?: ThemeColor,
+  /**
+   * 确定按钮文字颜色
+   */
+  confirmTextColor?: ThemeColor,
+  /**
+   * 取消按钮点击
+   */
+  onCancelPressed?: () => void;
+  /**
+   * 确定按钮点击事件
+   */
+  onConfirmPressed?: () => void;
+}) {
+  const {
+    title, description, cancelText, confirmText, cancelTextColor,
+    confirmTextColor = Color.primary, onCancelPressed, onConfirmPressed,
+  } = props;
+
+  return (
+    (title || description || cancelText || confirmText) ? (
+    <RowView style={styles.titleView} justify="space-between">
+      { cancelText ? <Button type="text" textColor={cancelTextColor} onPress={onCancelPressed}>{cancelText}</Button> : <View /> }
+      <ColumnView style={styles.titleTextView} center>
+        <Text style={[ styles.title, displayNoneIfEmpty(title) ]}>{title}</Text>
+        <Text style={[ styles.description, displayNoneIfEmpty(description) ]}>{description}</Text>
+      </ColumnView>
+      { confirmText ? <Button type="text" textColor={confirmTextColor} onPress={onConfirmPressed}>{confirmText}</Button> : <View /> }
+    </RowView>) : <></>
+  );
+}
+
 const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
 
   function onItemClick(item: ActionSheetItem, index: number) {
@@ -177,13 +237,7 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
       { width: props.center ? (props.centerWidth || rpx(600)) : undefined },
     ]} bounces={false}>
       <ColumnView>
-        <ColumnView center style={[
-          styles.titleView,
-          displayNoneIfEmpty(props.title, props.description),
-        ]}>
-          <Text style={[ styles.title, displayNoneIfEmpty(props.title) ]}>{props.title}</Text>
-          <Text style={[ styles.description, displayNoneIfEmpty(props.description) ]}>{props.description}</Text>
-        </ColumnView>
+        <ActionSheetTitle title={props.title} description={props.description} />
         <ColumnView style={styles.view}>
           { props.actions?.map((item, index) => <ActionSheetItem
             key={index}

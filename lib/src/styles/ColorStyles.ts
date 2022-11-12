@@ -24,14 +24,11 @@ export function PressedColor(color: ColorInfoItem): ColorInfoItem {
   for (const key in color) {
     if (Object.prototype.hasOwnProperty.call(color, key)) {
       if (key.startsWith('pressed_'))
-        newObj[key] = color[key];
+        newObj[key.substring(8)] = color[key];
     }
   }
 
-  return {
-    light: color.pressed_light || color.pressed || color.light,
-    dark: color.pressed_dark || color.pressed || color.dark,
-  };
+  return newObj;
 }
 
 /**
@@ -59,8 +56,12 @@ export const Color = {
     dark: '#222222',
   },
   switch: {
-    light: '#dddddd',
+    light: '#efefef',
     dark: '#eeeeee',
+  },
+  notify: {
+    light: '#ffffff',
+    dark: '#222222',
   },
   divider: {
     light: '#efefef',
@@ -74,6 +75,10 @@ export const Color = {
     light: 'rgba(0,0,0,0.4)',
     dark: 'rgba(255,255,255,0.2)',
   },
+  ghost: {
+    light: 'rgba(255,255,255,0.2)',
+    dark: 'rgba(0,0,0,0.4)',
+  },
   background: {
     light: '#f7f8fa',
     dark: '#121213',
@@ -81,7 +86,7 @@ export const Color = {
   link: {
     light: '#0b72cc',
     dark: '#0a5699',
-    pressed_light: '#043a69',
+    pressed_light: '#0960ac',
     pressed_dark: '#043a69',
   },
   text: {
@@ -101,8 +106,8 @@ export const Color = {
   primary: {
     light: '#33a3dc',
     dark: '#2779c0',
-    pressed_light: '#043a69',
-    pressed_dark: '#043a69',
+    pressed_light: '#0960ac22',
+    pressed_dark: '#043a6999',
   },
   success: {
     light: '#07c160',

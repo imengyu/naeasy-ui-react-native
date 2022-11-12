@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, TextStyle, GestureResponderEvent } from "react-native";
 import { Color, ThemeColor } from "../../styles";
-import { Icon } from "../Icon";
+import { Icon, IconProp } from "../Icon";
 import { ThemeWrapper } from "../../theme/Theme";
 
 export interface RateProps {
@@ -21,11 +21,11 @@ export interface RateProps {
   /**
    * 星星未激活自定义样式
    */
-  starStyle?: TextStyle;
+  starStyle?: IconProp;
   /**
    * 星星激活自定义样式
    */
-  starActiveStyle?: TextStyle;
+  starActiveStyle?: IconProp;
   /**
    * 星星激活的颜色
    */
@@ -63,10 +63,6 @@ export interface RateProps {
    * 评星组件大小
    */
   size?: number;
-  /**
-   * 图标字体名称
-   */
-  iconFontFamily?: string;
 }
 
 const styles = StyleSheet.create({
@@ -93,8 +89,8 @@ export const Rate = ThemeWrapper(function (props: RateProps) {
 
   const icon = props.icon || 'favorite-filling';
   const voidIcon = props.voidIcon || 'favorite';
-  const starActiveColor = props.starActiveColor || Color.yellow;
-  const starColor = props.starColor || Color.lightGrey;
+  const starActiveColor = props.starActiveColor || Color.warning;
+  const starColor = props.starColor || Color.grey;
   const starActiveStyle = {
     marginRight: space,
     ...props.starActiveStyle,
@@ -140,14 +136,16 @@ export const Rate = ThemeWrapper(function (props: RateProps) {
     for (let i = 0; i < count; i++) {
       if (i === Math.floor(value) && i < Math.ceil(value)) {
         arr.push(<View style={styles.activeHalf} key={i}>
-          <Icon icon={icon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveHalfStyle} />
-          <Icon icon={voidIcon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />
+          <View style={starActiveHalfStyle}>
+            <Icon icon={icon} {...props.starActiveStyle} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />
+          </View>
+          <Icon icon={voidIcon} {...props.starStyle} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />
         </View>);
       }
       else if (i < value)
-        arr.push(<Icon key={i} icon={icon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />);
+        arr.push(<Icon key={i} icon={icon} {...props.starActiveStyle} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />);
       else if (i >= value)
-        arr.push(<Icon key={i} icon={voidIcon} fontFamily={props.iconFontFamily} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />);
+        arr.push(<Icon key={i} icon={voidIcon} {...props.starStyle} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />);
     }
 
     return arr;

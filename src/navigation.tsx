@@ -50,6 +50,7 @@ export type RootStackParamList = {
   TestWhiteSpace: undefined;
   TestWingBlank: undefined;
   TestNumberKeyBoard: undefined;
+  TestPlateKeyBoard: undefined;
   TestAvatarStack: undefined;
   TestSimpleList: undefined;
   TestIndexedList: undefined;

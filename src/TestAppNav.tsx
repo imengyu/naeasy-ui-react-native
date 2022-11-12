@@ -56,6 +56,7 @@ import { TestLayout2Screen } from './base/TestLayout2Screen';
 import { TestSimpleListScreen } from './list/TestSimpleListScreen';
 import { TestIndexedListScreen } from './list/TestIndexedListScreen';
 import { TestStepScreen } from './display/TestStepScreen';
+import { TestPlateKeyBoardScreen } from './form/TestPlateKeyBoardScreen';
 
 const Stack = createStackNavigator();
 
@@ -148,6 +149,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestSimpleList" component={TestSimpleListScreen as any} />
         <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen as any} />
         <Stack.Screen name="TestStep" component={TestStepScreen as any} />
+        <Stack.Screen name="TestPlateKeyBoard" component={TestPlateKeyBoardScreen as any} />
       </Stack.Navigator>
     );
   }

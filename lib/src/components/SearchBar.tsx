@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Platform } from 'react-native';
 import { Text, TextInput, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../styles';
-import { Icon } from './Icon';
+import { Icon, IconProp } from './Icon';
 import { RowView } from './layout/RowView';
 import { ThemeWrapper } from '../theme/Theme';
 
@@ -36,9 +36,9 @@ export interface SearchBarProp {
    */
   leftIcon?: string|null;
   /**
-   * 图标字体名称
+   * 图标自定义属性
    */
-  leftIconFontFamily?: string;
+  leftIconProps?: IconProp;
   /**
    * 取消按钮显示，默认是 show-active
    * * hidden 不显示
@@ -165,7 +165,7 @@ export const SearchBar = ThemeWrapper(function (props: SearchBarProp) {
             props.renderLeftIcon() :
             (
               props.leftIcon !== null ?
-                <Icon icon={props.leftIcon || "search"} fontFamily={props.leftIconFontFamily} style={styles.leftIcon} /> :
+                <Icon icon={props.leftIcon || "search"} {...props.leftIconProps} style={styles.leftIcon} /> :
                 <></>
             )
         }

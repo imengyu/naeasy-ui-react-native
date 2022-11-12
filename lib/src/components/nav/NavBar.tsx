@@ -5,6 +5,7 @@ import { IconButton } from "../button/IconButton";
 import { TextScrollable } from "../TextScrollable";
 import { Color, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
+import { IconProp } from "../Icon";
 
 export type NavBarButtonTypes = 'back'|'menu'|'search'|'setting';
 
@@ -74,9 +75,9 @@ export interface NavBarProps {
    */
   titleScroll?: boolean;
   /**
-   * 图标字体名称
+   * 图标透传样式
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
 }
 
 const style = StyleSheet.create({
@@ -139,7 +140,7 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
         <IconButton
           key={button}
           icon={button}
-          fontFamily={props.iconFontFamily}
+          {...props.iconProps}
           onPress={left ? props.onLeftButtonPressed : props.onRightButtonPressed}
           shape="square-full"
         />

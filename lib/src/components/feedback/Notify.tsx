@@ -3,7 +3,7 @@ import Portal from '../../portal';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, Animated, ListRenderItemInfo, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { deviceHeight, selectStyleType } from '../../utils';
-import { Icon } from '../Icon';
+import { Icon, IconProp } from '../Icon';
 import { Button } from '../button/Button';
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
 import { useDidMountEffect } from '../../hooks/CommonHooks';
@@ -124,16 +124,11 @@ const styles = DynamicThemeStyleSheet.create({
     fontSize: 14,
     color: DynamicColor(Color.black),
   },
-  messageItemStyle: { backgroundColor: DynamicColor(Color.light) },
-  loadingItemStyle: { backgroundColor: DynamicColor(Color.light) },
+  messageItemStyle: { backgroundColor: DynamicColor(Color.notify) },
+  loadingItemStyle: { backgroundColor: DynamicColor(Color.notify) },
   errorItemStyle: { backgroundColor: DynamicColor(Color.danger) },
   successItemStyle: { backgroundColor: DynamicColor(Color.success) },
   waringItemStyle: { backgroundColor: DynamicColor(Color.warning) },
-  messageTextStyle: { color: DynamicColor(Color.text) },
-  loadingTextStyle: { color: DynamicColor(Color.text) },
-  errorTextStyle: { color: Color.white.light },
-  successTextStyle: { color: Color.white.light },
-  waringTextStyle: { color: Color.white.light },
 });
 
 export interface NotifyInstance {
@@ -191,13 +186,13 @@ const NotifyItemControl = ThemeWrapper(function (props: {
     success: styles.successItemStyle,
     waring: styles.waringItemStyle,
   });
-  const textStyle = selectStyleType(item.type, 'message', {
-    message: styles.messageTextStyle,
-    loading: styles.loadingTextStyle,
-    error: styles.errorTextStyle,
-    success: styles.successTextStyle,
-    waring: styles.waringTextStyle,
-  });
+  const textColor = ThemeSelector.color(selectStyleType(item.type, 'message', {
+    message: Color.text,
+    loading: Color.text,
+    error: Color.white.light,
+    success: Color.white.light,
+    waring: Color.white.light,
+  }) || Color.primary);
 
   useDidMountEffect(() => {
     if (!first) {
@@ -257,9 +252,25 @@ const NotifyItemControl = ThemeWrapper(function (props: {
       opacity: animOpacityValue.current,
     }]}>
       <TouchableOpacity style={styles.notifyClickable} activeOpacity={0.8} onPress={canRemove ? onClick : undefined}>
-        { (item.showIcon && icon !== '') ? (icon === 'loading' ? <ActivityIndicator size="small" color={(textStyle as TextStyle).color || ThemeSelector.color(Color.primary)} /> : <Icon icon={icon} fontFamily={item.iconFontFamily} style={{ ...textStyle, ...item.textStyle}} />) : <></> }
-        { typeof item.content === 'string' ? <Text style={[ styles.notifyText, textStyle, item.textStyle ]}>{item.content}</Text> : item.content }
-        { !CheckTools.isNullOrEmpty(item.button) ? <Button type="text" padding={0} onPress={onButtonClick}>{item.button}</Button> : <></> }
+        {
+          //加载中提示
+          (item.showIcon && icon !== '') ?
+            (icon === 'loading' ?
+              <ActivityIndicator size="small" color={textColor} /> :
+              <Icon icon={icon} color={textColor} {...item.iconProps} style={item.textStyle} />) :
+            <></>
+        }
+        {
+          //主内容
+          typeof item.content === 'string' ?
+            <Text style={[ styles.notifyText, { color: textColor }, item.textStyle ]}>{item.content}</Text> :
+            item.content
+        }
+        {
+          //一个附加按钮
+          !CheckTools.isNullOrEmpty(item.button) ? <Button type="text" padding={0} onPress={onButtonClick}>{item.button}</Button> :
+          <></>
+        }
       </TouchableOpacity>
     </Animated.View>
   );
@@ -390,9 +401,9 @@ export interface NotifyOptions {
    */
   icon?: string;
   /**
-   * 图标字体名称
+   * 图标自定义属性
    */
-  iconFontFamily?: string;
+  iconProps?: IconProp;
   /**
    * 是否显示指定类型的图标
    */

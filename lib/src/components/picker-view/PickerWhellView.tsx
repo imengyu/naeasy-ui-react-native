@@ -162,8 +162,13 @@ export interface PickerWhellViewProps {
   onValueChange?: (selectIndex: number[]) => void;
 }
 
-export const PickerWhellViewAndroid = (isAndroid ? requireNativeComponent('RCTPickerWheelView') : undefined) as HostComponent<PickerWhellViewAndroidProps>;
-export const PickerWhellViewIOS = (isIOS ? requireNativeComponent('RCTUIPickerView') : undefined) as HostComponent<PickerWhellViewIOSProps>;
+let PickerWhellViewAndroid : HostComponent<PickerWhellViewAndroidProps>|null = null;
+let PickerWhellViewIOS : HostComponent<PickerWhellViewIOSProps>|null = null;
+
+if (!PickerWhellViewAndroid && isAndroid)
+  PickerWhellViewAndroid = requireNativeComponent('RCTPickerWheelView') as HostComponent<PickerWhellViewAndroidProps>;
+if (!PickerWhellViewIOS && isIOS)
+  PickerWhellViewAndroid = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
 
 const styles = StyleSheet.create({
   host: {
@@ -231,15 +236,16 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
         }
       }
     }
+
     return (
-      <PickerWhellViewIOS
+      PickerWhellViewIOS ? <PickerWhellViewIOS
         { ...this.props.iosProps }
         ref={this.iosViewRef as any}
         style={this.props.style}
         data={this.props.options}
         selectedIndex={this.selectedIndex.concat()}
         onSelectRow={this.onIOSSelectRow}
-      />
+      /> : <></>
     );
   }
 
@@ -297,7 +303,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
 
     for (let i = 0; i < data.length; i++) {
       arr.push(
-        <PickerWhellViewAndroid
+        PickerWhellViewAndroid ? <PickerWhellViewAndroid
           { ...this.props.androidProps }
           textColorCenter={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.black)}
           textColorOut={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.text)}
@@ -310,7 +316,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
             this.selectedIndex[i] = e.nativeEvent.index;
             this.emitValueChange();
           }}
-        />
+        /> : <></>
       );
       xOffsetStart -= (i === Math.ceil(count / 2) ? 40 : 20);
     }

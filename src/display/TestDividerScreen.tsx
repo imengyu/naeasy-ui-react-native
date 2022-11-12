@@ -20,7 +20,7 @@ export class TestDividerScreen extends React.PureComponent<Props, State> {
   render() {
     return (
       <ScrollView>
-        <ColumnView center padding={10}>
+        <ColumnView>
           <CellGroup title="基础用法" inset>
             <Text style={TestStyles.TitleText}>通过 Divider 组件显示分割线。</Text>
             <ColumnView padding={10}>
