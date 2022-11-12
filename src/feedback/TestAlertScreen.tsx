@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, ActionSheetNative, Toast, AlertNative, ColumnView } from '@imengyu-ui-lib-debug';
+import { CellGroup, Cell, ActionSheetNative, Toast, AlertNative, ColumnView, A } from '@imengyu-ui-lib-debug';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestAlert'>;
@@ -13,7 +13,10 @@ export class TestAlertScreen extends React.PureComponent<Props> {
       <ScrollView>
         <ColumnView center>
           <CellGroup title="原生对话框" inset>
-            <Text style={{ padding: 10 }}>对原生的 Alert、ActionSheet 进行了封装。</Text>
+            <Text style={{ padding: 10 }}>
+              对原生的 Alert、ActionSheet 进行了封装，
+              用于统一 Alert、ActionSheet 在 安卓与 iOS 上的表现（安卓使用 <A href="https://github.com/kongzue/DialogX">DialogX</A> ）。
+            </Text>
             <Cell title="Alert.alert" showArrow onPress={() => {
               AlertNative.alert('提示', '这是一个弹出对话框');
             }} />

@@ -15,11 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
-import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.bigkoo.pickerview.view.TimePickerView;
-import com.contrarywind.view.WheelView;
+import com.imengyu.RNUiLib.pickerview.builder.OptionsPickerBuilder;
+import com.imengyu.RNUiLib.pickerview.builder.TimePickerBuilder;
+import com.imengyu.RNUiLib.pickerview.view.OptionsPickerView;
+import com.imengyu.RNUiLib.pickerview.view.TimePickerView;
+import com.imengyu.RNUiLib.whellview.view.WheelView;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
