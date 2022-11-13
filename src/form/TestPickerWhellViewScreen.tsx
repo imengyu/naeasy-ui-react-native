@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Toast, PickerWhellView, CascadePickerWhellItem, CascadePickerWhellView } from '../../lib/src/index';
+import { ColumnView, CellGroup, Toast, PickerWhellView, CascadePickerWhellItem, CascadePickerWhellView } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

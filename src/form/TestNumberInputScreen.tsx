@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, NumberInput, Color, ColumnView } from '../../lib/src/index';
+import { CellGroup, NumberInput, Color, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNumberInput', 'RootStack'>;

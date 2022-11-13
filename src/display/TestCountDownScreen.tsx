@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, CountDown, CountDownInstance, RowView, Button, WhiteSpace } from '../../lib/src/index';
+import { ColumnView, CellGroup, CountDown, CountDownInstance, RowView, Button, WhiteSpace } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';

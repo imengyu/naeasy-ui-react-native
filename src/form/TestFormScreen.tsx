@@ -6,7 +6,7 @@ import { TestStyles } from '../styles/TestStyles';
 import {
   Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
   Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView,
-} from '../../lib/src/index';
+} from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestForm', 'RootStack'>;

@@ -63,6 +63,7 @@ export type RootStackParamList = {
   TestStep: undefined;
   TestTabBar: undefined;
   TestNotify: undefined;
+  TestDarkTheme: undefined;
 };
 
 /**

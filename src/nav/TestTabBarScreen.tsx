@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Icon, Image, TabBar, TabBarItem } from '../../lib/src/index';
+import { ColumnView, Icon, Image, TabBar, TabBarItem } from '../lib';
 import { ScrollView } from 'react-native';
 import { StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';

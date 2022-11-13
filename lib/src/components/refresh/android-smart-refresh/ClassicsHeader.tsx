@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { requireNativeComponent, ViewProps } from 'react-native';
+import { isAndroid } from '../../../utils';
 
-const RCTClassicsHeader = requireNativeComponent('RCTClassicsHeader');
+const RCTClassicsHeader = isAndroid ? requireNativeComponent('RCTClassicsHeader') : undefined as any;
 
 interface ClassicsHeaderProps extends ViewProps {
   primaryColor?: string;

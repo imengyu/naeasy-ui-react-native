@@ -2,7 +2,7 @@ import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
-import { Color, Col, Row, CellGroup, ColumnView } from '../../lib/src/index';
+import { Color, Col, Row, CellGroup, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestLayout2'>;

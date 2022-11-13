@@ -1,7 +1,7 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
-  title: 'imengyu-ui-lib Docs',
+  title: 'NaEasy UI Docs',
   mode: 'site',
   locales: [['zh-CN', '中文']],
   resolve: {

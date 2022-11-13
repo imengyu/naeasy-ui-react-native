@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, SideBar, SideBarItem, Toast } from '../../lib/src/index';
+import { ColumnView, SideBar, SideBarItem, Toast } from '../lib';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';

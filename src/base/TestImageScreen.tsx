@@ -2,7 +2,7 @@ import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
 import { Text } from 'react-native';
-import { ColumnView, CellGroup, RowView, Image, rpx, Avatar } from '../../lib/src/index';
+import { ColumnView, CellGroup, RowView, Image, rpx, Avatar } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCell'>;

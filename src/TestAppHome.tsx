@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace, A, AlertNative } from '../lib/src/index';
+import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace, A, AlertNative } from './lib';
 import { RootStackParamList } from './navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'Components'>;
@@ -13,9 +13,13 @@ export class TestAppHome extends React.Component<Props> {
         <ColumnView flex={1}>
           <CellGroup inset>
             <ColumnView padding={10}>
-              <Text size={30} weight="bold">imengyu-ui-lib</Text>
+              <Text size={30} weight="bold">NaEasy UI</Text>
+              <Text>NaEasy UI</Text>
               <A href="https://github.com/imengyu/imengyu-ui-lib">https://github.com/imengyu/imengyu-ui-lib</A>
             </ColumnView>
+          </CellGroup>
+          <CellGroup inset title="暗黑模式">
+            <Cell title="暗黑模式" touchable showArrow onPress={() => this.props.navigation.push('TestDarkTheme')} />
           </CellGroup>
           <CellGroup inset title="基础组件">
             <Cell title="Typography 段落示例" touchable showArrow onPress={() => this.props.navigation.push('TestTypography')} />

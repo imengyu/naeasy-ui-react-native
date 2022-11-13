@@ -1,5 +1,5 @@
 import React from 'react';
-import { Provider } from '../lib/src/index';
+import { Provider } from './lib';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 

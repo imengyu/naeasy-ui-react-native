@@ -1,4 +1,4 @@
-import { Color, DynamicColor, DynamicThemeStyleSheet } from '../../lib/src/index';
+import { Color, DynamicColor, DynamicThemeStyleSheet } from '../lib';
 
 export const TestStyles = DynamicThemeStyleSheet.create({
   TitleText: {

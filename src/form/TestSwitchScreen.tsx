@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Switch, Color } from '../../lib/src/index';
+import { ColumnView, Switch, Color } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { Switch as NativeSwitch } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';

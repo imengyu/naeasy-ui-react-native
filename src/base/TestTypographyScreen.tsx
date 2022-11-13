@@ -1,9 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { ColumnView, CellGroup, A } from '../../lib/src/index';
-import { H1, H2, H3, H4, H5, H6 } from '../../lib/src/index';
-import { B, Br, I, S, U, Text } from '../../lib/src/index';
+import { ColumnView, CellGroup, A } from '../lib';
+import { H1, H2, H3, H4, H5, H6 } from '../lib';
+import { B, Br, I, S, U, Text } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTypography'>;

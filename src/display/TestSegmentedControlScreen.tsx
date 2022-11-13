@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { SegmentedControl, Color, ColumnView } from '../../lib/src/index';
+import { SegmentedControl, Color, ColumnView } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

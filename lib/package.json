@@ -4,7 +4,7 @@
   "license": "MIT",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
-  "name": "imengyu-ui-lib",
+  "name": "@imengyu/naeasy-ui-react-native",
   "description": "A simple ui lib for react native",
   "devDependencies": {
     "@babel/core": "^7.12.9",

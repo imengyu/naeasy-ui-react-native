@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView } from '../../lib/src/index';
+import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

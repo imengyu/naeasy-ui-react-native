@@ -1,7 +1,7 @@
 ---
 hero:
-  title: 一款简单的 React Native 移动端UI组件库
-  desc: imengyu-ui-lib
+  title: NaEasy UI
+  desc: 一款简单的 React Native 移动端UI组件库
   actions:
     - text: 快速上手
       link: /introduction

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
 import { ScrollView, TextInput } from 'react-native';
-import { Cell, CellGroup, ColumnView, PlateKeyBoard } from '../../lib/src/index';
+import { Cell, CellGroup, ColumnView, PlateKeyBoard } from '../lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPlateKeyBoard'>;
 

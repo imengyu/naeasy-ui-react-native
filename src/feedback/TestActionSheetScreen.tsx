@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, SimpleList, ActionSheetTitle } from '../../lib/src/index';
+import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, SimpleList, ActionSheetTitle } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestActionSheet'>;

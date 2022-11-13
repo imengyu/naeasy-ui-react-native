@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Step, ColumnView, StepItem, Button, RowView, Color } from '../../lib/src/index';
+import { CellGroup, Step, ColumnView, StepItem, Button, RowView, Color } from '../lib';
 import { Text, ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

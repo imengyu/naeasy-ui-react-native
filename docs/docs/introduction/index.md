@@ -8,7 +8,9 @@ nav:
 
 ## 项目简介
 
-imengyu-ui-lib 是一款简单的 React Native 移动端UI组件库。提供了一些国内APP开发中经常使用的组件和相关功能，并封装，希望可以给您的开发带来便利！
+NaEasy UI 是一款简单的 React Native 移动端UI组件库。
+
+中文名是 “那简单” UI，提供了一些国内APP开发中经常使用的组件和相关功能，并封装，希望可以给您的开发带来便利！
 
 在设计的时候参考了 [vant](https://vant-contrib.gitee.io/vant/#/zh-CN)，
 如果你使用过vant，那么使用本组件库也可以得心应手。
@@ -28,7 +30,7 @@ imengyu-ui-lib 是一款简单的 React Native 移动端UI组件库。提供了�
 
 ## Demo 体验
 
-目前暂时只有 Android Demo
+目前暂时只有 [Android Demo](https://pan.baidu.com/s/1SPV3WJOrg2WYFNVtVg37DQ?pwd=bix5) 可下载体验。
 
 iOS的暂时没有（没有开发账号上架不方便）。
 

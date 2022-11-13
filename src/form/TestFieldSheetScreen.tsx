@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Field, Button, ColumnView } from '../../lib/src/index';
+import { CellGroup, Field, Button, ColumnView } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 

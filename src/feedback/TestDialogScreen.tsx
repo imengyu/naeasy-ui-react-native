@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Text, Image } from 'react-native';
-import { Cell, Toast, Dialog, CellGroup, ColumnView, Color } from '../../lib/src/index';
+import { Cell, Toast, Dialog, CellGroup, ColumnView, Color } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;

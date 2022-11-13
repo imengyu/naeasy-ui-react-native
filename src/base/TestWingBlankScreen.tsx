@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, WingBlank, Color, CellGroup, DynamicThemeStyleSheet, DynamicColor } from '../../lib/src/index';
+import { ColumnView, WingBlank, Color, CellGroup, DynamicThemeStyleSheet, DynamicColor } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
