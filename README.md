@@ -13,6 +13,10 @@ imengyu-ui-lib 是一款简单的 React Native 移动端UI组件库。提供了�
 
 iOS的暂时没有（没有开发账号上架不方便）。
 
+## 安装
+
+[安装步骤](./docs/docs/introduction/install.md)
+
 ## 特性
 
 * 支持 Android & iOS
