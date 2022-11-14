@@ -39,6 +39,10 @@ RCT_EXPORT_MODULE(ToolsManagerIOS);
     @"UINotificationFeedbackTypeError": [ NSNumber numberWithInt: UINotificationFeedbackTypeError ],
   };
 }
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[ @"onThemeChanged" ];
+}
 
 #pragma mark - 触摸反馈
 
@@ -208,12 +212,12 @@ RCT_EXPORT_METHOD(getIsDarkMode:(NSDictionary *)options
 
 //深色模式更改
 - (void) onSystemThemeChanged:(NSNotification *)notification {
-  //获取对象，来自 RCTRootView.m
-  //https://github.com/facebook/react-native/blob/main/React/Base/RCTRootView.m#L386
-  UITraitCollection * traitCollection = [[notification userInfo]  objectForKey:RCTUserInterfaceStyleDidChangeNotificationTraitCollectionKey];
 
-  //发送消息到JS
   if (@available(iOS 12.0, *)) {
+    //获取对象，来自 RCTRootView.m
+    //https://github.com/facebook/react-native/blob/main/React/Base/RCTRootView.m#L386
+    UITraitCollection * traitCollection = [[notification userInfo]  objectForKey:RCTUserInterfaceStyleDidChangeNotificationTraitCollectionKey];
+    //发送消息到JS
     [self sendEventWithName:@"onThemeChanged" body:@{
       @"theme": traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? @"dark" : @"light"
     }];
