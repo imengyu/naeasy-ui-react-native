@@ -1,6 +1,6 @@
-import { isAndroid } from 'imengyu-ui-lib';
 import React, { Component } from 'react';
 import { requireNativeComponent, ViewProps } from 'react-native';
+import { isAndroid } from '../../../utils';
 
 const RCTMaterialHeader = isAndroid ? requireNativeComponent('RCTMaterialHeader') : undefined as any;
 
