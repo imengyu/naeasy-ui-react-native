@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
 
   s.source           = { :git => "https://github.com/imengyu/imengyu-ui-lib.git", :tag => "v#{s.version}" }
   s.ios.source_files = "ios/**/*.{h,m,mm}"
-  s.osx.source_files = "macos/**/*.{h,m,mm}"
+  s.resource         = 'ios/BRPickerView/Base/BRPickerView.bundle'
 
   s.dependency 'React-Core'
 end
