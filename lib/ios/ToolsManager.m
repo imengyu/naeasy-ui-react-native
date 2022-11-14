@@ -196,8 +196,12 @@ RCT_EXPORT_METHOD(getIsDarkMode:(NSDictionary *)options
 {
   UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
   UIViewController *currentVC = [self getCurrentVCFrom:rootViewController];
-  NSNumber *value = [NSNumber numberWithBool:(currentVC.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) ];
-  successCallback(@[ value ]);
+  if (@available(iOS 12.0, *)) {
+    NSNumber *value = [NSNumber numberWithBool:(currentVC.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) ];
+    successCallback(@[ value ]);
+  } else {
+    successCallback(@[ @false ]);
+  }
 }
 
 #pragma mark - 深色模式更改
@@ -209,9 +213,15 @@ RCT_EXPORT_METHOD(getIsDarkMode:(NSDictionary *)options
   UITraitCollection * traitCollection = [[notification userInfo]  objectForKey:RCTUserInterfaceStyleDidChangeNotificationTraitCollectionKey];
 
   //发送消息到JS
-  [self sendEventWithName:@"onThemeChanged" body:@{
-    @"theme": traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? @"dark" : @"light"
-  }]
+  if (@available(iOS 12.0, *)) {
+    [self sendEventWithName:@"onThemeChanged" body:@{
+      @"theme": traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? @"dark" : @"light"
+    }];
+  } else {
+    [self sendEventWithName:@"onThemeChanged" body:@{
+      @"theme": @"light"
+    }];
+  }
 }
 
 //开启深色模式消息接收
