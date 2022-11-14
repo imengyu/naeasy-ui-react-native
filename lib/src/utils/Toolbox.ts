@@ -148,7 +148,7 @@ function addSystemThemeChangedListener(callback: (theme: Theme) => void) {
 function getSystemTheme() : Promise<Theme> {
   return new Promise<Theme>((resolve, reject) => {
     if (isIOS)
-      MToolboxModule.getIsDarkMode((isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
+      MToolboxModule.getIsDarkMode({}, (isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
     else if (isAndroid)
       MToolboxModule.getIsDarkMode((isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
     else

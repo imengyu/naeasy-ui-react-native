@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Switch, Cell, CellGroup, ColumnView, Text, ThemeSelector } from '../lib';
+import { Switch, Cell, CellGroup, ColumnView, ThemeSelector } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { DeviceEventEmitter } from 'react-native';
 
@@ -12,20 +12,19 @@ export function TestThemeScreen(_props: Props) {
   const [ isFlowSystem, setIsFlowSystem ] = useState(false);
 
   useEffect(() => {
+    //通知 App.js 修改主题
     DeviceEventEmitter.emit('switchDarkTheme', isDark);
   }, [ isDark ]);
-
   useEffect(() => {
-    
-  }, []);
+    //通知 App.js 修改主题
+    DeviceEventEmitter.emit('switchDarkThemeFlowSystem', isFlowSystem);
+  }, [ isFlowSystem ]);
 
   return (
     <ColumnView center>
       <CellGroup title="暗黑模式">
         <Cell title="切换暗黑模式" renderRight={() => <Switch value={isDark} onValueChange={setIsDark} />} />
-        <Cell title="跟随系统" renderRight={() => <Switch value={isFlowSystem} onValueChange={setIsFlowSystem} />} />
-
-        <Text></Text>
+        <Cell title="跟随系统切换 " renderRight={() => <Switch value={isFlowSystem} onValueChange={setIsFlowSystem} />} />
       </CellGroup>
     </ColumnView>
   );

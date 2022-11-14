@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#F00',
+    //backgroundColor: '#F00',
     zIndex: 0,
   },
 });
@@ -132,6 +132,7 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
   const containerSize = useRef({ x: 0, y: 0 });
 
   //todo: rewrite with React Native Gesture Handler
+  //todo: 修改，换页后缩放重置
 
   const panResponder = useRef(PanResponder.create({
     // 要求成为响应者：

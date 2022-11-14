@@ -187,7 +187,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
     if (!PickerWhellViewAndroid && isAndroid)
       PickerWhellViewAndroid = requireNativeComponent('RCTPickerWheelView') as HostComponent<PickerWhellViewAndroidProps>;
     if (!PickerWhellViewIOS && isIOS)
-      PickerWhellViewAndroid = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
+      PickerWhellViewIOS = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
   }
 
   private iosReloadAllComponents() {

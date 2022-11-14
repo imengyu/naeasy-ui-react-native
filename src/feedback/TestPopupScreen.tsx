@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView } from 'react-native';
-import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text } from '../lib';
+import { ScrollView, Image } from 'react-native';
+import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text, rpx } from '../lib';
 import { RootStackParamList } from '../navigation';
+import { TestStyles } from '../styles/TestStyles';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPopup'>;
 
@@ -16,6 +17,7 @@ interface TestPopupScreenState {
   showProp7: boolean,
   showProp8: boolean,
   showProp9: boolean,
+  showProp10: boolean,
 }
 
 export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenState> {
@@ -30,6 +32,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
     showProp7: false,
     showProp8: false,
     showProp9: false,
+    showProp10: false,
   };
 
   render(): React.ReactNode {
@@ -41,7 +44,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             onClose={() => this.setState({ showProp1: false })}
             position="center"
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="success-filling" color={Color.success} size={50} />
                 <Text>这个是弹出层自定义内容</Text>
                 <Button text="关闭" onPress={() => this.setState({ showProp1: false }) } />
@@ -54,7 +57,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             position="center"
             closeable
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="success-filling" color={Color.success} size={50} />
                 <Text>这个是弹出层是可以点击遮罩和按扭关闭的</Text>
               </ColumnView>
@@ -66,7 +69,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             position="bottom"
             closeable
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-up" color={Color.success} size={50} />
                 <Text>底部弹出</Text>
               </ColumnView>
@@ -78,7 +81,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             position="top"
             closeable
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-down" color={Color.success} size={50} />
                 <Text>顶部弹出</Text>
               </ColumnView>
@@ -90,7 +93,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             position="left"
             closeable
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-left" color={Color.success} size={50} />
                 <Text>左侧弹出</Text>
               </ColumnView>
@@ -102,7 +105,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             position="right"
             closeable
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-right" color={Color.success} size={50} />
                 <Text>右侧弹出</Text>
               </ColumnView>
@@ -115,7 +118,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             closeable
             round
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-up" color={Color.success} size={50} />
                 <Text>圆角弹出层</Text>
               </ColumnView>
@@ -128,7 +131,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             closeable
             round
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-down" color={Color.success} size={50} />
                 <Text>圆角弹出层</Text>
               </ColumnView>
@@ -142,9 +145,25 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             round
             mask={false}
             renderContent={() => (
-              <ColumnView center style={{ padding: 10 }}>
+              <ColumnView center style={{ padding: 30 }}>
                 <Icon icon="direction-up" color={Color.success} size={50} />
                 <Text>圆角弹出层</Text>
+              </ColumnView>
+            )}
+          />
+          <Popup
+            show={this.state.showProp10}
+            onClose={() => this.setState({ showProp10: false })}
+            position="center"
+            closeable
+            round
+            backgroundColor="transparent"
+            renderContent={() => (
+              <ColumnView center>
+                <Image
+                  source={{ uri: 'https://image.ttcxx.cn/bgDialogRookieCoupon.png' }}
+                  style={{ width: rpx(700), height: rpx(800) }}
+                />
               </ColumnView>
             )}
           />
@@ -152,6 +171,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
           <CellGroup title="基础用法" inset>
             <Cell title="普通弹出框，不可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp1: true })} />
             <Cell title="弹出框，可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp2: true })} />
+            <Cell title="自定义透明弹窗，通常可用于广告" showArrow onPress={() => this.setState({ showProp10: true })} />
           </CellGroup>
           <CellGroup title="弹出位置" inset>
             <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp3: true })} />
@@ -160,12 +180,12 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             <Cell title="右侧弹出" showArrow onPress={() => this.setState({ showProp6: true })} />
           </CellGroup>
           <CellGroup title="圆角弹出层" inset>
-            <Text style={{ padding: 10 }}>设置 round 属性后，弹窗会根据弹出位置添加不同的圆角样式。</Text>
+            <Text style={TestStyles.TitleText}>设置 round 属性后，弹窗会根据弹出位置添加不同的圆角样式。</Text>
             <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp7: true })} />
             <Cell title="顶部弹出" showArrow onPress={() => this.setState({ showProp8: true })} />
           </CellGroup>
           <CellGroup title="无遮罩的弹出层" inset>
-            <Text style={{ padding: 10 }}>无遮罩，可以操控下方组件。</Text>
+            <Text style={TestStyles.TitleText}>无遮罩，可以操控下方组件。</Text>
             <Cell title="弹出" showArrow onPress={() => this.setState({ showProp9: true })} />
           </CellGroup>
         </ColumnView>

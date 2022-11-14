@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Provider, ThemeSelector, Color, ThemeRender } from './lib';
+import React, { useEffect, useRef, useState } from 'react';
+import { Provider, ThemeSelector, Color, ThemeRender, ToolBox } from './lib';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -10,15 +10,32 @@ import { DeviceEventEmitter, StatusBar } from 'react-native';
 function App() {
 
   const [ theme, setTheme ] = useState('light');
+  const folowSystem = useRef(false);
 
   useEffect(() => {
-    const event = DeviceEventEmitter.addListener('switchDarkTheme', (value: boolean) => {
+    const event1 = DeviceEventEmitter.addListener('switchDarkTheme', (value: boolean) => {
       setTheme(value ? 'dark' : 'light');
+    });
+    const event2 = DeviceEventEmitter.addListener('switchDarkThemeFlowSystem', (value: boolean) => {
+      folowSystem.current = value;
+    });
+    return () => {
+      event1.remove();
+      event2.remove();
+    };
+  });
+
+  //监听系统深色模式更改
+  useEffect(() => {
+    const event = ToolBox.addSystemThemeChangedListener((themeNow) => {
+      if (folowSystem.current) {
+        setTheme(themeNow);
+      }
     });
     return () => {
       event.remove();
     };
-  });
+  }, []);
 
   return (
     <SafeAreaProvider>

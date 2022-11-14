@@ -1,10 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color } from '../styles';
-import { rpx } from '../utils/StyleConsts';
-import { selectStyleType } from '../utils/StyleTools';
-import { Icon } from './Icon';
+import { Color } from '../../styles';
+import { rpx } from '../../utils/StyleConsts';
+import { selectStyleType } from '../../utils/StyleTools';
+import { Icon } from '../Icon';
 
 export type IToastPosition = 'top'|'bottom'|'center';
 

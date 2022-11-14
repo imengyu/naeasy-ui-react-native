@@ -125,9 +125,6 @@ RCT_EXPORT_METHOD(getCacheInfo:(NSDictionary *)options
                   e:(RCTResponseSenderBlock)errorCallback)
 {
   NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES)firstObject];
-  
-
-  NSDictionary *infoDic = [[NSBundle mainBundle] infoDictionary];
   NSString * cacheUnit = @"B";
   CGFloat cacheSize = [ self calculateCache ];
   CGFloat cacheSizeTransform = cacheSize;

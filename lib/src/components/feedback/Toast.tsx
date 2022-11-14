@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import Portal from '../../portal';
-import { ToastContainer, IToastPosition } from '../ToastContainer';
+import { ToastContainer, IToastPosition } from './ToastContainer';
 
 interface IToastConfigurable {
   /**
@@ -45,14 +45,13 @@ export interface IToastProps extends IToastConfigurable {
 
 
 const SHORT = 2000;
-const LONG = 6000;
 
 const defaultConfig: IToastConfigurable = {
   duration: SHORT,
   position: 'center',
   onClose: () => {},
   mask: false,
-  stackable: true,
+  stackable: false,
 };
 
 let defaultProps = {
@@ -75,7 +74,7 @@ function removeAll() {
 function notice(
   content: string | IToastProps,
   type: string,
-  duration = -12,
+  duration = defaultProps.duration,
   position = defaultProps.position,
   onClose = defaultProps.onClose,
   mask = defaultProps.mask,
@@ -95,14 +94,6 @@ function notice(
       ...props,
       ...content,
     };
-  }
-
-  if (duration < 0) {
-    if (typeof content === 'string')
-      duration = content.length / 80 * 20000;
-    else
-      duration = LONG;
-    props.duration = duration;
   }
 
   if (!props.stackable) {
@@ -142,7 +133,7 @@ export const Toast = {
   /**
    * 长时间显示时长
    */
-  LONG,
+  LONG: 6000,
   defaultConfig,
   /**
    * 获取当前配置
@@ -172,6 +163,11 @@ export const Toast = {
     onClose?: () => void,
     mask?: boolean,
   ) {
+    //根据文字长度设置显示时间
+    if (duration === -12) {
+      if (typeof props === 'string') duration = SHORT + props.length / 200 * 10000;
+      else duration = 1500;
+    }
     return notice(props, 'info', duration, position || 'center', onClose, mask);
   },
   /**
@@ -185,6 +181,11 @@ export const Toast = {
     onClose?: () => void,
     mask?: boolean,
   ) {
+    //根据文字长度设置显示时间
+    if (duration === -12) {
+      if (typeof props === 'string') duration = SHORT + props.length / 200 * 10000;
+      else duration = 2000;
+    }
     return notice(props, 'success', duration, position || 'center', onClose, mask);
   },
   /**
@@ -198,6 +199,11 @@ export const Toast = {
     onClose?: () => void,
     mask?: boolean,
   ) {
+    //根据文字长度设置显示时间
+    if (duration === -12) {
+      if (typeof props === 'string') duration = SHORT + props.length / 100 * 10000;
+      else duration = 4000;
+    }
     return notice(props, 'fail', duration, position || 'center', onClose, mask);
   },
   /**
@@ -211,6 +217,11 @@ export const Toast = {
     onClose?: () => void,
     mask?: boolean,
   ) {
+    //根据文字长度设置显示时间
+    if (duration === -12) {
+      if (typeof props === 'string') duration = SHORT + props.length / 100 * 10000;
+      else duration = 4000;
+    }
     return notice(props, 'offline', duration, position || 'center', onClose, mask);
   },
   /**
