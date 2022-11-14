@@ -40,7 +40,9 @@ npm i -S @newbanker/react-native-measure-text async-validator react-native-gestu
 Provider 用于为主题、全局配置、弹出框等等提供功能：
 
   ```jsx
-  import { Provider } from 'imengyu-ui-lib'; //导入Provider
+  import { Provider } from '@imengyu/naeasy-ui-react-native'; //导入Provider
+  import { SafeAreaProvider } from 'react-native-safe-area-context';
+  import { GestureHandlerRootView } from 'react-native-gesture-handler'; //部分组件依赖react-native-gesture-handler需要导入
 
   class App extends React.Component {
 
@@ -48,11 +50,15 @@ Provider 用于为主题、全局配置、弹出框等等提供功能：
 
     render() {
       return (
-        <Provider> { /* 用 Provider 包裹根组件 */ }
-          <NavigationContainer> { /* 下面是自己的内容 */ }
-            <TestAppNav />
-          </NavigationContainer>
-        </Provider>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Provider> { /* 用 Provider 包裹根组件 */ }
+              <NavigationContainer> { /* 下面是自己的内容 */ }
+                <TestAppNav />
+              </NavigationContainer>
+            </Provider>
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
       );
     }
   }
@@ -64,7 +70,7 @@ Provider 用于为主题、全局配置、弹出框等等提供功能：
 2. 导入你需要的组件，然后在页面中使用：
 
   ```jsx
-  import { Button } from 'imengyu-ui-lib';
+  import { Button } from '@imengyu/naeasy-ui-react-native';
 
   export class TestButtonScreen extends React.PureComponent {
     render() {

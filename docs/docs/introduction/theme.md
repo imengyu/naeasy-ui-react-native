@@ -9,7 +9,7 @@
 默认主题是 `light`。
 
 ```jsx
-import { Provider, Color, ColumnView, Button } from 'imengyu-ui-lib';
+import { Provider, Color, ColumnView, Button } from '@imengyu/naeasy-ui-react-native';
 
 class App extends React.Component {
 
@@ -41,7 +41,7 @@ export default App;
 修改已有主题颜色：
 
 ```js
-import { ThemeUtils } from 'imengyu-ui-lib';
+import { ThemeUtils } from '@imengyu/naeasy-ui-react-native';
 
 //需要在应用启动的时候设置，之后设置了需要重新设置主题才能生效
 ThemeUtils.configColors({
@@ -57,6 +57,69 @@ ThemeUtils.configColors({
   },
 });
 
+```
+
+## 动态主题与跟随系统深色模式
+
+参考 Demo app 中的 `App.tsx`，内置了主题切换与跟随系统深色模式功能。
+
+```jsx
+import { ThemeSelector, ToolBox， ThemeRender } from '@imengyu/naeasy-ui-react-native';
+
+function App() {
+
+  //这是主题变量
+  const [ theme, setTheme ] = useState('light');
+
+  //这个全局事件用于其他组件通过 DeviceEventEmitter.emit('setTheme', theme); 手动更改主题
+  useEffect(() => {
+    const event = DeviceEventEmitter.addListener('setTheme', (value: string) => {
+      setTheme(value);
+    });
+    return () => {
+      event.remove();
+    };
+  });
+
+  //如果需要监听系统深色模式更改，需要通过 ToolBox.addSystemThemeChangedListener 监听事件
+  useEffect(() => {
+    const event = ToolBox.addSystemThemeChangedListener((themeNow) => {
+      setTheme(themeNow);
+    });
+    return () => {
+      event.remove();
+    };
+  }, []);
+
+  return (
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider theme={theme}>
+          <ThemeRender>
+            { /* 下面是应用内容，Demo 中使用了 react-navigation，所以需要特殊处理 */ }
+            {(themeNow) => <NavigationContainer theme={{
+              //如果你使用了 react-navigation ，需要对他的样式特殊处理
+              dark: themeNow === 'dark',
+              colors: {
+                primary: ThemeSelector.select(Color.primary),
+                background: ThemeSelector.select(Color.background),
+                card: ThemeSelector.select(Color.light),
+                text: ThemeSelector.select(Color.text),
+                border: ThemeSelector.select(Color.border),
+                notification: ThemeSelector.select(Color.warning),
+              },
+            }}>
+              {/* 状态栏的颜色处理 */}
+              <StatusBar barStyle={themeNow === 'dark' ? 'light-content' : 'dark-content'} />
+              {/* 下面是你的应用内容 */}
+              <TestAppNav />
+            </NavigationContainer>}
+          </ThemeRender>
+        </Provider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
+  );
+}
 ```
 
 ## 文字大小预设
