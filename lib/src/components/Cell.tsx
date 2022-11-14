@@ -97,6 +97,10 @@ interface CellProp {
    * 自定义图标渲染
    */
   renderIcon?: (isLeft: boolean, name: string|ImageSourcePropType|undefined) => JSX.Element,
+  /**
+   * 自定义渲染子级
+   */
+  children?: JSX.Element,
 
   /**
    * 是否显示顶部边框，默认否
@@ -313,7 +317,7 @@ const styles = DynamicThemeStyleSheet.create({
       ]}
     >
       <RowView flex={1} align={props.center !== false ? 'center' : 'flex-start'} justify="space-between">
-        {renderBase()}
+        { props.children ? props.children : renderBase() }
       </RowView>
     </TouchableHighlight>
   );

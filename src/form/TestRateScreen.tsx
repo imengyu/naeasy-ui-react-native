@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, Rate, ColumnView } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { Color, Rate, ColumnView, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 
@@ -29,28 +29,42 @@ export class TestRateScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView padding={10}>
+        <ColumnView style={TestStyles.PaddingS}>
 
           <Text style={TestStyles.TitleText}>基础用法</Text>
-          <Rate value={this.state.value1} onValueChange={(page) => this.setState({ value1: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value1} onValueChange={(page) => this.setState({ value1: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>自定义图标和颜色</Text>
-          <Rate value={this.state.value2} icon="cry-filling" voidIcon="cry" starActiveColor={Color.success} starColor={Color.lightGrey} onValueChange={(page) => this.setState({ value2: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value2} icon="cry-filling" voidIcon="cry" starActiveColor={Color.success} starColor={Color.lightGrey} onValueChange={(page) => this.setState({ value2: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>自定义大小</Text>
-          <Rate value={this.state.value3} size={40} onValueChange={(page) => this.setState({ value3: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value3} size={40} onValueChange={(page) => this.setState({ value3: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>可选择半星</Text>
-          <Rate value={this.state.value4} half onValueChange={(page) => this.setState({ value4: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value4} half onValueChange={(page) => this.setState({ value4: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>自定义星星数量</Text>
-          <Rate value={this.state.value5} count={10} onValueChange={(page) => this.setState({ value5: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value5} count={10} onValueChange={(page) => this.setState({ value5: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>禁用状态</Text>
-          <Rate value={this.state.value5} disabled onValueChange={(page) => this.setState({ value5: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value5} disabled onValueChange={(page) => this.setState({ value5: page })} />
+          </ColumnView>
 
           <Text style={TestStyles.TitleText}>只读状态</Text>
-          <Rate value={this.state.value6} readonly onValueChange={(page) => this.setState({ value6: page })} />
+          <ColumnView style={TestStyles.PaddingS}>
+            <Rate value={this.state.value6} readonly onValueChange={(page) => this.setState({ value6: page })} />
+          </ColumnView>
 
         </ColumnView>
       </ScrollView>

@@ -6,7 +6,6 @@ import { deviceWidth } from '../utils/StyleConsts';
 import { topLeft } from '../utils/StyleTools';
 import { ColumnView } from './layout/ColumnView';
 import { Color, ThemeColor, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../styles';
-import { isIOS } from '../utils';
 import { ThemeRender } from '../theme/Theme';
 
 export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
@@ -120,12 +119,6 @@ export function Image(props: ImageWrapProps) {
     let source = props.source;
     if (typeof source === 'object' && typeof (source as ImageURISource).uri === 'string' && CheckTools.isNullOrEmpty((source as ImageURISource).uri))
       source = props.defaultSource || {};
-
-    if (isIOS) {
-      props.height = undefined;
-      props.width = undefined;
-    }
-
     return (
       <ReactNativeImage
         { ...props as ImageProps }

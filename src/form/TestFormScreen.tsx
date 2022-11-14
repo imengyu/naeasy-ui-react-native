@@ -1,11 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { KeyboardAvoidingView, Text } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import {
   Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
-  Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView,
+  Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView, Text,
 } from '../lib';
 import { RootStackParamList } from '../navigation';
 
@@ -28,10 +28,10 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
     return (
       <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
         <ScrollView>
-          <ColumnView padding={10}>
+          <ColumnView style={TestStyles.PaddingS}>
 
             <Text style={TestStyles.TitleText}>基础用法</Text>
-            <CellGroup inset>
+            <CellGroup>
               <Form
                 ref={(f) => { this.formRef1 = f;}}
                 rules={{
@@ -55,7 +55,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
             </CellGroup>
 
             <Text style={TestStyles.TitleText}>校验规则</Text>
-            <CellGroup inset>
+            <CellGroup>
               <Form
                 ref={(f) => { this.formRef2 = f;}}
                 fieldProps={{
@@ -71,7 +71,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
                   async: { required: true, validator: (rule, value, callback) => {
                       setTimeout(() => {
                         callback(value === '1' ? undefined : '请输入1');
-                      }, 1000);
+                      }, 200);
                     },
                   },
                 }}
@@ -91,9 +91,8 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
             </CellGroup>
 
             <Text style={TestStyles.TitleText}>表单类型</Text>
-            <CellGroup inset>
+            <CellGroup>
               <Form
-                style={{ padding: 10 }}
                 ref={(f) => { this.formRef3 = f;}}
                 fieldProps={{
                   labelFlex: 2,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, SearchBar } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { ColumnView, SearchBar, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 
@@ -35,6 +35,21 @@ export class TestSearchBarScreen extends React.PureComponent<Props, State> {
 
           <Text style={TestStyles.TitleText}>显示取消按钮</Text>
           <SearchBar placeholder="请输入搜索关键词" cancelState="show" onValueChange={(s) => this.setState({ value2: s })} />
+
+          <Text style={TestStyles.TitleText}>自定义样式</Text>
+          <SearchBar
+            placeholder="请输入搜索关键词"
+            style={{
+              borderRadius: 5,
+              backgroundColor: '#9a66ec',
+            }}
+            inputStyle={{ color: '#fff' }}
+            placeholderTextColor="#fff"
+            leftIconProps={{ color: '#fff' }}
+            cancelState="show"
+            onValueChange={(s) => this.setState({ value3: s })} />
+
+
 
         </ColumnView>
       </ScrollView>

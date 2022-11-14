@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ScrollView, TextInput } from 'react-native';
-import { NumberKeyBoard, Cell, CellGroup, ColumnView } from '../lib';
+import { ScrollView } from 'react-native';
+import { NumberKeyBoard, Cell, CellGroup, ColumnView, Field } from '../lib';
+import { TestStyles } from '../styles/TestStyles';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNumberKeyBoard'>;
 
@@ -24,11 +25,10 @@ export function TestNumberKeyBoardScreen(_props: Props) {
 
   return (
     <ScrollView>
-      <ColumnView padding={10}>
+      <ColumnView style={TestStyles.PaddingH}>
         <CellGroup inset>
-          <TextInput value={text} />
+          <Field value={text} onChangeText={setText} />
         </CellGroup>
-
 
         <CellGroup inset>
           <Cell title="弹出默认键盘" showArrow onPress={() => setCheck1(true)} />

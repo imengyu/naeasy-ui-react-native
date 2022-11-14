@@ -3,6 +3,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView, CellGroup, Toast, PickerWhellView, CascadePickerWhellItem, CascadePickerWhellView } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { TestStyles } from '../styles/TestStyles';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPickerWhellView', 'RootStack'>;
 
@@ -27,7 +28,7 @@ export class TestPickerWhellViewScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView disableScrollViewPanResponder={true}>
-        <ColumnView center style={{ padding: 10 }}>
+        <ColumnView center style={TestStyles.PaddingH}>
           <CellGroup title="基础用法" inset>
             <PickerWhellView
               style={{ height: 200 }}

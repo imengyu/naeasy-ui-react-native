@@ -32,7 +32,7 @@ import { TestFieldScreen } from './form/TestFieldSheetScreen';
 import { TestStepperScreen } from './form/TestStepperScreen';
 import { TestSwitchScreen } from './form/TestSwitchScreen';
 import { TestSliderScreen } from './form/TestSliderScreen';
-import { TestSearchBarScreen } from './form/TestSearchBarScreen';
+import { TestSearchBarScreen } from './nav/TestSearchBarScreen';
 import { TestFormScreen } from './form/TestFormScreen';
 import { TestRateScreen } from './form/TestRateScreen';
 import { TestNumberInputScreen } from './form/TestNumberInputScreen';

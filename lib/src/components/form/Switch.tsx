@@ -86,7 +86,7 @@ export const Switch = ThemeWrapper(function (props: SwitchProps) {
   const size = props.size || 30;
   const color = props.color || Color.primary;
   const inverseColor = props.inverseColor || Color.switch;
-  const dotColor = props.dotColor || Color.white;
+  const dotColor = props.dotColor || Color.white.light;
   const impactFeedback = props.impactFeedback !== true;
   const disabled = props.disabled === true;
   const dotPadding = 2;

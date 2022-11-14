@@ -57,7 +57,7 @@ export const Color = {
   },
   switch: {
     light: '#dddddd',
-    dark: '#eeeeee',
+    dark: '#333333',
   },
   notify: {
     light: '#ffffff',

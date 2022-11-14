@@ -173,7 +173,7 @@ const styles = DynamicThemeStyleSheet.create({
     flexDirection: 'column',
   },
   keyPad: {
-    backgroundColor: DynamicColor(Color.border),
+    backgroundColor: DynamicColor(Color.light),
     position: 'relative',
     flexDirection: 'row',
     flexWrap: 'wrap',

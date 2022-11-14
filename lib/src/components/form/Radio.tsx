@@ -34,6 +34,14 @@ export interface RadioProps {
    */
   shape?:"square"|"round";
   /**
+   * 复选框占满整个父元素，默认否
+   */
+  block?: boolean,
+  /**
+   * 复选框按钮位置，默认在左
+   */
+  checkPosition?:"left"|"right";
+  /**
    * 单选框内部形状
    * * color 一个纯色形状
    * * check 一个图标
@@ -86,28 +94,42 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
   }
 
   const text = props.children || props.text;
+  const {
+    checkPosition = 'left',
+    disabled = false,
+    value = false,
+    block = false,
+    textColor = Color.text,
+    disabledColor = Color.grey,
+    color,
+    shape,
+    style = {},
+  } = props;
+
+  function renderButtonStub() {
+    return props.renderButton ?
+      props.renderButton(value ) :
+      <RadioDefaultButton
+        on={value}
+        disabled={disabled}
+        shape={shape}
+        color={ThemeSelector.color(color)}
+        disabledColor={ThemeSelector.color(disabledColor)}
+      />;
+  }
 
   return (
-    <RowView touchable onPress={switchOn} style={{ ...styles.radioBox, ...props.style}}>
-      {
-        props.renderButton ?
-          props.renderButton(props.value || false) :
-          <RadioDefaultButton
-            on={props.value || false}
-            disabled={props.disabled || false}
-            shape={props.shape}
-            color={ThemeSelector.color(props.color)}
-            disabledColor={ThemeSelector.color(props.disabledColor)}
-          />
-      }
+    <RowView touchable onPress={switchOn} style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}>
+      { checkPosition === 'left' ? renderButtonStub() : <></> }
       <Text style={[
         styles.radioText,
         props.textStyle,
         {
-          color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.textColor || Color.text)),
+          color: ThemeSelector.color(disabled ? Color.grey : (textColor)),
           display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
         },
       ]}>{text}</Text>
+      { checkPosition === 'right' ? renderButtonStub() : <></> }
     </RowView>
   );
 });
@@ -266,6 +288,12 @@ const styles = DynamicThemeStyleSheet.create({
   },
   radioBox: {
     marginHorizontal: 4,
+  },
+  radioBoxFull: {
+    alignSelf: 'stretch',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginHorizontal: 0,
   },
   radioText: {
     fontSize: 14,

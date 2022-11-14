@@ -9,4 +9,7 @@ export const TestStyles = StyleSheet.create({
   PaddingS: {
     padding: 10,
   },
+  PaddingH: {
+    paddingVertical: 10,
+  },
 });

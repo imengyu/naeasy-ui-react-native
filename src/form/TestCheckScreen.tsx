@@ -74,10 +74,10 @@ export function TestCheckScreen(_props: Props) {
         </CellGroup>
         <CellGroup title="配合单元格组件使用" inset>
           <CheckBoxGroup value={checked4} onValueChange={(v) => setChecked4(v)} renderChildren={(wrapper) => ([
-            <Cell key="1" title="复选框 1" center renderRight={() => wrapper(<CheckBox name="0" />)} />,
-            <Cell key="2" title="复选框 2" center renderRight={() => wrapper(<CheckBox name="1" />)} />,
-            <Cell key="3" title="复选框 2" center renderRight={() => wrapper(<CheckBox name="2" />)} />,
-            <Cell key="4" title="复选框 2" center renderRight={() => wrapper(<CheckBox name="3" />)} />,
+            <Cell key="1">{wrapper(<CheckBox checkPosition="right" block name="1" text="复选框 1" />)}</Cell>,
+            <Cell key="2">{wrapper(<CheckBox checkPosition="right" block name="2" text="复选框 2" />)}</Cell>,
+            <Cell key="3">{wrapper(<CheckBox checkPosition="right" block name="3" text="复选框 3" />)}</Cell>,
+            <Cell key="4">{wrapper(<CheckBox checkPosition="right" block name="4" text="复选框 4" />)}</Cell>,
           ])} />
         </CellGroup>
         <CellGroup title="切换选择" inset>

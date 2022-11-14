@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Grid, GridItem } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { ColumnView, Grid, GridItem, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestGrid'>;
@@ -10,7 +10,7 @@ export class TestGridScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView>
           <Text style={{ padding: 10 }}>通过 icon 属性设置格子内的图标，title 属性设置文字内容。</Text>
           <Grid>
             <GridItem title="文字" icon="picture-filling" onPress={() => console.log('test')} />

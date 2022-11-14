@@ -1,8 +1,8 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Cell } from '../lib';
+import { ColumnView, CellGroup, Cell, Text, WhiteSpace } from '../lib';
 import { ScrollView } from 'react-native';
-import { Image, Text } from 'react-native';
+import { Image } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 
@@ -12,7 +12,7 @@ export class TestCellScreen extends React.PureComponent<Props> {
   render() {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView>
           <Text style={TestStyles.TitleText}>Cell 可以单独使用，也可以与 CellGroup 搭配使用，CellGroup 可以为 Cell 提供上下外边框。</Text>
           <CellGroup title="基础用法">
             <Cell title="单元格标题" value="内容" />
@@ -57,6 +57,8 @@ export class TestCellScreen extends React.PureComponent<Props> {
               </ColumnView>
             )} />
           </CellGroup>
+
+          <WhiteSpace size={100} />
         </ColumnView>
       </ScrollView>
     );

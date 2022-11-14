@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Field, Button, ColumnView } from '../lib';
+import { CellGroup, Field, Button, ColumnView, WhiteSpace } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
@@ -8,11 +8,10 @@ type Props = StackScreenProps<RootStackParamList, 'TestField'>;
 
 export function TestFieldScreen(_props: Props) {
   const [ value1, setValue1] = useState('');
-  const [ value2, setValue2] = useState('');
   const [ value3, setValue3] = useState('');
   const [ value4, setValue4] = useState('');
   const [ value5, setValue5] = useState('');
-  const [ value6, setValue6] = useState('用户名');
+  const [ value6, setValue6] = useState('');
   const [ value7, setValue7] = useState('');
   const [ value8, setValue8] = useState('只读的内容');
   const [ value9, setValue9] = useState('我发现很多混得不好的人看得都很开。也不知道他们是因为看得透彻而不屑于世俗的成功，还是因为不成功而不得不看得开。');
@@ -27,12 +26,11 @@ export function TestFieldScreen(_props: Props) {
             <Field label="文本" placeholder="请输入文本" value={value1} onChangeText={setValue1} />
           </CellGroup>
           <CellGroup title="自定义类型" inset>
-            <Field label="文本" type="text" placeholder="请输入文本" value={value2} onChangeText={setValue2} />
-            <Field label="密码" type="password" placeholder="请输入密码" value={value11} onChangeText={setValue11} />
             <Field label="整数" type="number" placeholder="请输入整数" value={value3} onChangeText={setValue3} />
             <Field label="数字" type="decimal" placeholder="请输入数字（小数）" value={value4} onChangeText={setValue4} />
             <Field label="电话" type="tel" placeholder="请输入电话" value={value5} onChangeText={setValue5} />
             <Field label="邮箱" type="email" placeholder="请输入邮箱" value={value6} onChangeText={setValue6} />
+            <Field label="密码" type="password" placeholder="请输入密码" value={value11} onChangeText={setValue11} />
           </CellGroup>
           <CellGroup title="禁用" inset>
             <Field label="只读" editable={false} placeholder="输入框只读" value={value8} onChangeText={setValue8} />
@@ -46,6 +44,7 @@ export function TestFieldScreen(_props: Props) {
             <Field
               label="短信验证码"
               required
+              center
               placeholder="请输入短信验证码"
               value={value6}
               onChangeText={setValue6}
@@ -59,7 +58,7 @@ export function TestFieldScreen(_props: Props) {
             <Field label="多行文字" multiline placeholder="请输入" showWordLimit maxLength={100} value={value10} onChangeText={setValue10} />
           </CellGroup>
 
-
+          <WhiteSpace size={100} />
         </ColumnView>
       </ScrollView>
     </KeyboardAvoidingView>

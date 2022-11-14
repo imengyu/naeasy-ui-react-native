@@ -85,7 +85,6 @@ const styles = DynamicThemeStyleSheet.create({
   },
   track: {
     position: 'absolute',
-    backgroundColor: '#fff',
     elevation: 2,
     shadowColor: DynamicColor(Color.black),
     shadowOpacity: 0.1,
@@ -194,7 +193,7 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
       { props.renderButton ? props.renderButton(valuePos) : <View style={[
         styles.track,
         {
-          opacity: touch ? 1 : 0.9,
+          backgroundColor: touch ? '#fff' : '#aaa',
           left: vertical ? 0 : `${valuePos}%`,
           top: vertical ? `${valuePos}%` : 0,
           marginLeft: vertical ? 0 : (-buttonSize / 2) * (valuePos / 100),

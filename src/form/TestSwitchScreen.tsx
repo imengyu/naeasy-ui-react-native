@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Switch, Color } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { ColumnView, Switch, Color, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { Switch as NativeSwitch } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
@@ -17,22 +17,34 @@ export function TestSwitchScreen(_props: Props) {
       <ColumnView padding={10}>
 
         <Text style={TestStyles.TitleText}>基础用法</Text>
-        <Switch value={check1} onValueChange={setCheck1} />
+        <ColumnView padding={10}>
+          <Switch value={check1} onValueChange={setCheck1} />
+        </ColumnView>
 
         <Text style={TestStyles.TitleText}>禁用状态</Text>
-        <Switch value={check1} onValueChange={setCheck1} disabled />
+        <ColumnView padding={10}>
+          <Switch value={check1} onValueChange={setCheck1} disabled />
+        </ColumnView>
 
         <Text style={TestStyles.TitleText}>加载状态</Text>
-        <Switch value={check1} onValueChange={setCheck1} loading />
+        <ColumnView padding={10}>
+          <Switch value={check1} onValueChange={setCheck1} loading />
+        </ColumnView>
 
         <Text style={TestStyles.TitleText}>自定义大小</Text>
-        <Switch value={check1} onValueChange={setCheck1} size={40} />
+        <ColumnView padding={10}>
+          <Switch value={check1} onValueChange={setCheck1} size={40} />
+        </ColumnView>
 
         <Text style={TestStyles.TitleText}>自定义颜色</Text>
-        <Switch value={check1} onValueChange={setCheck1} color={Color.danger} />
+        <ColumnView padding={10}>
+          <Switch value={check1} onValueChange={setCheck1} color={Color.danger} />
+        </ColumnView>
 
         <Text style={TestStyles.TitleText}>原生 Switch</Text>
-        <NativeSwitch value={check1} onValueChange={setCheck1} />
+        <ColumnView padding={10}>
+          <NativeSwitch value={check1} onValueChange={setCheck1} />
+        </ColumnView>
 
       </ColumnView>
     </ScrollView>

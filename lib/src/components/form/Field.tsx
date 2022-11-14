@@ -383,9 +383,16 @@ export class Field extends React.Component<FieldProps, State> {
                         decimal: 'decimal-pad',
                         tel: 'phone-pad',
                         email: 'email-address',
-                      })}
+                      }) || 'default'}
                       secureTextEntry={type === 'password'}
-                      textContentType={type === 'password' ? 'password' : undefined}
+                      textContentType={selectStyleType(type, 'text', {
+                        text: 'none',
+                        password: 'password',
+                        number: 'none',
+                        decimal: 'none',
+                        tel: 'telephoneNumber',
+                        email: 'emailAddress',
+                      })}
                       editable={disabled === true ? false : editable}
                       { ...this.props }
                       value={this.props.value as string}
@@ -459,8 +466,8 @@ const styles = DynamicThemeStyleSheet.create({
         padding: 0,
       },
       ios: {
-        paddingHorizontal: 3,
-        paddingVertical: 6,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
       },
     }),
     flex: 1,

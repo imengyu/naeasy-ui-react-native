@@ -54,8 +54,8 @@ export function TestRadioScreen(_props: Props) {
         </CellGroup>
         <CellGroup title="配合单元格组件使用" inset>
           <RadioGroup value={checked3} onValueChange={(v) => setChecked3(v as string)} renderChildren={(wrapper) => ([
-            <Cell key="0" title="单选框 1" center renderRight={() => wrapper(<Radio name="0" />)} />,
-            <Cell key="1" title="单选框 2" center renderRight={() => wrapper(<Radio name="1" />)} />,
+            <Cell key="0">{wrapper(<Radio checkPosition="right" block text="单选框 1" name="1" />)}</Cell>,
+            <Cell key="1">{wrapper(<Radio checkPosition="right" block text="单选框 2" name="2" />)}</Cell>,
           ])} />
         </CellGroup>
       </ColumnView>

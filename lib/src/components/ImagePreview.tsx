@@ -5,7 +5,6 @@ import { ActivityIndicator, Animated, BackHandler, GestureResponderEvent, PanRes
 import { Color } from "../styles/ColorStyles";
 import { deviceWidth } from "../utils";
 import { LongPressGestureHandler, TapGestureHandler } from "react-native-gesture-handler";
-import { TapGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/tapGesture";
 
 const styles = StyleSheet.create({
   container: {

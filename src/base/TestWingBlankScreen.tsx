@@ -16,7 +16,7 @@ const styles = DynamicThemeStyleSheet.create({
   },
   text: {
     color: DynamicColor(Color.text),
-    backgroundColor: DynamicColor(Color.lightGrey),
+    backgroundColor: DynamicColor(Color.light),
   },
 });
 

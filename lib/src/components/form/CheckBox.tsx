@@ -30,6 +30,14 @@ export interface CheckBoxProps {
    */
   shape?:"square"|"round";
   /**
+   * 复选框占满整个父元素，默认否
+   */
+  block?: boolean,
+  /**
+   * 复选框按钮位置，默认在左
+   */
+  checkPosition?:"left"|"right";
+  /**
    * 复选框未选择时的边框颜色
    */
   borderColor?: ThemeColor|undefined;
@@ -88,22 +96,38 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
   }
 
   const text = props.children || props.text;
+  const {
+    checkPosition = 'left',
+    disabled = false,
+    borderColor,
+    checkColor,
+    value = false,
+    block = false,
+    color,
+    shape,
+    checkSize,
+    style = {},
+  } = props;
+
+  function renderButtonStub() {
+    return (
+      props.renderButton ?
+        props.renderButton(value) :
+        <CheckBoxDefaultButton
+          on={value}
+          disabled={disabled}
+          shape={shape}
+          size={checkSize}
+          color={ThemeSelector.color(disabled === true ? Color.border : color)}
+          borderColor={ThemeSelector.color(borderColor || Color.border)}
+          checkColor={ThemeSelector.color(disabled === true ? Color.textSecond : checkColor)}
+          icon={props.icon} />
+      );
+  }
 
   return (
-    <RowView touchable activeOpacity={0.85} onPress={switchOn} style={{ ...styles.checkBox, ...props.style }} center>
-      {
-        props.renderButton ?
-          props.renderButton(props.value || false) :
-          <CheckBoxDefaultButton
-            on={props.value || false}
-            disabled={props.disabled || false}
-            shape={props.shape}
-            size={props.checkSize}
-            color={ThemeSelector.color(props.disabled === true ? Color.border : props.color)}
-            borderColor={ThemeSelector.color(props.borderColor || Color.border)}
-            checkColor={ThemeSelector.color(props.disabled === true ? Color.textSecond : props.checkColor)}
-            icon={props.icon} />
-      }
+    <RowView touchable activeOpacity={0.85} onPress={switchOn} style={[ block ? styles.checkBoxFull : styles.checkBox, style ]} center>
+      { checkPosition === 'left' ? renderButtonStub() : <></> }
       {
         (typeof text === 'string' && text) ?
           (<Text style={[
@@ -116,6 +140,7 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
           ]}>{text}</Text>) :
           (text as JSX.Element || <></>)
       }
+      { checkPosition === 'right' ? renderButtonStub() : <></> }
     </RowView>
   );
 });
@@ -317,6 +342,12 @@ const styles = DynamicThemeStyleSheet.create({
   checkBox: {
     alignSelf: 'flex-start',
     marginHorizontal: 4,
+  },
+  checkBoxFull: {
+    alignSelf: 'stretch',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginHorizontal: 0,
   },
   checkButtonOutView: {
     overflow: 'hidden',
