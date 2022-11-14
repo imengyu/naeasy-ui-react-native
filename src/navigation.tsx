@@ -5,6 +5,7 @@ import { StackScreenProps } from '@react-navigation/stack';
  */
 export type RootStackParamList = {
   Components: undefined;
+  TestTheme: undefined;
   TestButton: undefined;
   TestCell: undefined;
   TestIcon: undefined;

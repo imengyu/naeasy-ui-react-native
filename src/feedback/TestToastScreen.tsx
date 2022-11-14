@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, Toast, ColumnView } from '../lib';
+import { ScrollView } from 'react-native';
+import { CellGroup, Cell, Toast, ColumnView, Text } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestToast'>;
@@ -10,7 +10,7 @@ export class TestToastScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ padding: 10 }}>
+        <ColumnView center style={{ paddingVertical: 10 }}>
           <CellGroup title="介绍" inset>
             <Text style={{ padding: 10 }}>在页面中间弹出黑色半透明提示，用于消息通知、加载提示、操作结果提示等场景。</Text>
           </CellGroup>

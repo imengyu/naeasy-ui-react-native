@@ -11,7 +11,7 @@ export class TestNotifyScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView center style={{ paddingVertical: 10 }}>
           <CellGroup title="基础用法" inset>
             <Cell title="显示通知" showArrow onPress={() => {
               Notify.show({ content: '这是一个通知' });

@@ -1,10 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Icon, Image, TabBar, TabBarItem } from '../lib';
+import { ColumnView, Icon, Image, TabBar, TabBarItem, Text } from '../lib';
 import { ScrollView } from 'react-native';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Color } from '../../lib/dist/styles/ColorStyles';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabBar', 'RootStack'>;
 interface State {
@@ -78,8 +79,8 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
           <TabBar
             selectedTabName={this.state.value4}
             onSelectTab={name => this.setState({ value4: name })}
-            activeColor="#f00"
-            inactiveColor="#000"
+            activeColor={Color.danger}
+            inactiveColor={Color.success}
           >
             <TabBarItem name="first" icon="home" text="标签1" />
             <TabBarItem name="second" icon="data-view" text="标签2" />

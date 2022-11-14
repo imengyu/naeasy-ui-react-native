@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView, Text } from 'react-native';
-import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView } from '../lib';
+import { ScrollView } from 'react-native';
+import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text } from '../lib';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPopup'>;
@@ -35,7 +35,7 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView center style={{ paddingVertical: 10 }}>
           <Popup
             show={this.state.showProp1}
             onClose={() => this.setState({ showProp1: false })}

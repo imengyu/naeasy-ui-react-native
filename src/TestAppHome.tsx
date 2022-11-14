@@ -19,7 +19,7 @@ export class TestAppHome extends React.Component<Props> {
             </ColumnView>
           </CellGroup>
           <CellGroup inset title="暗黑模式">
-            <Cell title="暗黑模式" touchable showArrow onPress={() => this.props.navigation.push('TestDarkTheme')} />
+            <Cell title="暗黑模式" touchable showArrow onPress={() => this.props.navigation.push('TestTheme')} />
           </CellGroup>
           <CellGroup inset title="基础组件">
             <Cell title="Typography 段落示例" touchable showArrow onPress={() => this.props.navigation.push('TestTypography')} />

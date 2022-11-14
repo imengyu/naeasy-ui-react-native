@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Tag, RowView, ColumnView } from '../lib';
-import { Text, ScrollView } from 'react-native';
+import { Text, CellGroup, Tag, RowView, ColumnView } from '../lib';
+import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTag'>;

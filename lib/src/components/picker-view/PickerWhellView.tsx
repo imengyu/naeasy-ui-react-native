@@ -165,11 +165,6 @@ export interface PickerWhellViewProps {
 let PickerWhellViewAndroid : HostComponent<PickerWhellViewAndroidProps>|null = null;
 let PickerWhellViewIOS : HostComponent<PickerWhellViewIOSProps>|null = null;
 
-if (!PickerWhellViewAndroid && isAndroid)
-  PickerWhellViewAndroid = requireNativeComponent('RCTPickerWheelView') as HostComponent<PickerWhellViewAndroidProps>;
-if (!PickerWhellViewIOS && isIOS)
-  PickerWhellViewAndroid = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
-
 const styles = StyleSheet.create({
   host: {
     flexDirection: 'row',
@@ -186,6 +181,14 @@ interface State {}
  * 选择器的轮盘控件
  */
 export class PickerWhellView extends React.Component<PickerWhellViewProps, State> {
+
+  constructor(props: PickerWhellViewProps) {
+    super(props);
+    if (!PickerWhellViewAndroid && isAndroid)
+      PickerWhellViewAndroid = requireNativeComponent('RCTPickerWheelView') as HostComponent<PickerWhellViewAndroidProps>;
+    if (!PickerWhellViewIOS && isIOS)
+      PickerWhellViewAndroid = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
+  }
 
   private iosReloadAllComponents() {
     //向native层发送命令

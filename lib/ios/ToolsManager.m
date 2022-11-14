@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <React/RCTConstants.h>
 #import "ToolsManager.h"
 
 @interface ToolsManager ()

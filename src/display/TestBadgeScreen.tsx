@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, DynamicColor, DynamicThemeStyleSheet, CellGroup, Badge, RowView, Color } from '../lib';
-import { ScrollView, Text, View } from 'react-native';
+import { ColumnView, WhiteSpace, DynamicColor, DynamicThemeStyleSheet, CellGroup, Badge, RowView, Color, Text } from '../lib';
+import { ScrollView, View } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestBadge', 'RootStack'>;
@@ -39,6 +39,22 @@ export class TestBadgeScreen extends React.PureComponent<Props> {
               </Badge>
             </RowView>
           </CellGroup>
+          <CellGroup title="不同颜色的徽标" inset>
+            <RowView center style={{ padding: 10 }}>
+              <Badge>
+                <View style={styles.box} />
+              </Badge>
+              <Badge color={Color.primary}>
+                <View style={styles.box} />
+              </Badge>
+              <Badge color={Color.success}>
+                <View style={styles.box} />
+              </Badge>
+              <Badge color={Color.warning}>
+                <View style={styles.box} />
+              </Badge>
+            </RowView>
+          </CellGroup>
           <CellGroup title="不同位置、颜色的徽标" inset>
             <RowView center style={{ padding: 10 }}>
               <Badge>
@@ -58,7 +74,20 @@ export class TestBadgeScreen extends React.PureComponent<Props> {
           <CellGroup title="独立展示" inset>
             <RowView center style={{ padding: 10 }}>
               <Badge />
+              <WhiteSpace />
+              <Badge color={Color.primary} />
+              <WhiteSpace />
+              <Badge color={Color.success} />
+              <WhiteSpace />
+              <Badge color={Color.waring} />
+              <WhiteSpace />
+              <Badge color={Color.notice} />
+            </RowView>
+            <RowView center style={{ padding: 10 }}>
+              <Badge />
+              <WhiteSpace />
               <Badge content="1" />
+              <WhiteSpace />
               <Badge content="new" border />
             </RowView>
           </CellGroup>

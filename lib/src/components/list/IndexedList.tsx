@@ -12,12 +12,14 @@ const styles = DynamicThemeStyleSheet.create({
     backgroundColor: DynamicColor(Color.background),
     paddingHorizontal: 20,
     fontSize: 12,
+    color: DynamicColor(Color.textSecond),
   },
   item: {
     paddingHorizontal: 20,
     fontSize: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: DynamicColor(Color.border),
+    color: DynamicColor(Color.text),
     backgroundColor: DynamicColor(Color.white),
   },
 });

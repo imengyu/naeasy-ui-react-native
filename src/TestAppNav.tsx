@@ -57,6 +57,7 @@ import { TestSimpleListScreen } from './list/TestSimpleListScreen';
 import { TestIndexedListScreen } from './list/TestIndexedListScreen';
 import { TestStepScreen } from './display/TestStepScreen';
 import { TestPlateKeyBoardScreen } from './form/TestPlateKeyBoardScreen';
+import { TestThemeScreen } from './base/TestThemeScreen';
 
 const Stack = createStackNavigator();
 
@@ -73,7 +74,8 @@ export class TestAppNav extends React.Component {
               headerTitleAlign: 'center',
             },
           }),
-        }}>
+        }}
+      >
         <Stack.Screen name="Components" component={TestAppHome as any} />
         <Stack.Screen name="TestButton" component={TestButtonScreen as any} />
         <Stack.Screen name="TestCell" component={TestCellScreen as any} />
@@ -150,6 +152,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestIndexedList" component={TestIndexedListScreen as any} />
         <Stack.Screen name="TestStep" component={TestStepScreen as any} />
         <Stack.Screen name="TestPlateKeyBoard" component={TestPlateKeyBoardScreen as any} />
+        <Stack.Screen name="TestTheme" component={TestThemeScreen as any} />
       </Stack.Navigator>
     );
   }

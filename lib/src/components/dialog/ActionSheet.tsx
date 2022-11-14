@@ -79,6 +79,10 @@ export interface ActionSheetItem {
    */
   color?: ThemeColor;
   /**
+   * 是否加粗当前选项
+   */
+  bold?: boolean;
+  /**
    * 是否禁用当前选项
    */
   disabled?: boolean;
@@ -114,6 +118,9 @@ const styles = DynamicThemeStyleSheet.create({
   },
   titleView: {
     paddingVertical: 5,
+  },
+  titleViewBorder: {
+    paddingVertical: 5,
     borderColor: DynamicColor(Color.white),
     borderBottomColor: DynamicColor(Color.border),
     borderWidth: 1,
@@ -136,6 +143,7 @@ const styles = DynamicThemeStyleSheet.create({
 export interface ActionSheetItemProps {
   name: string;
   subname: string|undefined;
+  bold: boolean|undefined;
   color: string|undefined;
   disabled: boolean|undefined;
   onPress: () => void;
@@ -152,7 +160,7 @@ export const ActionSheetItem = ThemeWrapper(function (props: ActionSheetItemProp
       onPress={props.disabled === true ? undefined : props.onPress}
     >
       <ColumnView center>
-        <Text style={[ styles.itemTitle, { color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.color || Color.text)) } ]}>{props.name}</Text>
+        <Text style={[ styles.itemTitle, { color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.color || Color.text)), fontWeight: props.bold ? 'bold' : 'normal' } ]}>{props.name}</Text>
         <Text style={[ styles.itemSubTitle, displayNoneIfEmpty(props.subname) ]}>{props.subname}</Text>
       </ColumnView>
     </TouchableHighlight>
@@ -192,6 +200,10 @@ export function ActionSheetTitle(props: {
    */
   confirmTextColor?: ThemeColor,
   /**
+   * 是否显示底部边框，默认是
+   */
+  border?: boolean;
+  /**
    * 取消按钮点击
    */
   onCancelPressed?: () => void;
@@ -201,13 +213,14 @@ export function ActionSheetTitle(props: {
   onConfirmPressed?: () => void;
 }) {
   const {
-    title, description, cancelText, confirmText, cancelTextColor,
+    title, description, cancelText, confirmText, cancelTextColor = Color.text,
+    border = true,
     confirmTextColor = Color.primary, onCancelPressed, onConfirmPressed,
   } = props;
 
   return (
     (title || description || cancelText || confirmText) ? (
-    <RowView style={styles.titleView} justify="space-between">
+    <RowView style={border ? styles.titleViewBorder : styles.titleView} justify="space-between">
       { cancelText ? <Button type="text" textColor={cancelTextColor} onPress={onCancelPressed}>{cancelText}</Button> : <View /> }
       <ColumnView style={styles.titleTextView} center>
         <Text style={[ styles.title, displayNoneIfEmpty(title) ]}>{title}</Text>
@@ -242,6 +255,7 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
           { props.actions?.map((item, index) => <ActionSheetItem
             key={index}
             name={item.name}
+            bold={item.bold || false}
             color={ThemeSelector.color(item.color || props.textColor || Color.text)}
             subname={item.subname}
             disabled={item.disabled}
@@ -251,6 +265,7 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
         { props.showCancel === true ? <ColumnView style={styles.viewCancel}>
           <ActionSheetItem
             name={props.cancelText || '取消'}
+            bold={false}
             color={ThemeSelector.color(props.textColor || Color.text)}
             subname={''}
             disabled={false}

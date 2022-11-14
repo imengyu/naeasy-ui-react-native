@@ -4,6 +4,8 @@ import PagerView from "react-native-pager-view";
 import { ActivityIndicator, Animated, BackHandler, GestureResponderEvent, PanResponder, PanResponderGestureState, Text, View, StyleSheet } from "react-native";
 import { Color } from "../styles/ColorStyles";
 import { deviceWidth } from "../utils";
+import { LongPressGestureHandler, TapGestureHandler } from "react-native-gesture-handler";
+import { TapGesture } from "react-native-gesture-handler/lib/typescript/handlers/gestures/tapGesture";
 
 const styles = StyleSheet.create({
   container: {
@@ -71,13 +73,14 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     bottom: 0,
-    //backgroundColor: '#F00',
+    backgroundColor: '#F00',
     zIndex: 0,
   },
 });
 
 export interface ImagePreviewZoomProps{
   imageUrl: string,
+  onLongPress: () => void;
   onEmitClose: () => void;
 }
 /**
@@ -128,6 +131,8 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
   const panLastTouchCount = useRef(0);
   const imageSize = useRef({ x: 0, y: 0 });
   const containerSize = useRef({ x: 0, y: 0 });
+
+  //todo: rewrite with React Native Gesture Handler
 
   const panResponder = useRef(PanResponder.create({
     // 要求成为响应者：
@@ -277,40 +282,39 @@ export function ImageZoomControl(props: ImagePreviewZoomProps) {
       <Animated.View pointerEvents="none" style={[styles.imageZoomLoadingCon, { opacity: loadingOpacityValue.current }]}>
         <ActivityIndicator color={Color.white.light} />
       </Animated.View>
-      <Animated.View
-        style={styles.absTouchView}
-        onMoveShouldSetResponder={() => false}
-        onStartShouldSetResponder={() => true}
-        onResponderRelease={() => {
-          props.onEmitClose && props.onEmitClose();
-        }}
-      />
-      <Animated.Image
-        { ...panResponder.current.panHandlers }
-        resizeMode="contain"
-        source={{ uri: props.imageUrl }}
-        onLoad={(e) => {
-          const height = deviceWidth / (e.nativeEvent.source.width / e.nativeEvent.source.height);
-          setImageHeightValue(height);
-          imageSize.current = {
-            x: deviceWidth,
-            y: height,
-          };
-        }}
-        onLoadStart={() => loadingOpacityValue.current.setValue(1)}
-        onLoadEnd={() => loadingOpacityValue.current.setValue(0)}
-        style={[
-          styles.imageZoomImage,
-          {
-            height: imageHeightValue,
-            transform: [
-              { translateX: imagePositionValue.current.x },
-              { translateY: imagePositionValue.current.y },
-              { scale: imageScaleValue.current },
-            ],
-          },
-        ]}
-      />
+      <LongPressGestureHandler onActivated={props.onLongPress}>
+        <TapGestureHandler onActivated={props.onEmitClose}>
+          <Animated.View style={styles.absTouchView} />
+        </TapGestureHandler>
+      </LongPressGestureHandler>
+      <LongPressGestureHandler onActivated={props.onLongPress}>
+        <Animated.Image
+          { ...panResponder.current.panHandlers }
+          resizeMode="contain"
+          source={{ uri: props.imageUrl }}
+          onLoad={(e) => {
+            const height = deviceWidth / (e.nativeEvent.source.width / e.nativeEvent.source.height);
+            setImageHeightValue(height);
+            imageSize.current = {
+              x: deviceWidth,
+              y: height,
+            };
+          }}
+          onLoadStart={() => loadingOpacityValue.current.setValue(1)}
+          onLoadEnd={() => loadingOpacityValue.current.setValue(0)}
+          style={[
+            styles.imageZoomImage,
+            {
+              height: imageHeightValue,
+              transform: [
+                { translateX: imagePositionValue.current.x },
+                { translateY: imagePositionValue.current.y },
+                { scale: imageScaleValue.current },
+              ],
+            },
+          ]}
+        />
+      </LongPressGestureHandler>
     </View>
   );
 }
@@ -386,6 +390,7 @@ export function ImagePreviewControl(props: ImagePreviewControlProps) {
       <ImageZoomControl
         key={i}
         imageUrl={url}
+        onLongPress={() => props.onLongPress?.(i, url)}
         onEmitClose={doCloseAnim}
       />
     ));

@@ -44,7 +44,7 @@ interface AvatarStackProp {
 
 const styles = DynamicThemeStyleSheet.create({
   overflowCount: {
-    backgroundColor: DynamicColor(Color.mask),
+    backgroundColor: Color.white.light,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -52,7 +52,7 @@ const styles = DynamicThemeStyleSheet.create({
   },
   overflowCountText: {
     fontSize: 12,
-    color: DynamicColor(Color.white),
+    color: Color.text.light,
   },
 });
 

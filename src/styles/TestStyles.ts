@@ -1,11 +1,10 @@
-import { Color, DynamicColor, DynamicThemeStyleSheet } from '../lib';
+import { StyleSheet } from 'react-native';
 
-export const TestStyles = DynamicThemeStyleSheet.create({
+export const TestStyles = StyleSheet.create({
   TitleText: {
     paddingVertical: 5,
     paddingHorizontal: 7,
     marginTop: 5,
-    color: DynamicColor(Color.darkGrey),
   },
   PaddingS: {
     padding: 10,

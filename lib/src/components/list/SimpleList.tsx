@@ -16,6 +16,7 @@ const styles = DynamicThemeStyleSheet.create({
   itemText: {
     fontSize: 14,
     flex: 1,
+    color: DynamicColor(Color.text),
   },
 });
 

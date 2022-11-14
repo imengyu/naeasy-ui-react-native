@@ -52,7 +52,7 @@ export function TestActionSheetScreen(_props: Props) {
           description="说明文字"
           actions={[
             { name: '正常选项' },
-            { name: '危险选项', color: Color.danger, subname: '删除后无法恢复' },
+            { name: '危险选项', color: Color.danger, subname: '删除后无法恢复', bold: true },
             { name: '禁用选项1', disabled: true  },
             { name: '禁用选项2', disabled: true, subname: '这个选项不可点击'  },
           ]}
@@ -98,6 +98,7 @@ export function TestActionSheetScreen(_props: Props) {
               cancelText="取消"
               confirmText="确定"
               onCancelPressed={close}
+              border={false}
               onConfirmPressed={() => {
                 Toast.info('你选择了:' + JSON.stringify(choosedItem.current));
                 close();

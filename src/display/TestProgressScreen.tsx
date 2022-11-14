@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Progress, Color, WhiteSpace, RowView, Button, ColumnView } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { Progress, Color, WhiteSpace, RowView, Button, ColumnView, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 

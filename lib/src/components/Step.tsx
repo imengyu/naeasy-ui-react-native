@@ -192,6 +192,7 @@ function StepItemInternalDotNumberIcon(props: { color: string, size: number, ind
       <Text style={{
         color: props.color,
         fontSize: props.size - 11,
+        lineHeight: props.size - 3 - 2,
         textAlign: 'center',
       }}>{props.index}</Text>
     </View>

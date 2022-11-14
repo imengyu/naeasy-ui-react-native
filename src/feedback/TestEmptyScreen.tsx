@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView, Text } from '../lib';
+import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestEmpty'>;
@@ -18,7 +18,7 @@ export class TestEmptyScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ padding: 10 }}>
+        <ColumnView center style={{ paddingTop: 10 }}>
           <CellGroup title="介绍" inset>
             <Text style={{ padding: 10 }}>空状态时的占位提示。</Text>
           </CellGroup>

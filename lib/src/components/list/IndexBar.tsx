@@ -76,6 +76,7 @@ const styles = DynamicThemeStyleSheet.create({
     color: DynamicColor(Color.white),
   },
   barItemText: {
+    color: DynamicColor(Color.text),
     fontSize: 12,
   },
   indicator: {
