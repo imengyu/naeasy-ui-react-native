@@ -4,7 +4,7 @@ export * from './ObjectUtils';
 export * from './PlatformTools';
 export * from './StyleConsts';
 export * from './StyleTools';
-export * from './Toolbox';
+export * from './TimeUtils';
 
 
 

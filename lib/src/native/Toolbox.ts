@@ -1,4 +1,4 @@
-import { isIOS, isAndroid } from './PlatformTools';
+import { isIOS, isAndroid } from '../utils/PlatformTools';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const MToolboxModule = isIOS ? NativeModules.ToolsManagerIOS : NativeModules.MToolboxModule;
@@ -158,15 +158,6 @@ function getSystemTheme() : Promise<Theme> {
 
 
 /**
-* 等待延时
-*/
-function waitTimeOut(timeOut: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => resolve(), timeOut);
-  });
- }
-
-/**
  * App 工具类
  */
 export const ToolBox = {
@@ -174,7 +165,6 @@ export const ToolBox = {
   getPackageInfo,
   getCacheInfo,
   installApk,
-  waitTimeOut,
   nativeLog,
   getSystemTheme,
   addSystemThemeChangedListener,

@@ -1,4 +1,4 @@
-import { splitMillSeconds } from "../../utils/TimeUtils";
+import TimeUtils from "../../utils/TimeUtils";
 import { useMemo, useRef, useState, useCallback } from "react";
 
 interface CountDownComposeOptions {
@@ -56,7 +56,7 @@ export function useCountDown(options: CountDownComposeOptions) {
 
   const current = useMemo(() => {
 
-    const {days,hours,minutes,seconds,milliseconds} = splitMillSeconds(now);
+    const {days,hours,minutes,seconds,milliseconds} = TimeUtils.splitMillSeconds(now);
 
     return {
       total: now,

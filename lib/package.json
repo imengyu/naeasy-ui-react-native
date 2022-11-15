@@ -56,7 +56,7 @@
   "author": "imengyu",
   "scripts": {
     "build": "tsc",
-    "copy-to-example": "node ./scripts/copy-to-example.js",
+    "save-native-to-src": "node ./scripts/save-native-to-src.js",
     "copy-native": "node ./scripts/copy-native.js",
     "lint": "eslint src --ext .ts,.tsx --cache",
     "test": "jest",

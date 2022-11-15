@@ -2,8 +2,8 @@ package com.imengyu.RNUiLib;
 
 import androidx.annotation.NonNull;
 
-import com.imengyu.RNUiLib.dialog.PickerViewAndroidViewManager;
-import com.imengyu.RNUiLib.dialog.PickerViewAndroidModule;
+import com.imengyu.RNUiLib.pickerview.PickerViewAndroidViewManager;
+import com.imengyu.RNUiLib.pickerview.PickerViewAndroidModule;
 import com.imengyu.RNUiLib.dialog.DialogAndroidModule;
 import com.imengyu.RNUiLib.dialog.ActionSheetAndroidModule;
 import com.imengyu.RNUiLib.smartrefresh.smartrefreshlayout.SmartRefreshLayoutManager;
@@ -12,7 +12,7 @@ import com.imengyu.RNUiLib.smartrefresh.header.ClassicsHeaderManager;
 import com.imengyu.RNUiLib.smartrefresh.header.DefaultHeaderMananger;
 import com.imengyu.RNUiLib.smartrefresh.header.MaterialHeaderManager;
 import com.imengyu.RNUiLib.smartrefresh.header.AnyHeaderManager;
-import com.imengyu.RNUiLib.utils.ToolboxAndroidModule;
+import com.imengyu.RNUiLib.toolbox.ToolboxAndroidModule;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
