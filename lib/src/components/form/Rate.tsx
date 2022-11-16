@@ -68,7 +68,6 @@ export interface RateProps {
 const styles = StyleSheet.create({
   view: {
     flexDirection: 'row',
-    alignSelf: 'flex-start',
   },
   activeHalf: {
     position: 'relative',

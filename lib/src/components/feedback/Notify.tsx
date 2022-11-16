@@ -361,31 +361,31 @@ const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps
   }));
 
   function renderNotifyItem(info: ListRenderItemInfo<NotifyItem>) {
-    return <NotifyItemControl
-      item={info.item}
-      first={info.index === 0}
-      removeFlag={info.item.delAnimFlg}
-      canRemove={!info.item.duration || info.item.duration <= 0}
-      onRemoveAnimFinish={() => realRemoveItem(info.item.id)}
-    />;
+    return <ThemeRender>{() => (
+      <NotifyItemControl
+        item={info.item}
+        first={info.index === 0}
+        removeFlag={info.item.delAnimFlg}
+        canRemove={!info.item.duration || info.item.duration <= 0}
+        onRemoveAnimFinish={() => realRemoveItem(info.item.id)}
+      />)
+    }</ThemeRender>;
   }
 
   return (
-    <ThemeRender>{() => (
-      <Animated.FlatList
-        style={[
-          styles.container,
-          {
-            transform: [{ translateY: animSideValue.current }],
-            marginTop: insets.top,
-          },
-        ]}
-        contentContainerStyle={styles.containerInner}
-        pointerEvents="box-none"
-        data={notifys}
-        renderItem={renderNotifyItem}
-      />
-    )}</ThemeRender>
+    <Animated.FlatList
+      style={[
+        styles.container,
+        {
+          transform: [{ translateY: animSideValue.current }],
+          marginTop: insets.top,
+        },
+      ]}
+      contentContainerStyle={styles.containerInner}
+      pointerEvents="box-none"
+      data={notifys}
+      renderItem={renderNotifyItem}
+    />
   );
 });
 

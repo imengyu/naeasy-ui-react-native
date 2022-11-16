@@ -294,6 +294,7 @@ export interface CheckBoxDefaultButtonProps {
   checkColor?: string|undefined;
   color?: string|undefined;
   size?: number|undefined;
+  iconSize?: number|undefined;
   icon?: string;
   disabled?: boolean;
   style?: ViewStyle,
@@ -304,33 +305,44 @@ export interface CheckBoxDefaultButtonProps {
  * 默认的复选框按钮样式
  */
 export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefaultButtonProps) {
-  const size = props.size || 20;
+  const {
+    size = 16,
+    iconSize = 14,
+    shape = 'round',
+    on,
+    disabled = false,
+    color = Color.primary,
+    borderColor = Color.border,
+    checkColor = Color.white,
+    icon = 'check-mark',
+    style,
+  } = props;
 
   return (
     <View style={[
       styles.checkButtonOutView,
-      selectStyleType(props.shape, 'round', {
+      selectStyleType(shape, 'round', {
         round: { borderRadius: size / 2 },
         square: { borderRadius: 0 },
       }),
       {
         width: size,
         height: size,
-        borderColor: ThemeSelector.color((props.on && props.disabled !== true) ? (props.color || Color.primary) : (props.borderColor || Color.border)),
+        borderColor: ThemeSelector.color((on && disabled !== true) ? color : borderColor),
       },
-      props.style,
+      style,
     ]}>
       {
-        props.on ?
+        on ?
           <View style={[
             styles.checkButtonInnerView,
             {
-              width: size,
-              height: size,
-              backgroundColor: ThemeSelector.color(props.color || Color.primary),
+              width: size - 2, //减去边框
+              height: size - 2,
+              backgroundColor: ThemeSelector.color(color),
             },
           ]}>
-            <Icon icon={props.icon || 'select'} color={props.checkColor || Color.white} size={size} />
+            <Icon icon={icon} color={checkColor} size={iconSize} />
           </View> :
           <></>
       }
@@ -355,8 +367,11 @@ const styles = DynamicThemeStyleSheet.create({
     ...border(1, 'solid', Color.primary, true),
   },
   checkButtonInnerView: {
+    textAlign: 'center',
     overflow: 'hidden',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   check: {
     alignSelf: 'flex-start',

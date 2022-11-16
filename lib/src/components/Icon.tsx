@@ -42,6 +42,9 @@ type IconMap = Record<string, string|{ source: ImageSourcePropType, svg: boolean
 //图标集
 let iconMap = (require('../data/DefaultIcon.json') || {}) as IconMap;
 
+//CheckBox 使用的勾图标
+iconMap['check-mark'] = '<svg viewBox="0 0 1024 1024"><path d="M448 576 256 384 192 512 448 768 832 320 768 192Z"></path></svg>';
+
 export const IconUtils = {
   /**
    * 设置 Icon 组件的图标名称映射。

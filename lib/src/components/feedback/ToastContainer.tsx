@@ -1,24 +1,16 @@
 import React from 'react';
-import { ActivityIndicator, Animated, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
+import { ActivityIndicator, Animated, StyleSheet, Text, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Color } from '../../styles';
 import { rpx } from '../../utils/StyleConsts';
 import { selectStyleType } from '../../utils/StyleTools';
 import { Icon } from '../Icon';
+import { ToastProps } from './Toast';
 
 export type IToastPosition = 'top'|'bottom'|'center';
 
-export interface ToastProps {
-  content: string | React.ReactNode;
-  duration?: number;
-  onClose?: () => void;
-  position?: IToastPosition;
-  mask?: boolean;
-  type?: string;
+interface ToastContainerProp extends ToastProps {
   onAnimationEnd?: () => void;
-  toastStyle?: ViewStyle;
-  maskStyle?: ViewStyle;
-  textStyle?: TextStyle;
 }
 
 const styles = StyleSheet.create({
@@ -64,27 +56,43 @@ const styles = StyleSheet.create({
 /**
  * Toast 组件的展示容器
  */
-export class ToastContainer extends React.Component<ToastProps, any> {
-  static defaultProps = {
-    duration: 3,
-    mask: true,
-    onClose() {},
-  }
+export class ToastContainer extends React.Component<ToastContainerProp, {
+  toast: ToastContainerProp,
+  fadeAnim: Animated.Value,
+}> {
 
   anim: Animated.CompositeAnimation | null = null;
+  noEndNext = false;
 
-  constructor(props: ToastProps) {
+  constructor(props: ToastContainerProp) {
     super(props);
     this.state = {
+      toast: props,
       fadeAnim: new Animated.Value(0),
     };
   }
 
   componentDidMount() {
+    this.loadAnim();
+  }
+  componentWillUnmount() {
+    this.noEndNext = false;
+    if (this.anim) {
+      this.anim.stop();
+      this.anim = null;
+    }
+    const { onClose } = this.state.toast;
+    if (onClose) {
+      onClose();
+    }
+  }
+
+  loadAnim() {
+    const { duration = 1000 } = this.state.toast;
     const { onAnimationEnd } = this.props;
-    const duration = this.props.duration as number;
     const timing = Animated.timing;
     if (this.anim) {
+      this.anim.stop();
       this.anim = null;
     }
     const animArr = [
@@ -106,6 +114,11 @@ export class ToastContainer extends React.Component<ToastProps, any> {
     }
     this.anim = Animated.sequence(animArr);
     this.anim.start(() => {
+      if (this.noEndNext) {
+        console.log('noEndNext true');
+        this.noEndNext = false;
+        return;
+      }
       if (duration > 0) {
         this.anim = null;
         if (onAnimationEnd) {
@@ -115,20 +128,29 @@ export class ToastContainer extends React.Component<ToastProps, any> {
     });
   }
 
-  componentWillUnmount() {
-    if (this.anim) {
-      this.anim.stop();
-      this.anim = null;
-    }
-
-    const { onClose } = this.props;
-    if (onClose) {
-      onClose();
-    }
+  updateProps(props: ToastProps) {
+    this.setState({
+      toast: props,
+    });
+    setTimeout(() => {
+      this.noEndNext = true;
+      this.loadAnim();
+    }, 200);
   }
 
   render() {
-    const { type = '', content, mask, position } = this.props;
+    const {
+      type = 'text',
+      content,
+      forbidClick,
+      position,
+      icon,
+      iconProps,
+      textStyle,
+      toastStyle,
+      maskStyle,
+      onAnimationEnd,
+    } = this.state.toast;
     const iconType: {
       [key: string]: string
     } = {
@@ -146,19 +168,20 @@ export class ToastContainer extends React.Component<ToastProps, any> {
             ...styles.centering,
             marginBottom: 10,
           }}
-          color={ this.props.textStyle?.color as string || '#fff'}
+          color={ textStyle?.color as string || '#fff'}
           size="large"
         />
       );
-    } else if (type === 'info') {
+    } else if (type === 'text') {
       iconDom = null;
     } else {
       iconDom = (
         <Icon
-          icon={iconType[type]}
+          icon={icon ||  iconType[type]}
           style={styles.image}
-          color={ this.props.textStyle?.color as string || '#fff'}
+          color={ textStyle?.color as string || '#fff'}
           size={36}
+          { ...iconProps }
         />
       );
     }
@@ -180,23 +203,23 @@ export class ToastContainer extends React.Component<ToastProps, any> {
               paddingBottom: rpx(200),
             },
           }),
-          this.props.maskStyle,
+          maskStyle,
           { opacity: this.state.fadeAnim },
         ]}
-        pointerEvents={mask ? undefined : 'box-none'}>
+        pointerEvents={forbidClick ? undefined : 'box-none'}>
         <Animated.View style={{ opacity: this.state.fadeAnim }}>
           <TouchableOpacity
-            onPress={this.props.onAnimationEnd}
+            onPress={onAnimationEnd}
             style={[
               styles.innerWrap,
-              this.props.toastStyle,
+              toastStyle,
               iconDom ? styles.iconToast : styles.textToast,
             ]}>
             { iconDom }
             { React.isValidElement(content) ? (
               content
             ) : (
-              <Text style={[ styles.content, this.props.textStyle]}>{'' + content}</Text>
+              <Text style={[ styles.content, textStyle]}>{'' + content}</Text>
             )}
           </TouchableOpacity>
         </Animated.View>

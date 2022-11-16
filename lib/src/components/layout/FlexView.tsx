@@ -7,7 +7,7 @@ import { ThemeWrapper } from '../../theme/Theme';
 
 export interface FlexViewProp extends ViewProps {
 
-  children?: JSX.Element|JSX.Element[]|undefined,
+  children?: React.ReactNode|undefined,
 
   position?: "absolute" | "relative" | undefined;
   /**
@@ -37,7 +37,7 @@ export interface FlexViewProp extends ViewProps {
   /**
    * 特殊样式
    */
-  style?: ViewStyle|ViewStyle[],
+  style?: ViewStyle|ViewStyle[]|undefined,
   /**
    * flex参数
    */

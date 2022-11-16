@@ -5,7 +5,7 @@ import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, 
 import { deviceHeight, deviceWidth } from "../../utils/StyleConsts";
 import { borderRight, borderTop, displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
-import { RowView } from "../layout/RowView";
+import { FlexView } from "../layout/FlexView";
 import { Popup } from "../Popup";
 import { PopupContainerProps } from "../PopupContainer";
 import { ThemeWrapper } from "../../theme/Theme";
@@ -33,6 +33,26 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
    */
   content?: string|React.ReactNode;
   /**
+   * 对话框内容超高后是否自动滚动，默认是
+   */
+  contentScroll?: boolean;
+  /**
+   * 对话框内容框边距，，默认是 [ 15, 20 ]
+   * 支持数字或者数组
+   * * 如果是数字，则设置所有方向边距
+   * * 两位数组 [vetical,horizontal]
+   * * 四位数组 [top,right,down,left]
+   */
+  contentPadding?: number|number[],
+  /**
+   * 自定义渲染对话框底部内容，注意，提供此项后原有自带按扭无效
+   */
+  bottomContent?: (onConfirm: (name?: string) => void, onCancel: () => void) => JSX.Element;
+  /**
+   * 底部按扭是否垂直排版，默认否
+   */
+  bottomVertical?: boolean;
+  /**
    * 取消按扭的文字
    */
   cancelText?: string|undefined;
@@ -49,9 +69,22 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
    */
   cancelColor?: ThemeColor|undefined;
   /**
-   * 是否显示取消按扭
+   * 自定义其他按扭，这些按扭将在 cancel 和 confirm 之间显示，建议设置 bottomVertical 使按扭垂直排列。
+   */
+  customButtons?: {
+    name: string,
+    text: string,
+    color?: ThemeColor|undefined,
+    bold?: boolean,
+  }[];
+  /**
+   * 是否显示取消按扭，默认否
    */
   showCancel?: boolean;
+  /**
+   * 是否显示确定按扭，默认是
+   */
+  showConfirm?: boolean;
   /**
    * 对话框宽度
    */
@@ -67,7 +100,7 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
   /**
    * 当对话框点击确定的回调
    */
-  onConfirm?: () => void|Promise<void>;
+  onConfirm?: (buttonName?: string) => void|Promise<void>;
 }
 export type DialogConfirmProps = Omit<DialogProps, 'show'|'showCancel'|'onClose'>;
 
@@ -76,23 +109,21 @@ const styles = DynamicThemeStyleSheet.create({
     minWidth: deviceWidth - deviceWidth / 3,
     maxWidth: deviceWidth - deviceWidth / 10,
   },
-  dialogContent: {
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-  },
   dialogContentScroll: {
     maxHeight: deviceHeight - deviceHeight / 3,
   },
   bottomView: {
     position: 'relative',
-    ...borderTop(1, 'solid', Color.divider, true),
   },
   dialogButton: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
-    flex: 1,
+    ...borderTop(1, 'solid', Color.divider, true),
     ...borderRight(1, 'solid', Color.divider, true),
+  },
+  dialogButtonHorz: {
+    flex: 1,
   },
   buttonText: {
     fontSize: 16,
@@ -124,13 +155,17 @@ const styles = DynamicThemeStyleSheet.create({
 export const DialogButton = ThemeWrapper(function (props: {
   text: string|undefined,
   loading: boolean,
+  vertical: boolean|undefined,
   buttonColor: ThemeColor|undefined,
   pressedColor?: ThemeColor|undefined,
   onPress: () => void;
 }) {
   return (
     <TouchableHighlight
-      style={styles.dialogButton}
+      style={[
+        styles.dialogButton,
+        props.vertical ? {} : styles.dialogButtonHorz,
+      ]}
       underlayColor={ThemeSelector.color(props.pressedColor || PressedColor(Color.white))}
       onPress={props.loading ? undefined : props.onPress}
     >
@@ -142,99 +177,160 @@ export const DialogButton = ThemeWrapper(function (props: {
     </TouchableHighlight>
   );
 });
-export const DialogInner = ThemeWrapper(function (props: {
-  onClose?: () => void;
-  onCancel?: () => void|Promise<void>;
-  onConfirm?: () => void|Promise<void>;
-  title?: string;
-  icon?: string|JSX.Element;
-  iconColor?: ThemeColor;
-  iconSize?: number,
-  content?: string|React.ReactNode;
-  cancelText?: string|undefined;
-  confirmText?: string|undefined;
-  confirmColor?: ThemeColor|undefined;
-  cancelColor?: ThemeColor|undefined;
-  width?: number|undefined;
-  showCancel?: boolean;
-}) {
-  const [ cancelLoading, setCancelLoading ] = useState(false);
-  const [ confirmLoading, setConfirmLoading ] = useState(false);
+export const DialogInner = ThemeWrapper(function (props: Omit<DialogProps, 'show'>) {
+
+  const [ buttomLoadingState, setButtomLoadingState ] = useState<Record<string, boolean>>({});
+
+  const {
+    customButtons,
+    showCancel,
+    showConfirm = true,
+    cancelText = '取消',
+    cancelColor = Color.text,
+    confirmText = '确定',
+    confirmColor = Color.primary,
+    icon,
+    iconSize = 40,
+    iconColor,
+    bottomVertical,
+    title,
+    content,
+    contentScroll = true,
+    contentPadding = [ 15, 20 ],
+    width,
+    onCancel,
+    onConfirm,
+    bottomContent,
+  } = props;
 
   function onPopupClose() {
     if (typeof props.onClose === 'function')
       props.onClose();
   }
 
-  function checkAnyButtonLoading() {
-    return cancelLoading || confirmLoading;
+  function setButtonLoadingStateByName(name: string, state: boolean) {
+    return setButtomLoadingState((prev) => {
+      return { ...prev, [name]: state };
+    });
   }
+  function checkAnyButtonLoading() {
+    for (const key in buttomLoadingState) {
+      if (buttomLoadingState[key] === true)
+        return true;
+    }
+    return false;
+  }
+
   function onCancelClick() {
     if (checkAnyButtonLoading())
       return;
-
-    if (typeof props.onCancel === 'function') {
-      //处理返回值是promise
-      const ret = props.onCancel();
-      if (typeof ret === 'object') {
-        setCancelLoading(true);
-        ret.then(() => {
-          setCancelLoading(false);
-          onPopupClose();
-        }).catch(() => {
-          setCancelLoading(false);
-        });
-      } else onPopupClose();
+    if (!onCancel) {
+      onPopupClose();
+      return;
     }
-    else onPopupClose();
+    const ret = onCancel();
+    if (typeof ret === 'object') {
+      setButtonLoadingStateByName('cancel', true);
+      ret.then(() => {
+        setButtonLoadingStateByName('cancel', false);
+        onPopupClose();
+      }).catch(() => {
+        setButtonLoadingStateByName('cancel', false);
+      });
+    } else onPopupClose();
   }
-  function onConfirmClick() {
+  function onConfirmClick(name: string) {
     if (checkAnyButtonLoading())
       return;
-    if (typeof props.onConfirm === 'function') {
-      //处理返回值是promise
-      const ret = props.onConfirm();
-      if (typeof ret === 'object') {
-        setConfirmLoading(true);
-        ret.then(() => {
-          setConfirmLoading(false);
-          onPopupClose();
-        }).catch(() => {
-          setConfirmLoading(false);
-        });
-      } else onPopupClose();
+    if (!onConfirm) {
+      onPopupClose();
+      return;
     }
-    else onPopupClose();
+    const ret = onConfirm(name);
+    if (typeof ret === 'object') {
+      setButtonLoadingStateByName(name, true);
+      ret.then(() => {
+        setButtonLoadingStateByName(name, false);
+        onPopupClose();
+      }).catch(() => {
+        setButtonLoadingStateByName(name, false);
+      });
+    } else onPopupClose();
+  }
+
+  function renderButtons() {
+    const arr = [] as JSX.Element[];
+
+    if (showCancel) {
+      arr.push(<DialogButton
+        key="cancel"
+        vertical={bottomVertical}
+        text={cancelText}
+        loading={buttomLoadingState.cancel}
+        buttonColor={cancelColor}
+        onPress={onCancelClick} />);
+    }
+
+    customButtons?.forEach((btn) => {
+      arr.push(<DialogButton
+        vertical={bottomVertical}
+        key={btn.name}
+        text={btn.text}
+        loading={buttomLoadingState[btn.name]}
+        buttonColor={btn.color || Color.text}
+        onPress={() => onConfirmClick(btn.name)}
+      />);
+    });
+
+    if (showConfirm) {
+      arr.push(<DialogButton
+        vertical={bottomVertical}
+        key="confirm"
+        text={confirmText}
+        loading={buttomLoadingState.confirm}
+        buttonColor={confirmColor}
+        onPress={() => onConfirmClick('confirm')}
+      />);
+    }
+
+    return arr;
   }
 
   return (
     <ColumnView style={[
       styles.dialog,
-      { width: props.width },
+      { width: width },
     ]}>
-      <ColumnView style={styles.dialogContent}>
+      <ColumnView padding={contentPadding}>
         {/* 图标 */}
         {
-          props.icon ?
+          icon ?
             (<ColumnView style={styles.icon}>
             {
-              typeof props.icon === 'string' ?
-                <Icon icon={props.icon} color={props.iconColor} size={props.iconSize || 40} />
-                : props.icon
+              typeof icon === 'string' ?
+                <Icon icon={icon} color={iconColor} size={iconSize || 40} />
+                : icon
             }</ColumnView>) : <></>
         }
         {/* 标题 */}
-        <Text style={[ styles.title, displayNoneIfEmpty(props.title) ]}>{props.title}</Text>
+        <Text style={[ styles.title, displayNoneIfEmpty(title) ]}>{title}</Text>
         {/* 内容 */}
-        <ScrollView style={styles.dialogContentScroll}>
-          { typeof props.content === 'string' ? <Text style={styles.contentText}>{props.content}</Text> : props.content }
-        </ScrollView>
+        {
+          contentScroll ?
+            (<ScrollView style={styles.dialogContentScroll}>
+              { typeof content === 'string' ? <Text style={styles.contentText}>{content}</Text> : content }
+            </ScrollView>) :
+            typeof content === 'string' ? <Text style={styles.contentText}>{content}</Text> : content
+        }
       </ColumnView>
       {/* 底部按钮 */}
-      <RowView style={styles.bottomView} accessibilityLabel="test">
-        { props.showCancel ? <DialogButton text={props.cancelText || '取消'} loading={cancelLoading} buttonColor={props.cancelColor || Color.text} onPress={onCancelClick} /> : <></> }
-        <DialogButton text={props.confirmText || '确定'} loading={confirmLoading} buttonColor={props.confirmColor || Color.primary} onPress={onConfirmClick} />
-      </RowView>
+      {
+        bottomContent ?
+          bottomContent((name) => onConfirmClick(name || 'confirm'), onCancelClick) :
+          <FlexView direction={bottomVertical ? 'column' : 'row'} style={styles.bottomView}>
+            { renderButtons() }
+          </FlexView>
+      }
     </ColumnView>
   );
 });

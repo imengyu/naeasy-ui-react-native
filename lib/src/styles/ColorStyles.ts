@@ -104,9 +104,9 @@ export const Color = {
     pressed_dark: 'rgba(255,255,255,0.2)',
   },
   primary: {
-    light: '#33a3dc',
-    dark: '#2779c0',
-    pressed_light: '#0960ac22',
+    light: '#1989fa',
+    dark: '#2190ff',
+    pressed_light: '#0960ac88',
     pressed_dark: '#043a6999',
   },
   success: {

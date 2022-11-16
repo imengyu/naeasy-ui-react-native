@@ -18,6 +18,10 @@ const styles = DynamicThemeStyleSheet.create({
     flex: 1,
     color: DynamicColor(Color.text),
   },
+  itemTextChecked: {
+    fontWeight: 'bold',
+    color: DynamicColor(Color.primary),
+  },
 });
 
 export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"renderItem"|'getItemLayout'|'getItem'> {
@@ -29,6 +33,14 @@ export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"rende
    * 条目文字的自定义样式
    */
   textStyle?: TextStyle;
+  /**
+   * 选中的条目的自定义样式
+   */
+  checkedItemStyle?: ViewStyle;
+  /**
+   * 选中的条目文字的自定义样式
+   */
+  checkedTextStyle?: TextStyle;
   /**
    * 源数据
    */
@@ -116,11 +128,21 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
     ...styles.itemText,
     ...props.textStyle,
   } as ViewStyle;
+  const checkedItemStyle = {
+    ...styles.item,
+    ...props.checkedItemStyle,
+  } as ViewStyle;
+  const checkedTextStyle = {
+    ...styles.itemText,
+    ...styles.itemTextChecked,
+    ...props.checkedTextStyle,
+  } as ViewStyle;
   const checkProps = {
-    borderColor: Color.white,
-    checkColor: Color.primary,
-    color: Color.white,
+    borderColor: Color.border,
+    checkColor: Color.white,
+    color: Color.primary,
     size: 20,
+    iconSize: 16,
     disabled: false,
     ...props.checkProps,
   } as CheckBoxDefaultButtonProps;
@@ -131,27 +153,34 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
         <FlatList<T>
           { ...props }
           data={data}
-          renderItem={({ item, index }) => (props.renderItem ? props.renderItem(item, index) :
-            <TouchableHighlight
-              underlayColor={ThemeSelector.color(PressedColor(Color.white))}
-              onPress={() => onItemPress(item as T, index)}
-            >
-              <View style={itemStyle}>
-                {
-                  props.renderItemContent ?
-                    props.renderItemContent(item, index) :
-                    <Text style={textStyle}>{dataDisplayProp ? (item as unknown as Record<string, string>)[dataDisplayProp] : (item as unknown as string) }</Text>
-                }
-                {
-                  mode !== 'select' ?
-                    <CheckBoxDefaultButton
-                      { ...checkProps }
-                      on={checkedList.indexOf(item) >= 0}
-                    /> : <></>
-                }
-              </View>
-            </TouchableHighlight>
-          )}
+          renderItem={({ item, index }) => {
+            const checked = checkedList.indexOf(item) >= 0;
+            return (props.renderItem ? props.renderItem(item, index) :
+              <TouchableHighlight
+                underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+                onPress={() => onItemPress(item as T, index)}
+              >
+                <View style={checked ? checkedItemStyle : itemStyle}>
+                  {
+                    props.renderItemContent ?
+                      props.renderItemContent(item, index) :
+                      <Text style={checked ? checkedTextStyle : textStyle}>{
+                        dataDisplayProp ?
+                          (item as unknown as Record<string, string>)[dataDisplayProp] :
+                          (item as unknown as string) }
+                      </Text>
+                  }
+                  {
+                    mode !== 'select' ?
+                      <CheckBoxDefaultButton
+                        { ...checkProps }
+                        on={checked}
+                      /> : <></>
+                  }
+                </View>
+              </TouchableHighlight>
+            );
+          }}
         />
       )}
     </ThemeRender>

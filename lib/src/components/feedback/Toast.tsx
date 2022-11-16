@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import Portal from '../../portal';
+import { IconProp } from '../Icon';
 import { ToastContainer, IToastPosition } from './ToastContainer';
 
-interface IToastConfigurable {
+export interface ToastProps {
   /**
    * 自动关闭的延时，单位秒
    */
   duration?: number;
+  /**
+   * 自动关闭的延时，单位秒
+   */
+  type?: 'text'|'loading'|'success'|'fail'|'offline';
+  /**
+   * 自定义图标
+   */
+  icon?: string;
+  /**
+   * 图标自定义属性
+   */
+  iconProps?: IconProp;
+  /**
+   * 土司内容
+   */
+  content?: string|JSX.Element;
   /**
    * 关闭后回调
    */
@@ -17,14 +34,13 @@ interface IToastConfigurable {
    */
   position?: IToastPosition;
   /**
-   * 是否显示透明蒙层，防止触摸穿透
+   * 是否禁止背景点击
    */
-  mask?: boolean;
+  forbidClick?: boolean;
   /**
-   * 是否允许叠加显示
+   * 是否在点击后关闭
    */
-  stackable?: boolean;
-
+  closeOnClick?: boolean;
   /**
    * 土司背景的自定义样式
    */
@@ -39,85 +55,88 @@ interface IToastConfigurable {
   textStyle?: TextStyle;
 }
 
-export interface IToastProps extends IToastConfigurable {
-  content: string | React.ReactNode
-}
-
-
-const SHORT = 2000;
-
-const defaultConfig: IToastConfigurable = {
-  duration: SHORT,
+const defaultProps = {
   position: 'center',
-  onClose: () => {},
-  mask: false,
-  stackable: false,
-};
+  type: 'text',
+  textStyle: {
+    color: 'white',
+    fontSize: 14,
+  },
+  toastStyle: {
+    backgroundColor: 'black',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+} as ToastProps;
+let currentDefaultProps = { ...defaultProps } as ToastProps;
+let currentToastId = 0;
+let currentToastRef = createRef<ToastContainer>();
 
-let defaultProps = {
-  ...defaultConfig,
-};
+function show(props: ToastProps) {
 
-const toastKeyMap: { [key: number]: 1 } = {};
+  const { content } = props;
 
-function remove(key: number) {
-  Portal.remove(key);
-  delete toastKeyMap[key];
-}
+  const defaultDuration = (typeof content === 'string') ?
+    1000 + content.length / 200 * 10000
+    : 2000;
 
-function removeAll() {
-  Object.keys(toastKeyMap).forEach((_key) =>
-    Portal.remove(Number.parseInt(_key, 10)),
-  );
-}
-
-function notice(
-  content: string | IToastProps,
-  type: string,
-  duration = defaultProps.duration,
-  position = defaultProps.position,
-  onClose = defaultProps.onClose,
-  mask = defaultProps.mask,
-) {
-  let props = {
-    ...defaultProps,
-    content: content as string | React.ReactNode,
-    position,
-    type,
-    duration,
-    onClose,
-    mask,
-  };
-
-  if (typeof content !== 'string') {
-    props = {
-      ...props,
-      ...content,
-    };
+  if (currentToastId > 0) {
+    currentToastRef.current?.updateProps(props);
+    return;
   }
 
-  if (!props.stackable) {
-    removeAll();
-  }
-
-  const key = Portal.add(
+  currentToastId = Portal.add(
     <ToastContainer
-      content={props.content}
-      duration={props.duration}
-      onClose={props.onClose}
-      type={props.type}
-      position={props.position}
-      mask={props.mask}
-      toastStyle={defaultProps.toastStyle}
-      textStyle={defaultProps.textStyle}
-      maskStyle={defaultProps.maskStyle}
+      duration={defaultDuration}
+      { ...props }
+      ref={currentToastRef}
       onAnimationEnd={() => {
-        remove(key);
+        Portal.remove(currentToastId);
+        currentToastId = 0;
       }}
     />,
   );
-  toastKeyMap[key] = 1;
-  return key;
+}
+function info(text: string) {
+  return show({
+    position: 'center',
+    content: text,
+    type: 'text',
+  });
+}
+function success(props: string|ToastProps) {
+  return show({
+    position: 'center',
+    content: typeof props === 'string' ? props : undefined,
+    ...(typeof props === 'object' ? props : {}),
+    type: 'success',
+  });
+}
+function fail(props: string|ToastProps) {
+  return show({
+    position: 'center',
+    content: typeof props === 'string' ? props : undefined,
+    ...(typeof props === 'object' ? props : {}),
+    type: 'fail',
+  });
+}
+function loading(props: string|ToastProps) {
+  return show({
+    position: 'center',
+    forbidClick: true,
+    content: typeof props === 'string' ? props : undefined,
+    ...(typeof props === 'object' ? props : {}),
+    type: 'loading',
+  });
+}
+function offline(props: string|ToastProps) {
+  return show({
+    position: 'center',
+    content: typeof props === 'string' ? props : undefined,
+    ...(typeof props === 'object' ? props : {}),
+    type: 'offline',
+  });
 }
 
 /**
@@ -126,124 +145,26 @@ function notice(
  * 规则: 有 Icon 的 Toast，字数为 4-6 个；没有 Icon 的 Toast，字数不宜超过 14 个。
  */
 export const Toast = {
+  info,
+  show,
+  success,
+  fail,
+  loading,
+  offline,
   /**
-   * 短时间显示时长
+   * 	重置默认配置
    */
-  SHORT,
-  /**
-   * 长时间显示时长
-   */
-  LONG: 6000,
-  defaultConfig,
-  /**
-   * 获取当前配置
-   * @returns 配置
-   */
-  getConfig: () => {
-    return { ...defaultProps };
+  resetDefaultOptions() {
+    currentDefaultProps = { ...defaultProps };
   },
   /**
-   *  配置非必填项的默认值
-   * @param props 配置
+   * 修改默认配置
+   * @param options 配置
    */
-  config(props: IToastConfigurable) {
-    defaultProps = {
-      ...defaultProps,
-      ...props,
+  setDefaultOptions(options: ToastProps) {
+    currentDefaultProps = {
+      ...currentDefaultProps,
+      ...options,
     };
   },
-  /**
-   * 显示信息提示
-   * @param props: toast props
-   */
-  info(
-    props: string | IToastProps,
-    duration?: number,
-    position?: IToastPosition,
-    onClose?: () => void,
-    mask?: boolean,
-  ) {
-    //根据文字长度设置显示时间
-    if (duration === -12) {
-      if (typeof props === 'string') duration = SHORT + props.length / 200 * 10000;
-      else duration = 1500;
-    }
-    return notice(props, 'info', duration, position || 'center', onClose, mask);
-  },
-  /**
-   * 显示成功提示
-   * @param props: toast props
-   */
-  success(
-    props: string | IToastProps,
-    duration?: number,
-    position?: IToastPosition,
-    onClose?: () => void,
-    mask?: boolean,
-  ) {
-    //根据文字长度设置显示时间
-    if (duration === -12) {
-      if (typeof props === 'string') duration = SHORT + props.length / 200 * 10000;
-      else duration = 2000;
-    }
-    return notice(props, 'success', duration, position || 'center', onClose, mask);
-  },
-  /**
-   * 显示失败提示
-   * @param props: toast props
-   */
-  fail(
-    props: string | IToastProps,
-    duration?: number,
-    position?: IToastPosition,
-    onClose?: () => void,
-    mask?: boolean,
-  ) {
-    //根据文字长度设置显示时间
-    if (duration === -12) {
-      if (typeof props === 'string') duration = SHORT + props.length / 100 * 10000;
-      else duration = 4000;
-    }
-    return notice(props, 'fail', duration, position || 'center', onClose, mask);
-  },
-  /**
-   * 显示无网络提示
-   * @param props: toast props
-   */
-  offline(
-    props: string | IToastProps,
-    duration?: number,
-    position?: IToastPosition,
-    onClose?: () => void,
-    mask?: boolean,
-  ) {
-    //根据文字长度设置显示时间
-    if (duration === -12) {
-      if (typeof props === 'string') duration = SHORT + props.length / 100 * 10000;
-      else duration = 4000;
-    }
-    return notice(props, 'offline', duration, position || 'center', onClose, mask);
-  },
-  /**
-   * 显示加载中提示
-   * @param props: toast props
-   */
-  loading(
-    props?: string | IToastProps,
-    duration?: number,
-    position?: IToastPosition,
-    onClose?: () => void,
-    mask?: boolean,
-  ) {
-    return notice(props || '拼命加载中', 'loading', duration || 0, position || 'center', onClose, mask || true);
-  },
-  notice,
-  /**
-   * 关闭指定的提示
-   */
-  remove,
-  /**
-   * 关闭所有提示
-   */
-  removeAll,
 };
