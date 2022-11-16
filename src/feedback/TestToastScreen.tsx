@@ -32,14 +32,14 @@ export class TestToastScreen extends React.PureComponent<Props> {
           <CellGroup title="自定义位置" inset>
             <Text style={{ padding: 10 }}>Toast 默认渲染在屏幕正中位置，通过 position 属性可以控制 Toast 展示的位置。</Text>
             <Cell title="在顶部显示" showArrow onPress={() => Toast.show({
-              content: '这是一个提示！', 
-              duration: 2000, 
-              position: 'top'
+              content: '这是一个提示！',
+              duration: 2000,
+              position: 'top',
             })} />
             <Cell title="在底部显示" showArrow onPress={() => Toast.show({
-              content: '这是一个提示！', 
-              duration: 2000, 
-              position: 'bottom'
+              content: '这是一个提示！',
+              duration: 2000,
+              position: 'bottom',
             })} />
           </CellGroup>
         </ColumnView>
