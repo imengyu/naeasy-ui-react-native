@@ -30,19 +30,15 @@ class NaImagePicker: NSObject {
     //类型判断
     let options_type = options["type"] as? String
     let options_showCamera = options["showCamera"] as? Bool
-    let options_minSelectNum = options["minSelectNum"] as? Int
+    let options_selectTogether = options["selectTogether"] as? Bool
     let options_maxSelectNum = options["maxSelectNum"] as? Int
-    let options_minVideoSelectNum = options["minVideoSelectNum"] as? Int
     let options_maxVideoSelectNum = options["maxVideoSelectNum"] as? Int
     let options_imageSpanCount = options["imageSpanCount"] as? Int
-    let options_filterMaxFileSize = options["filterMaxFileSize"] as? Int
-    let options_filterMinFileSize = options["filterMinFileSize"] as? Int
-    let options_filterVideoMaxSecond = options["filterVideoMaxSecond"] as? Int
-    let options_filterVideoMinSecond = options["filterVideoMinSecond"] as? Int
     let options_minFileSize = options["minFileSize"] as? Int
     let options_maxFileSize = options["maxFileSize"] as? Int
     let options_minDurationSecond = options["minDurationSecond"] as? Int
     let options_maxDurationSecond = options["maxDurationSecond"] as? Int
+    let options_crop = options["crop"] as? [String: Any]
     if (options_type != nil && options_type == "all") {
       selectOptions = [.photo, .video]
     } else if (options_type != nil  && options_type == "video") {
@@ -51,8 +47,40 @@ class NaImagePicker: NSObject {
     if (options_showCamera != nil) {
       config.photoList.allowAddCamera = options_showCamera!;
     }
-    
-    
+    if (options_selectTogether != nil) {
+      config.allowSelectedTogether = options_selectTogether!;
+    }
+    if (options_maxSelectNum != nil) {
+      config.maximumSelectedCount = 0;
+      config.maximumSelectedPhotoCount = options_maxSelectNum!;
+    } else {
+      config.maximumSelectedPhotoCount = 9;
+      config.maximumSelectedCount = 0;
+    }
+    if (options_maxVideoSelectNum != nil) {
+      config.maximumSelectedVideoCount = options_maxVideoSelectNum!;
+    }
+    if (options_minDurationSecond != nil) {
+      config.minimumSelectedVideoDuration = options_minDurationSecond!;
+    }
+    if (options_maxDurationSecond != nil) {
+      config.maximumSelectedVideoDuration = options_maxDurationSecond!;
+    }
+    if (options_minFileSize != nil) {
+      config.maximumSelectedVideoFileSize = options_minFileSize!;
+    }
+    if (options_maxFileSize != nil) {
+      config.maximumSelectedPhotoFileSize = options_maxFileSize!;
+    }
+    if (options_imageSpanCount != nil) {
+      config.photoList.rowNumber = options_imageSpanCount!;
+    }
+    if (options_crop != nil) {
+      
+    } else {
+      
+    }
+
     config.selectOptions = selectOptions
     
     Photo.picker(

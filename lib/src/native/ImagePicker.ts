@@ -3,12 +3,6 @@ import { NativeModules } from 'react-native';
 
 export interface ImagePickerBaseOptions {
   type?: 'image'|'video'|'all';
-  minFileSize?: number;
-  maxFileSize?: number;
-  minDurationSecond?: number;
-  maxDurationSecond?: number;
-  recordVideoMaxSecond?: number;
-  recordVideoMinSecond?: number;
   /**
    * 是否允许用户裁剪图片，传入null禁止裁剪图片
    */
@@ -27,19 +21,44 @@ export interface ImagePickerBaseOptions {
   },
 }
 export interface ImagePickerCameraOptions extends ImagePickerBaseOptions {
+  recordVideoMaxSecond?: number;
+  recordVideoMinSecond?: number;
 }
 export interface ImagePickerAlbumOptions extends ImagePickerBaseOptions  {
   showCamera?: boolean;
+  selectTogether?: boolean;
+  /**
+   * @platform Android
+   */
   minSelectNum?: number;
   maxSelectNum?: number;
+  /**
+   * @platform Android
+   */
   minVideoSelectNum?: number;
   maxVideoSelectNum?: number;
   selectedData?: ImagePickerChooseMedia[];
   imageSpanCount?: number;
+  /**
+   * @platform Android
+   */
   filterMaxFileSize?: number;
+  /**
+   * @platform Android
+   */
   filterMinFileSize?: number;
+  /**
+   * @platform Android
+   */
   filterVideoMaxSecond?: number;
+  /**
+   * @platform Android
+   */
   filterVideoMinSecond?: number;
+  minFileSize?: number;
+  maxFileSize?: number;
+  minDurationSecond?: number;
+  maxDurationSecond?: number;
 }
 export interface ImagePickerChooseMedia {
   id: number,
