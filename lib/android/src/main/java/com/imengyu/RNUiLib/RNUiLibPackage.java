@@ -2,6 +2,7 @@ package com.imengyu.RNUiLib;
 
 import androidx.annotation.NonNull;
 
+import com.imengyu.RNUiLib.imagepicker.ImagePickerModule;
 import com.imengyu.RNUiLib.pickerview.PickerViewAndroidViewManager;
 import com.imengyu.RNUiLib.pickerview.PickerViewAndroidModule;
 import com.imengyu.RNUiLib.dialog.DialogAndroidModule;
@@ -46,6 +47,7 @@ public class RNUiLibPackage implements ReactPackage {
     modules.add(new DialogAndroidModule(reactContext));
     modules.add(new PickerViewAndroidModule(reactContext));
     modules.add(new RCTSpinnerStyleModule(reactContext));
+    modules.add(new ImagePickerModule(reactContext));
     return modules;
   }
 

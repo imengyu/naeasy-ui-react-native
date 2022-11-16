@@ -43,7 +43,7 @@ import { TestAppHome } from './TestAppHome';
 import { TestAvatarStackScreen } from './base/TestAvatarStackScreen';
 import { TestSideBarScreen } from './nav/TestSideBarScreen';
 import { TestTabBarScreen } from './nav/TestTabBarScreen';
-import { TestImagePreviewScreen } from './display/TestImagePreviewScreen';
+import { TestImagePreviewScreen } from './media/TestImagePreviewScreen';
 import { TestNavBarScreen } from './nav/TestNavBarScreen';
 import { TestNotifyScreen } from './feedback/TestNotifyScreen';
 import { TestCountToScreen } from './display/TestCountToScreen';
@@ -58,6 +58,7 @@ import { TestIndexedListScreen } from './list/TestIndexedListScreen';
 import { TestStepScreen } from './display/TestStepScreen';
 import { TestPlateKeyBoardScreen } from './form/TestPlateKeyBoardScreen';
 import { TestThemeScreen } from './base/TestThemeScreen';
+import { TestImagePickerScreen } from './media/TestImagePickerScreen';
 
 const Stack = createStackNavigator();
 
@@ -153,6 +154,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestStep" component={TestStepScreen as any} />
         <Stack.Screen name="TestPlateKeyBoard" component={TestPlateKeyBoardScreen as any} />
         <Stack.Screen name="TestTheme" component={TestThemeScreen as any} />
+        <Stack.Screen name="TestImagePicker" component={TestImagePickerScreen as any} />
       </Stack.Navigator>
     );
   }

@@ -60,7 +60,6 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => AlertNative.alert('提示', '未完成，敬请期待')} />
             <Cell title="[未完成] Collapse 可折叠组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
             <Cell title="[未完成] Carousel 轮播组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
-            <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
             <Cell title="IndexedList 索引列表" touchable showArrow onPress={() => this.props.navigation.push('TestIndexedList')} />
             <Cell title="Pagination 分页组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestPagination')} />
             <Cell title="NavBar 导航栏" touchable showArrow onPress={() => this.props.navigation.push('TestNavBar')} />
@@ -74,6 +73,10 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="SwipeableRow 组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
             <Cell title="Tabbar 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTabBar')} />
             <Cell title="Tag 标签组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
+          </CellGroup>
+          <CellGroup inset title="媒体组件">
+            <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
+            <Cell title="ImagePicker 图片选择组件" touchable showArrow onPress={() => this.props.navigation.push('TestImagePicker')} />
           </CellGroup>
           <CellGroup inset title="反馈组件">
             <Cell title="原生 Alert/ActionSheet 示例" touchable showArrow onPress={() => this.props.navigation.push('TestAlert')} />

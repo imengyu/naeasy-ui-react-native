@@ -22,7 +22,6 @@ export type RootStackParamList = {
   TestPagination: undefined;
   TestSegmentedControl: undefined;
   TestNoticeBar: undefined;
-  TestImagePicker: undefined;
   TestWebView: undefined;
   TestCarousel: undefined;
   TestPicker: undefined;
@@ -58,6 +57,7 @@ export type RootStackParamList = {
   TestCountDown: undefined;
   TestCountTo: undefined;
   TestImagePreview: undefined;
+  TestImagePicker: undefined;
   TestNavBar: undefined;
   TestSideBar: undefined;
   TestSkeleton: undefined;

@@ -1,8 +1,8 @@
 import { isIOS, isAndroid } from '../utils/PlatformTools';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 
-const MToolboxModule = isIOS ? NativeModules.ToolsManagerIOS : NativeModules.MToolboxModule;
-const eventEmitter = new NativeEventEmitter(MToolboxModule);
+const NaToolboxModule = isIOS ? NativeModules.ToolsManagerIOS : NativeModules.NaToolboxModule;
+const eventEmitter = new NativeEventEmitter(NaToolboxModule);
 
 /**
  * App 信息
@@ -53,9 +53,9 @@ export interface CacheInfo {
 function getPackageInfo() {
   return new Promise<PackageInfo>((resolve, reject) => {
     if (isAndroid)
-      MToolboxModule.getPackageInfo({}, (d: PackageInfo) => resolve(d), (e: string) => reject(e));
+      NaToolboxModule.getPackageInfo({}, (d: PackageInfo) => resolve(d), (e: string) => reject(e));
     else if (isIOS)
-      MToolboxModule.getAppInfo({}, (d: { [index: string]: string | number }) => resolve({
+      NaToolboxModule.getAppInfo({}, (d: { [index: string]: string | number }) => resolve({
         packageName: d.appBundleIdentifier as string,
         versionCode: parseInt(d.appBuildVersion as string, 10),
         versionName: d.appVersion as string,
@@ -72,7 +72,7 @@ function getPackageInfo() {
 function installApk(path: string) {
   return new Promise<void>((resolve, reject) => {
     if (isAndroid)
-      MToolboxModule.installApk(path, () => resolve(), (e: string) => reject(e));
+      NaToolboxModule.installApk(path, () => resolve(), (e: string) => reject(e));
     else
       reject('Not support');
   });
@@ -83,7 +83,7 @@ function installApk(path: string) {
 function getCacheInfo() {
   return new Promise<CacheInfo>((resolve, reject) => {
     if (isAndroid || isIOS)
-      MToolboxModule.getCacheInfo({}, (d: CacheInfo) => resolve(d), (e: string) => reject(e));
+      NaToolboxModule.getCacheInfo({}, (d: CacheInfo) => resolve(d), (e: string) => reject(e));
     else
       reject('Not support');
   });
@@ -94,9 +94,9 @@ function getCacheInfo() {
  */
 function clearAppCache(callback: () => void) {
   if (isAndroid)
-    MToolboxModule.clearAppCache(callback);
+    NaToolboxModule.clearAppCache(callback);
   else if (isIOS)
-    MToolboxModule.clearAppCache({}, () => callback(), (e: string) => console.error('clearAppCache failed:' + e));
+    NaToolboxModule.clearAppCache({}, () => callback(), (e: string) => console.error('clearAppCache failed:' + e));
   else
     setTimeout(() => {
       console.error('clearAppCache not support');
@@ -114,13 +114,13 @@ function clearAppCache(callback: () => void) {
  */
 function nativeLog(message: string, tag?: string, level?: 'verbose'|'debug'|'info'|'warn'|'error') {
   if (isAndroid)
-    MToolboxModule.androidLog({
+    NaToolboxModule.androidLog({
       tag,
       level,
       message,
     });
   else if (isIOS) {
-    MToolboxModule.nsLog({
+    NaToolboxModule.nsLog({
       tag,
       level,
       message,
@@ -138,7 +138,7 @@ type Theme = 'light'|'dark';
  */
 function addSystemThemeChangedListener(callback: (theme: Theme) => void) {
   if (isIOS)
-    MToolboxModule.addSystemThemeChangedListener();
+    NaToolboxModule.addSystemThemeChangedListener();
   return eventEmitter.addListener('onThemeChanged', (data) => callback(data.theme));
 }
 /**
@@ -148,14 +148,13 @@ function addSystemThemeChangedListener(callback: (theme: Theme) => void) {
 function getSystemTheme() : Promise<Theme> {
   return new Promise<Theme>((resolve, reject) => {
     if (isIOS)
-      MToolboxModule.getIsDarkMode({}, (isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
+      NaToolboxModule.getIsDarkMode({}, (isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
     else if (isAndroid)
-      MToolboxModule.getIsDarkMode((isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
+      NaToolboxModule.getIsDarkMode((isDarkMode: boolean) => resolve(isDarkMode ? 'dark' : 'light'));
     else
      reject('Not support');
   });
 }
-
 
 /**
  * App 工具类

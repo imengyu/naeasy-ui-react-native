@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
+import com.facebook.react.bridge.ReadableArray;
+import com.hjq.permissions.OnPermissionPageCallback;
+import com.hjq.permissions.XXPermissions;
 import com.imengyu.RNUiLib.utils.CacheUtils;
 import com.imengyu.RNUiLib.utils.ClearCacheAsyncTask;
 import com.imengyu.RNUiLib.utils.FileUtils;
@@ -25,8 +28,11 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ToolboxAndroidModule extends ReactContextBaseJavaModule {
   private static ReactApplicationContext reactContext;
@@ -34,7 +40,7 @@ public class ToolboxAndroidModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return "MToolboxModule";
+    return "NaToolboxModule";
   }
   @Override
   public Map<String, Object> getConstants() {
@@ -194,5 +200,90 @@ public class ToolboxAndroidModule extends ReactContextBaseJavaModule {
       errorCallback.invoke(e.toString());
     }
   }
+  @ReactMethod
+  public void isGrantedPermission(String permission, final Callback successCallback, final Callback errorCallback) {
+    try {
+      successCallback.invoke(XXPermissions.isGranted(reactContext, permission));
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+  @ReactMethod
+  public void isGrantedPermissions(ReadableArray permissions, final Callback successCallback, final Callback errorCallback) {
+    try {
+      List<String> permission = new ArrayList<>();
+      for (int i = 0; i < permissions.size(); i++)
+        permission.add(permissions.getString(i));
+      successCallback.invoke(XXPermissions.isGranted(reactContext, permission));
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+  @ReactMethod
+  public void isSpecialPermission(String permission, final Callback successCallback, final Callback errorCallback) {
+    try {
+      successCallback.invoke(XXPermissions.isSpecial(permission));
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+  @ReactMethod
+  public void isPermanentDeniedPermissions(ReadableArray permissions, final Callback successCallback, final Callback errorCallback) {
+    try {
+      List<String> permission = new ArrayList<>();
+      for (int i = 0; i < permissions.size(); i++)
+        permission.add(permissions.getString(i));
+      successCallback.invoke(XXPermissions.isPermanentDenied(getCurrentActivity(), permission));
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+  @ReactMethod
+  public void startPermissionActivity(ReadableArray permissions, final Callback successCallback, final Callback errorCallback) {
+    try {
+      List<String> permission = new ArrayList<>();
+      for (int i = 0; i < permissions.size(); i++)
+        permission.add(permissions.getString(i));
+      XXPermissions.startPermissionActivity(Objects.requireNonNull(getCurrentActivity()),
+              permission,
+              new OnPermissionPageCallback() {
+        @Override
+        public void onGranted() {
+          successCallback.invoke(true);
+        }
+        @Override
+        public void onDenied() {
+          successCallback.invoke(false);
+        }
+      });
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+  @ReactMethod
+  public void requestPermissions(ReadableArray permissions, final Callback successCallback, final Callback errorCallback) {
+    try {
+      List<String> permission = new ArrayList<>();
+      for (int i = 0; i < permissions.size(); i++)
+        permission.add(permissions.getString(i));
+      XXPermissions.with(getCurrentActivity())
+              // 申请单个权限
+              .permission(permission)
+              .request((res, all) -> {
+                successCallback.invoke(all);
+              });
+    } catch (Exception e) {
+      e.printStackTrace();
+      errorCallback.invoke(e.toString());
+    }
+  }
+
+
+
 }
 
