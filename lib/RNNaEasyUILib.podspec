@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
   s.resource         = 'ios/BRPickerView/Base/BRPickerView.bundle'
 
   s.dependency 'React-Core'
+  s.dependency 'HXPHPicker'
 end

@@ -74,6 +74,38 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - hermes-engine (0.70.5)
+  - HXPHPicker (1.4.5):
+    - HXPHPicker/Full (= 1.4.5)
+  - HXPHPicker/Camera (1.4.5):
+    - HXPHPicker/Camera/Lite (= 1.4.5)
+    - HXPHPicker/Camera/Location (= 1.4.5)
+  - HXPHPicker/Camera/Lite (1.4.5):
+    - HXPHPicker/Core
+  - HXPHPicker/Camera/Location (1.4.5):
+    - HXPHPicker/Camera/Lite
+    - HXPHPicker/Core
+  - HXPHPicker/Core (1.4.5)
+  - HXPHPicker/Editor (1.4.5):
+    - HXPHPicker/Editor/KF (= 1.4.5)
+    - HXPHPicker/Editor/Lite (= 1.4.5)
+  - HXPHPicker/Editor/KF (1.4.5):
+    - HXPHPicker/Editor/Lite
+    - Kingfisher (~> 7.0)
+  - HXPHPicker/Editor/Lite (1.4.5):
+    - HXPHPicker/Core
+  - HXPHPicker/Full (1.4.5):
+    - HXPHPicker/Camera
+    - HXPHPicker/Editor
+    - HXPHPicker/Picker
+  - HXPHPicker/Picker (1.4.5):
+    - HXPHPicker/Picker/KF (= 1.4.5)
+    - HXPHPicker/Picker/Lite (= 1.4.5)
+  - HXPHPicker/Picker/KF (1.4.5):
+    - HXPHPicker/Picker/Lite
+    - Kingfisher (~> 7.0)
+  - HXPHPicker/Picker/Lite (1.4.5):
+    - HXPHPicker/Core
+  - Kingfisher (7.4.1)
   - libevent (2.1.12)
   - newbanker-react-native-measure-text (0.2.0):
     - React-Core
@@ -380,7 +412,8 @@ PODS:
     - React-perflogger (= 0.70.5)
   - RNGestureHandler (2.8.0):
     - React-Core
-  - RNNaEasyUILib (0.1.9):
+  - RNNaEasyUILib (0.2.1):
+    - HXPHPicker
     - React-Core
   - RNScreens (3.18.2):
     - React-Core
@@ -473,6 +506,8 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - HXPHPicker
+    - Kingfisher
     - libevent
     - OpenSSL-Universal
     - SocketRocket
@@ -580,6 +615,8 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 3b88ac1e8ec1843d5ff63cef056221d5cba478ce
+  HXPHPicker: 2cc9ef438049b32a2085dd2b1e471b8cabc09457
+  Kingfisher: cd762a593a61b2fbecf7645c00f9a801a3ebfc9c
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   newbanker-react-native-measure-text: f7307f66cbcad5c059975eebe08026a556eaf344
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -613,7 +650,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 7401c4a40f8728fd89df4a56104541b760876117
   ReactCommon: c9246996e73bf75a2c6c3ff15f1e16707cdc2da9
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
-  RNNaEasyUILib: 1d559ff45f233aa31802a1d072169a6d806f4868
+  RNNaEasyUILib: b60edc6360a9d61ecd44cc7b8c0bc6fcbe7759ec
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   RNSVG: 38ca962c970dbce1ca38991a5aebf26d163f9efb
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608

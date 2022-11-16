@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { Color } from '../../lib/dist/styles/ColorStyles';
+import { Color } from '../lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabBar', 'RootStack'>;
 interface State {
