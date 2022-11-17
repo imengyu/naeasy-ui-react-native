@@ -10,6 +10,7 @@ interface State {
   value3: string;
   value4: string;
   value5: string;
+  value6: string;
 }
 
 export class TestNumberInputScreen extends React.PureComponent<Props, State> {
@@ -20,16 +21,20 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
     value3: '',
     value4: '',
     value5: '',
+    value6: '',
   };
 
   render(): React.ReactNode {
     return (
-      <ColumnView center style={{ padding: 10 }}>
+      <ColumnView center style={{ padding: 20 }}>
         <CellGroup title="基础用法">
           <NumberInput value={this.state.value1} onChangeText={(v) => this.setState({ value1: v })} />
         </CellGroup>
+        <CellGroup title="使用 NumberKeyBoard 输入键盘">
+          <NumberInput value={this.state.value6} onChangeText={(v) => this.setState({ value6: v })} useSystemInput={false}/>
+        </CellGroup>
         <CellGroup title="自定义长度">
-          <NumberInput value={this.state.value2} onChangeText={(v) => this.setState({ value2: v })} numberCount={4} />
+          <NumberInput value={this.state.value2} onChangeText={(v) => this.setState({ value2: v })} numberCount={8} />
         </CellGroup>
         <CellGroup title="格子间距">
           <NumberInput value={this.state.value3} onChangeText={(v) => this.setState({ value3: v })} gutter={5} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '../button/Button';
-import { Empty } from '../Empty';
+import { Empty } from '../feedback/Empty';
 
 export interface ErrorBoundaryProps {
   /**

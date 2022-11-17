@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
-import { border, borderBottom, borderRight, selectStyleType } from '../../utils/StyleTools';
+import { borderBottom, borderRight, selectStyleType } from '../../utils/StyleTools';
 import { Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
 import { TextInput } from 'react-native';
 import { ColumnView } from '../layout/ColumnView';
@@ -47,7 +47,7 @@ export interface NumberInputProps {
    */
   startFocus?: boolean;
   /**
-   * 使用系统输入键盘，否则使用NumberInput，默认是
+   * 使用系统输入键盘，否则使用 NumberKeyBoard ，默认是
    */
   useSystemInput?: boolean;
   /**
@@ -143,8 +143,9 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
   const finishHideKeyPad = props.finishHideKeyPad !== false;
   const borderType = props.borderType || 'box';
   const borderWidth = props.borderWidth || 1;
-  const borderColor = props.borderColor || Color.border;
-  const activeBorderColor = props.activeBorderColor || borderColor;
+  const borderColor = props.borderColor || (borderType === 'box' ? Color.background : Color.border);
+  const activeBorderColor = props.activeBorderColor || Color.primary;
+  const gutter = props.gutter || 0;
   const valueArr = props.value.split('');
 
   let lastClickBoxRet = -1;
@@ -194,8 +195,7 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
   }
   function onBoxClicked(i: number) {
     lastClickBoxRet = i;
-    if (props.useSystemInput !== false)
-      inputRef.current?.focus();
+    focusInput();
   }
 
   function renderBoxs() {
@@ -203,22 +203,22 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
     for (let i = 0; i < numberCount; i++) {
       const valueThis = valueArr[i];
 
-      const boxStyle = {
-        ...styles.box,
-        marginHorizontal: props.gutter,
-        ...selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
-          box: {
-            ...( i !== numberCount - 1 ? borderRight(borderWidth, 'dotted', borderColor) : {}),
-            backgroundColor: ThemeSelector.color(Color.white),
-          },
-          underline: {
-            ...borderBottom(borderWidth, 'solid', valueThis ? activeBorderColor : borderColor),
-          },
-        }),
-      } as ViewStyle;
+      const boxStyle = selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
+        box: {
+          ...( i !== numberCount - 1 && gutter === 0 ? borderRight(borderWidth, 'solid', borderColor) : {}),
+          backgroundColor: ThemeSelector.color(Color.white),
+        },
+        underline: {
+          ...borderBottom(borderWidth, 'solid', valueThis ? activeBorderColor : borderColor),
+        },
+      }) as ViewStyle;
 
       arr.push(
-        <TouchableHighlight key={i} style={boxStyle} underlayColor={ThemeSelector.color(PressedColor(Color.white))} onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}>
+        <TouchableHighlight key={i} style={[
+          styles.box,
+          { marginHorizontal: gutter },
+          boxStyle,
+        ]} underlayColor={ThemeSelector.color(PressedColor(Color.white))} onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}>
           <Text style={styles.text}>{(valueThis ? (isPassword ? '●' : valueThis) : ' ')}</Text>
         </TouchableHighlight>
       );
@@ -235,11 +235,10 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
 
   return (
     <ColumnView>
-      <View style={{
-        ...styles.view,
-        ...(borderType === 'box' ? border(borderWidth, 'solid', borderColor) : {}),
-        ...props.style,
-      }}>
+      <View style={[
+        styles.view,
+        props.style,
+      ]}>
         {renderBoxs()}
       </View>
       <TextInput

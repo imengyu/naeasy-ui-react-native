@@ -6,15 +6,15 @@ import { ActivityIndicator, FlatList, FlatListProps, ImageSourcePropType, ListRe
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button } from "../button/Button";
 import { XBarSpace } from "../space/XBarSpace";
-import { Empty } from "../Empty";
+import { Empty } from "../feedback/Empty";
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from "../../styles";
 import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { rpx } from "../../utils/StyleConsts";
 import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
 import { ColumnView } from "../layout/ColumnView";
 import CheckTools from "../../utils/CheckTools";
-import { ToolBox } from "../../utils";
 import ArrayUtils from "../../utils/ArrayUtils";
+import TimeUtils from "../../utils/TimeUtils";
 
 export interface FlatListWapperListItem {
   /**
@@ -180,7 +180,7 @@ interface FlatListWapperState<T> {
 }
 
 /**
- * 一个列表的封装组件，提供了分页，上拉刷新，下拉加载，空页，错误页，头部吸顶功能
+ * 一个列表的封装组件，提供了分页，上拉刷新，下拉加载，空页，错误页功能
  *
  * 使用方法：
  * ```
@@ -391,7 +391,7 @@ export class FlatListWapper<T extends FlatListWapperListItem> extends React.Comp
     }
     const retData = await this.loadData(true, wipeData);
 
-    await ToolBox.waitTimeOut(isIOS ? 600 : 300);
+    await TimeUtils.waitTimeOut(isIOS ? 600 : 300);
 
     if (setState !== false) {
       //设置刷新状态

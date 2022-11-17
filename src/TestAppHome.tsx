@@ -87,6 +87,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Notify 通知" touchable showArrow onPress={() => this.props.navigation.push('TestNotify')} />
             <Cell title="Overlay 遮罩层" touchable showArrow onPress={() => this.props.navigation.push('TestOverlay')} />
             <Cell title="Popup 弹出层示例" touchable showArrow onPress={() => this.props.navigation.push('TestPopup')} />
+            <Cell title="Result 结果" touchable showArrow onPress={() => this.props.navigation.push('TestResult')} />
             <Cell title="Toast 轻提示示例" touchable showArrow onPress={() => this.props.navigation.push('TestToast')} />
           </CellGroup>
         </ColumnView>

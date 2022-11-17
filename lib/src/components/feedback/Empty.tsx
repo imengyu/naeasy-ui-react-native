@@ -1,12 +1,12 @@
 import React from 'react';
-import CheckTools from '../utils/CheckTools';
+import CheckTools from '../../utils/CheckTools';
 import { ImageSourcePropType, ImageStyle, Text, ViewStyle, Image } from 'react-native';
-import { Color } from '../styles/ColorStyles';
-import { rpx } from '../utils/StyleConsts';
-import { ColumnView } from './layout/ColumnView';
-import { selectStyleType } from '../utils/StyleTools';
-import { DynamicColor, DynamicThemeStyleSheet } from '../styles/DynamicThemeStyleSheet';
-import { ThemeWrapper } from '../theme/Theme';
+import { Color } from '../../styles/ColorStyles';
+import { rpx } from '../../utils/StyleConsts';
+import { ColumnView } from '../layout/ColumnView';
+import { selectStyleType } from '../../utils/StyleTools';
+import { DynamicColor, DynamicThemeStyleSheet } from '../../styles/DynamicThemeStyleSheet';
+import { ThemeWrapper } from '../../theme/Theme';
 
 
 type EmptyImageType = 'default'|'error'|'network'|'search';
@@ -63,10 +63,10 @@ export const Empty = ThemeWrapper(function (props: EmptyProp) {
     <ColumnView style={{ ...styles.view, ...props.style}} center pointerEvents={props.pointerEvents}>
       { typeof props.image === 'string' ?
         selectStyleType<JSX.Element, EmptyImageType>(props.image, 'default', {
-          default: <Image source={require('../images/empty-image-default.png')} style={imageStyle} />,
-          error: <Image source={require('../images/empty-image-error.png')} style={imageStyle} />,
-          network: <Image source={require('../images/empty-image-netowok.png')} style={imageStyle} />,
-          search: <Image source={require('../images/empty-image-search.png')} style={imageStyle} />,
+          default: <Image source={require('../../images/empty-image-default.png')} style={imageStyle} />,
+          error: <Image source={require('../../images/empty-image-error.png')} style={imageStyle} />,
+          network: <Image source={require('../../images/empty-image-netowok.png')} style={imageStyle} />,
+          search: <Image source={require('../../images/empty-image-search.png')} style={imageStyle} />,
         }) :
         (typeof props.image !== 'undefined' ? <Image source={props.image as ImageSourcePropType} style={imageStyle} /> : <></>)
       }

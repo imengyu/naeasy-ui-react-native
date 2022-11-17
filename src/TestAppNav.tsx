@@ -61,6 +61,7 @@ import { TestThemeScreen } from './base/TestThemeScreen';
 import { TestImagePickerScreen } from './media/TestImagePickerScreen';
 import { TestErrorBoundaryScreen } from './base/TestErrorBoundaryScreen';
 import { TestOverlayScreen } from './feedback/TestOverlayScreen';
+import { TestResultScreen } from './feedback/TestResultScreen';
 
 const Stack = createStackNavigator();
 
@@ -159,6 +160,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestImagePicker" component={TestImagePickerScreen as any} />
         <Stack.Screen name="TestErrorBoundary" component={TestErrorBoundaryScreen as any} />
         <Stack.Screen name="TestOverlay" component={TestOverlayScreen as any} />
+        <Stack.Screen name="TestResult" component={TestResultScreen as any} />
       </Stack.Navigator>
     );
   }
