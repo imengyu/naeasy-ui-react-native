@@ -22,11 +22,29 @@ export class TestToastScreen extends React.PureComponent<Props> {
           </CellGroup>
           <CellGroup title="加载中提示" inset>
             <Cell title="显示加载中提示2秒" showArrow onPress={() => {
-              //返回一个key，可以用于取消
               Toast.loading({
                 content: '加载中请稍后',
                 duration: 2000,
               });
+            }} />
+          </CellGroup>
+          <CellGroup title="动态修改提示" inset>
+            <Cell title="动态修改提示" showArrow onPress={() => {
+              //返回一个实例，可以用于修改
+              const instance = Toast.loading({
+                content: '加载中请稍后',
+                duration: 0,
+              });
+              let time = 0;
+              const timer = setInterval(() => {
+                if (time < 8) {
+                  time++;
+                  instance.updateProps({ content: `加载中 （${time}/8）...` });
+                } else {
+                  instance.close();
+                  clearInterval(timer);
+                }
+              }, 1000);
             }} />
           </CellGroup>
           <CellGroup title="自定义位置" inset>

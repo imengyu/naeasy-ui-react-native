@@ -115,7 +115,6 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
     this.anim = Animated.sequence(animArr);
     this.anim.start(() => {
       if (this.noEndNext) {
-        console.log('noEndNext true');
         this.noEndNext = false;
         return;
       }
@@ -132,10 +131,12 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
     this.setState({
       toast: props,
     });
-    setTimeout(() => {
-      this.noEndNext = true;
-      this.loadAnim();
-    }, 200);
+    if (props.duration !== this.state.toast.duration) {
+      setTimeout(() => {
+        this.noEndNext = true;
+        this.loadAnim();
+      }, 200);
+    }
   }
 
   render() {

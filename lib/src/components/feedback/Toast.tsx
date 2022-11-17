@@ -4,9 +4,20 @@ import Portal from '../../portal';
 import { IconProp } from '../Icon';
 import { ToastContainer, IToastPosition } from './ToastContainer';
 
+export interface ToastPublicInstance {
+  /**
+   * 关闭当前显示的 Toast
+   */
+  close: () => void;
+  /**
+   * 更新当前显示的 Toast 属性。
+   * @param newProps 需要更新的属性。
+   */
+  updateProps: (newProps: ToastProps) => void;
+}
 export interface ToastProps {
   /**
-   * 自动关闭的延时，单位秒
+   * 自动关闭的延时，单位秒。为0不会自动关闭
    */
   duration?: number;
   /**
@@ -73,17 +84,32 @@ let currentDefaultProps = { ...defaultProps } as ToastProps;
 let currentToastId = 0;
 let currentToastRef = createRef<ToastContainer>();
 
-function show(props: ToastProps) {
+function show(props: ToastProps) : ToastPublicInstance {
 
   const { content } = props;
 
+  //自动计算显示时长
   const defaultDuration = (typeof content === 'string') ?
     1000 + content.length / 200 * 10000
     : 2000;
 
+  //公共接口
+  const toastPublicInstance = {
+    close() {
+      Portal.remove(currentToastId);
+      currentToastId = 0;
+    },
+    updateProps(newProps: ToastProps) {
+      currentToastRef.current?.updateProps({
+        ...props,
+        ...newProps,
+      });
+    },
+  } as ToastPublicInstance;
+
   if (currentToastId > 0) {
     currentToastRef.current?.updateProps(props);
-    return;
+    return toastPublicInstance;
   }
 
   currentToastId = Portal.add(
@@ -97,6 +123,8 @@ function show(props: ToastProps) {
       }}
     />,
   );
+
+  return toastPublicInstance;
 }
 function info(text: string) {
   return show({

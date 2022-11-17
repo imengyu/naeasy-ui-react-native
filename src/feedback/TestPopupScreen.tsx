@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView, Image } from 'react-native';
-import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text, rpx } from '../lib';
+import { ScrollView } from 'react-native';
+import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';
 
@@ -151,27 +151,10 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
               </ColumnView>
             )}
           />
-          <Popup
-            show={this.state.showProp10}
-            onClose={() => this.setState({ showProp10: false })}
-            position="center"
-            closeable
-            round
-            backgroundColor="transparent"
-            renderContent={() => (
-              <ColumnView center>
-                <Image
-                  source={{ uri: 'https://image.ttcxx.cn/bgDialogRookieCoupon.png' }}
-                  style={{ width: rpx(700), height: rpx(800) }}
-                />
-              </ColumnView>
-            )}
-          />
 
           <CellGroup title="基础用法" inset>
             <Cell title="普通弹出框，不可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp1: true })} />
             <Cell title="弹出框，可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp2: true })} />
-            <Cell title="自定义透明弹窗，通常可用于广告" showArrow onPress={() => this.setState({ showProp10: true })} />
           </CellGroup>
           <CellGroup title="弹出位置" inset>
             <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp3: true })} />

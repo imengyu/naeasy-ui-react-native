@@ -59,6 +59,8 @@ import { TestStepScreen } from './display/TestStepScreen';
 import { TestPlateKeyBoardScreen } from './form/TestPlateKeyBoardScreen';
 import { TestThemeScreen } from './base/TestThemeScreen';
 import { TestImagePickerScreen } from './media/TestImagePickerScreen';
+import { TestErrorBoundaryScreen } from './base/TestErrorBoundaryScreen';
+import { TestOverlayScreen } from './feedback/TestOverlayScreen';
 
 const Stack = createStackNavigator();
 
@@ -155,6 +157,8 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestPlateKeyBoard" component={TestPlateKeyBoardScreen as any} />
         <Stack.Screen name="TestTheme" component={TestThemeScreen as any} />
         <Stack.Screen name="TestImagePicker" component={TestImagePickerScreen as any} />
+        <Stack.Screen name="TestErrorBoundary" component={TestErrorBoundaryScreen as any} />
+        <Stack.Screen name="TestOverlay" component={TestOverlayScreen as any} />
       </Stack.Navigator>
     );
   }

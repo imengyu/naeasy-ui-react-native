@@ -83,7 +83,9 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="ActionSheet 示例" touchable showArrow onPress={() => this.props.navigation.push('TestActionSheet')} />
             <Cell title="Dialog 示例" touchable showArrow onPress={() => this.props.navigation.push('TestDialog')} />
             <Cell title="Empty 空状态组件示例" touchable showArrow onPress={() => this.props.navigation.push('TestEmpty')} />
+            <Cell title="ErrorBoundary 错误捕获" touchable showArrow onPress={() => this.props.navigation.push('TestErrorBoundary')} />
             <Cell title="Notify 通知" touchable showArrow onPress={() => this.props.navigation.push('TestNotify')} />
+            <Cell title="Overlay 遮罩层" touchable showArrow onPress={() => this.props.navigation.push('TestOverlay')} />
             <Cell title="Popup 弹出层示例" touchable showArrow onPress={() => this.props.navigation.push('TestPopup')} />
             <Cell title="Toast 轻提示示例" touchable showArrow onPress={() => this.props.navigation.push('TestToast')} />
           </CellGroup>

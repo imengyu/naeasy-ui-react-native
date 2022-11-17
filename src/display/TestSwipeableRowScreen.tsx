@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Color, AlertNative, SwipeableRightActionsRow, SwipeableRow, Cell, Button, ColumnView } from '../lib';
+import { CellGroup, Color, AlertNative, SwipeableRightActionsRow, SwipeableRow, Cell, Button, ColumnView, A } from '../lib';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
 import { RootStackParamList } from '../navigation';
@@ -13,6 +13,9 @@ export class TestSwipeableRowScreen extends React.PureComponent<Props> {
       <GestureHandlerRootView>
         <ColumnView>
           <CellGroup title="基础用法">
+            <Text style={{ padding: 10 }}>
+              基于 <A href="https://github.com/software-mansion/react-native-gesture-handler">react-native-gesture-handler</A> 封装实现。
+            </Text>
             <SwipeableRightActionsRow
               rightThreshold={40}
               actions={[

@@ -37,6 +37,11 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
    */
   contentScroll?: boolean;
   /**
+   * 对话框内容自动滚动超高高度，
+   * 默认是 `deviceHeight - deviceHeight / 3`
+   */
+  contentScrollMaxHeight?: number,
+  /**
    * 对话框内容框边距，，默认是 [ 15, 20 ]
    * 支持数字或者数组
    * * 如果是数字，则设置所有方向边距
@@ -108,9 +113,6 @@ const styles = DynamicThemeStyleSheet.create({
   dialog: {
     minWidth: deviceWidth - deviceWidth / 3,
     maxWidth: deviceWidth - deviceWidth / 10,
-  },
-  dialogContentScroll: {
-    maxHeight: deviceHeight - deviceHeight / 3,
   },
   bottomView: {
     position: 'relative',
@@ -196,6 +198,7 @@ export const DialogInner = ThemeWrapper(function (props: Omit<DialogProps, 'show
     title,
     content,
     contentScroll = true,
+    contentScrollMaxHeight = deviceHeight - deviceHeight / 3,
     contentPadding = [ 15, 20 ],
     width,
     onCancel,
@@ -317,7 +320,7 @@ export const DialogInner = ThemeWrapper(function (props: Omit<DialogProps, 'show
         {/* 内容 */}
         {
           contentScroll ?
-            (<ScrollView style={styles.dialogContentScroll}>
+            (<ScrollView style={{ maxHeight: contentScrollMaxHeight }}>
               { typeof content === 'string' ? <Text style={styles.contentText}>{content}</Text> : content }
             </ScrollView>) :
             typeof content === 'string' ? <Text style={styles.contentText}>{content}</Text> : content

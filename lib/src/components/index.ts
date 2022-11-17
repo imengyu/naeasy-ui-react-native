@@ -85,6 +85,7 @@ export * from './nav';
 export * from './ImagePreview';
 export * from './Step';
 export * from './Skeleton';
+export * from './error/ErrorBoundary';
 
 
 
