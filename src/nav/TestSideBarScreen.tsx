@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, SideBar, SideBarItem, Toast, Text, RowView } from '../lib';
+import { ColumnView, Toast, Text, RowView } from '../lib';
 import { ScrollView, StyleSheet } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { SideBar, SideBarItem } from '../../lib/src/components/nav';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSideBar', 'RootStack'>;
 interface State {

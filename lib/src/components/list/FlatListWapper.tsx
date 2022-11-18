@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import { LoadingPage, LoadingPageProps } from "../LoadingPage";
+import { LoadingPage, LoadingPageProps } from "../loading/LoadingPage";
 import { SmartRefreshControl, SmartRefreshControlProps } from "../refresh/android-smart-refresh/SmartRefreshControl";
 import { WhiteSpace } from "../space/WhiteSpace";
 import { ActivityIndicator, FlatList, FlatListProps, ImageSourcePropType, ListRenderItemInfo, RefreshControl, RefreshControlProps, Text, View, ViewStyle } from "react-native";

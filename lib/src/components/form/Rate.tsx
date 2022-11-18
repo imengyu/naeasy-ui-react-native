@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, TextStyle, GestureResponderEvent } from "react-native";
 import { Color, ThemeColor } from "../../styles";
-import { Icon, IconProp } from "../Icon";
+import { Icon, IconProp } from "../basic/Icon";
 import { ThemeWrapper } from "../../theme/Theme";
 
 export interface RateProps {

@@ -2,10 +2,10 @@ import CheckTools from "../../utils/CheckTools";
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { IconButton } from "../button/IconButton";
-import { TextScrollable } from "../TextScrollable";
+import { TextScrollable } from "../typography/TextScrollable";
 import { Color, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
-import { IconProp } from "../Icon";
+import { IconProp } from "../basic/Icon";
 
 export type NavBarButtonTypes = 'back'|'menu'|'search'|'setting';
 

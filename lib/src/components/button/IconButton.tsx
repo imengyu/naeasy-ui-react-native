@@ -3,7 +3,7 @@ import { ViewStyle } from 'react-native';
 import { TouchableHighlight } from "react-native";
 import { selectStyleType } from '../../utils/StyleTools';
 import { Color, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
-import { Icon, IconProp } from "../Icon";
+import { Icon, IconProp } from "../basic/Icon";
 import { ImageButtonShapeType } from './ImageButton';
 import { ThemeWrapper } from '../../theme/Theme';
 

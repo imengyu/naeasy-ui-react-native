@@ -3,7 +3,7 @@ import Portal from '../../portal';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, Animated, ListRenderItemInfo, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { deviceHeight, selectStyleType } from '../../utils';
-import { Icon, IconProp } from '../Icon';
+import { Icon, IconProp } from '../basic/Icon';
 import { Button } from '../button/Button';
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
 import { useDidMountEffect } from '../../hooks/CommonHooks';

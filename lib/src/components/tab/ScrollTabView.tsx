@@ -1,7 +1,8 @@
 import React from "react";
-import { Animated, StyleSheet, ViewStyle, View } from "react-native";
 import PagerView, { PagerViewProps } from "react-native-pager-view";
+import { Animated, StyleSheet, ViewStyle, View } from "react-native";
 import { ScrollableTabBar, ScrollableTabBarProps } from "./ScrollableTabBar";
+import { isIOS } from "../../utils";
 
 export interface ScrollTabViewProps {
   /**
@@ -67,11 +68,20 @@ export class ScrollTabView extends React.Component<ScrollTabViewProps, State> {
           style={styles.pager}
           { ...this.props.pagerProps }
           ref={(v) => { this.pagerRef = v;}}
-          onPageSelected={(e) => this.setState({ currentTab: e.nativeEvent.position })}
-          onPageScroll={Animated.event(
+          onPageSelected={(e) => {
+            this.setState({ currentTab: e.nativeEvent.position });
+            if (!isIOS) {
+              Animated.timing(this.pagerScrollValue, {
+                useNativeDriver: true,
+                toValue: e.nativeEvent.position,
+                duration: 350,
+              }).start();
+            }
+          }}
+          onPageScroll={isIOS ? Animated.event(
             [ { nativeEvent: { position: this.pagerScrollValue, offset: this.pagerScrollValueOffset } } ],
             { useNativeDriver: false }
-          )}
+          ) : undefined}
         >
           { this.props.children }
         </PagerView>

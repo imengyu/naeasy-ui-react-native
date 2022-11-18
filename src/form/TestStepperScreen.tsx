@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { ColumnView, Stepper, Cell, CellGroup } from '../lib';
+import { ColumnView, Cell, CellGroup } from '../lib';
 import { RootStackParamList } from '../navigation';
+import { Stepper } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestStepper'>;
 

@@ -6,10 +6,10 @@ import { deviceHeight, deviceWidth } from "../../utils/StyleConsts";
 import { borderRight, borderTop, displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
 import { FlexView } from "../layout/FlexView";
-import { Popup } from "../Popup";
-import { PopupContainerProps } from "../PopupContainer";
+import { Popup } from "../basic/Popup";
+import { PopupContainerProps } from "../basic/PopupContainer";
 import { ThemeWrapper } from "../../theme/Theme";
-import { Icon } from "../Icon";
+import { Icon } from "../basic/Icon";
 
 export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**

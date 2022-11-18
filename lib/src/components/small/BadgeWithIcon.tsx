@@ -1,6 +1,6 @@
 import React from "react";
 import { ImageSourcePropType, ImageStyle, ViewStyle } from "react-native";
-import { Image } from "../Image";
+import { Image } from "../basic/Image";
 import { RowView } from "../layout/RowView";
 import { Text } from "../typography/Text";
 import { ThemeColor } from "../../styles";

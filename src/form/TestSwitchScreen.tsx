@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Switch, Color, Text } from '../lib';
+import { ColumnView, Color, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { Switch as NativeSwitch } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Switch } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSwitch'>;
 

@@ -1,6 +1,6 @@
 import React, { } from 'react';
-import { Popup } from '../Popup';
-import { PopupContainerProps } from '../PopupContainer';
+import { Popup } from '../basic/Popup';
+import { PopupContainerProps } from '../basic/PopupContainer';
 
 export interface OverlayProps extends Omit<PopupContainerProps, 'renderContent'> {
   children?: React.ReactElement|undefined,

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Radio, RadioGroup, Color, Cell, ColumnView } from '../lib';
+import { CellGroup, Color, Cell, ColumnView } from '../lib';
 import { ScrollView, StyleSheet } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { Radio, RadioGroup } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestRadio'>;
 

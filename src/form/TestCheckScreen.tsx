@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { ScrollView, StyleSheet } from 'react-native';
-import { Color, Cell, CheckBox, CheckBoxGroup, RowView, Button, CellGroup, ImageCheckBox, ColumnView } from '../lib';
+import { Color, Cell, RowView, Button, CellGroup, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
+import { CheckBox, CheckBoxGroup, ImageCheckBox } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCheck'>;
 

@@ -68,6 +68,7 @@ export type RootStackParamList = {
   TestDarkTheme: undefined;
   TestOverlay: undefined;
   TestResult: undefined;
+  TestDropdownMenu: undefined;
 };
 
 /**

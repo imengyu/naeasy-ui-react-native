@@ -4,7 +4,7 @@ import { ActivityIndicator, Image, ImageSourcePropType, ImageStyle, StyleSheet, 
 import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines } from '../../styles';
 import { FonstSizes } from '../../styles/TextStyles';
 import { border, paddingVH, selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
-import { Icon, IconProp } from '../Icon';
+import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
 import { ThemeWrapper } from '../../theme/Theme';
 

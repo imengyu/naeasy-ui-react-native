@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, NavBar, Button, Color, Toast, Text } from '../lib';
+import { ColumnView, Button, Color, Text, Toast } from '../lib';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { NavBar } from '../../lib/src/components/nav';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNavBar', 'RootStack'>;
 

@@ -4,7 +4,7 @@ import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { border, selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
-import { Icon } from "../Icon";
+import { Icon } from "../basic/Icon";
 import { ThemeWrapper } from "../../theme/Theme";
 
 

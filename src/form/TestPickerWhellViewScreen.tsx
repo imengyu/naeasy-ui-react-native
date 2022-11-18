@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, Toast, PickerWhellView, CascadePickerWhellItem, CascadePickerWhellView } from '../lib';
+import { ColumnView, CellGroup, Toast } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';
+import { CascadePickerWhellItem, CascadePickerWhellView, PickerWhellView } from '../../lib/src/components/picker';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPickerWhellView', 'RootStack'>;
 

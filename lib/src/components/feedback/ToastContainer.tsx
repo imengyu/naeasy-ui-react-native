@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import { Color } from '../../styles';
 import { rpx } from '../../utils/StyleConsts';
 import { selectStyleType } from '../../utils/StyleTools';
-import { Icon } from '../Icon';
+import { Icon } from '../basic/Icon';
 import { ToastProps } from './Toast';
 
 export type IToastPosition = 'top'|'bottom'|'center';

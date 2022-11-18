@@ -6,7 +6,7 @@ import { Text, TextInput, TextInputProps, TextStyle, ViewStyle } from "react-nat
 import { TouchableOpacity } from "react-native";
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { selectStyleType } from "../../utils/StyleTools";
-import { Icon } from "../Icon";
+import { Icon } from "../basic/Icon";
 import { ColumnView } from "../layout/ColumnView";
 import { RowView } from "../layout/RowView";
 import { Platform } from "react-native";

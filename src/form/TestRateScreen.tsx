@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, Rate, ColumnView, Text } from '../lib';
+import { Color, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Rate } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestRate'>;
 interface State {

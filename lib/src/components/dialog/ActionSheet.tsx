@@ -5,8 +5,8 @@ import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, 
 import { deviceHeight, rpx } from "../../utils/StyleConsts";
 import { displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
-import { Popup } from "../Popup";
-import { PopupContainerProps } from "../PopupContainer";
+import { Popup } from "../basic/Popup";
+import { PopupContainerProps } from "../basic/PopupContainer";
 import { ThemeWrapper } from "../../theme/Theme";
 import { RowView } from "../layout/RowView";
 import { Button } from "../button/Button";

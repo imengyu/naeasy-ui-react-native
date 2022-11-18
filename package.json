@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "build-lib": "cd lib && tsc",
+    "build-lib": "cd lib && tsc && node ./scripts/copy-after-build.js",
     "publish-lib": "cd lib && npm publish",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "expo-android": "expo start --android",
+    "expo-ios": "expo start --ios",
+    "web": "expo start --web"
   },
   "dependencies": {
     "@newbanker/react-native-measure-text": "^0.2.0",
@@ -23,7 +26,12 @@
     "react-native-pager-view": "^6.1.0",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
-    "react-native-svg": "^13.5.0"
+    "react-native-svg": "^13.5.0",
+    "expo": "~47.0.6",
+    "expo-status-bar": "~1.4.2",
+    "react-native-web": "~0.18.9",
+    "react-dom": "18.1.0",
+    "@expo/webpack-config": "^0.17.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

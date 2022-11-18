@@ -1,7 +1,7 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import { Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
-import { Badge, BadgeProps } from "../Badge";
+import { Badge, BadgeProps } from "../display/Badge";
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 

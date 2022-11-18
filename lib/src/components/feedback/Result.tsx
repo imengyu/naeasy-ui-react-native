@@ -1,6 +1,6 @@
 import { Color } from '@imengyu/naeasy-ui-react-native';
 import React, { } from 'react';
-import { Icon } from '../Icon';
+import { Icon } from '../basic/Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { WhiteSpace } from '../space/WhiteSpace';
 import { Text } from '../typography/Text';

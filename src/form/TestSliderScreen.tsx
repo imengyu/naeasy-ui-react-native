@@ -3,7 +3,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, Slider, Color, RowView, Toast, WhiteSpace, Text } from '../lib';
+import { ColumnView, Color, RowView, Toast, WhiteSpace, Text } from '../lib';
+import { Slider } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSlider', 'RootStack'>;
 interface State {

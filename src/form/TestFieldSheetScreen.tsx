@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Field, Button, ColumnView, WhiteSpace } from '../lib';
+import { CellGroup, Button, ColumnView, WhiteSpace } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { Field } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestField'>;
 

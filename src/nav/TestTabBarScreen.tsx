@@ -1,11 +1,12 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Icon, Image, TabBar, TabBarItem, Text } from '../lib';
+import { ColumnView, Icon, Image, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { Color } from '../lib';
+import { TabBar, TabBarItem } from '../../lib/src/components/nav';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabBar', 'RootStack'>;
 interface State {

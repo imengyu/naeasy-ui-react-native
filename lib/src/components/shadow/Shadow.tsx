@@ -1,1 +1,0 @@
-import { ViewProps } from "react-native";

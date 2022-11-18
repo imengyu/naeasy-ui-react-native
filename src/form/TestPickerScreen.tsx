@@ -1,10 +1,11 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Cell, Picker, Toast, ColumnView } from '../lib';
+import { CellGroup, Cell, Toast, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 import StringTools from '../utils/StringTools';
 import { TestStyles } from '../styles/TestStyles';
+import { Picker } from '../../lib/src/components/picker';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPicker'>;
 

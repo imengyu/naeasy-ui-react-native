@@ -4,9 +4,13 @@ import { ScrollView } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import {
-  Form, CellGroup, Dialog, Field, Button, Switch, CheckBox, CheckBoxGroup,
-  Rate, Radio, RadioGroup, Stepper, XBarSpace, ColumnView, Text,
+  CellGroup, Button, XBarSpace, ColumnView, Text,
 } from '../lib';
+import {
+  Form, Field, Switch, CheckBox, CheckBoxGroup,
+  Rate, Radio, RadioGroup, Stepper,
+} from '../../lib/src/components/form';
+import { Dialog } from '../../lib/src/components/dialog';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestForm', 'RootStack'>;

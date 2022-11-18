@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import { TextStyle, ViewStyle } from 'react-native';
 import Portal from '../../portal';
-import { IconProp } from '../Icon';
+import { IconProp } from '../basic/Icon';
 import { ToastContainer, IToastPosition } from './ToastContainer';
 
 export interface ToastPublicInstance {

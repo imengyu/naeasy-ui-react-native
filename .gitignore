@@ -63,3 +63,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 lib-link
+
+# Expo
+.expo
