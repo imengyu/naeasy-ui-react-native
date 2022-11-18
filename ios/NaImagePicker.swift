@@ -94,27 +94,41 @@ class NaImagePicker: NSObject {
         switch result {
           case .success(let response):
             var url = ""
-            var mimeType = ""
             if response.mediaType == .photo {
               url = response.url.absoluteString
-              mimeType = "image/*"
+              jsArray.append([
+                "isNetworkAsset": photoAsset.isNetworkAsset,
+                "isLocalAsset": photoAsset.isLocalAsset,
+                "isGifAsset": photoAsset.isGifAsset,
+                "path": url,
+                "originalPath": url,
+                "mimeType": "image/*",
+                "videoThumbnailPath": "",
+                "duration": photoAsset.videoDuration,
+                "width": photoAsset.imageSize.width,
+                "height": photoAsset.imageSize.height,
+                "size": photoAsset.fileSize,
+              ])
             } else {
               url = response.url.absoluteString
-              mimeType = "video/*"
+
+              let info = self.getVideoInfo(videoUrl: response.url)
+
+              jsArray.append([
+                "isNetworkAsset": photoAsset.isNetworkAsset,
+                "isLocalAsset": photoAsset.isLocalAsset,
+                "isGifAsset": photoAsset.isGifAsset,
+                "path": url,
+                "originalPath": url,
+                "mimeType": "video/*",
+                "videoThumbnailPath": "",
+                "duration": info["duration"] as! Double,
+                "width": info["width"] as! Double,
+                "height": info["height"] as! Double,
+                "size": info["size"] as! Double,
+              ])
             }
-            jsArray.append([
-              "isNetworkAsset": photoAsset.isNetworkAsset,
-              "isLocalAsset": photoAsset.isLocalAsset,
-              "isGifAsset": photoAsset.isGifAsset,
-              "path": url,
-              "originalPath": url,
-              "mimeType": mimeType,
-              "videoThumbnailPath": "",
-              "duration": photoAsset.videoDuration,
-              "width": photoAsset.imageSize.width,
-              "height": photoAsset.imageSize.height,
-              "size": photoAsset.fileSize,
-            ])
+            
           case .failure(let error):
             print(error.localizedDescription)
         }
