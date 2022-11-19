@@ -22,6 +22,8 @@ export function TestCheckScreen(_props: Props) {
   const [ checked3, setChecked3 ] = useState<string[]>([ '0' ]);
   const [ checked4, setChecked4 ] = useState<string[]>([ '1', '2' ]);
   const [ checked5, setChecked5 ] = useState<string[]>([ '0', '1' ]);
+  const [ checked6, setChecked6 ] = useState<string[]>([ '0' ]);
+  const [ checked7, setChecked7 ] = useState<string[]>([ '0' ]);
 
   return (
     <ScrollView>
@@ -59,7 +61,7 @@ export function TestCheckScreen(_props: Props) {
         </CellGroup>
         <CellGroup title="自定义颜色" inset>
           <ColumnView style={{ padding: 10 }}>
-            <CheckBoxGroup value={checked3} onValueChange={(v) => setChecked3(v)}>
+            <CheckBoxGroup value={checked7} onValueChange={(v) => setChecked7(v)}>
               <CheckBox name="0" color={Color.danger} text="复选框 1" style={styles.radioStyle} />
               <CheckBox name="1" color={Color.success} text="复选框 2" style={styles.radioStyle} />
             </CheckBoxGroup>
@@ -67,19 +69,19 @@ export function TestCheckScreen(_props: Props) {
         </CellGroup>
         <CellGroup title="自定义图片" inset>
           <ColumnView style={{ padding: 10 }}>
-            <CheckBoxGroup value={checked3} onValueChange={(v) => setChecked3(v)}>
+            <CheckBoxGroup value={checked6} onValueChange={(v) => setChecked6(v)}>
               <ImageCheckBox name="0" text="复选框 1" style={styles.radioStyle} />
               <ImageCheckBox name="1" boxImage={require('../images/test/test-check-box.png')} checkImage={require('../images/test/test-check.png')} text="复选框 2" style={styles.radioStyle} />
             </CheckBoxGroup>
           </ColumnView>
         </CellGroup>
         <CellGroup title="配合单元格组件使用" inset>
-          <CheckBoxGroup value={checked4} onValueChange={(v) => setChecked4(v)} renderChildren={(wrapper) => ([
-            <Cell key="1">{wrapper(<CheckBox checkPosition="right" block name="1" text="复选框 1" />)}</Cell>,
-            <Cell key="2">{wrapper(<CheckBox checkPosition="right" block name="2" text="复选框 2" />)}</Cell>,
-            <Cell key="3">{wrapper(<CheckBox checkPosition="right" block name="3" text="复选框 3" />)}</Cell>,
-            <Cell key="4">{wrapper(<CheckBox checkPosition="right" block name="4" text="复选框 4" />)}</Cell>,
-          ])} />
+          <CheckBoxGroup value={checked4} onValueChange={(v) => setChecked4(v)}>
+            <Cell key="1"><CheckBox checkPosition="right" block name="1" text="复选框 1" /></Cell>
+            <Cell key="2"><CheckBox checkPosition="right" block name="2" text="复选框 2" /></Cell>
+            <Cell key="3"><CheckBox checkPosition="right" block name="3" text="复选框 3" /></Cell>
+            <Cell key="4"><CheckBox checkPosition="right" block name="4" text="复选框 4" /></Cell>
+          </CheckBoxGroup>
         </CellGroup>
         <CellGroup title="切换选择" inset>
           <ColumnView style={{ padding: 10 }}>

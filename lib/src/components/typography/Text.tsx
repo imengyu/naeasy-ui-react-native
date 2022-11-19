@@ -30,6 +30,10 @@ export interface TextProps extends ReactNativeTextProps {
    */
   weight?: "normal" | "bold" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
   /**
+   * 宽度
+   */
+  width?: number;
+  /**
    * 是否是斜体
    */
   italic?: boolean;
@@ -106,6 +110,7 @@ export const Text = ThemeWrapper(function (props: TextProps) {
     fontSize: props.autoSize === true ? getAutoSize() : solveSize(props.size),
     fontStyle: props.italic ? 'italic' : 'normal',
     fontWeight: props.bold ? 'bold' : props.weight,
+    width: props.width,
     textDecorationLine: textDecorationLine,
   } as TextStyle;
 

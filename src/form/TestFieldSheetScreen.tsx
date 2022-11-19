@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Button, ColumnView, WhiteSpace } from '../lib';
+import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, ThemeSelector, rpx } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Field } from '../../lib/src/components/form';
@@ -18,6 +18,12 @@ export function TestFieldScreen(_props: Props) {
   const [ value9, setValue9] = useState('我发现很多混得不好的人看得都很开。也不知道他们是因为看得透彻而不屑于世俗的成功，还是因为不成功而不得不看得开。');
   const [ value10, setValue10] = useState('殷勤花下同携手。更尽杯中酒。美人不用敛蛾眉。');
   const [ value11, setValue11] = useState('');
+  const [ value12, setValue12] = useState('');
+  const [ value13, setValue13] = useState('');
+  const [ value14, setValue14] = useState('');
+  const [ value15, setValue15] = useState('');
+  const [ value16, setValue16] = useState('');
+  const [ value17, setValue17] = useState('');
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={60}>
@@ -41,6 +47,64 @@ export function TestFieldScreen(_props: Props) {
             <Field label="用户名" required showRequiredBadge placeholder="请输入用户名" error value={value6} onChangeText={setValue6} />
             <Field label="用户名" required showRequiredBadge placeholder="请输入用户名" errorMessage="请输入用户名" value={value7} onChangeText={setValue7} />
           </CellGroup>
+          <CellGroup title="带清除按钮" inset>
+            <Field label="标题" clearButton clearButtonMode="unless-editing" placeholder="请输入文字" value={value6} onChangeText={setValue6} />
+          </CellGroup>
+          <CellGroup title="不同的自定义样式" inset>
+            <Field placeholder="无左侧标签" value={value12} onChangeText={setValue12} />
+            <Field label="我是标签我是标签我是标签" placeholder="自定义标签与输入框宽度占比" labelFlex={2} inputFlex={3} value={value12} onChangeText={setValue12} />
+            <Field label="无冒号" colon={false} placeholder="请输入文本" value={value17} onChangeText={setValue17} />
+            <ColumnView padding={10}>
+              <Field placeholder="自定义样式1" fieldStyle={{
+                paddingVertical: rpx(10),
+                paddingHorizontal: rpx(20),
+                borderBottomColor: ThemeSelector.color(Color.border),
+                borderBottomWidth: rpx(2),
+                backgroundColor: ThemeSelector.color(Color.white),
+              }} activeFieldStyle={{
+                borderBottomColor: ThemeSelector.color(Color.primary),
+              }} value={value12} onChangeText={setValue12} />
+              <WhiteSpace size="sm" />
+              <Field placeholder="自定义样式2" fieldStyle={{
+                paddingVertical: rpx(10),
+                paddingHorizontal: rpx(20),
+                borderRadius: 5,
+                borderWidth: rpx(2),
+                borderColor: ThemeSelector.color(Color.border),
+              }} activeFieldStyle={{
+                borderColor: ThemeSelector.color(Color.primary),
+              }} value={value12} onChangeText={setValue12} />
+              <WhiteSpace size="sm" />
+              <Field placeholder="自定义样式3" fieldStyle={{
+                paddingVertical: rpx(10),
+                paddingHorizontal: rpx(20),
+                borderRadius: 5,
+                backgroundColor: ThemeSelector.color(Color.grey),
+              }}value={value12} onChangeText={setValue12} />
+            </ColumnView>
+          </CellGroup>
+          <CellGroup title="输入文本右对齐+后缀" inset>
+            <Field
+              label="身高"
+              colon={false}
+              type="number"
+              inputAlign="right"
+              placeholder="请输入身高"
+              suffix={<Text width={30} align="right" color={Color.black}>cm</Text>}
+              value={value13}
+              onChangeText={setValue13}
+            />
+            <Field
+              label="体重"
+              colon={false}
+              type="number"
+              inputAlign="right"
+              placeholder="请输入体重"
+              suffix={<Text width={30} align="right" color={Color.black}>kg</Text>}
+              value={value14}
+              onChangeText={setValue14}
+            />
+          </CellGroup>
           <CellGroup title="插入按钮" inset>
             <Field
               label="短信验证码"
@@ -52,8 +116,25 @@ export function TestFieldScreen(_props: Props) {
               renderRightButton={() => (<Button size="small" type="primary">发送验证码</Button>)}
             />
           </CellGroup>
+          <CellGroup title="添加图标" inset>
+            <Field
+              center
+              renderLeftIcon={() => <Icon icon="pad" style={{ marginRight: 10 }} />}
+              placeholder="请输入手机号"
+              value={value15}
+              onChangeText={setValue15}
+            />
+            <Field
+              center
+              placeholder="请输入短信验证码"
+              value={value16}
+              onChangeText={setValue16}
+              renderLeftIcon={() => <Icon icon="lock" style={{ marginRight: 10 }} />}
+              renderRightButton={() => (<Button size="small" type="primary">发送验证码</Button>)}
+            />
+          </CellGroup>
           <CellGroup title="多行文字" inset>
-            <Field label="多行文字" multiline placeholder="请输入"  value={value9} onChangeText={setValue9} />
+            <Field label="多行文字" multiline placeholder="请输入" value={value9} onChangeText={setValue9} />
           </CellGroup>
           <CellGroup title="显示字数统计" inset>
             <Field label="多行文字" multiline placeholder="请输入" showWordLimit maxLength={100} value={value10} onChangeText={setValue10} />

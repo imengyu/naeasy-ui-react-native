@@ -6,7 +6,6 @@ import { RowView } from "../layout/RowView";
 import { ThemeWrapper } from "../../theme/Theme";
 import { CheckBoxDefaultButton } from "./CheckBox";
 
-
 export interface RadioProps {
   /**
    * 是否选中 单选框
@@ -80,34 +79,32 @@ export interface RadioProps {
   renderButton?: (on: boolean) => JSX.Element;
 }
 
+
 /**
  * 单选框
  */
 export const Radio = ThemeWrapper(function (props: RadioProps) {
 
-  function switchOn() {
-    if (props.disabled)
-      return;
-    if (typeof props.onValueChange === 'function')
-      props.onValueChange(!props.value);
-  }
+
 
   const text = props.children || props.text;
   const {
     checkPosition = 'left',
+    name,
     disabled = false,
-    value = false,
+    value: valueProp = false,
     block = false,
     textColor = Color.text,
     disabledColor = Color.grey,
     color,
     shape,
     style = {},
+    onValueChange,
   } = props;
 
-  function renderButtonStub() {
+  function renderButtonStub(value: boolean) {
     return props.renderButton ?
-      props.renderButton(value ) :
+      props.renderButton(value) :
       <CheckBoxDefaultButton
         on={value}
         disabled={disabled}
@@ -115,27 +112,58 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
         color={ThemeSelector.color(color)}
         disableBorderColor={ThemeSelector.color(disabledColor)}
         disableColor={ThemeSelector.color(disabledColor)}
-        disableCheckColor={ThemeSelector.color(disabledColor)}
+        iconSize={10}
         type="radio"
       />;
   }
 
-  return (
-    <RowView touchable align="center" onPress={switchOn} style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}>
-      { checkPosition === 'left' ? renderButtonStub() : <></> }
-      <Text style={[
-        styles.radioText,
-        props.textStyle,
-        {
-          color: ThemeSelector.color(disabled ? Color.grey : (textColor)),
-          display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
-        },
-      ]}>{text}</Text>
-      { checkPosition === 'right' ? renderButtonStub() : <></> }
-    </RowView>
-  );
+  return <RadioGroupContext.Consumer>{context => {
+    let value = valueProp;
+
+    if (context) {
+      if (!name) {
+        console.log('Radio in RadioGroup need name prop!');
+        return;
+      }
+      //Set value from parent
+      value = context.value === name;
+    }
+
+    function switchOn() {
+      if (context)
+        context.onRadioCheck(name as string);
+      else if (typeof onValueChange === 'function')
+        onValueChange(!value);
+    }
+
+    return (
+      <RowView
+        touchable
+        activeOpacity={0.75}
+        align="center"
+        onPress={disabled ? undefined : switchOn}
+        style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}
+      >
+        { checkPosition === 'left' ? renderButtonStub(value) : <></> }
+        <Text style={[
+          styles.radioText,
+          props.textStyle,
+          {
+            color: ThemeSelector.color(disabled ? Color.grey : (textColor)),
+            display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+          },
+        ]}>{text}</Text>
+        { checkPosition === 'right' ? renderButtonStub(value) : <></> }
+      </RowView>
+    );
+  }}</RadioGroupContext.Consumer>;
 });
 
+export interface RadioGroupContextInfo {
+  value: string,
+  disabled: boolean,
+  onRadioCheck: (name: string|undefined) => void;
+}
 export interface RadioGroupProps {
   /**
    * 当前单选框组选中的项目
@@ -149,71 +177,30 @@ export interface RadioGroupProps {
    * 用户更改选中时发生
    */
   onValueChange?: (value: string|number) =>  void;
-    /**
-   * 渲染子check事件，这通常可以用于check不在一级子的情况, 需要使用 wapper 包装你的 复选框，才能使它响应数据<br/>
-   * 例如：
-   * ```
-   * <RadioGroup value={checked4} onChange={(v) => setChecked4(v)} renderChildren={(wrapper, ) => ([
-   *   <Cell key="1" title="单选框 1" center renderRight={() => wrapper(<Radio name="0" />)} />,
-   *   <Cell key="2" title="单选框 2" center renderRight={() => wrapper(<Radio name="1" />)} />,
-   *   <Cell key="3" title="单选框 2" center renderRight={() => wrapper(<Radio name="2" />)} />,
-   * ])} />
-   * ```
-   */
-  renderChildren?: (wapperRadio: (radio: JSX.Element) => JSX.Element) => JSX.Element|JSX.Element[];
 
   children?: JSX.Element[];
 }
+
+export const RadioGroupContext = React.createContext<RadioGroupContextInfo|null>(null);
 
 /**
  * 单选框组
  */
 export function RadioGroup(props: RadioGroupProps) {
 
-  const radioArrays = [] as JSX.Element[];
-  const disabled = props.disabled === true;
-
   function onValueChange(name: string|number|undefined) {
     if (typeof props.onValueChange === 'function')
       props.onValueChange(name || '');
   }
 
-  props.children?.forEach((item) => {
-    const name = item.props.name;
-    if (name) {
-      radioArrays.push(
-        React.cloneElement(
-          item,
-          {
-            key: name,
-            value: props.value === name,
-            disabled: disabled ? true : undefined,
-            onValueChange: () => onValueChange(name),
-          } as RadioProps
-        )
-      );
-    }
-  });
-
-  if (props.renderChildren) {
-    const ret = props.renderChildren((radio) => React.cloneElement(
-      radio,
-      {
-        key: radio.props.name,
-        value: props.value === radio.props.name,
-        disabled: disabled ? true : undefined,
-        onValueChange: () => onValueChange((radio.props as RadioProps).name),
-      } as RadioProps
-    ));
-
-    if (ret instanceof Array)
-      radioArrays.push(...ret);
-    else
-      radioArrays.push(ret);
-  }
-
   return (
-    <>{radioArrays}</>
+    <RadioGroupContext.Provider value={{
+      value: props.value as string,
+      disabled: props.disabled === true,
+      onRadioCheck: onValueChange,
+    }}>
+      { props.children }
+    </RadioGroupContext.Provider>
   );
 }
 

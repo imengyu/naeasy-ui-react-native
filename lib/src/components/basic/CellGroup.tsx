@@ -64,9 +64,9 @@ const styles = DynamicThemeStyleSheet.create({
  */
 export const CellGroup = ThemeWrapper(function (props: CellGroupProp) {
   const titleStyle = {
-    backgroundColor: props.titleDark ? Color.lightBorder : undefined,
-    paddingHorizontal: props.inset ? rpx(48) : rpx(12),
     ...styles.title,
+    backgroundColor: props.titleDark ? Color.lightBorder : undefined,
+    paddingHorizontal: props.inset ? rpx(48) : rpx(35),
     ...props.titleStyle,
   } as TextStyle;
   return (

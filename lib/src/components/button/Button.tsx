@@ -91,7 +91,7 @@ export interface ButtonProp {
    */
   style?: ViewStyle,
   /**
-   * 自定义图标样式 TODO: fix
+   * 自定义图标样式
    */
   iconStyle?: TextStyle|ImageStyle,
   /**
@@ -131,7 +131,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   icon: {
-    marginHorizontal: 6,
+  },
+  iconImage: {
+    width: 18,
+    height: 20,
   },
 });
 
@@ -231,8 +234,8 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
       return props.renderIcon(true, props.icon);
     if (typeof props.icon === 'string') {
       if (props.icon.startsWith('http'))
-        return <Image key="leftIcon" style={[ styles.icon, marginStyle, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
-      return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{
+        return <Image key="leftIcon" style={[ styles.icon, styles.iconImage, marginStyle, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
+      return <Icon key="leftIcon" name={props.icon} {...props.iconProps} style={{
         ...styles.titleIcon,
         ...marginStyle,
         ...props.iconStyle as TextStyle,
@@ -240,7 +243,7 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
       }} color={(speicalStyle as TextStyle).color as string} />;
     }
     if (typeof props.icon === 'object' || typeof props.icon === 'number')
-      return <Image key="leftIcon" style={[ styles.icon, marginStyle, props.iconStyle as ImageStyle ]} source={props.icon} />;
+      return <Image key="leftIcon" style={[ styles.icon,  styles.iconImage, marginStyle, props.iconStyle as ImageStyle ]} source={props.icon} />;
     return <View key="leftIcon" />;
   }
 

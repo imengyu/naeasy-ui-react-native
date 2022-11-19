@@ -10,6 +10,11 @@ export interface IconProp {
    *
    * 可使用 IconUtils.configIconMap 函数添加自己的图标名称映射。
    */
+  name?: string,
+  /**
+   * 图标的名称。
+   * @deprecated 已弃用，请使用 `name` 属性。
+   */
   icon?: string,
   /**
    * 图标文字大小
@@ -87,28 +92,37 @@ export const IconUtils = {
 export const Icon = ThemeWrapper(function (props: IconProp) {
 
   const { icon, svgProps, imageProps, style, color } = props;
+  let name = props.name;
 
-  if (!icon)
-    return <></>;
+  if (!name)
+    name = icon;
+  if (!name)
+    return renderFail();
 
   const size = props.size || 20;
+  const iconData = iconMap[name || ''];
 
-  const iconData = iconMap[icon || ''];
+  if (!iconData)
+    return renderFail();
+
   const colorFinal = ThemeSelector.color(color, Color.black);
 
+  //url svg
   function renderSvgUri() {
     return <SvgFromUri uri={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
+  //xml文本式svg
   function renderSvgXml() {
     return <SvgFromXml xml={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
-
+  //图片式
   function renderImage(source: ImageSourcePropType) {
     return <Image style={[
       { width: size, height: size },
       style as ImageStyle,
     ]} source={source} resizeMode="contain" { ...imageProps } />;
   }
+  //字体式
   function renderText() {
     return <Text style={{
       color: colorFinal,
@@ -119,9 +133,12 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   }
 
   if (typeof iconData === 'string') {
-    if (iconData.length === 1) return renderText();
-    else if (iconData.startsWith('<svg')) return renderSvgXml();
-    else if (iconData.startsWith('http')) return iconData.endsWith('.svg') ? renderSvgUri() : renderImage({ uri: iconData });
+    if (iconData.length === 1)
+      return renderText();
+    else if (iconData.startsWith('<svg'))
+      return renderSvgXml();
+    else if (iconData.startsWith('http'))
+      return iconData.endsWith('.svg') ? renderSvgUri() : renderImage({ uri: iconData });
   } else if (iconData) {
     if (iconData.svg)
       return <LocalSvg asset={iconData.source} width={size} height={size} style={style} {...svgProps} />;
@@ -129,5 +146,9 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
       return renderImage(iconData.source);
   }
 
-  return <Text style={{ color: '#f00' }}>RenderFail:{iconData}</Text>;
+  function renderFail() {
+    return <Text style={{ color: '#f00' }}>IconFail:{name || 'empty'}</Text>;
+  }
+
+  return renderFail();
 });

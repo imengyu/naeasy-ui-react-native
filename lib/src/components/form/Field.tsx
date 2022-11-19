@@ -12,6 +12,7 @@ import { RowView } from "../layout/RowView";
 import { Platform } from "react-native";
 import { Form } from "./Form";
 import { ThemeRender } from "../../theme/Theme";
+import { rpx } from "@imengyu/naeasy-ui-react-native";
 
 export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**
@@ -61,7 +62,7 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**
    * 是否启用清除图标，点击清除图标后会清空输入框
    */
-  clearable?: boolean;
+  clearButton?: boolean;
   /**
    * 左侧文本的宽度
    */
@@ -102,6 +103,10 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    * 输入框颜色
    */
   inputColor?: ThemeColor;
+  /**
+   * 输入框文本对齐。默认： left
+   */
+  inputAlign?: 'left'|'center'|'right';
   /**
    * 输入框禁用颜色
    */
@@ -149,6 +154,14 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    * 是否显左边标题，默认是
    */
   showLabel?: boolean;
+  /**
+   * 输入框自定义后缀
+   */
+  suffix?: JSX.Element;
+  /**
+   * 输入框前缀，这个前缀是显示在 label 后面，输入框前面
+   */
+  prefix?: JSX.Element;
   /**
    * 点击回调
    */
@@ -198,15 +211,8 @@ interface State {
 
 const styles = DynamicThemeStyleSheet.create({
   field: {
-    ...Platform.select({
-      android: {
-        paddingVertical: 8,
-      },
-      ios: {
-        paddingVertical: 12,
-      },
-    }),
-    paddingHorizontal: 16,
+    paddingVertical: rpx(16),
+    paddingHorizontal: rpx(32),
   },
   whiteItemField: {
     backgroundColor: DynamicColor(Color.white),
@@ -239,16 +245,8 @@ const styles = DynamicThemeStyleSheet.create({
     width: '100%',
   },
   input: {
-    ...Platform.select({
-      android: {
-        padding: 0,
-      },
-      ios: {
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-      },
-    }),
     flex: 1,
+    paddingVertical: 0,
   },
   errorMessage: {
     fontSize: 12,
@@ -400,16 +398,18 @@ export class Field extends React.Component<FieldProps, State> {
       inputFlex = 5,
       error = false,
       colon = true,
-      fieldStyle,
-      activeFieldStyle,
+      fieldStyle = {},
+      activeFieldStyle = {},
       labelStyle,
       inputStyle,
       required,
       center,
       showWordLimit,
-      clearable,
+      clearButton,
+      clearButtonMode,
       labelWidth,
       labelAlign = "left",
+      inputAlign = "left",
       type = "text",
       disabled = false,
       editable = true,
@@ -417,6 +417,8 @@ export class Field extends React.Component<FieldProps, State> {
       showLabel = true,
       activeInputStyle,
       showRequiredBadge = true,
+      suffix,
+      prefix,
       onPress,
       renderLeftIcon,
       renderRightButton,
@@ -428,13 +430,13 @@ export class Field extends React.Component<FieldProps, State> {
         {() => (
           <RowView
             touchable={typeof onPress === 'function'} onPress={onPress}
-            style={{ ...styles.field, ...fieldStyle, ...(this.state.focused ? activeFieldStyle : {}) }}
+            style={[ styles.field, fieldStyle, (this.state.focused ? activeFieldStyle : {}) ]}
             center={center}
           >
             { /* 左边的标签区域 */ }
-            { (showLabel === false || (CheckTools.isNullOrEmpty(label) && !renderLeftIcon)) ? <></> : <RowView flex={labelFlex}>
-              { renderLeftIcon ? renderLeftIcon() : <></> }
+            { (showLabel === false || (CheckTools.isNullOrEmpty(label) && !renderLeftIcon)) ? <></> : <RowView align="center" flex={labelFlex}>
               { required && showRequiredBadge ? <Text style={styles.requiredMark}>*</Text> : <></> }
+              { renderLeftIcon ? renderLeftIcon() : <></> }
               {
                 CheckTools.isNullOrEmpty(label) ?
                   <View style={labelStyle} /> :
@@ -453,6 +455,7 @@ export class Field extends React.Component<FieldProps, State> {
             { /* 输入框区域 */ }
             <ColumnView flex={inputFlex}>
               <RowView align="center" style={styles.inputWapper2}>
+                { prefix }
                 { renderLeftButton ? renderLeftButton() : <></> }
                 {
                   this.props.renderInput ?
@@ -467,7 +470,10 @@ export class Field extends React.Component<FieldProps, State> {
                         styles.input,
                         inputStyle,
                         (this.state.focused ? activeInputStyle : {}),
-                        { color: ThemeSelector.color(disabled ? inputDisableColor : (error ? Color.danger : inputColor)) },
+                        {
+                          color: ThemeSelector.color(disabled ? inputDisableColor : (error ? Color.danger : inputColor)),
+                          textAlign: inputAlign,
+                        },
                       ]}
                       placeholderTextColor={error ? ThemeSelector.color(Color.danger) : (this.props.placeholderTextColor || ThemeSelector.color(Color.textSecond) )}
                       keyboardType={selectStyleType(type, 'text', {
@@ -495,6 +501,7 @@ export class Field extends React.Component<FieldProps, State> {
                       onFocus={this.onFocus}
                     />
                 }
+                { suffix }
                 { renderRightButton ? renderRightButton() : <></> }
               </RowView>
               { CheckTools.isNullOrEmpty(errorMessage) ? <></> : <Text style={styles.errorMessage}>{errorMessage}</Text> }
@@ -503,9 +510,13 @@ export class Field extends React.Component<FieldProps, State> {
 
             { /* 清除按钮 */ }
             {
-              clearable ?
+              (clearButton && (
+                clearButtonMode === 'always'
+                || (clearButtonMode === 'while-editing' && this.state.focused))
+                || (clearButtonMode === 'unless-editing' && this.props.value !== '')
+              ) ?
                 <TouchableOpacity style={styles.clearIcon} onPress={this.onClear}>
-                  <Icon icon="delete-filling" />
+                  <Icon icon="delete-filling" color={Color.grey} />
                 </TouchableOpacity> :
                 <></>
             }

@@ -12,7 +12,7 @@ const styles = DynamicThemeStyleSheet.create({
   },
   bold: {
     color: DynamicColor(Color.text),
-    fontWeight: '500',
+    fontWeight: 'bold',
   },
   underline: {
     color: DynamicColor(Color.text),

@@ -74,7 +74,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
                 <Field name="password" label="密码" placeholder="请输入密码"  type="password" />
                 <Field name="passwordRepeat" label="密码" placeholder="再输入一次"  type="password" />
               </Form>
-              <ColumnView padding={10}>
+              <ColumnView padding={20}>
                 <Button type="primary" shape="round" radius={5} onPress={() => this.formRef1?.submit(true)}>提交</Button>
                 <WhiteSpace size="sm" />
                 <Button type="default" shape="round" radius={5} onPress={() => this.formRef1?.reset()}>重置</Button>
@@ -115,7 +115,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
                 <Field name="validator" label="文本" placeholder="自定义校验(输入1正确，其他错误)" />
                 <Field name="async" label="文本" placeholder="异步函数校验(输入1正确，其他错误)" />
               </Form>
-              <ColumnView padding={10}>
+              <ColumnView padding={20}>
                 <Button type="primary" shape="round" radius={5} onPress={() => this.formRef2?.submit(true)}>提交</Button>
               </ColumnView>
             </CellGroup>
@@ -162,7 +162,7 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
                 <Field name="stepper" label="步进器" renderInput={() => <Stepper />} />
                 <Field name="rate" label="评分" renderInput={() => <Rate />} />
               </Form>
-              <ColumnView padding={10}>
+              <ColumnView padding={20}>
                 <Button type="primary" shape="round" radius={5} onPress={() => this.formRef3?.submit(true)}>提交</Button>
               </ColumnView>
             </CellGroup>

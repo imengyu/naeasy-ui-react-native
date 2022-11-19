@@ -62,6 +62,7 @@ import { TestImagePickerScreen } from './media/TestImagePickerScreen';
 import { TestErrorBoundaryScreen } from './base/TestErrorBoundaryScreen';
 import { TestOverlayScreen } from './feedback/TestOverlayScreen';
 import { TestResultScreen } from './feedback/TestResultScreen';
+import { ThemeSelector, Color } from './lib';
 
 const Stack = createStackNavigator();
 
@@ -72,6 +73,7 @@ export class TestAppNav extends React.Component {
         screenOptions={{
           presentation: 'card',
           headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: ThemeSelector.color(Color.background) },
           ...TransitionPresets.SlideFromRightIOS,
           ...Platform.select<StackNavigationOptions>({
             android: {

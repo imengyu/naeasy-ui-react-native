@@ -94,7 +94,8 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     disabled = false,
     borderColor,
     checkColor,
-    value = false,
+    name,
+    value: valueProp = false,
     block = false,
     color,
     shape,
@@ -103,14 +104,8 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     onValueChange,
   } = props;
 
-  function switchOn() {
-    if (disabled)
-      return;
-    if (typeof onValueChange === 'function')
-      onValueChange(!value);
-  }
 
-  function renderButtonStub() {
+  function renderButtonStub(value: boolean) {
     return (
       props.renderButton ?
         props.renderButton(value) :
@@ -127,22 +122,56 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
   }
 
   return (
-    <RowView touchable activeOpacity={0.85} onPress={switchOn} style={[ block ? styles.checkBoxFull : styles.checkBox, style ]} center>
-      { checkPosition === 'left' ? renderButtonStub() : <></> }
-      {
-        (typeof text === 'string' && text) ?
-          (<Text style={[
-            styles.checkText,
-            props.textStyle,
-            {
-              color: ThemeSelector.color(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
-              display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
-            },
-          ]}>{text}</Text>) :
-          (text as JSX.Element || <></>)
+    <CheckBoxGroupContext.Consumer>{context => {
+
+      let value = valueProp;
+
+      if (context) {
+        if (!name) {
+          console.log('CheckBox in CheckBoxGroup need name prop!');
+          return;
+        }
+        //Set value from parent
+        value = context.value && context.value.indexOf(name) >= 0;
+
+        //Register to CheckBoxGroup
+        context.onAddItem(name, disabled);
       }
-      { checkPosition === 'right' ? renderButtonStub() : <></> }
-    </RowView>
+
+      function switchOn() {
+        if (disabled)
+          return;
+        if (context)
+          context.onValueChange(name, !value);
+        else if (typeof onValueChange === 'function')
+          onValueChange(!value);
+      }
+
+      return (
+        <RowView
+          touchable
+          activeOpacity={0.75}
+          onPress={disabled ? undefined : switchOn}
+          style={[ block ? styles.checkBoxFull : styles.checkBox, style ]}
+          center
+        >
+          { checkPosition === 'left' ? renderButtonStub(value) : <></> }
+          {
+            (typeof text === 'string' && text) ?
+              (<Text style={[
+                styles.checkText,
+                props.textStyle,
+                {
+                  color: ThemeSelector.color(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
+                  display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+                },
+              ]}>{text}</Text>) :
+              (text as JSX.Element || <></>)
+          }
+          { checkPosition === 'right' ? renderButtonStub(value) : <></> }
+        </RowView>
+      );
+    }}</CheckBoxGroupContext.Consumer>
   );
 });
 
@@ -159,20 +188,8 @@ export interface CheckBoxGroupProps {
    * 用户更改选中时发生
    */
   onValueChange?: (value: string[]) =>  void;
-  /**
-   * 渲染子check事件，这通常可以用于check不在一级子的情况, 需要使用 wapperCheckBox 包装你的 复选框，才能使它相应数据<br/>
-   * 例如：
-   * ```
-   * <CheckBoxGroup value={checked4} onValueChange={(v) => setChecked4(v)} renderChildren={(wrapper) => ([
-   *   <Cell key="1" title="复选框 1" center renderRight={() => wrapper(<CheckBox name="0" />)} />,
-   *   <Cell key="2" title="复选框 2" center renderRight={() => wrapper(<CheckBox name="1" />)} />,
-   *   <Cell key="3" title="复选框 2" center renderRight={() => wrapper(<CheckBox name="2" />)} />,
-   * ])} />
-   * ```
-   */
-  renderChildren?: (wapperCheckBox: (check: JSX.Element) => JSX.Element) => JSX.Element|JSX.Element[];
 
-  children?: JSX.Element[];
+  children?: JSX.Element[]|React.ReactElement;
 }
 export interface CheckBoxGroupToggleOptions {
   /**
@@ -185,15 +202,22 @@ export interface CheckBoxGroupToggleOptions {
   skipDisabled: boolean,
 }
 
+export interface CheckBoxGroupContextInfo {
+  value: string[],
+  onValueChange: (name: string|undefined, v: boolean) => void;
+  onAddItem: (name: string, disabled: boolean) => void;
+}
+export const CheckBoxGroupContext = React.createContext<CheckBoxGroupContextInfo|null>(null);
+
 /**
  * 复选框组
  */
 export class CheckBoxGroup extends React.PureComponent<CheckBoxGroupProps> {
 
 
-  onValueChange(name: string|undefined, v: boolean) {
+  onValueChange(name: string|undefined, checked: boolean) {
     const valueNew = (this.props.value || []).concat();
-    if (v)
+    if (checked)
       ArrayUtils.addOnce(valueNew, name as string);
     else
       ArrayUtils.remove(valueNew, name as string);
@@ -236,55 +260,17 @@ export class CheckBoxGroup extends React.PureComponent<CheckBoxGroupProps> {
   render(): React.ReactNode {
     ArrayUtils.empty(this.allCheckNames);
     ArrayUtils.empty(this.allCheckDisabled);
-
-    const disabled = this.props.disabled === true;
-    const checkArrays = [] as JSX.Element[];
-    const value = this.props.value as string[];
-
-    this.props.children?.forEach((item) => {
-      const name = item.props.name;
-      if (name) {
-        checkArrays.push(
-          React.cloneElement(
-            item,
-            {
-              key: name,
-              value: value && ArrayUtils.contains(value, name),
-              disabled: disabled ? true : undefined,
-              onValueChange: (v) => this.onValueChange(name, v),
-            } as CheckBoxProps
-          )
-        );
-        this.allCheckNames.push(name);
-        this.allCheckDisabled.push(disabled || item.props.disabled === true);
-      }
-    });
-
-    if (this.props.renderChildren) {
-      const ret = this.props.renderChildren((check) => {
-        const name = check.props.name;
-
-        this.allCheckNames.push(name);
-        this.allCheckDisabled.push(disabled || check.props.disabled === true);
-
-        return React.cloneElement(
-          check,
-          {
-            key: name,
-            value: ArrayUtils.contains(value, name),
-            disabled: disabled ? true : undefined,
-            onValueChange: (v) => this.onValueChange(name, v),
-          } as CheckBoxProps
-        );
-      });
-      if (ret instanceof Array)
-        checkArrays.push(...ret);
-      else
-        checkArrays.push(ret);
-    }
-
     return (
-      <>{checkArrays}</>
+      <CheckBoxGroupContext.Provider value={{
+        value: this.props.value as string[],
+        onValueChange: this.onValueChange.bind(this),
+        onAddItem: (name: string, disabled: boolean) => {
+          this.allCheckNames.push(name);
+          this.allCheckDisabled.push(disabled);
+        },
+      }}>
+        { this.props.children }
+      </CheckBoxGroupContext.Provider>
     );
   }
 }
@@ -367,7 +353,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
     borderColor = Color.border,
     checkColor = Color.white,
     disableBorderColor = Color.grey,
-    disableCheckColor = Color.grey,
+    disableCheckColor = Color.white,
     disableColor = Color.grey,
     icon = 'check-mark',
     style,

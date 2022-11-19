@@ -1,9 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { FlatList, StyleSheet } from 'react-native';
-import { ColumnView, CellGroup, Text, RowView, Icon, IconUtils } from '../lib';
+import { FlatList, ScrollView, StyleSheet } from 'react-native';
+import { ColumnView, Text, RowView, Icon, IconUtils } from '../lib';
 import { ScrollTabView } from '../../lib/src/components/tab';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCell'>;
 
@@ -15,10 +17,15 @@ const styles = StyleSheet.create({
   item: {
     alignItems: 'center',
     paddingVertical: 5,
-    paddingHorizontal: 15,
-    width: '47%',
+    paddingHorizontal: 0,
+    borderColor: '#efefef',
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    width: '33%',
   },
-  itemText: { marginLeft: 10 },
+  itemText: {
+    marginTop: 10,
+  },
 });
 
 //添加自定义图标
@@ -51,50 +58,58 @@ export class TestIconScreen extends React.PureComponent<Props, TestIconScreenSta
   render(): React.ReactNode {
     return (
       <ScrollTabView tabBarProps={{ tabs: [ '使用方法', '图标列表' ] }}>
-        <ColumnView style={{ padding: 10 }}>
-          <CellGroup title="基础用法">
-            <Text>通过 name 属性来指定需要使用的图标，我们内置了一套图标库（见图标列表），可以直接传入对应的名称来使用。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <Icon icon="smile-filling" />
+        <ScrollView>
+
+          <TestPageHeader
+            title="Icon 图标"
+            desc="Icon是基于矢量图的图标集，你可以通过 Icon 组件使用，也可以在其他组件中通过 icon 属性引用。支持引入 iconfont 图标库。"
+            navigation={this.props.navigation}
+          />
+          <TestHeader desc="通过 name 属性来指定需要使用的图标，我们内置了一套图标库（见图标列表），可以直接传入对应的名称来使用。">基础用法</TestHeader>
+          <TestGroup>
+            <RowView>
+              <Icon name="smile-filling" />
+              <Icon name="success" />
+              <Icon name="user" />
             </RowView>
-          </CellGroup>
-          <CellGroup title="图标颜色">
-            <Text>通过 color 属性来设置图标的颜色。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <Icon icon="smile-filling" color="#ff0900" />
-              <Icon icon="rise-filling" color="#f58220" />
-              <Icon icon="success-filling" color="#1d953f" />
+          </TestGroup>
+          <TestHeader desc="通过 color 属性来设置图标的颜色。">图标颜色</TestHeader>
+          <TestGroup>
+            <RowView>
+              <Icon name="smile-filling" color="#ff0900" />
+              <Icon name="rise-filling" color="#f58220" />
+              <Icon name="success-filling" color="#1d953f" />
             </RowView>
-          </CellGroup>
-          <CellGroup title="图标大小">
-            <Text>通过 size 属性来设置图标的尺寸大小。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <Icon icon="file-common-filling" size={20} />
-              <Icon icon="file-common-filling" size={40} />
-              <Icon icon="file-common-filling" size={60} />
+          </TestGroup>
+          <TestHeader desc="通过 size 属性来设置图标的尺寸大小。">图标大小</TestHeader>
+          <TestGroup>
+            <RowView>
+              <Icon name="file-common-filling" size={20} />
+              <Icon name="file-common-filling" size={40} />
+              <Icon name="file-common-filling" size={60} />
             </RowView>
-          </CellGroup>
-          <CellGroup title="自定义图标">
-            <Text>允许你添加自定义图标，可以是 字体图标、普通图像、svg图像。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <Icon icon="custom1" size={20} />
-              <Icon icon="custom2" size={40} />
-              <Icon icon="custom3" size={40} />
+          </TestGroup>
+          <TestHeader desc="支持注册自定义图标，可以是 字体图标、普通图像、svg图像。具体可参考 Demo 源代码。">自定义图标</TestHeader>
+          <TestGroup>
+            <RowView>
+              <Icon name="custom1" size={20} />
+              <Icon name="custom2" size={40} />
+              <Icon name="custom3" size={40} />
             </RowView>
-          </CellGroup>
-        </ColumnView>
+          </TestGroup>
+        </ScrollView>
         <FlatList
           data={this.state.icons}
           renderItem={(data) => {
             return (
-              <RowView style={styles.item}>
-                <Icon icon={data.item} size={30} />
-                <Text style={styles.itemText}>{data.item}</Text>
-              </RowView>
+              <ColumnView style={styles.item}>
+                <Icon name={data.item} size={30} />
+                <Text style={styles.itemText} selectable>{data.item}</Text>
+              </ColumnView>
             );
           }}
           keyExtractor={item => item}
-          numColumns={2}
+          numColumns={3}
         />
       </ScrollTabView>
     );
