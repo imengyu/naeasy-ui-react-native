@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {StackScreenProps} from '@react-navigation/stack';
-import {ColumnView, ErrorBoundary, Button} from '../lib';
-import {RootStackParamList} from '../navigation';
+import { StackScreenProps } from '@react-navigation/stack';
+import { ColumnView, Button } from '../lib';
+import { RootStackParamList } from '../navigation';
+import { ErrorBoundary } from '../../lib/src/components/error';
 
 type Props = StackScreenProps<RootStackParamList, 'TestErrorBoundary'>;
 
@@ -9,7 +10,7 @@ export function TestErrorBoundaryScreen(_props: Props) {
   const [a, setA] = useState(0);
 
   function renderErrorTest() {
-    setA((prev) => {
+    setA(prev => {
       if (Math.random() > 0.2) {
         throw new Error('i crashed！！！');
       }

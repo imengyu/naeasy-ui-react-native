@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Pagination, DotIndicator, ColumnView, Text } from '../lib';
+import { DotIndicator, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Pagination } from '../../lib/src/components/nav';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPagination', 'RootStack'>;
 interface State {

@@ -1,11 +1,10 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { Text, TextStyle, View, ViewStyle } from "react-native";
+import { Text, TextStyle, ViewStyle } from "react-native";
 import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
-import { border, selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
-import { Icon } from "../basic/Icon";
 import { ThemeWrapper } from "../../theme/Theme";
+import { CheckBoxDefaultButton } from "./CheckBox";
 
 
 export interface RadioProps {
@@ -109,17 +108,20 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
   function renderButtonStub() {
     return props.renderButton ?
       props.renderButton(value ) :
-      <RadioDefaultButton
+      <CheckBoxDefaultButton
         on={value}
         disabled={disabled}
         shape={shape}
         color={ThemeSelector.color(color)}
-        disabledColor={ThemeSelector.color(disabledColor)}
+        disableBorderColor={ThemeSelector.color(disabledColor)}
+        disableColor={ThemeSelector.color(disabledColor)}
+        disableCheckColor={ThemeSelector.color(disabledColor)}
+        type="radio"
       />;
   }
 
   return (
-    <RowView touchable onPress={switchOn} style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}>
+    <RowView touchable align="center" onPress={switchOn} style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}>
       { checkPosition === 'left' ? renderButtonStub() : <></> }
       <Text style={[
         styles.radioText,
@@ -215,72 +217,7 @@ export function RadioGroup(props: RadioGroupProps) {
   );
 }
 
-export interface RadioDefaultButtonProps {
-  on: boolean;
-  disabled: boolean;
-  color: string|undefined;
-  disabledColor: string|undefined;
-  checkType?: 'color'|'check';
-  checkIconName?: string;
-  shape?:"square"|"round";
-}
-
-/**
- * 默认的单选框按钮样式
- */
-export const RadioDefaultButton = ThemeWrapper(function (props: RadioDefaultButtonProps) {
-
-  return (
-    <View style={{
-      ...styles.radioButtonOutView,
-      ...selectStyleType(props.shape, 'round', {
-        round: { borderRadius: 10 },
-        square: { borderRadius: 0 },
-      }),
-      borderColor: ThemeSelector.color(props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary)),
-    }}>
-      {
-        props.on ?
-        (props.checkType === 'check' ?
-          <Icon
-            style={styles.radioButtonInnerCheck}
-            icon={props.checkIconName || 'select'}
-          /> :
-          <View style={{
-            ...styles.radioButtonInnerView,
-            ...selectStyleType(props.shape, 'round', {
-              round: { borderRadius: 8 },
-              square: { borderRadius: 0 },
-            }),
-            backgroundColor: ThemeSelector.color(props.disabled === true ? (props.disabledColor || Color.grey) : (props.color || Color.primary)),
-          }} />
-        ) : <></>
-      }
-    </View>
-  );
-});
-
 const styles = DynamicThemeStyleSheet.create({
-  radioButtonOutView: {
-    width: 20,
-    height: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    marginRight: 4,
-    ...border(1, 'solid', Color.primary, true),
-  },
-  radioButtonInnerView: {
-    width: 12,
-    height: 12,
-    overflow: 'hidden',
-  },
-  radioButtonInnerCheck: {
-    width: 20,
-    height: 20,
-    overflow: 'hidden',
-  },
   radio: {
     alignSelf: 'flex-start',
     alignItems: 'center',

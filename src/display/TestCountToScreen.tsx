@@ -3,7 +3,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, CountTo, CountToInstance, Button, RowView, WhiteSpace, Text } from '../lib';
+import { ColumnView, Button, RowView, WhiteSpace, Text } from '../lib';
+import { CountTo, CountToInstance } from '../../lib/src/components/countdown';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCountTo'>;
 

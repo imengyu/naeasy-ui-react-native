@@ -3,7 +3,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { Toast, Cell, CellGroup, ColumnView, ActionSheet } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
-import { ImagePreview } from '../../lib/dist/components/media';
+import { ImagePreview } from '../../lib/src/components/media';
 
 type Props = StackScreenProps<RootStackParamList, 'TestImagePreview'>;
 interface State {

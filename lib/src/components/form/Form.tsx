@@ -67,6 +67,10 @@ export interface FormProps {
    * 对当前表单内部的所有 Field 属性进行统一设置
    */
   fieldProps?: FieldProps;
+  /**
+   * 是否自动根据表单校验规则为 Field 设置必填星号，默认是
+   */
+  addRequireMark?: boolean;
 
   children?: JSX.Element|JSX.Element[];
 }
@@ -100,9 +104,13 @@ export class Form extends React.Component<FormProps, FormState> {
    * 重置表单
    */
   reset() {
-    this.setState({
-      ...(this.props.intitalValue || {}),
+    const intitalValue = this.props.intitalValue || {};
+    const result = {} as Record<string, unknown>;
+    this.activeName.forEach((key) => {
+      result[key] = intitalValue[key];
     });
+    this.setState({ ...result });
+    this.resetValidation();
 
     this.props.onReset && this.props.onReset();
   }
@@ -237,15 +245,18 @@ export class Form extends React.Component<FormProps, FormState> {
     //清空当前激活
     this.activeName = [];
 
-    const rules = this.props.rules;
-    const fieldProps = this.props.fieldProps;
-    const validateTrigger = this.props.validateTrigger || 'onSubmit';
+    const {
+      rules,
+      fieldProps,
+      validateTrigger = 'onSubmit',
+      addRequireMark = true,
+    } = this.props;
 
     const checkRuleRequired = (rule: Rule) => {
       if (rule instanceof Array)
-        return rule.find((r) => r.required);
+        return rule.find((r) => r.required === true) !== undefined;
       else
-        return rule.required;
+        return rule.required === true;
     };
 
     const solveItem = (e: JSX.Element) => {
@@ -273,7 +284,7 @@ export class Form extends React.Component<FormProps, FormState> {
             //错误信息的控制
             error: validState ? validState.error : undefined,
             errorMessage: validState ? validState.errorMessage : undefined,
-            required: rule && checkRuleRequired(rule),
+            required: addRequireMark && rule && checkRuleRequired(rule),
             //数据变化
             onValueChange: (newValue: unknown) => {
               this.setState({ [name]: newValue });

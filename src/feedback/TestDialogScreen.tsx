@@ -1,9 +1,10 @@
 import React, { createRef, forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Image, StyleSheet } from 'react-native';
-import { Cell, Toast, Dialog, CellGroup, ColumnView,
-  Color, Text, Field, Rate, SimpleList, Button, rpx } from '../lib';
+import { Cell, Toast, Dialog, CellGroup, ColumnView, Color, Text, Button, rpx } from '../lib';
 import { RootStackParamList } from '../navigation';
+import { Field, Rate } from '../../lib/src/components/form';
+import { SimpleList } from '../../lib/src/components/list';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;
 

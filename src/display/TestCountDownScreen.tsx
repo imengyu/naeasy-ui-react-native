@@ -1,9 +1,10 @@
 import React, { createRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, CellGroup, CountDown, CountDownInstance, RowView, Button, WhiteSpace, Text } from '../lib';
+import { ColumnView, CellGroup, RowView, Button, WhiteSpace, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';
+import { CountDown, CountDownInstance } from '../../lib/src/components/countdown';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCountDown', 'RootStack'>;
 

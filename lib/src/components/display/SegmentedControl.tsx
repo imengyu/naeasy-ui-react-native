@@ -22,11 +22,16 @@ const styles = StyleSheet.create({
   },
 });
 
+export interface SegmentedControlCustomItem {
+  label: string,
+  disabled?: boolean,
+  [index: string]: unknown;
+}
 export interface SegmentedControlProps {
   /**
    * 如果为false，用户将无法与控件交互。默认值为true。
    */
-  enabled?: boolean | undefined;
+  touchable?: boolean | undefined;
 
   /**
    * 当用户点击某个段时调用的回调
@@ -35,7 +40,7 @@ export interface SegmentedControlProps {
 
   /**当用户点击某个段时调用的回调
    */
-  onValueChange?: ((value: string) => void) | undefined;
+  onValueChange?: ((value: string|SegmentedControlCustomItem) => void) | undefined;
 
   /**
    * 选中的条目索引。
@@ -50,11 +55,14 @@ export interface SegmentedControlProps {
    * 条目激活时的文字颜色。
    */
   activeTextColor?: ThemeColor | undefined;
-
   /**
-   * 控件段按钮的标签按顺序排列。
+   * 圆角
    */
-  values?: string[] | undefined;
+  radius?: number;
+  /**
+   * 控件段按钮的标签。
+   */
+  values?: string[] | SegmentedControlCustomItem[] | undefined;
 }
 
 /**
@@ -62,36 +70,42 @@ export interface SegmentedControlProps {
  */
 export const SegmentedControl = ThemeWrapper(function (props: SegmentedControlProps) {
 
-  const enabled = props.enabled !== false;
-  const activeColor = props.tintColor || Color.primary;
-  const activeTextColor = props.activeTextColor || Color.white;
-  const values = props.values || [];
+  const {
+    touchable = true,
+    tintColor: activeColor = Color.primary,
+    activeTextColor = Color.white,
+    values = [],
+    radius = 5,
+  } = props;
 
   function SegmentedControlItem(itemProps: {
     label: string,
     active: boolean,
     index: number,
+    disabled: boolean|undefined,
   }) {
+    const disabled = itemProps.disabled || touchable === false;
     return (
       <TouchableHighlight
         style={[
           styles.item,
           border(1, 'solid', ThemeSelector.color(activeColor)),
+          disabled ? { opacity: 0.5 } : {},
           (itemProps.index === 0 ? {
-            borderTopLeftRadius: 5,
-            borderBottomLeftRadius: 5,
+            borderTopLeftRadius: radius,
+            borderBottomLeftRadius: radius,
           } : {}),
           (itemProps.index !== values.length - 1 ? {
             borderRightWidth: 0,
           } : {}),
           (itemProps.index === values.length - 1 ? {
-            borderTopRightRadius: 5,
-            borderBottomRightRadius: 5,
+            borderTopRightRadius: radius,
+            borderBottomRightRadius: radius,
           } : {}),
           { backgroundColor: itemProps.active ? ThemeSelector.color(activeColor) : undefined },
         ]}
         underlayColor={ThemeSelector.color(PressedColor(Color.white))}
-        onPress={enabled ? () => onItemPress(itemProps.index) : undefined}
+        onPress={disabled ? undefined : () => onItemPress(itemProps.index)}
       >
         <Text style={[
           styles.itemText,
@@ -115,7 +129,8 @@ export const SegmentedControl = ThemeWrapper(function (props: SegmentedControlPr
           <SegmentedControlItem
             key={i}
             index={i}
-            label={item}
+            label={typeof item === 'object' ? item.label : item}
+            disabled={typeof item === 'object' ? item.disabled : false}
             active={i === props.selectedIndex}
           />
         ))

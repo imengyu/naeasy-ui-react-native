@@ -195,10 +195,85 @@ interface State {
   focused: boolean;
 }
 
+
+const styles = DynamicThemeStyleSheet.create({
+  field: {
+    ...Platform.select({
+      android: {
+        paddingVertical: 8,
+      },
+      ios: {
+        paddingVertical: 12,
+      },
+    }),
+    paddingHorizontal: 16,
+  },
+  whiteItemField: {
+    backgroundColor: DynamicColor(Color.white),
+    borderBottomColor: DynamicColor(Color.background),
+    borderBottomWidth: 1,
+  },
+  requiredMark: {
+    fontSize: 14,
+    alignSelf: 'flex-start',
+    color: DynamicColor(Color.danger),
+    ...Platform.select({
+      android: {
+        paddingVertical: 4,
+      },
+    }),
+    marginHorizontal: 4,
+  },
+  labelText: {
+    marginRight: 10,
+    fontSize: 14,
+    alignSelf: 'flex-start',
+    ...Platform.select({
+      android: {
+        paddingVertical: 4,
+      },
+    }),
+  },
+  inputWapper2: {
+    alignSelf: 'center',
+    width: '100%',
+  },
+  input: {
+    ...Platform.select({
+      android: {
+        padding: 0,
+      },
+      ios: {
+        paddingHorizontal: 0,
+        paddingVertical: 0,
+      },
+    }),
+    flex: 1,
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: DynamicColor(Color.danger),
+    marginTop: 4,
+  },
+  wordLimitText: {
+    fontSize: 12,
+    color: DynamicColor(Color.textSecond),
+    width: '100%',
+    textAlign: 'right',
+  },
+  clearIcon: {
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+
 /**
  * 表单条目组件
  */
 export class Field extends React.Component<FieldProps, State> {
+
 
   state: Readonly<State> = {
     focused: false,
@@ -316,18 +391,37 @@ export class Field extends React.Component<FieldProps, State> {
 
   render(): React.ReactNode {
     const {
-      label, colon, fieldStyle, activeFieldStyle, labelStyle, inputStyle, required, center, showWordLimit,
-      clearable, labelWidth, labelAlign, type, disabled, editable, errorMessage, showLabel, activeInputStyle,
-      showRequiredBadge, onPress,
-      renderLeftIcon, renderRightButton,renderLeftButton,
+      label,
+      labelColor = Color.text,
+      labelDisableColor = Color.grey,
+      labelFlex,
+      inputDisableColor = Color.grey,
+      inputColor = Color.text,
+      inputFlex = 5,
+      error = false,
+      colon = true,
+      fieldStyle,
+      activeFieldStyle,
+      labelStyle,
+      inputStyle,
+      required,
+      center,
+      showWordLimit,
+      clearable,
+      labelWidth,
+      labelAlign = "left",
+      type = "text",
+      disabled = false,
+      editable = true,
+      errorMessage,
+      showLabel = true,
+      activeInputStyle,
+      showRequiredBadge = true,
+      onPress,
+      renderLeftIcon,
+      renderRightButton,
+      renderLeftButton,
     } = this.props;
-    const labelColor = this.props.labelColor || Color.text;
-    const labelDisableColor = this.props.labelDisableColor || Color.grey;
-    const labelFlex = this.props.labelFlex;
-    const inputDisableColor = this.props.inputDisableColor || Color.grey;
-    const inputColor = this.props.inputColor || Color.text;
-    const inputFlex = this.props.inputFlex || 5;
-    const error = this.props.error === true;
 
     return (
       <ThemeRender>
@@ -420,72 +514,10 @@ export class Field extends React.Component<FieldProps, State> {
       </ThemeRender>
     );
   }
+
+  /**
+   * 白底加边框的样式
+   */
+  static StyleWhiteItemField = styles.whiteItemField;
 }
 
-
-const styles = DynamicThemeStyleSheet.create({
-  field: {
-    ...Platform.select({
-      android: {
-        paddingVertical: 8,
-      },
-      ios: {
-        paddingVertical: 12,
-      },
-    }),
-    paddingHorizontal: 16,
-  },
-  requiredMark: {
-    fontSize: 14,
-    alignSelf: 'flex-start',
-    color: DynamicColor(Color.danger),
-    ...Platform.select({
-      android: {
-        paddingVertical: 4,
-      },
-    }),
-    marginHorizontal: 4,
-  },
-  labelText: {
-    marginRight: 10,
-    fontSize: 14,
-    alignSelf: 'flex-start',
-    ...Platform.select({
-      android: {
-        paddingVertical: 4,
-      },
-    }),
-  },
-  inputWapper2: {
-    alignSelf: 'center',
-    width: '100%',
-  },
-  input: {
-    ...Platform.select({
-      android: {
-        padding: 0,
-      },
-      ios: {
-        paddingHorizontal: 0,
-        paddingVertical: 0,
-      },
-    }),
-    flex: 1,
-  },
-  errorMessage: {
-    fontSize: 12,
-    color: DynamicColor(Color.danger),
-    marginTop: 4,
-  },
-  wordLimitText: {
-    fontSize: 12,
-    color: DynamicColor(Color.textSecond),
-    width: '100%',
-    textAlign: 'right',
-  },
-  clearIcon: {
-    width: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

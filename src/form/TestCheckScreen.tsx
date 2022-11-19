@@ -44,8 +44,8 @@ export function TestCheckScreen(_props: Props) {
         <CellGroup title="禁用" inset>
           <ColumnView style={{ padding: 10 }}>
             <CheckBoxGroup value={checked3} onValueChange={(v) => setChecked3(v)}>
-              <CheckBox name="0" disabled color={Color.danger} text="复选框 1" style={styles.radioStyle} />
-              <CheckBox name="1" disabled color={Color.success} text="复选框 2" style={styles.radioStyle} />
+              <CheckBox name="0" disabled={true} color={Color.danger} text="复选框 1" style={styles.radioStyle} />
+              <CheckBox name="1" disabled={true} color={Color.success} text="复选框 2" style={styles.radioStyle} />
             </CheckBoxGroup>
           </ColumnView>
         </CellGroup>

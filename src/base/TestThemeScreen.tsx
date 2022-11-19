@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Switch, Cell, CellGroup, ColumnView, ThemeSelector } from '../lib';
+import { Cell, CellGroup, ColumnView, ThemeSelector } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { DeviceEventEmitter } from 'react-native';
+import { Switch } from '../../lib/src/components/form';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTheme'>;
 

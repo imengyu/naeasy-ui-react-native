@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Text, CellGroup, Step, ColumnView, StepItem, Button, RowView, Color } from '../lib';
+import { Text, CellGroup, ColumnView, Button, RowView, Color } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { Step, StepItem } from '../../lib/src/components/display';
 
 type Props = StackScreenProps<RootStackParamList, 'TestStep'>;
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Color, AlertNative, SwipeableRightActionsRow, SwipeableRow, Cell, Button, ColumnView, A } from '../lib';
+import { CellGroup, Color, AlertNative, Cell, Button, ColumnView, A } from '../lib';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { SwipeableRightActionsRow, SwipeableRow } from '../../lib/src/components/swipeable';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSwipeableRow', 'RootStack'>;
 

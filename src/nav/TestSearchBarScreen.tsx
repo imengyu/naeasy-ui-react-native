@@ -4,7 +4,7 @@ import { ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { SearchBar } from '../../lib/dist/components/form';
+import { SearchBar } from '../../lib/src/components/form';
 
 
 type Props = StackScreenProps<RootStackParamList, 'TestSearchBar', 'RootStack'>;

@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, NoticeBar } from '../lib';
+import { ColumnView } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { NoticeBar } from '../../lib/src/components/display/NoticeBar';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNoticeBar', 'RootStack'>;
 interface State {

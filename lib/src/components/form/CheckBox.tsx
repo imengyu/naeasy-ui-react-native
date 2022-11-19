@@ -88,13 +88,6 @@ export interface CheckBoxProps {
  */
 export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
 
-  function switchOn() {
-    if (props.disabled)
-      return;
-    if (typeof props.onValueChange === 'function')
-      props.onValueChange(!props.value);
-  }
-
   const text = props.children || props.text;
   const {
     checkPosition = 'left',
@@ -107,7 +100,15 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     shape,
     checkSize,
     style = {},
+    onValueChange,
   } = props;
+
+  function switchOn() {
+    if (disabled)
+      return;
+    if (typeof onValueChange === 'function')
+      onValueChange(!value);
+  }
 
   function renderButtonStub() {
     return (
@@ -289,16 +290,66 @@ export class CheckBoxGroup extends React.PureComponent<CheckBoxGroupProps> {
 }
 
 export interface CheckBoxDefaultButtonProps {
+  /**
+   * 是否处于激活状态
+   */
   on?: boolean;
+  /**
+   * 未选中状态下边框颜色。默认：Color.border
+   */
   borderColor?: string|undefined;
+  /**
+   * 图标颜色。默认：Color.white
+   */
   checkColor?: string|undefined;
+  /**
+   * 选中状态下按钮颜色。默认：Color.primary
+   */
   color?: string|undefined;
+  /**
+   * 禁用并且未选中状态下边框颜色。默认：Color.border
+   */
+  disableBorderColor?: string|undefined;
+  /**
+   * 禁用状态下图标颜色。默认：Color.white
+   */
+  disableCheckColor?: string|undefined;
+  /**
+   * 禁用并且选中状态下按钮颜色。默认：Color.primary
+   */
+  disableColor?: string|undefined;
+  /**
+   * 按钮大小。默认：18
+   */
   size?: number|undefined;
+  /**
+   * 图标大小。默认：15
+   */
   iconSize?: number|undefined;
+  /**
+   * 图标。默认：check-mark
+   */
   icon?: string;
+  /**
+   * 是否处于禁用状态。默认：false
+   */
   disabled?: boolean;
+  /**
+   * 自定义样式
+   */
   style?: ViewStyle,
+  /**
+   * 这个按钮的形状。默认：round
+   * * square：正方形
+   * * round：圆形
+   */
   shape?: "square"|"round";
+  /**
+   * 这个按钮的显示模式。默认：icon
+   * * icon：多选按钮显示的图标
+   * * radio：单选按钮显示的圆形
+   */
+  type?: "icon"|"radio";
 }
 
 /**
@@ -306,14 +357,18 @@ export interface CheckBoxDefaultButtonProps {
  */
 export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefaultButtonProps) {
   const {
-    size = 16,
-    iconSize = 14,
+    size = 18,
+    iconSize = 15,
     shape = 'round',
+    type = 'icon',
     on,
     disabled = false,
     color = Color.primary,
     borderColor = Color.border,
     checkColor = Color.white,
+    disableBorderColor = Color.grey,
+    disableCheckColor = Color.grey,
+    disableColor = Color.grey,
     icon = 'check-mark',
     style,
   } = props;
@@ -328,7 +383,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
       {
         width: size,
         height: size,
-        borderColor: ThemeSelector.color((on && disabled !== true) ? color : borderColor),
+        borderColor: ThemeSelector.color(disabled ? (on ? disableColor : disableBorderColor) : (on ? color : borderColor)),
       },
       style,
     ]}>
@@ -339,10 +394,14 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
             {
               width: size - 2, //减去边框
               height: size - 2,
-              backgroundColor: ThemeSelector.color(color),
+              backgroundColor: ThemeSelector.color(disabled ? disableColor : color),
             },
           ]}>
-            <Icon icon={icon} color={checkColor} size={iconSize} />
+            {
+              type === 'icon' ?
+                <Icon icon={icon} color={disabled ? disableCheckColor : checkColor} size={iconSize} /> :
+                <View style={{ borderRadius: iconSize / 2, width: iconSize, height: iconSize, backgroundColor: ThemeSelector.color(disabled ? disableCheckColor : checkColor) }} />
+            }
           </View> :
           <></>
       }

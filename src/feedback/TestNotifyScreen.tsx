@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AlertNative, CheckBox, RowView, Notify, Cell, CellGroup, ColumnView } from '../lib';
-import { ScrollView, Text } from 'react-native';
+import { AlertNative, RowView, Notify, Cell, CellGroup, ColumnView } from '../lib';
+import { Image, ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNotify'>;
@@ -63,7 +63,7 @@ export class TestNotifyScreen extends React.PureComponent<Props> {
               Notify.show({
                 content: (
                   <RowView>
-                    <CheckBox value={true}>HAHA</CheckBox>
+                    <Image source={require('../images/test4.png')} />
                     <Text>这里是自定义内容</Text>
                   </RowView>
                 ),

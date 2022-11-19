@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Empty, RowView, Button, LoadingView, WingBlank, ColumnView, Text } from '../lib';
+import { CellGroup, Empty, RowView, Button, WingBlank, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';
+import { LoadingView } from '../../lib/src/components/loading';
 
 type Props = StackScreenProps<RootStackParamList, 'TestEmpty'>;
 interface State {
@@ -48,11 +49,13 @@ export class TestEmptyScreen extends React.PureComponent<Props, State> {
             <RowView style={TestStyles.TitleText}>
               <Button text={'切换加载中状态: ' + (this.state.loading ? 'true' : 'false')} onPress={() => this.setState((prev) => ({ loading: !prev.loading })) } />
             </RowView>
-            <LoadingView loading={this.state.loading} loadingText="加载中，请稍后">
-              <WingBlank size="sm">
-                <Text>战式厂思省空面马六前，做造识强等，道派B无标两育。 合目治中做图是定，易斗必至听究地，入江记H两速。查少四老规影外公，方地更G集性。包，员能级干理达历中，很便F节府员里直。 业意量叫位美深J基。</Text>
-              </WingBlank>
-            </LoadingView>
+            <ColumnView padding={10}>
+              <LoadingView loading={this.state.loading} loadingText="加载中，请稍后">
+                <WingBlank size="sm">
+                  <Text>战式厂思省空面马六前，做造识强等，道派B无标两育。 合目治中做图是定，易斗必至听究地，入江记H两速。查少四老规影外公，方地更G集性。包，员能级干理达历中，很便F节府员里直。 业意量叫位美深J基。</Text>
+                </WingBlank>
+              </LoadingView>
+            </ColumnView>
           </CellGroup>
         </ColumnView>
       </ScrollView>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Progress, Color, WhiteSpace, RowView, Button, ColumnView, Text } from '../lib';
+import { Color, WhiteSpace, RowView, Button, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { Progress } from '../../lib/src/components/display/Progress';
 
 type Props = StackScreenProps<RootStackParamList, 'TestProgress', 'RootStack'>;
 interface State {

@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, WhiteSpace, DynamicColor, DynamicThemeStyleSheet, CellGroup, Badge, RowView, Color, Text } from '../lib';
+import { ColumnView, WhiteSpace, DynamicColor, DynamicThemeStyleSheet, CellGroup, RowView, Color, Text } from '../lib';
 import { ScrollView, View } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { Badge } from '../../lib/src/components/display/Badge';
 
 type Props = StackScreenProps<RootStackParamList, 'TestBadge', 'RootStack'>;
 
