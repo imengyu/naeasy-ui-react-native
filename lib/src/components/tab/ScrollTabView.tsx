@@ -12,7 +12,11 @@ export interface ScrollTabViewProps {
   /**
    * ScrollableTabBar 属性
    */
-  tabBarProps: ScrollableTabBarProps;
+  tabBarProps?: ScrollableTabBarProps;
+  /**
+   * 标签
+   */
+  tabs: string[],
   /**
    * PagerView 属性
    */
@@ -53,16 +57,7 @@ export class ScrollTabView extends React.Component<ScrollTabViewProps, State> {
   render(): React.ReactNode {
     return (
       <View style={{ ...styles.pager, ...this.props.style }}>
-        <ScrollableTabBar
-          { ...this.props.tabBarProps }
-          scrollValue={this.pagerScrollValue}
-          scrollValueOffset={this.pagerScrollValueOffset}
-          activeTab={this.state.currentTab}
-          goToPage={(t) => {
-            this.setState({ currentTab: t });
-            this.pagerRef?.setPage(t);
-          }}
-        />
+
         {/* Tab页面 */}
         <PagerView
           style={styles.pager}
@@ -70,18 +65,11 @@ export class ScrollTabView extends React.Component<ScrollTabViewProps, State> {
           ref={(v) => { this.pagerRef = v;}}
           onPageSelected={(e) => {
             this.setState({ currentTab: e.nativeEvent.position });
-            if (!isIOS) {
-              Animated.timing(this.pagerScrollValue, {
-                useNativeDriver: true,
-                toValue: e.nativeEvent.position,
-                duration: 350,
-              }).start();
-            }
           }}
-          onPageScroll={isIOS ? Animated.event(
+          onPageScroll={Animated.event(
             [ { nativeEvent: { position: this.pagerScrollValue, offset: this.pagerScrollValueOffset } } ],
             { useNativeDriver: false }
-          ) : undefined}
+          )}
         >
           { this.props.children }
         </PagerView>
