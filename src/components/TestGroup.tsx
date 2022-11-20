@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewProps } from 'react-native';
-import { AlertNative } from '../lib';
+import { AlertNative, Color, ThemeSelector } from '../lib';
 
 const styles = StyleSheet.create({
   group: {
@@ -14,10 +14,14 @@ const styles = StyleSheet.create({
 
 interface TestGroupProps extends ViewProps {
   noHorizontalPadding?: boolean,
+  white?: boolean,
 }
 
 export function TestGroup(props: TestGroupProps) {
-  return <View {...props} style={props.noHorizontalPadding ? styles.groupFull : styles.group} />;
+  return <View {...props} style={[
+    props.noHorizontalPadding ? styles.groupFull : styles.group,
+    { backgroundColor: props.white ? ThemeSelector.color(Color.white) : undefined },
+  ]} />;
 }
 
 export function showTestMessage(str: string) {

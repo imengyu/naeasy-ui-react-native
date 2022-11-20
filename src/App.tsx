@@ -57,7 +57,7 @@ function App() {
               {/* 状态栏的样式处理 */}
               <StatusBar
                 barStyle={themeNow === 'dark' ? 'light-content' : 'dark-content'}
-                backgroundColor={themeNow === 'dark' ? '#000' : '#fff'}
+                backgroundColor={ThemeSelector.select(Color.background)}
               />
               <TestAppNav />
             </NavigationContainer>}

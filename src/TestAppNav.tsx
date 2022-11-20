@@ -63,6 +63,7 @@ import { TestErrorBoundaryScreen } from './base/TestErrorBoundaryScreen';
 import { TestOverlayScreen } from './feedback/TestOverlayScreen';
 import { TestResultScreen } from './feedback/TestResultScreen';
 import { ThemeSelector, Color } from './lib';
+import { TestTabsScreen } from './nav/TestTabsScreen';
 
 const Stack = createStackNavigator();
 
@@ -163,6 +164,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestErrorBoundary" component={TestErrorBoundaryScreen as any} />
         <Stack.Screen name="TestOverlay" component={TestOverlayScreen as any} />
         <Stack.Screen name="TestResult" component={TestResultScreen as any} />
+        <Stack.Screen name="TestTabs" component={TestTabsScreen as any} />
       </Stack.Navigator>
     );
   }

@@ -3,7 +3,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
 import { ColumnView, Text, Color, WhiteSpace } from '../lib';
 import { IndexBar, IndexedList } from '../../lib/src/components/list';
-import { ScrollTabView } from '../../lib/src/components/tab';
+import { TabsPage, TabsPageItem } from '../../lib/src/components/tab';
 
 type Props = StackScreenProps<RootStackParamList, 'TestIndexedList'>;
 
@@ -69,27 +69,33 @@ export class TestIndexedListScreen extends React.PureComponent<Props> {
 
   render(): React.ReactNode {
     return (
-      <ScrollTabView tabBarProps={{ tabs: [ '基础列表', '自定义渲染', '单独使用 IndexedBar' ] }}>
-        <IndexedList<string>
-          data={data}
-          groupDataBy={(item) => item.charAt(0)}
-          sortGroup={arr => arr.sort()}
-          onItemPress={(item) => console.log('onItemPress', item)}
-        />
-        <IndexedList<string>
-          data={data}
-          groupDataBy={(item) => item.charAt(0)}
-          onItemPress={(item) => console.log('onItemPress', item)}
-          sortGroup={arr => arr.sort()}
-          groupHeight={20}
-          itemHeight={36}
-          renderItem={(k, i, header) => (header ? <Text style={{ height: 20, backgroundColor: 'yellow' }}>Header {k}</Text> : <ColumnView height={36}>
-            <Text>Index: {i}</Text>
-            <Text color={i % 2 === 0 ? Color.danger : Color.success}>{k}</Text>
-          </ColumnView>)}
-        />
-        <TestIndexedBar />
-      </ScrollTabView>
+      <TabsPage>
+        <TabsPageItem text="基础列表">
+          <IndexedList<string>
+            data={data}
+            groupDataBy={(item) => item.charAt(0)}
+            sortGroup={arr => arr.sort()}
+            onItemPress={(item) => console.log('onItemPress', item)}
+          />
+        </TabsPageItem>
+        <TabsPageItem text="自定义渲染">
+          <IndexedList<string>
+            data={data}
+            groupDataBy={(item) => item.charAt(0)}
+            onItemPress={(item) => console.log('onItemPress', item)}
+            sortGroup={arr => arr.sort()}
+            groupHeight={20}
+            itemHeight={36}
+            renderItem={(k, i, header) => (header ? <Text style={{ height: 20, backgroundColor: 'yellow' }}>Header {k}</Text> : <ColumnView height={36}>
+              <Text>Index: {i}</Text>
+              <Text color={i % 2 === 0 ? Color.danger : Color.success}>{k}</Text>
+            </ColumnView>)}
+          />
+        </TabsPageItem>
+        <TabsPageItem text="单独使用 IndexedBar">
+          <TestIndexedBar />
+        </TabsPageItem>
+      </TabsPage>
     );
   }
 }

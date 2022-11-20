@@ -1,7 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, ScrollTabView, SimpleList, Text, Color } from '../lib';
+import { ColumnView, Text, Color } from '../lib';
+import { TabsPage, TabsPageItem } from '../../lib/src/components/tab';
+import { SimpleList } from '../../lib/src/components/list';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSimpleList'>;
 
@@ -32,27 +34,35 @@ export class TestSimpleListScreen extends React.PureComponent<Props> {
 
   render(): React.ReactNode {
     return (
-      <ScrollTabView tabBarProps={{ tabs: [ '基础列表', '自定义渲染', '选择模式', '多选模式' ] }}>
-        <SimpleList<string>
-          data={data}
-        />
-        <SimpleList<string>
-          data={data}
-          renderItemContent={(k, i) => (<ColumnView>
-            <Text>Index: {i}</Text>
-            <Text color={i % 2 === 0 ? Color.danger : Color.success}>{k}</Text>
-          </ColumnView>)}
-        />
-        <SimpleList<string>
-          data={data}
-          mode="single-check"
-        />
-        <SimpleList<string>
-          data={data}
-          mode="mulit-check"
-          onSelectedItemChanged={(items) => console.log('mulit selected: ', items)}
-        />
-      </ScrollTabView>
+      <TabsPage>
+        <TabsPageItem text="基础列表">
+          <SimpleList<string>
+            data={data}
+          />
+        </TabsPageItem>
+        <TabsPageItem text="自定义渲染">
+          <SimpleList<string>
+            data={data}
+            renderItemContent={(k, i) => (<ColumnView>
+              <Text>Index: {i}</Text>
+              <Text color={i % 2 === 0 ? Color.danger : Color.success}>{k}</Text>
+            </ColumnView>)}
+          />
+        </TabsPageItem>
+        <TabsPageItem text="选择模式">
+          <SimpleList<string>
+            data={data}
+            mode="single-check"
+          />
+        </TabsPageItem>
+        <TabsPageItem text="多选模式">
+          <SimpleList<string>
+            data={data}
+            mode="mulit-check"
+            onSelectedItemChanged={(items) => console.log('mulit selected: ', items)}
+          />
+        </TabsPageItem>
+      </TabsPage>
     );
   }
 }

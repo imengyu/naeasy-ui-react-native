@@ -28,8 +28,13 @@ const styles = DynamicThemeStyleSheet.create({
     marginBottom: 10,
     position: 'relative',
   },
+  headerOut: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
   desc: {
     paddingHorizontal: 20,
+    marginBottom: 10,
   },
 });
 
@@ -39,7 +44,7 @@ export function TestHeader(props: {
 }) {
   return (
     <ThemeRender>{
-      () => <ColumnView>
+      () => <ColumnView style={styles.headerOut}>
       <ColumnView justify="center" style={styles.header}>
         <Text size={16} color={Color.black}>{props.children}</Text>
         <View style={styles.titleLine} />
@@ -57,7 +62,7 @@ export function TestPageHeader(props: {
 }) {
   useDidMountEffect(() => {
     props.navigation.setOptions({
-      title: props.title,
+      title: '',//props.title,
     });
   });
 

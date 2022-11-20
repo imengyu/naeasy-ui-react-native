@@ -142,7 +142,8 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
     checkColor: Color.white,
     color: Color.primary,
     size: 20,
-    iconSize: 16,
+    iconSize: mode === 'single-check' ? 10 : 16,
+    type: mode === 'single-check' ? 'radio' : 'icon',
     disabled: false,
     ...props.checkProps,
   } as CheckBoxDefaultButtonProps;

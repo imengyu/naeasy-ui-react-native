@@ -1,2 +1,1 @@
-export * from './ScrollTabView';
-export * from './ScrollableTabBar';
+export * from './Tabs';
