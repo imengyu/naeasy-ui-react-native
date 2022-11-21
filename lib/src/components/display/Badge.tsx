@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { Color } from "../../styles/ColorStyles";
 import { selectStyleType, border as _border, paddingVH } from '../../utils/StyleTools';
 import { ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
+import MeasureText from '@newbanker/react-native-measure-text';
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';
 
@@ -46,6 +47,10 @@ export interface BadgeProps {
    */
   badgeSize?: number;
   /**
+   * 字号。默认是12.5
+   */
+  fontSize?: number,
+  /**
    * 如果 content===0 是否隐藏红点，默认是
    */
   hiddenIfZero?: boolean;
@@ -61,7 +66,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 100,
     color: Color.white.light,
-    borderRadius: 5,
+    borderRadius: 20,
     minWidth: 10,
     textAlign: 'center',
     alignSelf: 'flex-start',
@@ -75,31 +80,23 @@ const styles = StyleSheet.create({
 
 export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
 
-  const { content, children, border, position, badgeStyle, containerStyle, offset } = props;
-  const badgeSize = props.badgeSize || 10;
-  const hiddenIfZero  = props.hiddenIfZero !== false;
+  const {
+    color,
+    content,
+    children,
+    border,
+    position,
+    badgeStyle,
+    containerStyle,
+    offset,
+    badgeSize = 10,
+    fontSize = 12.5,
+    hiddenIfZero = true,
+  } = props;
 
-  const badgeStyleFinal = {
-    ...styles.badge,
-    ...badgeStyle,
-    backgroundColor: ThemeSelector.color(props.color || Color.danger),
-    ...(border ? _border(1, 'solid', ThemeSelector.color(Color.white)) : {}),
-    ...(CheckTools.isNullOrEmpty(content) ? {
-      height: badgeSize,
-      fontSize: 0,
-    } : (typeof content === 'number' || CheckTools.isNumber(content) ? {
-      height: badgeSize + 6,
-      width: (badgeSize * Math.max(1, ('' + content).length / 2) + 5),
-      fontSize: badgeSize,
-      borderRadius: (badgeSize + 5) / 2,
-      paddingVertical: 2,
-    } : {
-      ...paddingVH(2, 4),
-      fontSize: badgeSize,
-      borderRadius: badgeSize - 2,
-    })),
-  };
+  const [ currentStyle, setCurrentStyle ] = useState<TextStyle[]>([]);
 
+  //文字处理
   let contentString : string|undefined;
   if (typeof content !== 'undefined') {
     if (typeof content === 'number')
@@ -107,53 +104,82 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
     else
       contentString = content;
   }
-  let offsetY = (badgeStyleFinal.fontSize) / 4;
-  let offsetX = (contentString && contentString.length > 0) ? contentString.length * (CheckTools.isNumber(contentString) ? 2 : 3.5) : 0;
-  if (offset) {
-    offsetX += offset.x;
-    offsetY += offset.y;
-  }
+
+  //样式生成
+  const doGenStyle = useCallback(() => {
+
+    //计算文字的宽度
+    if (contentString) {
+      MeasureText.width({
+        fontSize: fontSize,
+        text: contentString,
+        height: badgeSize,
+      }).then((textWidth) => {
+        genOffset(textWidth);
+      });
+    } else {
+      genOffset();
+    }
+
+    function genOffset(textWidth?: number) {
+      //偏移计算
+      let offsetY = badgeSize;
+      let offsetX = textWidth ? (textWidth + 4) : badgeSize;
+      if (offset) {
+        offsetX += offset.x;
+        offsetY += offset.y;
+      }
+
+      setCurrentStyle([
+        styles.badge,
+        badgeStyle as TextStyle,
+        { backgroundColor: ThemeSelector.color(color || Color.danger) },
+        selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
+          topRight: {
+            top: -offsetY,
+            right: -offsetX,
+          },
+          topLeft: {
+            top: -offsetY,
+            left: -offsetX,
+          },
+          bottomRight: {
+            bottom: -offsetY,
+            right: -offsetX,
+          },
+          bottomLeft: {
+            bottom: -offsetY,
+            left: -offsetX,
+          },
+        }),
+        (border ? _border(2, 'solid', ThemeSelector.color(Color.white)) : {}),
+        (contentString ? {
+          paddingHorizontal: 2,
+          borderRadius: badgeSize,
+          fontSize: contentString.length >= 3 ? fontSize - 2 : fontSize,
+          lineHeight: badgeSize + fontSize,
+        } : {
+          height: badgeSize,
+          width: badgeSize,
+          borderRadius: badgeSize,
+        }),
+      ]);
+    }
+  }, [ badgeSize, badgeStyle, color, border, contentString, fontSize, offset, position ]);
+
+  useEffect(() => {
+    doGenStyle();
+  }, [ doGenStyle ]);
 
   const showBadge = (!hiddenIfZero || (hiddenIfZero && content !== 0 && content !== '0'));
 
   return (
     children ?
-      <View style={{
-        ...styles.view,
-        ...containerStyle,
-      }}>
-        {
-          showBadge ?
-            (<Text style={[
-              badgeStyleFinal,
-              selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
-                topRight: {
-                  top: -offsetY,
-                  right: -offsetX,
-                },
-                topLeft: {
-                  top: -offsetY,
-                  left: -offsetX,
-                },
-                bottomRight: {
-                  bottom: -offsetY,
-                  right: -offsetX,
-                },
-                bottomLeft: {
-                  bottom: -offsetY,
-                  left: -offsetX,
-                },
-              }),
-            ]}>{contentString}</Text>) :
-            <></>
-          }
-        {children}
-        </View> :
-        (
-          showBadge ?
-            <Text style={{...badgeStyleFinal, position: 'relative' }}>{contentString}</Text> :
-            <></>
-        )
+      <View style={[ styles.view, containerStyle ]}>
+        { showBadge ? <Text style={currentStyle}>{contentString}</Text> : <></> }
+        { children }
+      </View> :
+      (showBadge ? <Text style={[ currentStyle, { position: 'relative' } ]}>{contentString}</Text> : <></>)
   );
 });
 

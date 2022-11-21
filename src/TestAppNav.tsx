@@ -40,7 +40,7 @@ import { TestTypographyScreen } from './base/TestTypographyScreen';
 import { TestDividerScreen } from './display/TestDividerScreen';
 import { Platform } from 'react-native';
 import { TestAppHome } from './TestAppHome';
-import { TestAvatarStackScreen } from './base/TestAvatarStackScreen';
+import { TestAvatarStackScreen } from './display/TestAvatarStackScreen';
 import { TestSideBarScreen } from './nav/TestSideBarScreen';
 import { TestTabBarScreen } from './nav/TestTabBarScreen';
 import { TestImagePreviewScreen } from './media/TestImagePreviewScreen';
