@@ -4,10 +4,11 @@ import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, ThemeSele
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Field } from '../../lib/src/components/form';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestField'>;
 
-export function TestFieldScreen(_props: Props) {
+export function TestFieldScreen(props: Props) {
   const [ value1, setValue1] = useState('');
   const [ value3, setValue3] = useState('');
   const [ value4, setValue4] = useState('');
@@ -28,6 +29,11 @@ export function TestFieldScreen(_props: Props) {
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={60}>
       <ScrollView>
+        <TestPageHeader
+          title="Field 输入框/表单项"
+          desc="用户可以在文本框内输入或编辑文字。Field 同时也作为表单项使用，可以搭配 Form 组件实现表单相关功能。"
+          navigation={props.navigation}
+        />
         <ColumnView center>
           <CellGroup title="基础用法" inset>
             <Field label="文本" placeholder="请输入文本" value={value1} onChangeText={setValue1} />

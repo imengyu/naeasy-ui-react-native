@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Color, Cell, RowView, Button, CellGroup, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { CheckBox, CheckBoxGroup, ImageCheckBox } from '../../lib/src/components/form';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestCheck'>;
 
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function TestCheckScreen(_props: Props) {
+export function TestCheckScreen(props: Props) {
 
   const check5 = React.createRef<CheckBoxGroup>();
   const [ checked1, setChecked1 ] = useState(false);
@@ -27,7 +28,13 @@ export function TestCheckScreen(_props: Props) {
 
   return (
     <ScrollView>
-      <ColumnView center>
+
+      <ColumnView>
+        <TestPageHeader
+          title="CheckBox 复选框"
+          desc="复选框用于选择一个或多个选项。"
+          navigation={props.navigation}
+        />
         <CellGroup title="单独用法" inset>
           <ColumnView style={{ padding: 10 }}>
             <CheckBox value={checked1} onValueChange={setChecked1} text="复选框" />

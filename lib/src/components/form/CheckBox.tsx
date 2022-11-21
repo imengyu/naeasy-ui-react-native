@@ -98,7 +98,7 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     value: valueProp = false,
     block = false,
     color,
-    shape,
+    shape = 'round',
     checkSize,
     style = {},
     onValueChange,
@@ -114,9 +114,9 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
           disabled={disabled}
           shape={shape}
           size={checkSize}
-          color={ThemeSelector.color(disabled === true ? Color.border : color)}
-          borderColor={ThemeSelector.color(borderColor || Color.border)}
-          checkColor={ThemeSelector.color(disabled === true ? Color.textSecond : checkColor)}
+          backgroundColor={ThemeSelector.color(color)}
+          borderColor={ThemeSelector.color(borderColor)}
+          checkColor={ThemeSelector.color(checkColor)}
           icon={props.icon} />
       );
   }
@@ -281,29 +281,45 @@ export interface CheckBoxDefaultButtonProps {
    */
   on?: boolean;
   /**
-   * 未选中状态下边框颜色。默认：Color.border
+   * 未选中状态下边框颜色。默认：
    */
   borderColor?: string|undefined;
   /**
-   * 图标颜色。默认：Color.white
+   * 选中状态下边框颜色。默认：
    */
-  checkColor?: string|undefined;
+  checkedBorderColor?: string|undefined;
   /**
-   * 选中状态下按钮颜色。默认：Color.primary
-   */
-  color?: string|undefined;
-  /**
-   * 禁用并且未选中状态下边框颜色。默认：Color.border
+   * 禁用并且未选中状态下边框颜色。默认：
    */
   disableBorderColor?: string|undefined;
   /**
-   * 禁用状态下图标颜色。默认：Color.white
+   * 禁用并且选中状态下边框颜色。默认：
+   */
+  disableCheckedBorderColor?: string|undefined;
+  /**
+   * 图标颜色。默认：
+   */
+  checkColor?: string|undefined;
+  /**
+   * 禁用状态下图标颜色。默认：
    */
   disableCheckColor?: string|undefined;
   /**
-   * 禁用并且选中状态下按钮颜色。默认：Color.primary
+   * 未选中状态下按钮背景颜色。默认：
    */
-  disableColor?: string|undefined;
+  backgroundColor?: string|undefined;
+  /**
+   * 且选中状态下按钮背景颜色。默认：
+   */
+  checkedBackgroundColor?: string|undefined;
+  /**
+   * 禁用并且未选中状态下按钮背景颜色。默认：
+   */
+  disableBackgroundColor?: string|undefined;
+  /**
+   * 禁用并且选中状态下按钮背景颜色。默认：
+   */
+  disableCheckedBackgroundColor?: string|undefined;
   /**
    * 按钮大小。默认：18
    */
@@ -312,6 +328,10 @@ export interface CheckBoxDefaultButtonProps {
    * 图标大小。默认：15
    */
   iconSize?: number|undefined;
+  /**
+   * 边框粗细。默认：1
+   */
+  borderWidth?: number|undefined;
   /**
    * 图标。默认：check-mark
    */
@@ -345,51 +365,58 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
   const {
     size = 18,
     iconSize = 15,
+    borderWidth = 1,
+    disabled = false,
     shape = 'round',
     type = 'icon',
-    on,
-    disabled = false,
-    color = Color.primary,
-    borderColor = Color.border,
-    checkColor = Color.white,
-    disableBorderColor = Color.grey,
-    disableCheckColor = Color.white,
-    disableColor = Color.grey,
     icon = 'check-mark',
     style,
+    on = false,
+
+    borderColor = Color.border,
+    checkedBorderColor = Color.primary,
+    disableBorderColor = Color.grey,
+    disableCheckedBorderColor = Color.grey,
+    checkColor = Color.white,
+    disableCheckColor = Color.grey,
+    backgroundColor = Color.white,
+    checkedBackgroundColor = Color.primary,
+    disableBackgroundColor = Color.background,
+    disableCheckedBackgroundColor = Color.background,
   } = props;
 
   return (
     <View style={[
       styles.checkButtonOutView,
       selectStyleType(shape, 'round', {
-        round: { borderRadius: size / 2 },
+        round: { borderRadius: size },
         square: { borderRadius: 0 },
       }),
       {
         width: size,
         height: size,
-        borderColor: ThemeSelector.color(disabled ? (on ? disableColor : disableBorderColor) : (on ? color : borderColor)),
+        borderWidth: borderWidth,
+        borderColor: ThemeSelector.color(disabled ?
+          (on ? disableCheckedBorderColor : disableBorderColor) :
+          (on ? checkedBorderColor : borderColor)
+        ),
+        backgroundColor: ThemeSelector.color(disabled ?
+          (on ? disableCheckedBackgroundColor : disableBackgroundColor) :
+          (on ? checkedBackgroundColor : backgroundColor)
+        ),
       },
       style,
     ]}>
       {
-        on ?
-          <View style={[
-            styles.checkButtonInnerView,
-            {
-              width: size - 2, //减去边框
-              height: size - 2,
-              backgroundColor: ThemeSelector.color(disabled ? disableColor : color),
-            },
-          ]}>
-            {
-              type === 'icon' ?
-                <Icon icon={icon} color={disabled ? disableCheckColor : checkColor} size={iconSize} /> :
-                <View style={{ borderRadius: iconSize / 2, width: iconSize, height: iconSize, backgroundColor: ThemeSelector.color(disabled ? disableCheckColor : checkColor) }} />
-            }
-          </View> :
-          <></>
+        on ? (
+          type === 'icon' ?
+            <Icon icon={icon} color={disabled ? disableCheckColor : checkColor} size={iconSize} /> :
+            <View style={{
+              borderRadius: iconSize,
+              width: iconSize, height: iconSize,
+              backgroundColor: ThemeSelector.color(disabled ? disableCheckColor : checkColor),
+            }} />
+        ) : <></>
       }
     </View>
   );
@@ -408,15 +435,11 @@ const styles = DynamicThemeStyleSheet.create({
   },
   checkButtonOutView: {
     overflow: 'hidden',
-    marginRight: 4,
-    ...border(1, 'solid', Color.primary, true),
-  },
-  checkButtonInnerView: {
-    textAlign: 'center',
-    overflow: 'hidden',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 4,
+    ...border(1, 'solid', Color.primary, true),
   },
   check: {
     alignSelf: 'flex-start',

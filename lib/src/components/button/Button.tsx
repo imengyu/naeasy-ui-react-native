@@ -41,7 +41,7 @@ export interface ButtonProp {
    */
   loadingColor?: ThemeColor,
   /**
-   * 按钮形状 通过 square 设置方形按钮，通过 round 设置圆形按钮。
+   * 按钮形状 通过 square 设置方形按钮，通过 round 设置圆形按钮。默认：round
    */
   shape?: 'square'|'round',
   /**
@@ -65,7 +65,7 @@ export interface ButtonProp {
    */
   touchable?: boolean,
   /**
-   * 当按扭为round圆形按扭时的圆角大小，默认是50%
+   * 当按扭为round圆形按扭时的圆角大小。默认：5
    */
   radius?: number,
   /**

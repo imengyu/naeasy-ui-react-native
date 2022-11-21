@@ -86,7 +86,6 @@ export interface RadioProps {
 export const Radio = ThemeWrapper(function (props: RadioProps) {
 
 
-
   const text = props.children || props.text;
   const {
     checkPosition = 'left',
@@ -109,9 +108,9 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
         on={value}
         disabled={disabled}
         shape={shape}
-        color={ThemeSelector.color(color)}
+        checkedBorderColor="transparent"
+        checkedBackgroundColor={ThemeSelector.color(color)}
         disableBorderColor={ThemeSelector.color(disabledColor)}
-        disableColor={ThemeSelector.color(disabledColor)}
         iconSize={10}
         type="radio"
       />;

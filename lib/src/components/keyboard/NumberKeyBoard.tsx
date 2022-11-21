@@ -9,6 +9,7 @@ import { FeedbackNative } from "../tools/Feedback";
 import { WhiteSpace } from "../space/WhiteSpace";
 import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
+import { deviceWidth } from "../../utils";
 
 export interface NumberKeyBoardProps extends NumberKeyBoardInnerProps {
   /**
@@ -16,31 +17,85 @@ export interface NumberKeyBoardProps extends NumberKeyBoardInnerProps {
    */
   show: boolean;
   /**
+   * 是否显示键盘遮罩，显示遮罩时无法操作下方组件。默认：false
+   */
+  mask?: boolean;
+  /**
    * 键盘关闭时发出事件
    */
   onBlur?: () => void;
 }
+
+interface NumberKeyBoardSideKey {
+  /**
+   * 按键文字
+   */
+  key: string,
+  /**
+   * 按键是否显示图标，为 true 时 key 同时也是图标的名称。
+   */
+  icon?: boolean,
+  /**
+   * 按键所占格子数。默认：1
+   */
+  span?: number,
+}
+interface NumberKeyBoardExtraKey {
+  /**
+   * 按键文字
+   */
+  key: string,
+  /**
+   * 按键所占格子数。默认：1
+   */
+  span?: number,
+  /**
+   * 按键所占高度格子数。默认：1
+   */
+  height?: number,
+  /**
+   * 按键是否显示图标，为 true 时 key 同时也是图标的名称。
+   */
+  icon?: boolean,
+  /**
+   * 这个表示要在默认数字按键数组的哪一位插入。默认是在末尾添加。
+   */
+  order?: number,
+  /**
+   * 当order不为空时，指定此属性为true是直接替换指定位置的按键。
+   */
+  replace?: boolean,
+}
+
 export interface NumberKeyBoardInnerProps {
   /**
    * 键盘标题
    */
   title?: string;
   /**
+   * 键盘宽度，默认：deviceWidth
+   */
+  width?: number;
+  /**
+   * 默认数字按键数组。默认：`[ '1', '2', '3', '4', '5', '6', '7', '8', '9', 'close', '0', 'delete' ]`
+   */
+  defaultKeys?: string[],
+  /**
+   * 默认数字按键数组。默认：`[ '1', '2', '3', '4', '5', '6', '7', '8', '9', 'close', '0', 'delete' ]`
+   */
+  sideKeys?: NumberKeyBoardSideKey[],
+  /**
    * 键盘额外按键。 showSideButtons 为 true 时可配置2个额外按键，false 时可配置1个额外按键。
    */
-  extraKey?: string[];
+  extraKeys?: NumberKeyBoardExtraKey[];
   /**
    * 是否显示侧栏，当显示侧栏时，完成与删除按钮显示在侧栏，您可以使用 extraKey 配置额外的2个按键。
    */
   showSideButtons?: boolean;
   /**
-   * 是否显示完成按钮
+   * 是否显示关闭按钮。当显示 title 时，这个属性也用来控制标题栏上面的完成按钮是否显示。默认：是
    */
-  showFinishButton?: boolean;
-  /**
-   * 是否显示删除按钮
-   */
-  showDeleteButton?: boolean;
+  showCloseButton?: boolean;
   /**
    * 完成按钮文字
    */
@@ -49,6 +104,14 @@ export interface NumberKeyBoardInnerProps {
    * 按键高度，默认50
    */
   keyHeight?: number;
+  /**
+   * 键盘之间的间距
+   */
+  keyMargin?: number,
+  /**
+   * 键盘显示按键列数（不包括侧栏）。默认：3
+   */
+  keyColNum?: number,
   /**
    * 自定义按键的样式
    */
@@ -82,10 +145,14 @@ export interface NumberKeyBoardInnerProps {
    */
   keyPressedColor?: ThemeColor;
   /**
-   * 按键按下时是否有触感反馈，默认是
+   * 按键按下时是否有触感反馈，默认 true
    * @platform iOS
    */
   keyPressedImpactFeedback?: boolean;
+  /**
+   * 是否随机排序数字键盘，常用于安全等级较高的场景。默认：false
+   */
+  keyRandomOrder?: boolean;
   /**
    * 键盘点击按键时发出事件
    */
@@ -98,18 +165,28 @@ export interface NumberKeyBoardInnerProps {
    * 键盘点击完成按钮时发出事件
    */
   onFinish?: () => void;
+  /**
+   * 自定义渲染顶部区域
+   */
+  renderTop?: () => JSX.Element;
 }
 export interface NumberKeyBoardInstance {
 
 }
 
-const NumberKeyBoardKeys = [
-  '1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '',
+export const NumberKeyBoardKeys = [
+  '1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'delete',
 ];
+export const NumberKeyBoardSideKeys = [
+  { key: 'delete', span: 2 },
+  { key: 'finish', span: 2 },
+] as NumberKeyBoardSideKey[];
+
 const styles = DynamicThemeStyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',
+    backgroundColor: DynamicColor(Color.background),
   },
   keyPadOut: {
     position: 'relative',
@@ -119,20 +196,22 @@ const styles = DynamicThemeStyleSheet.create({
     flexDirection: 'row',
     flex: 3,
     flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   keyPadSide: {
     position: 'relative',
     flexDirection: 'row',
     flexWrap: 'wrap',
     flex: 1,
+    justifyContent: 'flex-start',
   },
   key: {
-    flexBasis: '33%',
-    width: '33%',
     height: 10,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: DynamicColor(Color.white),
+    borderRadius: 6,
   },
   title: {
     color: DynamicColor(Color.black),
@@ -148,17 +227,33 @@ const styles = DynamicThemeStyleSheet.create({
  */
 export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardInnerProps) {
 
-  const showSideButtons = props.showSideButtons === true;
-  const keyFinishColor = props.keyFinishColor || Color.primary;
-  const keyFinishPressedColor = props.keyFinishPressedColor || PressedColor(Color.white);
-  const keyColor = props.keyColor || Color.white;
-  const keyPressedColor = props.keyPressedColor || PressedColor(Color.white);
-  const keyFinishTextColor = props.keyFinishTextColor || Color.white;
-  const keyTextColor = props.keyTextColor || Color.black;
-  const finishButtonText = props.finishButtonText || '完成';
-  const keyHeight = props.keyHeight || 51;
-  const extraKey = props.extraKey || [];
-  const keyPressedImpactFeedback = props.keyPressedImpactFeedback !== false;
+  const {
+    width = deviceWidth,
+    showSideButtons = false,
+    keyFinishColor = Color.primary,
+    keyFinishPressedColor = PressedColor(Color.white),
+    keyColor = Color.white,
+    keyPressedColor = PressedColor(Color.white),
+    keyFinishTextColor = Color.white,
+    keyTextColor = Color.black,
+    finishButtonText = '完成',
+    keyHeight = 51,
+    keyMargin = 4,
+    keyColNum = 3,
+    defaultKeys = NumberKeyBoardKeys,
+    sideKeys = NumberKeyBoardSideKeys,
+    extraKeys = [],
+    keyPressedImpactFeedback = true,
+    keyRandomOrder = false,
+    showCloseButton = true,
+    title,
+    onDelete,
+    onInput,
+    onFinish,
+    renderTop,
+  } = props;
+
+
   const keyTextStyle = {
     ...styles.keyText,
     ...props.keyTextStyle,
@@ -171,21 +266,26 @@ export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardI
     color: ThemeSelector.color(keyFinishTextColor),
   };
 
-  function onFinish() {
-    props.onFinish && props.onFinish();
-  }
+  //计算按键占用宽度
+  const keyColNumFinal = (keyColNum + (showSideButtons ? 1 : 0));
+  const keyWidthBase = ((width - keyMargin * (keyColNumFinal + 1)) / keyColNumFinal);
 
-  function renderKey(text: string, icon: boolean, action = '', width = 0, height = 1) {
+  function renderKey(text: string, icon: boolean, action = '', widthCount = 1, heightCount = 1, side = false) {
+
+    const keyWidthReal = widthCount * keyWidthBase + keyMargin * (widthCount - 1);
+    const keyHeightReal = keyHeight * heightCount + (side ? keyMargin * (heightCount - 1) : 0);
 
     const keyStyle = {
       ...styles.key,
       backgroundColor: ThemeSelector.color(action === 'finish' ? keyFinishColor : keyColor),
-      flexBasis: `${width === 0 ? 33 : width}%`,
-      width: `${width === 0 ? 33 : width}%`,
-      height: keyHeight * height,
-      minHeight: keyHeight * height,
+      width: keyWidthReal,
+      height: keyHeightReal,
+      minHeight: keyHeightReal,
+      marginLeft: side ? 0 : keyMargin,
+      marginRight: side ? keyMargin : 0,
+      marginTop: keyMargin,
       ...props.keyStyle,
-    };
+    } as ViewStyle;
 
     //为空显示占位, 否则显示按钮
     return (
@@ -203,11 +303,11 @@ export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardI
               FeedbackNative.impactSelectionFeedbackGenerator();
             //键盘点击事件
             if (action === 'delete')
-              props.onDelete && props.onDelete();
+              onDelete?.();
             else if (action === 'finish')
-              onFinish();
+              onFinish?.();
             else
-              props.onInput && props.onInput(text);
+              onInput?.(text);
           }}
         >
           <View>
@@ -221,39 +321,62 @@ export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardI
     );
   }
 
+  //生成随机数字顺序
+  function makeRandomKeys() {
+    const noNumberKeys = defaultKeys.filter((k) => k.length !== 1);
+    const numberKeys = defaultKeys.filter((k) => k.length === 1).sort(() => 0.5 - Math.random());
+    return numberKeys.concat(noNumberKeys);
+  }
+
+  //主按键
   function renderKeys() {
     const arr = [] as JSX.Element[];
+    const keys = keyRandomOrder ? makeRandomKeys() : defaultKeys;
 
-    for (let i = 0; i < NumberKeyBoardKeys.length; i++) {
-      if (!showSideButtons) {
-        if (i === 9)
-          arr.push(renderKey(extraKey.length >= 1 ? extraKey[0] : '', false, 'extra1')); //附加按键1
-        else if (i === 11)
-          arr.push(renderKey('delete', true, 'delete')); //后退键
+    //循环按键
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] === 'delete') {
+        if (showSideButtons)
+          //删除在显示侧栏时按钮无需添加，因为侧栏已经有一个了
+          arr.push(renderKey('', false, '', 1, 1, false));
         else
-          arr.push(renderKey(NumberKeyBoardKeys[i], false)); //正常按键
-      } else {
-        if (i === 9 || i === 11) {
-          if (i === 9 && extraKey.length >= 1)
-            arr.push(renderKey(extraKey[0], false, 'extra1')); //附加按键1
-          else if (i === 11 && extraKey.length >= 2)
-            arr.push(renderKey(extraKey[1], false, 'extra2')); //附加按键2
-        }
-        else {
-          let w = 0;
-          if (i === 10 && extraKey.length < 2)
-            w = extraKey.length === 1 ? 66 : 100;
-          arr.push(renderKey(NumberKeyBoardKeys[i], false, '', w)); //正常按键
-        }
+          arr.push(renderKey('delete', true, 'delete', 1, 1, false));
+        continue;
       }
+
+      //添加Key
+      arr.push(renderKey(keys[i], keys[i].length > 1, 'key' + i, 1, 1, false));
+    }
+
+    //添加更多的按键
+    if (extraKeys.length > 0) {
+      extraKeys.forEach((key, i) => {
+        const keyEle = renderKey(key.key, key.icon === true, 'extra' + i, key.span || 1, key.height || 1, false);
+        if (key.order) {//插入或者替换
+          if (key.replace)
+            arr[key.order] = keyEle;
+          else
+            arr.splice(key.order, 0, keyEle);
+        }
+        else
+          arr.push(keyEle);
+      });
     }
 
     return arr;
   }
+
+  //侧栏按键
   function renderSideButtons() {
     const arr = [] as JSX.Element[];
-    arr.push(renderKey('delete', true, 'delete', 100, 2)); //后退键
-    arr.push(renderKey(finishButtonText, false, 'finish', 100, 2)); //完成键
+    for (const key of sideKeys) {
+      if (key.key === 'finish')
+        arr.push(renderKey(finishButtonText, false, 'finish', 1, key.span, true)); //完成键
+      else if (key.key === 'delete')
+        arr.push(renderKey('delete', true, 'delete', 1, key.span, true)); //后退键
+      else
+        arr.push(renderKey(key.key, key.icon === true, 'extra', 1, key.span, true)); //其他键
+    }
     return arr;
   }
 
@@ -261,22 +384,36 @@ export const NumberKeyBoardInner = ThemeWrapper(function (props: NumberKeyBoardI
     <View style={styles.container}>
       { /* 标题 */ }
       {
-        !CheckTools.isNullOrEmpty(props.title) ?
+        !CheckTools.isNullOrEmpty(title) ?
           <RowView padding={[ 4, 0 ]} justify="space-between" align="center">
             <RowView width={80} />
-            <Text style={styles.title}>{props.title}</Text>
+            <Text style={styles.title}>{title}</Text>
             <RowView width={80}>
-              { !props.showSideButtons ? <Button type="text" textColor={Color.primary} pressedColor={keyPressedColor} onPress={onFinish}>{finishButtonText}</Button> : <></> }
+              { showCloseButton ? <Button type="text" textColor={Color.primary} pressedColor={keyPressedColor} onPress={onFinish}>{finishButtonText}</Button> : <></> }
             </RowView>
           </RowView> :
-          <RowView justify="center" padding={[ 3, 6 ]}>
+          (showCloseButton ? <RowView justify="center" padding={[ 3, 6 ]}>
             <Button type="text" style={{ width: '100%' }} pressedColor={keyPressedColor} onPress={onFinish} icon="arrow-down" />
-          </RowView>
+          </RowView> : <></>)
       }
+      { renderTop ? renderTop() : <></> }
       { /* 键盘区域 */ }
       <View style={styles.keyPadOut}>
-        <View style={styles.keyPadKeys}>{ renderKeys() }</View>
-        { props.showSideButtons ? <View style={styles.keyPadSide}>{ renderSideButtons() }</View> : <></> }
+        <View style={[
+          styles.keyPadKeys,
+          {
+            paddingBottom: keyMargin,
+            paddingRight: keyMargin,
+          },
+        ]}>{ renderKeys() }</View>
+        {
+          showSideButtons ?
+            <View style={[
+              styles.keyPadSide,
+              { paddingBottom: keyMargin },
+            ]}>{ renderSideButtons() }</View> :
+            <></>
+        }
       </View>
       <WhiteSpace size="sm" />
     </View>
@@ -305,7 +442,7 @@ export const NumberKeyBoard = forwardRef<NumberKeyBoardInstance, NumberKeyBoardP
       show={props.show}
       closeable
       closeIcon={false}
-      mask={false}
+      mask={props.mask === true}
       position="bottom"
       onClose={onClose}
       renderContent={() => <NumberKeyBoardInner { ...props  } onFinish={onFinish} />}

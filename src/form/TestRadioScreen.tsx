@@ -4,6 +4,7 @@ import { CellGroup, Color, Cell, ColumnView } from '../lib';
 import { ScrollView, StyleSheet } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Radio, RadioGroup } from '../../lib/src/components/form';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestRadio'>;
 
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export function TestRadioScreen(_props: Props) {
+export function TestRadioScreen(props: Props) {
 
   const [ checked1, setChecked1 ] = useState(false);
   const [ checked2, setChecked2 ] = useState('0');
@@ -21,7 +22,12 @@ export function TestRadioScreen(_props: Props) {
 
   return (
     <ScrollView>
-      <ColumnView center>
+      <ColumnView>
+        <TestPageHeader
+          title="Radio 单选框"
+          desc="在一组备选项中进行单选。"
+          navigation={props.navigation}
+        />
         <CellGroup title="单独用法" inset>
           <ColumnView style={{ padding: 10 }}>
             <Radio value={checked1} onValueChange={setChecked1} text="单选框" />

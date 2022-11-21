@@ -13,8 +13,9 @@ export class TestAppHome extends React.Component<Props> {
         <ColumnView flex={1}>
           <CellGroup inset>
             <ColumnView padding={10}>
-              <RowView align="flex-end">
+              <RowView align="baseline">
                 <Text size={30} weight="bold">NaEasy UI</Text>
+                <WhiteSpace size="sm" />
                 <Tag text="React Native" type="primary" />
               </RowView>
               <Text>一款简单的移动端 UI 组件库</Text>
@@ -42,10 +43,10 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="CheckBox 组件" touchable showArrow onPress={() => this.props.navigation.push('TestCheck')} />
             <Cell title="Field 组件" touchable showArrow onPress={() => this.props.navigation.push('TestField')} />
             <Cell title="Form 表单" touchable showArrow onPress={() => this.props.navigation.push('TestForm')} />
-            <Cell title="NumberInput " touchable showArrow onPress={() => this.props.navigation.push('TestNumberInput')} />
+            <Cell title="NumberInput 数字输入" touchable showArrow onPress={() => this.props.navigation.push('TestNumberInput')} />
             <Cell title="NumberKeyBoard 数字键盘" touchable showArrow onPress={() => this.props.navigation.push('TestNumberKeyBoard')} />
             <Cell title="PlateKeyBoard 车牌号键盘" touchable showArrow onPress={() => this.props.navigation.push('TestPlateKeyBoard')} />
-            <Cell title="Picker 组件" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
+            <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
             <Cell title="Rate 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
