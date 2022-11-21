@@ -4,10 +4,11 @@ import { ScrollView } from 'react-native';
 import { ColumnView, Cell, CellGroup } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { Stepper } from '../../lib/src/components/form';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestStepper'>;
 
-export function TestStepperScreen(_props: Props) {
+export function TestStepperScreen(props: Props) {
 
   const [ check1, setCheck1 ] = useState(1);
   const [ check2, setCheck2 ] = useState(1);
@@ -20,6 +21,11 @@ export function TestStepperScreen(_props: Props) {
   return (
     <ScrollView>
       <ColumnView>
+        <TestPageHeader
+          title="Stepper 步进器"
+          desc="步进器由增加按钮、减少按钮和输入框组成，用于在一定范围内输入、调整数字。"
+          navigation={props.navigation}
+        />
         <CellGroup inset>
           <Cell title="基础用法" center renderRight={() => <Stepper key="1" value={check1} onValueChange={setCheck1} />} />
           <Cell title="步长设置" center renderRight={() => <Stepper key="2" value={check2} onValueChange={setCheck2} step={3} />} />

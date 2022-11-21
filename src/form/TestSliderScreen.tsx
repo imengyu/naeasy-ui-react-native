@@ -1,10 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, Color, RowView, Toast, WhiteSpace, Text } from '../lib';
+import { Color, Toast, WhiteSpace } from '../lib';
 import { Slider } from '../../lib/src/components/form';
+import { TestGroup } from '../components/TestGroup';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSlider', 'RootStack'>;
 interface State {
@@ -28,21 +29,29 @@ export class TestSliderScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView padding={10}>
-
-          <Text style={TestStyles.TitleText}>滑动输入条，用于在给定的范围内选择一个值。</Text>
+        <TestPageHeader
+          title="Slider 滑块"
+          desc="用于在给定的范围内选择一个值。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader bar={false}>基础用法</TestHeader>
+        <TestGroup>
           <Slider value={this.state.value1} onValueChange={v => this.setState({ value1: v })} />
-
-          <Text style={TestStyles.TitleText}>指定选择范围。</Text>
+        </TestGroup>
+        <TestHeader bar={false}>指定范围</TestHeader>
+        <TestGroup>
           <Slider value={this.state.value2} onValueChange={v => this.setState({ value2: v })} minValue={-50} maxValue={50} onEndChange={(v) => Toast.info(`当前值：${v}`)} />
-
-          <Text style={TestStyles.TitleText}>禁用</Text>
+        </TestGroup>
+        <TestHeader bar={false}>禁用</TestHeader>
+        <TestGroup>
           <Slider value={this.state.value3} onValueChange={v => this.setState({ value3: v })} touchable={false} />
-
-          <Text style={TestStyles.TitleText}>指定步长</Text>
+        </TestGroup>
+        <TestHeader bar={false}>指定步长</TestHeader>
+        <TestGroup>
           <Slider value={this.state.value3} onValueChange={v => this.setState({ value3: v })} step={20} />
-
-          <Text style={TestStyles.TitleText}>自定义样式</Text>
+        </TestGroup>
+        <TestHeader bar={false}>自定义样式</TestHeader>
+        <TestGroup>
           <Slider
             value={this.state.value4}
             onValueChange={v => this.setState({ value4: v })}
@@ -53,15 +62,13 @@ export class TestSliderScreen extends React.PureComponent<Props, State> {
               borderRadius: 0,
             }}
           />
+        </TestGroup>
+        <TestHeader bar={false}>垂直方向</TestHeader>
+        <TestGroup>
+          <Slider value={this.state.value5} onValueChange={v => this.setState({ value5: v })} vertical style={{ height: 200 }} />
+        </TestGroup>
 
-          <Text style={TestStyles.TitleText}>垂直方向</Text>
-          <RowView justify="center">
-            <Slider value={this.state.value5} onValueChange={v => this.setState({ value5: v })} vertical style={{ height: 200 }} />
-          </RowView>
-
-          <WhiteSpace size={400} />
-
-        </ColumnView>
+        <WhiteSpace size={400} />
       </ScrollView>
     );
   }

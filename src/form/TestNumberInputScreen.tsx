@@ -46,11 +46,11 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
         </TestGroup>
         <TestHeader>自定义长度</TestHeader>
         <TestGroup>
-          <NumberInput value={this.state.value2} onChangeText={(v) => this.setState({ value2: v })} numberCount={8} />
+          <NumberInput value={this.state.value2} onChangeText={(v) => this.setState({ value2: v })} numberCount={8} autoSize />
         </TestGroup>
         <TestHeader>格子间距</TestHeader>
         <TestGroup>
-          <NumberInput value={this.state.value3} onChangeText={(v) => this.setState({ value3: v })} gutter={5} />
+          <NumberInput value={this.state.value3} onChangeText={(v) => this.setState({ value3: v })} gutter={14} autoSize />
         </TestGroup>
         <TestHeader>下划线边框</TestHeader>
         <TestGroup>

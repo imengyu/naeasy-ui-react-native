@@ -3,6 +3,7 @@ import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated 
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { FeedbackNative } from "../tools/Feedback";
 import { ThemeWrapper } from "../../theme/Theme";
+import { Switch as NativeSwitch } from 'react-native';
 
 export interface SwitchProps {
   /**
@@ -14,6 +15,10 @@ export interface SwitchProps {
    */
   onValueChange?: (value: boolean) => void;
 
+  /**
+   * 是否使用 RN 原生 Switch 组件
+   */
+  native?: boolean;
   /**
    * 开关的颜色
    */
@@ -122,55 +127,57 @@ export const Switch = ThemeWrapper(function (props: SwitchProps) {
   } as ViewStyle;
 
   return (
-    <TouchableWithoutFeedback
-      style={{
-        ...styles.toggleOut,
-        ...style,
-      }}
-      onPress={change}
-    >
-      <View style={[
-        {
-          backgroundColor: ThemeSelector.color(inverseColor),
-          opacity: props.disabled ? 0.8 : 1,
-        },
-        styles.toggleOutView,
-        style,
-      ]}>
-        <Animated.View
-          style={[
-            { backgroundColor: ThemeSelector.color(color) },
-            styles.toggleActiveColor,
-            { opacity: opacityAnim },
-          ]}
-        />
-        <Animated.View
-          style={[
-            styles.toggleDot,
-            {
-              width: size,
-              height: size,
-            },
-            {
-              transform: [{
-                translateX: translateXAnim,
-              }],
-            },
-          ]}
-        >
-          <View style={[
-            styles.toggleDotInner,
-            {
-              backgroundColor: ThemeSelector.color(dotColor),
-              borderRadius: size / 2,
-              width: size - dotPadding * 2,
-              height: size - dotPadding * 2,
-            },
-          ]}>
-            { props.loading ? <ActivityIndicator color={ThemeSelector.color(props.value ? color : inverseColor)} /> : <></> }
-          </View>
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+    props.native ?
+      <NativeSwitch {...props} /> :
+      <TouchableWithoutFeedback
+        style={{
+          ...styles.toggleOut,
+          ...style,
+        }}
+        onPress={change}
+      >
+        <View style={[
+          {
+            backgroundColor: ThemeSelector.color(inverseColor),
+            opacity: props.disabled ? 0.8 : 1,
+          },
+          styles.toggleOutView,
+          style,
+        ]}>
+          <Animated.View
+            style={[
+              { backgroundColor: ThemeSelector.color(color) },
+              styles.toggleActiveColor,
+              { opacity: opacityAnim },
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.toggleDot,
+              {
+                width: size,
+                height: size,
+              },
+              {
+                transform: [{
+                  translateX: translateXAnim,
+                }],
+              },
+            ]}
+          >
+            <View style={[
+              styles.toggleDotInner,
+              {
+                backgroundColor: ThemeSelector.color(dotColor),
+                borderRadius: size / 2,
+                width: size - dotPadding * 2,
+                height: size - dotPadding * 2,
+              },
+            ]}>
+              { props.loading ? <ActivityIndicator color={ThemeSelector.color(props.value ? color : inverseColor)} /> : <></> }
+            </View>
+          </Animated.View>
+        </View>
+      </TouchableWithoutFeedback>
   );
 });

@@ -41,14 +41,15 @@ const styles = DynamicThemeStyleSheet.create({
 export function TestHeader(props: {
   children: string,
   desc?: string,
+  bar?: boolean,
 }) {
   return (
     <ThemeRender>{
       () => <ColumnView style={styles.headerOut}>
       <ColumnView justify="center" style={styles.header}>
         <Text size={16} color={Color.black}>{props.children}</Text>
-        <View style={styles.titleLine} />
-        <View style={styles.titleLine2} />
+        { props.bar !== false ? <View style={styles.titleLine} /> : <></> }
+        { props.bar !== false ?  <View style={styles.titleLine2} /> : <></> }
       </ColumnView>
       { props.desc ? <Text size={14} color={Color.textSecond} style={styles.desc}>{props.desc}</Text> : <></> }
     </ColumnView>}</ThemeRender>

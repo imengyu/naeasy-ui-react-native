@@ -1,9 +1,8 @@
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
-import { borderBottom, borderRight, selectStyleType } from '../../utils/StyleTools';
-import { Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
-import { TextInput } from 'react-native';
+import { border, borderBottom, selectStyleType } from '../../utils/StyleTools';
+import { Text, TextStyle, TouchableHighlight, View, ViewStyle, TextInput, Animated } from 'react-native';
 import { ColumnView } from '../layout/ColumnView';
 import { NumberKeyBoard } from '../keyboard/NumberKeyBoard';
 import { ThemeWrapper } from '../../theme/Theme';
@@ -59,6 +58,10 @@ export interface NumberInputProps {
    */
   gutter?: number;
   /**
+   * 是否自动调整宽度，默认否
+   */
+  autoSize?: boolean;
+  /**
    * 格子的边框，默认box
    */
   borderType?: NumberInputBorderType;
@@ -83,6 +86,10 @@ export interface NumberInputProps {
    */
   disableKeyPad?: boolean;
   /**
+   * 是显示输入闪烁光标，默认是
+   */
+  showCursur?: boolean;
+  /**
    * 是否在输入完成后自动收起键盘，默认是
    */
   finishHideKeyPad?: boolean;
@@ -102,13 +109,20 @@ const styles = DynamicThemeStyleSheet.create({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   box: {
-    padding: 10,
-    flex: 1,
+    position: 'relative',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
   },
   text: {
     fontSize: 18,
+    width: 18,
     textAlign: 'center',
     color: DynamicColor(Color.text),
   },
@@ -128,6 +142,16 @@ const styles = DynamicThemeStyleSheet.create({
     height: 1,
     left: -300,
   },
+  inputCursor: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -9,
+    width: 1.5,
+    marginLeft: -0.75,
+    height: 18,
+    backgroundColor: DynamicColor(Color.text),
+  },
 });
 
 /**
@@ -135,35 +159,69 @@ const styles = DynamicThemeStyleSheet.create({
  */
 export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
 
-  const useSystemInput = props.useSystemInput !== false;
-  const numberCount = props.numberCount || 6;
-  const isPassword = props.isPassword === true;
-  const disableKeyPad = props.disableKeyPad === true;
-  const startFocus = props.startFocus === true;
-  const finishHideKeyPad = props.finishHideKeyPad !== false;
-  const borderType = props.borderType || 'box';
-  const borderWidth = props.borderWidth || 1;
-  const borderColor = props.borderColor || (borderType === 'box' ? Color.background : Color.border);
-  const activeBorderColor = props.activeBorderColor || Color.primary;
-  const gutter = props.gutter || 0;
-  const valueArr = props.value.split('');
+  const {
+    useSystemInput = true,
+    numberCount = 6,
+    isPassword = false,
+    autoSize = false,
+    disableKeyPad = false,
+    startFocus = false,
+    finishHideKeyPad = true,
+    showCursur = true,
+    borderType = 'box',
+    borderWidth = 1.5,
+    gutter = 2,
+    borderColor = Color.border,
+    activeBorderColor = Color.primary,
+    value,
+    boxStyle,
+    textStyle,
+  } = props;
+
+  const valueArr = value.split('');
+  const inputCursorFadeAnimValue = useRef(new Animated.Value(0)).current;
+  const inputCursorFadeAnim = useRef(Animated.loop(Animated.sequence([
+    Animated.timing(inputCursorFadeAnimValue, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }),
+    Animated.timing(inputCursorFadeAnimValue, {
+      toValue: 0,
+      duration: 600,
+      useNativeDriver: true,
+    }),
+  ]))).current;
 
   let lastClickBoxRet = -1;
   const inputRef = createRef<TextInput>();
-  const textShadow = useRef(props.value);
+  const textShadow = useRef(value);
   const [ showInput, setShowInput ] = useState(startFocus);
+  const [ isFocus, setIsFocus ] = useState(startFocus);
 
   function focusInput() {
     if (useSystemInput)
       inputRef.current?.focus();
     else
       setShowInput(true);
+    setIsFocus(true);
+
+    if (showCursur)
+      inputCursorFadeAnim.start();
   }
   function blurInput() {
     if (useSystemInput)
       inputRef.current?.blur();
     else
       setShowInput(false);
+
+    setIsFocus(false);
+
+    if (showCursur)
+      inputCursorFadeAnim.stop();
+  }
+  function onBlurInput() {
+    setIsFocus(false);
   }
 
   useEffect(() => {
@@ -202,24 +260,50 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
     const arr = [] as JSX.Element[];
     for (let i = 0; i < numberCount; i++) {
       const valueThis = valueArr[i];
+      const activeCurrent = (isFocus && (i === 0) || Boolean(valueArr[i - 1]));
+      const active = Boolean(valueThis) || activeCurrent;
 
-      const boxStyle = selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
+      const finalBoxStyle = selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
         box: {
-          ...( i !== numberCount - 1 && gutter === 0 ? borderRight(borderWidth, 'solid', borderColor) : {}),
-          backgroundColor: ThemeSelector.color(Color.white),
+          ...border(borderWidth, 'solid', active ? activeBorderColor : borderColor),
         },
         underline: {
-          ...borderBottom(borderWidth, 'solid', valueThis ? activeBorderColor : borderColor),
+          ...borderBottom(borderWidth, 'solid', active ? activeBorderColor : borderColor),
+          borderRadius: 0,
         },
       }) as ViewStyle;
 
       arr.push(
-        <TouchableHighlight key={i} style={[
-          styles.box,
-          { marginHorizontal: gutter },
-          boxStyle,
-        ]} underlayColor={ThemeSelector.color(PressedColor(Color.white))} onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}>
-          <Text style={styles.text}>{(valueThis ? (isPassword ? '●' : valueThis) : ' ')}</Text>
+        <TouchableHighlight
+          key={i}
+          style={[
+            styles.box,
+            {
+              marginHorizontal: gutter,
+              flex: autoSize ? 1 : undefined,
+            },
+            finalBoxStyle,
+            boxStyle,
+          ]}
+          underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+          onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}
+        >
+          <View>
+            <Text style={[
+              styles.text,
+              textStyle,
+            ]}>{ valueThis ? (isPassword ? '●' : valueThis) : ' '}</Text>
+            {
+              !valueThis && activeCurrent && showCursur ?
+                <Animated.View
+                  style={[
+                    styles.inputCursor,
+                    { opacity: inputCursorFadeAnimValue },
+                  ]}
+                /> :
+                <></>
+            }
+          </View>
         </TouchableHighlight>
       );
     }
@@ -248,6 +332,7 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
         secureTextEntry={isPassword}
         keyboardType="number-pad"
         onChangeText={onInputChangeText}
+        onBlur={onBlurInput}
       />
       { CheckTools.isNullOrEmpty(props.info) ? <></> : <Text style={styles.info}>{props.info}</Text> }
       { CheckTools.isNullOrEmpty(props.errorMessage) ? <></> : <Text style={styles.errorMessage}>{props.errorMessage}</Text> }
@@ -256,6 +341,7 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
         show={showInput}
         onInput={onInput}
         onDelete={onDelete}
+        onBlur={onBlurInput}
       />
     </ColumnView>
   );

@@ -238,7 +238,7 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
   const keyFinishColor = props.keyFinishColor || Color.primary;
   const keyFinishPressedColor = props.keyFinishPressedColor || PressedColor(Color.primary);
   const keyColor = props.keyColor || Color.white;
-  const keyPressedColor = props.keyPressedColor || PressedColor(Color.primary);
+  const keyPressedColor = props.keyPressedColor || PressedColor(Color.white);
   const keyFinishTextColor = props.keyFinishTextColor || Color.white;
   const keyTextColor = props.keyTextColor || Color.black;
   const keyHeight = props.keyHeight || 40;
@@ -274,6 +274,10 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
   function onCancel() {
     props.onCancel && props.onCancel();
   }
+
+  const heightStyle = {
+    height: keyHeight * 7 + 10,
+  };
 
   function renderKey(text: string, icon: boolean, action = '', width = 0, height = 1) {
 
@@ -383,26 +387,26 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
       { /* 键盘区域 */ }
       {
         currentText.length === 0 ?
-        <View style={styles.keyPad}>
+        <View style={[ styles.keyPad, heightStyle]}>
           { keysProvinceText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length === 1 ?
-        <View style={styles.keyPad}>
+        <View style={[ styles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length > 1 && currentText.length < (isNewPlate ? 7 : 6) ?
-        <View style={styles.keyPad}>
+        <View style={[ styles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           { keysNumberText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length >= (isNewPlate ? 7 : 6) ?
-        <View style={styles.keyPad}>
+        <View style={[ styles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           { keysNumberText.map((key) => renderKey(key, false, '')) }
           { keysLastWordText.map((key) => renderKey(key, false, '')) }

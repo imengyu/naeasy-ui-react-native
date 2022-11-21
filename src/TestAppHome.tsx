@@ -40,20 +40,20 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="WingBlank 两翼留白" touchable showArrow onPress={() => this.props.navigation.push('TestWingBlank')} />
           </CellGroup>
           <CellGroup inset title="表单组件">
-            <Cell title="CheckBox 组件" touchable showArrow onPress={() => this.props.navigation.push('TestCheck')} />
-            <Cell title="Field 组件" touchable showArrow onPress={() => this.props.navigation.push('TestField')} />
+            <Cell title="CheckBox 复选框" touchable showArrow onPress={() => this.props.navigation.push('TestCheck')} />
+            <Cell title="Field 输入框/表单项" touchable showArrow onPress={() => this.props.navigation.push('TestField')} />
             <Cell title="Form 表单" touchable showArrow onPress={() => this.props.navigation.push('TestForm')} />
             <Cell title="NumberInput 数字输入" touchable showArrow onPress={() => this.props.navigation.push('TestNumberInput')} />
             <Cell title="NumberKeyBoard 数字键盘" touchable showArrow onPress={() => this.props.navigation.push('TestNumberKeyBoard')} />
             <Cell title="PlateKeyBoard 车牌号键盘" touchable showArrow onPress={() => this.props.navigation.push('TestPlateKeyBoard')} />
             <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
-            <Cell title="Radio 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
+            <Cell title="Radio 单选框" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
             <Cell title="Rate 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
-            <Cell title="SearchBar 组件" touchable showArrow onPress={() => this.props.navigation.push('TestSearchBar')} />
-            <Cell title="Slider 组件" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
-            <Cell title="Stepper 组件" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
-            <Cell title="Switch 组件" touchable showArrow onPress={() => this.props.navigation.push('TestSwitch')} />
+            <Cell title="SearchBar 搜索框" touchable showArrow onPress={() => this.props.navigation.push('TestSearchBar')} />
+            <Cell title="Slider 滑块" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
+            <Cell title="Stepper 步进器" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
+            <Cell title="Switch 开关" touchable showArrow onPress={() => this.props.navigation.push('TestSwitch')} />
           </CellGroup>
           <CellGroup inset title="展示组件">
             <Cell title="AvatarStack 头像组组件" touchable showArrow onPress={() => this.props.navigation.push('TestAvatarStack')} />

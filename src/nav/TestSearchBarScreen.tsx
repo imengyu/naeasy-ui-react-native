@@ -1,10 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { SearchBar } from '../../lib/src/components/form';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 
 type Props = StackScreenProps<RootStackParamList, 'TestSearchBar', 'RootStack'>;
@@ -29,15 +29,21 @@ export class TestSearchBarScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView padding={10}>
-
-          <Text style={TestStyles.TitleText}>基础用法</Text>
+        <TestPageHeader
+          title="SearchBar 搜索框"
+          desc="用于搜索场景的输入框组件。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader>基础用法</TestHeader>
+        <TestGroup>
           <SearchBar placeholder="请输入搜索关键词" onValueChange={(s) => this.setState({ value1: s })} />
-
-          <Text style={TestStyles.TitleText}>显示取消按钮</Text>
+        </TestGroup>
+        <TestHeader>显示取消按钮</TestHeader>
+        <TestGroup>
           <SearchBar placeholder="请输入搜索关键词" cancelState="show" onValueChange={(s) => this.setState({ value2: s })} />
-
-          <Text style={TestStyles.TitleText}>自定义样式</Text>
+        </TestGroup>
+        <TestHeader>自定义样式</TestHeader>
+        <TestGroup>
           <SearchBar
             placeholder="请输入搜索关键词"
             style={{
@@ -48,11 +54,9 @@ export class TestSearchBarScreen extends React.PureComponent<Props, State> {
             placeholderTextColor="#fff"
             leftIconProps={{ color: '#fff' }}
             cancelState="show"
-            onValueChange={(s) => this.setState({ value3: s })} />
-
-
-
-        </ColumnView>
+            onValueChange={(s) => this.setState({ value3: s })}
+          />
+        </TestGroup>
       </ScrollView>
     );
   }

@@ -193,7 +193,7 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
       { props.renderButton ? props.renderButton(valuePos) : <View style={[
         styles.track,
         {
-          backgroundColor: touch ? '#fff' : '#aaa',
+          backgroundColor: touch ? '#fff' : '#eaeaea',
           left: vertical ? 0 : `${valuePos}%`,
           top: vertical ? `${valuePos}%` : 0,
           marginLeft: vertical ? 0 : (-buttonSize / 2) * (valuePos / 100),
