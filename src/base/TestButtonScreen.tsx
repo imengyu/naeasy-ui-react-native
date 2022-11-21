@@ -20,11 +20,11 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         <TestHeader desc="按钮支持 default、primary、success、warning、danger 五种类型，默认为 default。">基础用法</TestHeader>
         <TestGroup>
           <ColumnView>
+            <Button text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
             <Button text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />
             <Button text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
-            <Button text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />
             <Button text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />
@@ -34,11 +34,11 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         <TestHeader desc="通过 plain 属性将按钮设置为朴素按钮，朴素按钮的文字为按钮颜色，背景为白色。">朴素按钮</TestHeader>
         <TestGroup>
           <ColumnView>
+            <Button plain text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
             <Button plain text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />
             <Button plain text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
-            <Button plain text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />
             <Button plain text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
             <WhiteSpace size="sm" />

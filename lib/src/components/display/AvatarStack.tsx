@@ -1,10 +1,11 @@
 import React from 'react';
-import { ImageSourcePropType, Text, View } from 'react-native';
+import { ImageSourcePropType, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { Avatar } from './Avatar';
 import { RowView } from '../layout/RowView';
-import { DynamicThemeStyleSheet } from '../../styles';
+import { DynamicThemeStyleSheet, ThemeColor } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeSelector } from '@imengyu/naeasy-ui-react-native';
 
 interface AvatarStackProp {
   /**
@@ -16,11 +17,11 @@ interface AvatarStackProp {
    */
   urls: string[],
   /**
-   * 最大显示多少个头像，超过后显示数字，默认是5个
+   * 最大显示多少个头像，超过后显示数字，默认 5
    */
   maxCount?: number,
   /**
-   * 超过最大显示后是否显示数字，默认是
+   * 超过最大显示后是否显示数字，默认 true
    */
   showOverflowCount?: boolean,
   /**
@@ -32,9 +33,33 @@ interface AvatarStackProp {
    */
   size?: number,
   /**
-   * 头像是否是圆形的
+   * 头像是否是圆形的，默认 true
    */
   round?: boolean,
+  /**
+   * 头像是圆角的大小，仅在 round=false 时有效，默认 0
+   */
+  radius?: number,
+  /**
+   * 是否为头像添加边框，默认 false
+   */
+  border?: boolean,
+  /**
+   * 头像边框宽度，默认 1
+   */
+  borderWidth?: number,
+  /**
+   * 头像边框颜色，默认 Color.white
+   */
+  borderColor?: ThemeColor,
+  /**
+   * 超出显示文字背景样式
+   */
+  overflowCountStyle?: ViewStyle,
+  /**
+   * 超出显示文字自定义样式
+   */
+  overflowCountTextStyle?: TextStyle,
   /**
    * 点击事件
    */
@@ -62,32 +87,54 @@ const styles = DynamicThemeStyleSheet.create({
  */
 export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
 
+  const {
+    imageMargin,
+    maxCount = 5,
+    border,
+    borderWidth = 1.5,
+    borderColor = Color.white,
+    round = true,
+    size = 30,
+    radius = 0,
+    showOverflowCount = true,
+    overflowCountStyle,
+    overflowCountTextStyle,
+    urls,
+    defaultAvatar,
+  } = props;
+
   function renderImages() {
     const array : Array<JSX.Element> = [];
-    const maxCount = props.maxCount || 5;
-    const size = props.size || 30;
     const imageStyle = {
-      marginLeft: props.imageMargin || -(size / 3),
-      borderRadius: props.round ? (size / 2) : 4,
+      marginLeft: imageMargin || -(size / 3),
+      borderRadius: round ? (size / 2) : radius,
+      borderWidth: border ? borderWidth : 0,
+      borderColor: ThemeSelector.color(borderColor),
       width: size,
       height: size,
     };
-    const showOverflowCount = props.showOverflowCount !== false;
 
-    for (let i = 0; i < props.urls.length; i++) {
-      const element = props.urls[i];
+    for (let i = 0; i < urls.length; i++) {
+      const element = urls[i];
       if (i === 0) {
         array.push(<Avatar url={element} key={i} style={{
           ...imageStyle,
           marginLeft: 0,
         }} />);
       } else if (i < maxCount) {
-        array.push(<Avatar url={element} key={i} defaultAvatar={props.defaultAvatar} style={imageStyle} />);
+        array.push(<Avatar url={element} key={i} defaultAvatar={defaultAvatar} style={imageStyle} />);
       } else {
         if (showOverflowCount) {
           array.push(
-            <View key={i} style={[imageStyle, styles.overflowCount]}>
-              <Text style={styles.overflowCountText}>+{props.urls.length - i}</Text>
+            <View key={i} style={[
+              imageStyle,
+              styles.overflowCount,
+              overflowCountStyle,
+            ]}>
+              <Text style={[
+                styles.overflowCountText,
+                overflowCountTextStyle,
+              ]}>+{urls.length - i}</Text>
             </View>
           );
         }

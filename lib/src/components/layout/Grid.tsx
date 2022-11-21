@@ -2,7 +2,7 @@ import React from 'react';
 import CheckTools from '../../utils/CheckTools';
 import ObjectUtils from '../../utils/ObjectUtils';
 import { borderTop } from '../../utils/StyleTools';
-import { Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { ImageSourcePropType, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 import { ThemeSelector, Color, ThemeColor, PressedColor } from '../../styles';
 import { Icon, IconProp } from '../basic/Icon';
@@ -53,6 +53,10 @@ interface GridItemProp {
    */
   titleColor?: ThemeColor,
   /**
+   * 文字自定义样式
+   */
+  titleStyle?: TextStyle,
+  /**
    * 背景颜色
    */
   backgroundColor?: ThemeColor,
@@ -65,26 +69,6 @@ interface GridItemProp {
    */
   icon?: string|ImageSourcePropType,
   /**
-   * 如果填写字段，则在图片位置显示文字。同时icon不生效。
-   */
-  imageAsTtile?: string;
-  /**
-   * 图片位置显示文字的颜色。
-   */
-  imageAsTtileColor?: ThemeColor;
-  /**
-   * 图片位置显示文字的大小，默认是18。
-   */
-  imageAsTtileStyle?: TextStyle;
-  /**
-   * 格子内容排列的方向，可选值为 horizontal
-   */
-  direction?: 'vetical'|'horizontal',
-  /**
-   * 图标自定义样式
-   */
-  iconStyle?: ImageStyle,
-  /**
    * 图标大小
    */
   iconSize?: number,
@@ -96,6 +80,22 @@ interface GridItemProp {
    * 图标自定义属性
    */
   iconProps?: IconProp;
+  /**
+   * 如果填写字段，则在图片位置显示文字。同时icon不生效。
+   */
+  imageAsTtile?: string;
+  /**
+   * 图片位置显示文字的颜色。
+   */
+  imageAsTtileColor?: ThemeColor;
+  /**
+   * 图片位置显示文字的样式。
+   */
+  imageAsTtileStyle?: TextStyle;
+  /**
+   * 格子内容排列的方向，可选值为 horizontal
+   */
+  direction?: 'vetical'|'horizontal',
   /**
    * 点击事件
    */
@@ -113,7 +113,7 @@ const styles = DynamicThemeStyleSheet.create({
     padding: 8,
   },
   title: {
-    fontSize: 13,
+    fontSize: 14,
     color: DynamicColor(Color.text),
   },
   titleImage: {
@@ -127,80 +127,105 @@ const styles = DynamicThemeStyleSheet.create({
 
 /**
  * 网格块按钮。包含一个图标和文字。
- *
- * ![示意图](https://imengyu.top/assets/images/cui/cui-block-button.png)
  */
 export const GridItem = ThemeWrapper(function (props: GridItemProp) {
 
+  const {
+    icon,
+    highlightColor,
+    iconColor,
+    iconSize = 22,
+    iconProps,
+    imageAsTtile,
+    imageAsTtileColor,
+    imageAsTtileStyle,
+    title,
+    titleColor,
+    titleStyle,
+    direction,
+    children,
+    style,
+    onPress,
+  } = props;
+
   function renderIcon() {
-    if (typeof props.icon === 'object' || typeof props.icon === 'number')
-      return <Image key="leftIcon" style={[ styles.icon, props.iconStyle as ImageStyle ]} resizeMode="contain" source={props.icon} />;
-    if (typeof props.icon === 'string') {
-      if (props.icon.startsWith('http'))
-        return <Image key="leftIcon" style={[ styles.icon, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
-      return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{
-        ...styles.icon,
-        ...props.iconStyle as TextStyle,
-        color: ThemeSelector.color(props.iconColor, Color.black),
-        fontSize: props.iconSize,
-      }} color={(styles.title as TextStyle).color as string} />;
-    }
-    return <View key="leftIcon" />;
+    return <Icon key="icon"
+      icon={icon}
+      style={styles.icon}
+      color={iconColor}
+      size={iconSize}
+      {...iconProps}
+    />;
   }
 
   return (
     <TouchableHighlight
-      underlayColor={ThemeSelector.color(props.highlightColor || PressedColor(Color.white))}
-      onPress={props.onPress}
+      underlayColor={ThemeSelector.color(highlightColor || PressedColor(Color.white))}
+      onPress={onPress}
       style={[
         styles.itemView,
-        props.style,
+        style,
       ]}
     >
-      <FlexView style={styles.itemView} center flex={1} direction={props.direction === 'horizontal' ? 'row' : 'column'}>
+      <FlexView style={styles.itemView} center flex={1} direction={direction === 'horizontal' ? 'row' : 'column'}>
         {
-          !CheckTools.isNullOrEmpty(props.imageAsTtile) ?
-            <Text style={[ styles.titleImage, { color: ThemeSelector.color(props.imageAsTtileColor, Color.text) }, props.imageAsTtileStyle ]} >{props.imageAsTtile}</Text> :
-            (props.icon ? renderIcon() : <></>)
+          !CheckTools.isNullOrEmpty(imageAsTtile) ?
+            <Text style={[
+              styles.titleImage,
+              { color: ThemeSelector.color(imageAsTtileColor, Color.text) },
+              imageAsTtileStyle,
+            ]} >{imageAsTtile}</Text> :
+            (icon ? renderIcon() : <></>)
         }
         {
-          !CheckTools.isNullOrEmpty(props.title) ?
-            <Text style={[ styles.title, { color: ThemeSelector.color(props.titleColor, Color.text) } ]} >{props.title}</Text> :
+          !CheckTools.isNullOrEmpty(title) ?
+            <Text style={[
+              styles.title,
+              { color: ThemeSelector.color(titleColor, Color.text) },
+              direction === 'vetical' ? { marginTop: 6 } : {},
+              titleStyle,
+            ]} >{title}</Text> :
             <></>
         }
-        { props.children as JSX.Element }
+        { children as JSX.Element }
       </FlexView>
     </TouchableHighlight>
   );
 });
 
 /**
- * 单元格组件, 为列表中的单个展示项。
+ * 宫格可以在水平方向上把页面分隔成等宽度的区块, 主要使用场景如：热门内容等。
  */
 export const Grid = ThemeWrapper(function (props: GridProp) {
+
+  const {
+    columnNum = 4,
+    square = false,
+    border = true,
+    borderWidth = StyleSheet.hairlineWidth,
+    direction = 'vetical',
+    children,
+    itemProps,
+  } = props;
+
   const borderColor = ThemeSelector.color(props.borderColor || Color.border);
-  const borderWidth = props.borderWidth || StyleSheet.hairlineWidth;
 
   function renderChildren() {
-    const columnNum = props.columnNum || 4;
-    const square = props.square === true;
-    const border = props.border !== false;
-    const direction = props.direction || 'vetical';
 
     const arr = [] as JSX.Element[];
-    if (props.children) {
+    if (children) {
 
       const flexBasis = (100 / columnNum);
-      const len = props.children.length;
+      const len = children.length;
 
       for (let index = 0; index < len; index++) {
-        const element = props.children[index];
+        const element = children[index];
 
         //对 GridItem 进行处理
         if (element) {
           //添加样式
           const style = ObjectUtils.clone({
-            ...(props.itemProps?.style || {}),
+            ...(itemProps?.style || {}),
             ...element.props.style,
           }) as ViewStyle;
           const key = index;
@@ -238,7 +263,7 @@ export const Grid = ThemeWrapper(function (props: GridProp) {
   }
 
   const hostStyle = {
-    ...(props.border ? borderTop(borderWidth, 'solid', borderColor) : {}),
+    ...(border ? borderTop(borderWidth, 'solid', borderColor) : {}),
   };
 
   return (<RowView wrap style={hostStyle}>{renderChildren()}</RowView>);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace, A } from './lib';
+import { Text, ColumnView, CellGroup, Cell, XBarSpace, WhiteSpace, A, RowView, Tag } from './lib';
 import { RootStackParamList } from './navigation';
 
 type Props = StackScreenProps<RootStackParamList, 'Components'>;
@@ -13,8 +13,11 @@ export class TestAppHome extends React.Component<Props> {
         <ColumnView flex={1}>
           <CellGroup inset>
             <ColumnView padding={10}>
-              <Text size={30} weight="bold">NaEasy UI</Text>
-              <Text>NaEasy UI</Text>
+              <RowView align="flex-end">
+                <Text size={30} weight="bold">NaEasy UI</Text>
+                <Tag text="React Native" type="primary" />
+              </RowView>
+              <Text>一款简单的移动端 UI 组件库</Text>
               <A href="https://github.com/imengyu/imengyu-ui-lib">https://github.com/imengyu/imengyu-ui-lib</A>
             </ColumnView>
           </CellGroup>
@@ -32,7 +35,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Flex 布局封装" touchable showArrow onPress={() => this.props.navigation.push('TestLayout')} />
             <Cell title="Layout 栅格布局" touchable showArrow onPress={() => this.props.navigation.push('TestLayout2')} />
             <Cell title="Grid 宫格组" touchable showArrow onPress={() => this.props.navigation.push('TestGrid')} />
-            <Cell title="WhiteSpace 上下留白" touchable showArrow onPress={() => this.props.navigation.push('TestWhiteSpace')} />
+            <Cell title="WhiteSpace 空白高度" touchable showArrow onPress={() => this.props.navigation.push('TestWhiteSpace')} />
             <Cell title="WingBlank 两翼留白" touchable showArrow onPress={() => this.props.navigation.push('TestWingBlank')} />
           </CellGroup>
           <CellGroup inset title="表单组件">

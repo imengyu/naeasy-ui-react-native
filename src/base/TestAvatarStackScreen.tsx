@@ -1,8 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { ColumnView, CellGroup, RowView, AvatarStack, Text } from '../lib';
+import { AvatarStack } from '../lib';
 import { RootStackParamList } from '../navigation';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestAvatarStack'>;
 
@@ -11,43 +13,79 @@ export class TestAvatarStackScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ padding: 10 }}>
-          <CellGroup title="头像组">
-            <Text>通过 AvatarStack 组件显示一组头像。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <AvatarStack urls={[
-                'https://imengyu.top/assets/images/test/2.jpg',
-                'https://imengyu.top/assets/images/test/3.jpg',
-                'https://imengyu.top/assets/images/test/4.jpg',
-                'https://imengyu.top/assets/images/test/5.jpg',
-              ]} round />
-            </RowView>
+        <TestPageHeader
+          title="AvatarStack 头像组"
+          desc="用于显示一组头像，通常可用于显示活动用户、好友信息等等。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader>头像组</TestHeader>
+        <TestGroup>
+          <AvatarStack urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} round />
+        </TestGroup>
 
-            <Text>头像组超出后显示数字。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <AvatarStack urls={[
-                'https://imengyu.top/assets/images/test/2.jpg',
-                'https://imengyu.top/assets/images/test/3.jpg',
-                'https://imengyu.top/assets/images/test/4.jpg',
-                'https://imengyu.top/assets/images/test/5.jpg',
-                'https://imengyu.top/assets/images/test/2.jpg',
-                'https://imengyu.top/assets/images/test/3.jpg',
-                'https://imengyu.top/assets/images/test/4.jpg',
-                'https://imengyu.top/assets/images/test/5.jpg',
-              ]} round maxCount={6} />
-            </RowView>
+        <TestHeader>自定义大小</TestHeader>
+        <TestGroup>
+          <AvatarStack urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} size={50} />
+        </TestGroup>
 
-            <Text>设置头像之间的间距。</Text>
-            <RowView style={{ paddingVertical: 10 }}>
-              <AvatarStack imageMargin={10} urls={[
-                'https://imengyu.top/assets/images/test/2.jpg',
-                'https://imengyu.top/assets/images/test/3.jpg',
-                'https://imengyu.top/assets/images/test/4.jpg',
-                'https://imengyu.top/assets/images/test/5.jpg',
-              ]} round />
-            </RowView>
-          </CellGroup>
-        </ColumnView>
+        <TestHeader>方形形状</TestHeader>
+        <TestGroup>
+          <AvatarStack urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} round={false}  />
+        </TestGroup>
+
+        <TestHeader>头像组超出后显示数字</TestHeader>
+        <TestGroup>
+          <AvatarStack urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} round maxCount={6} />
+        </TestGroup>
+
+        <TestHeader>边框</TestHeader>
+        <TestGroup>
+          <AvatarStack urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} round border maxCount={6} />
+        </TestGroup>
+
+        <TestHeader>设置头像之间的间距</TestHeader>
+        <TestGroup>
+          <AvatarStack imageMargin={10} urls={[
+            'https://imengyu.top/assets/images/test/2.jpg',
+            'https://imengyu.top/assets/images/test/3.jpg',
+            'https://imengyu.top/assets/images/test/4.jpg',
+            'https://imengyu.top/assets/images/test/5.jpg',
+          ]} round />
+        </TestGroup>
+
       </ScrollView>
     );
   }

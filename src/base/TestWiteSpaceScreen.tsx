@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, ColumnView, WhiteSpace, Text, Color } from '../lib';
+import { ColumnView, RowView, WhiteSpace, Text, Color } from '../lib';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestWhiteSpace'>;
 
@@ -14,7 +15,27 @@ const styles = StyleSheet.create({
   },
   box2: {
     width: '100%',
+    borderWidth: 1,
+    borderColor: Color.warning.light,
+  },
+  box5: {
+    height: '100%',
+    borderWidth: 1,
+    borderColor: Color.warning.light,
+  },
+  box3: {
+    width: 39,
+    height: 39,
+    backgroundColor: Color.success.light,
+    borderRadius: 10,
+    margin: 5,
+  },
+  box4: {
+    width: 39,
+    height: 39,
     backgroundColor: Color.warning.light,
+    borderRadius: 10,
+    margin: 5,
   },
 });
 
@@ -22,32 +43,49 @@ export class TestWhiteSpaceScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center>
-          <CellGroup title="空白高度">
-            <Text style={TestStyles.TitleText}>通过 WhiteSpace 添加空白高度, 支持 lg/md/sm 或者是数字宽度 。</Text>
-            <ColumnView wrap style={TestStyles.PaddingS}>
-              <View style={styles.box}>
-                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit iaculis velit, vitae euismod urna facilisis et. Ut orci justo, euismod at orci in,.</Text>
-              </View>
-              <WhiteSpace size={100} style={styles.box2} />
-              <View style={styles.box}>
-                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit iaculis velit, vitae euismod urna facilisis et. Ut orci justo, euismod at orci in,.</Text>
-              </View>
-              <WhiteSpace size="lg" style={styles.box2} />
-              <View style={styles.box}>
-                <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor. Duis volutpat ultricies placerat. Morbi non placerat nulla, nec finibus urna. Sed vitae ullamcorper erat, et finibus massa. Ut consequat purus sit amet lacus lacinia, quis convallis nunc interdum. Phasellus pellentesque enim ante, ut tristique quam commodo eu. Curabitur sit amet facilisis neque, eget iaculis mauris. Proin dapibus lectus eu sem vestibulum tristique.</Text>
-              </View>
-              <WhiteSpace size="md" style={styles.box2} />
-              <View style={styles.box}>
-                <Text>Maecenas pharetra vel sem vel ultrices. Nulla consequat, diam ac tristique dictum, massa orci convallis libero, vitae volutpat nulla massa quis arcu. Proin tempor, nibh at blandit porttitor, metus massa faucibus mi, nec volutpat metus nunc quis velit. Pellentesque commodo augue sem, id lobortis erat mollis sed. Aliquam vitae sapien id neque pretium faucibus eu et augue. Nullam semper ornare felis sit amet hendrerit. Sed sit amet ligula in erat maximus dapibus at nec urna. In hac habitasse platea dictumst. Vivamus velit orci, auctor quis venenatis eu, aliquet eu sapien. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut varius massa libero, eu viverra orci commodo in. </Text>
-              </View>
-              <WhiteSpace size="sm" style={styles.box2} />
-              <View style={styles.box}>
-                <Text>In turpis leo, placerat eget metus a, mattis elementum diam. Suspendisse auctor ipsum sed mauris aliquet semper.</Text>
-              </View>
-            </ColumnView>
-          </CellGroup>
-        </ColumnView>
+        <TestPageHeader
+          title="WhiteSpace 空白高度"
+          desc="用于在布局中添加空白高度。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader desc="通过 WhiteSpace 添加空白高度, 支持 lg/md/sm 或者是数字宽度 。">空白高度</TestHeader>
+        <TestGroup>
+          <ColumnView wrap>
+            <View style={styles.box}>
+              <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit iaculis velit, vitae euismod urna facilisis et. Ut orci justo, euismod at orci in,.</Text>
+            </View>
+            <WhiteSpace size={100} style={styles.box2} />
+            <View style={styles.box}>
+              <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit iaculis velit, vitae euismod urna facilisis et. Ut orci justo, euismod at orci in,.</Text>
+            </View>
+            <WhiteSpace size="lg" style={styles.box2} />
+            <View style={styles.box}>
+              <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor. Duis volutpat ultricies placerat. Morbi non placerat nulla, nec finibus urna. </Text>
+            </View>
+            <WhiteSpace size="md" style={styles.box2} />
+            <View style={styles.box}>
+              <Text>Maecenas pharetra vel sem vel ultrices. Nulla consequat, diam ac tristique dictum, massa orci convallis libero, vitae volutpat nulla massa quis arcu. </Text>
+            </View>
+            <WhiteSpace size="sm" style={styles.box2} />
+            <View style={styles.box}>
+              <Text>In turpis leo, placerat eget metus a, mattis elementum diam. Suspendisse auctor ipsum sed mauris aliquet semper.</Text>
+            </View>
+          </ColumnView>
+        </TestGroup>
+        <TestHeader desc="也可在水平布局中占位 。">水平布局中占位</TestHeader>
+        <TestGroup>
+          <RowView wrap>
+            <View style={styles.box3} />
+            <WhiteSpace size={10} style={styles.box5} />
+            <View style={styles.box4} />
+            <WhiteSpace size="lg" style={styles.box5} />
+            <View style={styles.box3} />
+            <WhiteSpace size="md" style={styles.box5} />
+            <View style={styles.box4} />
+            <WhiteSpace size="sm" style={styles.box5} />
+            <View style={styles.box3} />
+          </RowView>
+        </TestGroup>
       </ScrollView>
     );
   }
