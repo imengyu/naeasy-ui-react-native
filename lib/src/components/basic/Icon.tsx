@@ -12,10 +12,16 @@ export interface IconProp {
    */
   name?: string,
   /**
-   * 图标的名称。
-   * @deprecated 已弃用，请使用 `name` 属性。
+   * 图标的名称或者传入图标数组。
+   * 同 `name` 属性，但此属性支持：
+   * * 传入 http/https 开头的图片 URL ，会直接调用图片显示。
+   * * 传入本地图片，会直接调用图片显示。
    */
-  icon?: string,
+  icon?: string|ImageSourcePropType,
+  /**
+   * 当 `icon` 传入本地图片资源时，是否按照 SVG 解析。默认：false
+   */
+  svgWhenIconIsResource?: boolean,
   /**
    * 图标文字大小
    */
@@ -42,7 +48,8 @@ export interface IconProp {
   fontFamily?: string,
 }
 
-type IconMap = Record<string, string|{ source: ImageSourcePropType, svg: boolean }>;
+type IconItem = string|{ source: ImageSourcePropType, svg: boolean }
+type IconMap = Record<string, IconItem>;
 
 //图标集
 let iconMap = (require('../../data/DefaultIcon.json') || {}) as IconMap;
@@ -87,20 +94,40 @@ export const IconUtils = {
  * Icon 支持基于字体的图标集、Svg 图标、图片，你只需要预先通过 IconUtils.configIconMap
  * 设置自己的图标集，即可通过 name 快速显示一个图标。
  *
+ * * 也可传入 URL 或者 `require('image')` 显示单独的图标图像
+ *
  * 内置图标请参考 TODO
  */
 export const Icon = ThemeWrapper(function (props: IconProp) {
 
-  const { icon, svgProps, imageProps, style, color } = props;
-  let name = props.name;
+  //参数
+  const {
+    icon,
+    svgProps, imageProps, style, color,
+    size = 20,
+    svgWhenIconIsResource = false,
+  } = props;
+  let name : string|ImageSourcePropType|undefined = props.name;
+  let iconData : IconItem|null = null;
 
+  //兼容性写法
   if (!name)
     name = icon;
   if (!name)
     return renderFail();
 
-  const size = props.size || 20;
-  const iconData = iconMap[name || ''];
+  //处理直接传入对象的情况
+  if (typeof name === 'string') {
+    if (name.startsWith('http'))
+      iconData = name;
+    else
+      iconData = iconMap[name || ''];
+  } else {
+    iconData = {
+      source: name,
+      svg: svgWhenIconIsResource,
+    };
+  }
 
   if (!iconData)
     return renderFail();
@@ -147,7 +174,7 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   }
 
   function renderFail() {
-    return <Text style={{ color: '#f00' }}>IconFail:{name || 'empty'}</Text>;
+    return <Text style={{ color: '#f00' }}>IconFail:{'' + name}</Text>;
   }
 
   return renderFail();

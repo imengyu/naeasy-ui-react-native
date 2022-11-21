@@ -23,15 +23,15 @@ export class TestAppHome extends React.Component<Props> {
           </CellGroup>
           <CellGroup inset title="基础组件">
             <Cell title="Typography 段落" touchable showArrow onPress={() => this.props.navigation.push('TestTypography')} />
-            <Cell title="Button 按钮组件" touchable showArrow onPress={() => this.props.navigation.push('TestButton')} />
-            <Cell title="Cell 单元格组件" touchable showArrow onPress={() => this.props.navigation.push('TestCell')} />
-            <Cell title="Icon 图标组件" touchable showArrow onPress={() => this.props.navigation.push('TestIcon')} />
-            <Cell title="Image 图片组件" touchable showArrow onPress={() => this.props.navigation.push('TestImage')} />
+            <Cell title="Button 按钮" touchable showArrow onPress={() => this.props.navigation.push('TestButton')} />
+            <Cell title="Cell 单元格" touchable showArrow onPress={() => this.props.navigation.push('TestCell')} />
+            <Cell title="Icon 图标" touchable showArrow onPress={() => this.props.navigation.push('TestIcon')} />
+            <Cell title="Image 图片" touchable showArrow onPress={() => this.props.navigation.push('TestImage')} />
           </CellGroup>
           <CellGroup inset title="布局组件">
-            <Cell title="Flex 布局组件" touchable showArrow onPress={() => this.props.navigation.push('TestLayout')} />
-            <Cell title="Layout 布局组件" touchable showArrow onPress={() => this.props.navigation.push('TestLayout2')} />
-            <Cell title="Grid 宫格组件" touchable showArrow onPress={() => this.props.navigation.push('TestGrid')} />
+            <Cell title="Flex 布局封装" touchable showArrow onPress={() => this.props.navigation.push('TestLayout')} />
+            <Cell title="Layout 栅格布局" touchable showArrow onPress={() => this.props.navigation.push('TestLayout2')} />
+            <Cell title="Grid 宫格组" touchable showArrow onPress={() => this.props.navigation.push('TestGrid')} />
             <Cell title="WhiteSpace 上下留白" touchable showArrow onPress={() => this.props.navigation.push('TestWhiteSpace')} />
             <Cell title="WingBlank 两翼留白" touchable showArrow onPress={() => this.props.navigation.push('TestWingBlank')} />
           </CellGroup>
@@ -43,7 +43,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="NumberKeyBoard 数字键盘" touchable showArrow onPress={() => this.props.navigation.push('TestNumberKeyBoard')} />
             <Cell title="PlateKeyBoard 车牌号键盘" touchable showArrow onPress={() => this.props.navigation.push('TestPlateKeyBoard')} />
             <Cell title="Picker 组件" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
-            <Cell title="PickerWhellView 组件" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
+            <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
             <Cell title="Rate 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
             <Cell title="SearchBar 组件" touchable showArrow onPress={() => this.props.navigation.push('TestSearchBar')} />

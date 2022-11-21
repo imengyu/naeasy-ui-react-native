@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Button, RowView } from '../lib';
+import { Button, RowView, ColumnView, WhiteSpace } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
@@ -19,23 +19,31 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         />
         <TestHeader desc="按钮支持 default、primary、success、warning、danger 五种类型，默认为 default。">基础用法</TestHeader>
         <TestGroup>
-          <RowView wrap>
-            <Button text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button text="success" type="success" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button text="default" type="default" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-          </RowView>
+          <ColumnView>
+            <Button text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} />
+          </ColumnView>
         </TestGroup>
         <TestHeader desc="通过 plain 属性将按钮设置为朴素按钮，朴素按钮的文字为按钮颜色，背景为白色。">朴素按钮</TestHeader>
         <TestGroup>
-          <RowView wrap>
-            <Button plain text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button plain text="success" type="success" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button plain text="default" type="default" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button plain text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button plain text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-          </RowView>
+          <ColumnView>
+            <Button plain text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button plain text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button plain text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button plain text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="sm" />
+            <Button plain text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} />
+          </ColumnView>
         </TestGroup>
         <TestHeader desc="通过 touchable=false 属性来禁用按钮，禁用状态下按钮不可点击。也可不提供 onPress 函数，此时按钮也无法响应点击。">禁用状态</TestHeader>
         <TestGroup>
@@ -50,7 +58,7 @@ export class TestButtonScreen extends React.PureComponent<Props> {
           <RowView wrap>
             <Button shape="square" text="方形按钮" type="primary" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
             <Button shape="round" text="圆形按钮" type="success" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-            <Button shape="round" radius={5} text="可以通过raduis设置圆角大小" type="primary" onPress={()=>showTestMessage('点击了！')} style={{ marginTop: 10 }} />
+            <Button shape="round" radius={50} text="可以通过raduis设置圆角大小" type="danger" onPress={()=>showTestMessage('点击了！')} style={{ marginTop: 10 }} />
           </RowView>
         </TestGroup>
         <TestHeader>自定义颜色</TestHeader>

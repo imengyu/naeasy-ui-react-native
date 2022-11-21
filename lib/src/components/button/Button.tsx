@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { ActivityIndicator, Image, ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewProps, ViewStyle } from 'react-native';
-import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines } from '../../styles';
+import { ActivityIndicator, ColorValue, ImageSourcePropType, Text, TextStyle, TouchableHighlight, ViewProps, ViewStyle } from 'react-native';
+import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines, DynamicThemeStyleSheet, DynamicColor } from '../../styles';
 import { FonstSizes } from '../../styles/TextStyles';
 import { border, paddingVH, selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
 import { ThemeWrapper } from '../../theme/Theme';
-
-//TODO: 优化代码样式
 
 type ButtomType = 'default'|'primary'|'success'|'warning'|'danger'|'custom'|'text';
 type ButtomSizeType = 'small'|'medium'|'large'|'larger'|'mini';
@@ -51,9 +49,17 @@ export interface ButtonProp {
    */
   icon?: string|ImageSourcePropType,
   /**
-   * 当使用图标时，图标的附加属性
+   * 当使用图标时，左侧图标的附加属性
    */
   iconProps?: IconProp;
+  /**
+   * 右侧图标。支持 IconFont 组件里的所有图标，也可以传入图标的图片 URL（http/https）。
+   */
+  rightIcon?: string|ImageSourcePropType,
+  /**
+   * 当使用图标时，右侧图标的附加属性
+   */
+  rightIconProps?: IconProp;
   /**
    * 是否可以点击
    */
@@ -91,10 +97,6 @@ export interface ButtonProp {
    */
   style?: ViewStyle,
   /**
-   * 自定义图标样式
-   */
-  iconStyle?: TextStyle|ImageStyle,
-  /**
    * 按扭的文字，等同于 text 属性
    */
   children?: string;
@@ -119,7 +121,7 @@ export interface ButtonProp {
   onPress?: () => void,
 }
 
-const styles = StyleSheet.create({
+const styles = DynamicThemeStyleSheet.create({
   view: {
     minWidth: 50,
     width: 'auto',
@@ -130,160 +132,210 @@ const styles = StyleSheet.create({
   titleIcon: {
     fontSize: 18,
   },
-  icon: {
+  plainButtonDefault: {
+    ...border(1, 'solid', Color.border, true),
+    color: DynamicColor(Color.text),
   },
-  iconImage: {
-    width: 18,
-    height: 20,
+  plainButtonPrimary: {
+    ...border(1, 'solid', Color.primary, true),
+    color: DynamicColor(Color.primary),
+  },
+  plainButtonSuccess: {
+    ...border(1, 'solid', Color.success, true),
+    color: DynamicColor(Color.success),
+  },
+  plainButtonWarning: {
+    ...border(1, 'solid', Color.warning, true),
+    color: DynamicColor(Color.warning),
+  },
+  plainButtonDanger: {
+    ...border(1, 'solid', Color.danger, true),
+    color: DynamicColor(Color.danger),
+  },
+  buttonBlock: {
+    alignSelf: 'stretch',
+  },
+  buttonAuto: {
+    flex: 0,
+    flexShrink: 0,
+    flexGrow: 0,
+  },
+  buttonSizeLarger: paddingVH(SpaceDefines.button_pv_large, SpaceDefines.button_ph_large),
+  buttonSizeLarge: paddingVH(SpaceDefines.button_pv_large, SpaceDefines.button_ph_large),
+  buttonSizeMedium: paddingVH(SpaceDefines.button_pv_medium, SpaceDefines.button_ph_medium),
+  buttonSizeSmall: paddingVH(SpaceDefines.button_pv_small, SpaceDefines.button_ph_small),
+  buttonSizeMini: paddingVH(SpaceDefines.button_pv_mini, SpaceDefines.button_ph_mini),
+  buttonPrimary: {
+    backgroundColor: DynamicColor(Color.primary),
+    color: DynamicColor(Color.white),
+  },
+  buttonSuccess: {
+    backgroundColor: DynamicColor(Color.success),
+    color: DynamicColor(Color.white),
+  },
+  buttonWarning: {
+    backgroundColor: DynamicColor(Color.warning),
+    color: DynamicColor(Color.white),
+  },
+  buttonDanger: {
+    backgroundColor: DynamicColor(Color.danger),
+    color: DynamicColor(Color.white),
   },
 });
+
+const ButtonSizeChoices = {
+  large: styles.buttonSizeLarge,
+  larger: styles.buttonSizeLarger,
+  medium: styles.buttonSizeMedium,
+  small: styles.buttonSizeSmall,
+  mini: styles.buttonSizeMini,
+};
 
 /**
  * 按钮组件。
  */
 export const Button = ThemeWrapper(function (props: ButtonProp) {
-  function getStyle() {
-    const style = {
-      ...selectStyleType<ViewStyle|TextStyle, ButtomType>(props.type, 'default', props.plain ? {
-        default: {
-          ...border(1, 'solid', ThemeSelector.color(Color.border)),
-          color: ThemeSelector.color(Color.text),
-        },
-        primary: {
-          ...border(1, 'solid', ThemeSelector.color(Color.primary)),
-          color: ThemeSelector.color(Color.primary),
-        },
-        success: {
-          ...border(1, 'solid', ThemeSelector.color(Color.success)),
-          color: ThemeSelector.color(Color.success),
-        },
-        warning: {
-          ...border(1, 'solid', ThemeSelector.color(Color.warning)),
-          color: ThemeSelector.color(Color.warning),
-        },
-        danger: {
-          ...border(1, 'solid', ThemeSelector.color(Color.danger)),
-          color: ThemeSelector.color(Color.danger),
-        },
-        custom: {
-          ...border(1, 'solid', ThemeSelector.color(props.color || Color.primary)),
-          color: ThemeSelector.color(props.color),
-        },
-        text: {
-          color: ThemeSelector.color(props.color),
-        },
-      } : {
-        default: {
-          ...border(1, 'solid', ThemeSelector.color(Color.border)),
-          color: ThemeSelector.color(Color.text),
-        },
-        primary: {
-          backgroundColor: ThemeSelector.color(Color.primary),
-          color: ThemeSelector.color(Color.white),
-        },
-        success: {
-          backgroundColor: ThemeSelector.color(Color.success),
-          color: ThemeSelector.color(Color.white),
-        },
-        warning: {
-          backgroundColor: ThemeSelector.color(Color.warning),
-          color: ThemeSelector.color(Color.white),
-        },
-        danger: {
-          backgroundColor: ThemeSelector.color(Color.danger),
-          color: ThemeSelector.color(Color.white),
-        },
-        custom: {
-          backgroundColor: ThemeSelector.color(props.touchable === false ? props.disabledColor : props.color),
-          color: ThemeSelector.color(props.textColor),
-        },
-        text: {
-          color: ThemeSelector.color(props.textColor),
-        },
-      }),
-      ...selectStyleType<ViewStyle, ButtomSizeType>(props.size, 'medium', {
-        large: paddingVH(SpaceDefines.button_pv_large, SpaceDefines.button_ph_large),
-        larger: paddingVH(SpaceDefines.button_pv_larger, SpaceDefines.button_ph_larger),
-        medium: paddingVH(SpaceDefines.button_pv_medium, SpaceDefines.button_ph_medium),
-        small: paddingVH(SpaceDefines.button_pv_small, SpaceDefines.button_ph_small),
-        mini: paddingVH(SpaceDefines.button_pv_mini, SpaceDefines.button_ph_mini),
-      }),
-      opacity: props.touchable === false ? 0.5 : 1,
-      borderRadius: props.shape === 'round' ? (props.radius || 100) : 0,
-      ...(props.block ? {
-        alignSelf: 'stretch',
-      } : {
-        flex: 0,
-        flexShrink: 0,
-        flexGrow: 0,
-      }),
-    } as ViewStyle|TextStyle;
 
-    if (props.disabledColor && props.touchable === false && props.type !== 'custom' && props.plain !== true)
-      style.backgroundColor = ThemeSelector.color(props.disabledColor);
+  const {
+    loading, loadingText, children, touchable,
+    text, textColor,
+    color, pressedColor, loadingColor, disabledColor,
+    plain = false, type, size, block = false, radius = 5, shape = "round", padding,
+    icon, iconProps, rightIcon, rightIconProps,
+    viewProps, textStyle, style,
+    renderIcon,
+    onPress,
+  } = props;
+
+  //按钮样式生成
+  const getStyle = useCallback(() => {
+    const colorStyle = selectStyleType<ViewStyle|TextStyle, ButtomType>(type, 'default', plain ? {
+      default: styles.plainButtonDefault,
+      primary: styles.plainButtonPrimary,
+      success: styles.plainButtonSuccess,
+      warning: styles.plainButtonWarning,
+      danger: styles.plainButtonDanger,
+      custom: {
+        ...border(1, 'solid', ThemeSelector.color(color || Color.primary)),
+        color: ThemeSelector.color(color),
+      },
+      text: {
+        color: ThemeSelector.color(color),
+      },
+    } : {
+      default: styles.plainButtonDefault,
+      primary: styles.buttonPrimary,
+      success: styles.buttonSuccess,
+      warning: styles.buttonWarning,
+      danger: styles.buttonDanger,
+      custom: {
+        backgroundColor: ThemeSelector.color(touchable === false ? disabledColor : color),
+        color: ThemeSelector.color(textColor),
+      },
+      text: {
+        color: ThemeSelector.color(textColor),
+      },
+    });
+
+    const styleArray = [
+      colorStyle,
+      selectStyleType<ViewStyle, ButtomSizeType>(size, 'medium', ButtonSizeChoices),
+      block ? styles.buttonBlock : styles.buttonAuto,
+    ] as ViewStyle[];
+
+    const speicalStyle = {
+      opacity: touchable === false ? 0.5 : 1,
+      borderRadius: shape === 'round' ? radius : 0,
+    } as ViewStyle;
+
+    if (disabledColor && touchable === false && type !== 'custom' && plain !== true)
+      speicalStyle.backgroundColor = ThemeSelector.color(disabledColor);
 
     //内边距样式的强制设置
-    styleConfigPadding(style, props.padding);
-    return style;
-  }
-  function renderLeftIcon(speicalStyle: ViewStyle) {
-    const marginStyle = {
-      marginRight: CheckTools.isNullOrEmpty(props.text) ? undefined : 5,
+    styleConfigPadding(speicalStyle, padding);
+
+    styleArray.push(speicalStyle);
+
+    return {
+      color: (colorStyle as TextStyle).color,
+      style: styleArray,
     };
-    if (props.renderIcon)
-      return props.renderIcon(true, props.icon);
-    if (typeof props.icon === 'string') {
-      if (props.icon.startsWith('http'))
-        return <Image key="leftIcon" style={[ styles.icon, styles.iconImage, marginStyle, props.iconStyle as ImageStyle ]} source={{ uri: props.icon }} />;
-      return <Icon key="leftIcon" name={props.icon} {...props.iconProps} style={{
+  }, [
+    block, color, disabledColor, padding, plain,
+    radius, shape, size, textColor, touchable, type,
+  ]);
+
+  const currentText = loading ? (loadingText || children || text) : children || text;
+  const currentStyleObj = useRef(getStyle());
+
+  //渲染样式
+  function doRenderIcon(left: boolean, nowColor: ColorValue|undefined) {
+    const currentIcon = left ? icon : rightIcon;
+
+    if (renderIcon)
+      return renderIcon(left, currentIcon);
+    if (left && loading)
+      return <ActivityIndicator
+        size="small"
+        color={ThemeSelector.color(loadingColor || Color.white) || currentStyleObj.current?.color}
+        style={{
+          marginRight: CheckTools.isNullOrEmpty(currentText) ? undefined : 5,
+        }}
+      />;
+
+    return currentIcon ? <Icon key={left ? 'leftIcon' : 'rightIcon'}
+      icon={currentIcon}
+      style={{
         ...styles.titleIcon,
-        ...marginStyle,
-        ...props.iconStyle as TextStyle,
-        fontSize: selectStyleType(props.size, 'medium', FonstSizes) + 3,
-      }} color={(speicalStyle as TextStyle).color as string} />;
-    }
-    if (typeof props.icon === 'object' || typeof props.icon === 'number')
-      return <Image key="leftIcon" style={[ styles.icon,  styles.iconImage, marginStyle, props.iconStyle as ImageStyle ]} source={props.icon} />;
-    return <View key="leftIcon" />;
+        marginRight: left ? (CheckTools.isNullOrEmpty(currentText) ? undefined : 5) : undefined,
+        marginLeft: left ? undefined : (CheckTools.isNullOrEmpty(currentText) ? undefined : 5),
+        fontSize: selectStyleType(size, 'medium', FonstSizes) + 2,
+      }}
+      color={nowColor as string}
+      {...(left ? iconProps : rightIconProps)}
+    /> : <></>;
   }
 
-  const speicalStyle = getStyle();
-  const text = props.loading ? props.loadingText : (props.children || props.text);
+  //当对应参数更改时，重新生成样式对象
+  useEffect(() => {
+    currentStyleObj.current = getStyle();
+  }, [ getStyle ]);
 
   return (
+    //点击处理
     <TouchableHighlight
-      onPress={(props.touchable === false || props.loading === true) ? undefined : props.onPress}
-      underlayColor={props.pressedColor || props.type === 'custom' ? ThemeSelector.color(props.pressedColor || Color.default) :
-        ThemeSelector.color((props.plain || props.type === 'text') ?
+      onPress={(touchable === false || loading === true) ? undefined : onPress}
+      underlayColor={pressedColor || type === 'custom' ? ThemeSelector.color(pressedColor || Color.default) :
+        ThemeSelector.color((plain || type === 'text') ?
           PressedColor(Color.notice) :
-          PressedColor(selectObjectByType(props.type, 'notice', Color)))
+          PressedColor(selectObjectByType(type, 'notice', Color)))
       }
       style={[
         styles.view,
-        speicalStyle,
-        props.style,
+        currentStyleObj.current?.style,
+        style,
       ]}
-      { ...props.viewProps }
+      { ...viewProps }
     >
       <RowView center>
         {
-          props.loading ?
-            <ActivityIndicator size="small" color={ThemeSelector.color(props.loadingColor || Color.white)} /> :
-            renderLeftIcon(speicalStyle)
+          //左图标
+          doRenderIcon(true, currentStyleObj.current?.color)
         }
+        {/* 文本 */}
         <Text style={[
           styles.title,
           {
-            color: ThemeSelector.color(props.textColor) || (speicalStyle as TextStyle).color,
-            fontSize: selectStyleType(props.size, 'medium', FonstSizes),
-            marginLeft: props.loading ? 5 : 0,
-            display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
+            color: ThemeSelector.color(textColor) || currentStyleObj.current?.color,
+            fontSize: selectStyleType(size, 'medium', FonstSizes),
           },
-          props.type === 'text' ? { fontWeight: 'bold' } : {},
-          props.textStyle,
-        ]}>
-          { text }
-        </Text>
+          type === 'text' ? { fontWeight: 'bold' } : {},
+          textStyle,
+        ]}>{ currentText }</Text>
+        {
+          //右图标
+          doRenderIcon(false, currentStyleObj.current?.color)
+        }
       </RowView>
     </TouchableHighlight>
   );
