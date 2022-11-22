@@ -49,47 +49,47 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 单选框" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
-            <Cell title="Rate 组件" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
+            <Cell title="Rate 评分" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
             <Cell title="SearchBar 搜索框" touchable showArrow onPress={() => this.props.navigation.push('TestSearchBar')} />
             <Cell title="Slider 滑块" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
             <Cell title="Stepper 步进器" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
             <Cell title="Switch 开关" touchable showArrow onPress={() => this.props.navigation.push('TestSwitch')} />
           </CellGroup>
           <CellGroup inset title="展示组件">
-            <Cell title="AvatarStack 头像组组件" touchable showArrow onPress={() => this.props.navigation.push('TestAvatarStack')} />
-            <Cell title="Badge 徽标组件" touchable showArrow onPress={() => this.props.navigation.push('TestBadge')} />
+            <Cell title="AvatarStack 头像组" touchable showArrow onPress={() => this.props.navigation.push('TestAvatarStack')} />
+            <Cell title="Badge 徽标" touchable showArrow onPress={() => this.props.navigation.push('TestBadge')} />
             <Cell title="CountDown 倒计时" touchable showArrow onPress={() => this.props.navigation.push('TestCountDown')} />
             <Cell title="CountTo 数字滚动" touchable showArrow onPress={() => this.props.navigation.push('TestCountTo')} />
-            <Cell title="Divider 分割线组件" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
+            <Cell title="Divider 分隔线" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
             <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => this.props.navigation.push('TestDropdownMenu')} />
-            <Cell title="[未完成] Collapse 可折叠组件" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
-            <Cell title="[未完成] Carousel 轮播组件" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
-            <Cell title="NoticeBar 组件" touchable showArrow onPress={() => this.props.navigation.push('TestNoticeBar')} />
+            <Cell title="[未完成] Collapse 可折叠" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
+            <Cell title="[未完成] Carousel 轮播" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
+            <Cell title="NoticeBar 公告栏" touchable showArrow onPress={() => this.props.navigation.push('TestNoticeBar')} />
             <Cell title="Progress 进度条" touchable showArrow onPress={() => this.props.navigation.push('TestProgress')} />
             <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />
             <Cell title="Sidebar 侧边导航" touchable showArrow onPress={() => this.props.navigation.push('TestSideBar')} />
             <Cell title="[未完成] Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />
-            <Cell title="Step 步骤条组件" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
-            <Cell title="SwipeableRow 组件" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
-            <Cell title="Tag 标签组件" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
+            <Cell title="Step 步骤条" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
+            <Cell title="SwipeableRow 侧滑操作" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
+            <Cell title="Tag 标签" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
           </CellGroup>
           <CellGroup inset title="导航组件">
             <Cell title="IndexedList 索引列表" touchable showArrow onPress={() => this.props.navigation.push('TestIndexedList')} />
             <Cell title="NavBar 导航栏" touchable showArrow onPress={() => this.props.navigation.push('TestNavBar')} />
             <Cell title="Pagination 分页组件" touchable showArrow onPress={() => this.props.navigation.push('TestPagination')} />
-            <Cell title="SegmentedControl 分段器组件" touchable showArrow onPress={() => this.props.navigation.push('TestSegmentedControl')} />
+            <Cell title="SegmentedControl 分段器" touchable showArrow onPress={() => this.props.navigation.push('TestSegmentedControl')} />
             <Cell title="Tabbar 底部标签栏" touchable showArrow onPress={() => this.props.navigation.push('TestTabBar')} />
-            <Cell title="Tabs 标签页组件" touchable showArrow onPress={() => this.props.navigation.push('TestTabs')} />
+            <Cell title="Tabs 标签页" touchable showArrow onPress={() => this.props.navigation.push('TestTabs')} />
           </CellGroup>
           <CellGroup inset title="媒体组件">
             <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
-            <Cell title="ImagePicker 图片选择组件" touchable showArrow onPress={() => this.props.navigation.push('TestImagePicker')} />
+            <Cell title="ImagePicker 图片选择器" touchable showArrow onPress={() => this.props.navigation.push('TestImagePicker')} />
           </CellGroup>
           <CellGroup inset title="反馈组件">
             <Cell title="原生 Alert/ActionSheet " touchable showArrow onPress={() => this.props.navigation.push('TestAlert')} />
-            <Cell title="ActionSheet " touchable showArrow onPress={() => this.props.navigation.push('TestActionSheet')} />
-            <Cell title="Dialog " touchable showArrow onPress={() => this.props.navigation.push('TestDialog')} />
-            <Cell title="Empty 空状态组件" touchable showArrow onPress={() => this.props.navigation.push('TestEmpty')} />
+            <Cell title="ActionSheet 动作面板" touchable showArrow onPress={() => this.props.navigation.push('TestActionSheet')} />
+            <Cell title="Dialog 对话框" touchable showArrow onPress={() => this.props.navigation.push('TestDialog')} />
+            <Cell title="Empty 空状态" touchable showArrow onPress={() => this.props.navigation.push('TestEmpty')} />
             <Cell title="ErrorBoundary 错误捕获" touchable showArrow onPress={() => this.props.navigation.push('TestErrorBoundary')} />
             <Cell title="Notify 通知" touchable showArrow onPress={() => this.props.navigation.push('TestNotify')} />
             <Cell title="Overlay 遮罩层" touchable showArrow onPress={() => this.props.navigation.push('TestOverlay')} />

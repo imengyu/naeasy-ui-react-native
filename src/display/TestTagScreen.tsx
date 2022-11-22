@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Text, CellGroup, Tag, RowView, ColumnView } from '../lib';
+import { Text, CellGroup, Tag, RowView, ColumnView, WhiteSpace } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTag'>;
 interface State {
@@ -18,7 +19,12 @@ export class TestTagScreen extends React.PureComponent<Props, State> {
   render() {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView>
+          <TestPageHeader
+            title="Tag 标签"
+            desc="用于标记关键词和概括主要内容。"
+            navigation={this.props.navigation}
+          />
           <CellGroup title="基础用法" inset>
             <Text style={{ padding: 10 }}>按钮支持 default、primary、success、warning、danger 五种类型，默认为 default。</Text>
             <RowView wrap style={{ padding: 10 }}>
@@ -64,6 +70,7 @@ export class TestTagScreen extends React.PureComponent<Props, State> {
               }
             </RowView>
           </CellGroup>
+          <WhiteSpace size={100} />
         </ColumnView>
       </ScrollView>
     );

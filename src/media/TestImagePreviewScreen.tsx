@@ -4,6 +4,7 @@ import { Toast, Cell, CellGroup, ColumnView, ActionSheet } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { ImagePreview } from '../../lib/src/components/media';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestImagePreview'>;
 interface State {
@@ -19,7 +20,12 @@ export class TestImagePreviewScreen extends React.PureComponent<Props, State> {
   render() {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView>
+          <TestPageHeader
+            title="ImagePreview 图片预览"
+            desc="图片大图预览组件，可以预览单张或者多张图片。"
+            navigation={this.props.navigation}
+          />
           <CellGroup title="基础用法" inset>
             <Cell title="查看图片" showArrow onPress={() => {
               ImagePreview.show({

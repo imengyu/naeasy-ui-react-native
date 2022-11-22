@@ -1,10 +1,11 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, WhiteSpace, RowView, Button, ColumnView, Text } from '../lib';
+import { Color, WhiteSpace, RowView, Button } from '../lib';
 import { ScrollView } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { Progress } from '../../lib/src/components/display/Progress';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestProgress', 'RootStack'>;
 interface State {
@@ -20,9 +21,13 @@ export class TestProgressScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView padding={20}>
-
-          <Text style={TestStyles.TitleText}>基本进度条。</Text>
+        <TestPageHeader
+          title="Progress 进度条"
+          desc="用于展示操作的当前进度。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader bar={false}>基本进度条</TestHeader>
+        <TestGroup>
           <Progress value={this.state.progress} />
           <WhiteSpace />
           <Progress progressColor={Color.success} value={this.state.progress} />
@@ -30,11 +35,13 @@ export class TestProgressScreen extends React.PureComponent<Props, State> {
           <Progress progressColor={Color.warning}  value={this.state.progress} />
           <WhiteSpace />
           <Progress progressColor={Color.danger} value={this.state.progress} />
-
-          <Text style={TestStyles.TitleText}>从右到左的进度条。</Text>
+        </TestGroup>
+        <TestHeader bar={false}>从右到左的进度条</TestHeader>
+        <TestGroup>
           <Progress type="right-left" value={this.state.progress} />
-
-          <Text style={TestStyles.TitleText}>竖向进度条。</Text>
+        </TestGroup>
+        <TestHeader bar={false}>竖向进度条</TestHeader>
+        <TestGroup>
           <RowView style={{ height: 100 }}>
             <Progress type="top-bottom" progressColor={Color.success} value={this.state.progress} />
             <WhiteSpace />
@@ -42,18 +49,17 @@ export class TestProgressScreen extends React.PureComponent<Props, State> {
             <WhiteSpace />
             <Progress type="bottom-top" progressColor={Color.danger} value={this.state.progress} />
           </RowView>
-
-          <Text style={TestStyles.TitleText}>有动画进度条。</Text>
+        </TestGroup>
+        <TestHeader bar={false}>有动画进度条</TestHeader>
+        <TestGroup>
           <Progress animate value={this.state.progress} />
-
-          <Text style={TestStyles.TitleText}>控制。</Text>
+          <WhiteSpace />
           <RowView>
-            <Button onPress={() => this.setState((state) => ({ progress: state.progress + 10 }))}>增加</Button>
+            <Button onPress={() => this.setState((state) => ({ progress: state.progress - 10 }))}>- 减少</Button>
             <WhiteSpace size="sm" />
-            <Button onPress={() => this.setState((state) => ({ progress: state.progress - 10 }))}>减少</Button>
+            <Button onPress={() => this.setState((state) => ({ progress: state.progress + 10 }))}>+ 增加</Button>
           </RowView>
-
-        </ColumnView>
+        </TestGroup>
       </ScrollView>
     );
   }

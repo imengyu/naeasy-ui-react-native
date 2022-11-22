@@ -1,10 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { DotIndicator, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { Pagination } from '../../lib/src/components/nav';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPagination', 'RootStack'>;
 interface State {
@@ -20,18 +20,22 @@ export class TestPaginationScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView padding={10}>
-
-          <Text style={TestStyles.TitleText}>数据量过多时，采用分页的形式将数据分隔，每次只加载一个页面。</Text>
+        <TestPageHeader
+          title="Pagination 分页器"
+          desc="数据量过多时，采用分页的形式将数据分隔，每次只加载一个页面。"
+          navigation={this.props.navigation}
+        />
+        <TestHeader>基础用法</TestHeader>
+        <TestGroup>
           <Pagination pageCount={10} currentPage={this.state.page} onCurrentPageChange={(page) => this.setState({ page: page })} />
-
-          <Text style={TestStyles.TitleText}>简单模式。将 mode 设置为 simple 来切换到简单模式，此时分页器不会展示具体的页码按钮。</Text>
+        </TestGroup>
+        <TestHeader desc="将 mode 设置为 simple 来切换到简单模式，此时分页器不会展示具体的页码按钮。">简单模式</TestHeader>
+        <TestGroup>
           <Pagination simple pageCount={10} currentPage={this.state.page} onCurrentPageChange={(page) => this.setState({ page: page })} />
-
-          <Text style={TestStyles.TitleText}>简单页码指示器，只读，不可操作。</Text>
-          <DotIndicator size={10} currentIndex={this.state.page} count={10} />
-
-        </ColumnView>
+        </TestGroup>
+        <TestHeader desc="说明">自定义按钮</TestHeader>
+        <TestGroup>
+        </TestGroup>
       </ScrollView>
     );
   }

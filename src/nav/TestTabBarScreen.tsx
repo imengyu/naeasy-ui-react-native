@@ -3,10 +3,10 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView, Icon, Image, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { Color } from '../lib';
 import { TabBar, TabBarItem } from '../../lib/src/components/nav';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabBar', 'RootStack'>;
 interface State {
@@ -28,6 +28,12 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: 'transparent',
   },
+  title: {
+    paddingTop: 15,
+    paddingBottom: 5,
+    paddingHorizontal: 10,
+    marginTop: 5,
+  },
 });
 
 export class TestTabBarScreen extends React.PureComponent<Props, State> {
@@ -44,7 +50,12 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
     return (
       <ScrollView>
         <ColumnView>
-          <Text style={TestStyles.TitleText}>基础用法</Text>
+          <TestPageHeader
+            title="TabBar 标签栏"
+            desc="标签栏，用于在不同功能模块之间进行切换，通常用于主页各个模块的底部切换。"
+            navigation={this.props.navigation}
+          />
+          <Text style={styles.title}>基础用法</Text>
           <TabBar
             selectedTabName={this.state.value1}
             onSelectTab={name => this.setState({ value1: name })}
@@ -55,7 +66,7 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
             <TabBarItem name="forth" icon="user" text="标签4" />
           </TabBar>
 
-          <Text style={TestStyles.TitleText}>徽标提示</Text>
+          <Text style={styles.title}>徽标提示</Text>
           <TabBar
             selectedTabName={this.state.value2}
             onSelectTab={name => this.setState({ value2: name })}
@@ -66,7 +77,7 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
             <TabBarItem name="forth" icon="user" text="标签4" badge={100} />
           </TabBar>
 
-          <Text style={TestStyles.TitleText}>自定义图标</Text>
+          <Text style={styles.title}>自定义图标</Text>
           <TabBar
             selectedTabName={this.state.value3}
             onSelectTab={name => this.setState({ value3: name })}
@@ -76,7 +87,7 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
             <TabBarItem name="forth" icon="user" text="标签4" />
           </TabBar>
 
-          <Text style={TestStyles.TitleText}>自定义颜色</Text>
+          <Text style={styles.title}>自定义颜色</Text>
           <TabBar
             selectedTabName={this.state.value4}
             onSelectTab={name => this.setState({ value4: name })}
@@ -89,7 +100,7 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
             <TabBarItem name="forth" icon="user" text="标签4" />
           </TabBar>
 
-          <Text style={TestStyles.TitleText}>凸起标签</Text>
+          <Text style={styles.title}>凸起标签</Text>
           <TabBar
             selectedTabName={this.state.value5}
             onSelectTab={name => this.setState({ value5: name })}
@@ -107,7 +118,7 @@ export class TestTabBarScreen extends React.PureComponent<Props, State> {
             <TabBarItem name="forth" icon="user" text="标签4" />
           </TabBar>
 
-          <Text style={TestStyles.TitleText}>自定义背景</Text>
+          <Text style={styles.title}>自定义背景</Text>
           <TabBar
             selectedTabName={this.state.value1}
             onSelectTab={name => this.setState({ value1: name })}

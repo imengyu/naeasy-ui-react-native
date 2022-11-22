@@ -4,10 +4,11 @@ import { ScrollView } from 'react-native';
 import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, ActionSheetTitle } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { SimpleList } from '../../lib/src/components/list';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestActionSheet'>;
 
-export function TestActionSheetScreen(_props: Props) {
+export function TestActionSheetScreen(props: Props) {
   const [ showActionSheet1, setShowActionSheet1] = useState(false);
   const [ showActionSheet2, setShowActionSheet2] = useState(false);
   const [ showActionSheet3, setShowActionSheet3] = useState(false);
@@ -17,7 +18,12 @@ export function TestActionSheetScreen(_props: Props) {
 
   return (
     <ScrollView>
-      <ColumnView center>
+      <ColumnView>
+        <TestPageHeader
+          title="ActionSheet 动作面板"
+          desc="底部弹起的模态面板，包含与当前情境相关的多个选项。"
+          navigation={props.navigation}
+        />
         <ActionSheet
           show={showActionSheet1}
           actions={[

@@ -120,7 +120,7 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
     color,
     show = true,
     anim = false,
-    content,
+    content = '',
     children,
     border,
     borderWidth = 2,

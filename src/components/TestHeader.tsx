@@ -58,7 +58,7 @@ export function TestHeader(props: {
 
 export function TestPageHeader(props: {
   title: string,
-  desc: string,
+  desc: string|JSX.Element,
   navigation: StackNavigationProp<RootStackParamList>,
 }) {
   useDidMountEffect(() => {
@@ -70,7 +70,7 @@ export function TestPageHeader(props: {
   return (
     <ColumnView style={styles.header}>
       <Text size={20} weight="bold" color={Color.primary}>{props.title}</Text>
-      <Text size={14} color={Color.textSecond}>{props.desc}</Text>
+      { typeof props.desc === 'string' ? <Text size={14} color={Color.textSecond}>{props.desc}</Text> : props.desc }
     </ColumnView>
   );
 }

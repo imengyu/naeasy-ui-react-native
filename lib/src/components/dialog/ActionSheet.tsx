@@ -117,10 +117,10 @@ const styles = DynamicThemeStyleSheet.create({
     marginTop: 4,
   },
   titleView: {
-    paddingVertical: 5,
+    paddingVertical: 8,
   },
   titleViewBorder: {
-    paddingVertical: 5,
+    paddingVertical: 8,
     borderColor: DynamicColor(Color.white),
     borderBottomColor: DynamicColor(Color.border),
     borderWidth: 1,

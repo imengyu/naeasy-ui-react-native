@@ -67,6 +67,8 @@ const styles = StyleSheet.create({
   },
 });
 
+//TODO: 进度条文字
+
 /**
  * 进度条
  */

@@ -92,7 +92,7 @@ export function TestTabsScreen(props: Props) {
         <Tabs
           tabs={[
             { text: '标签页1' },
-            { text: '带小红点', badgeProps: { hiddenIfZero: false, offset: { x: 8, y: 2 }  } },
+            { text: '带小红点', badgeProps: { offset: { x: 8, y: 2 }  } },
             { text: '带数字红点', badgeProps: { content: 423, maxCount: 99, offset: { x: 8, y: 2 }  } },
           ]}
           currentIndex={tabIndex5}
@@ -116,7 +116,7 @@ export function TestTabsScreen(props: Props) {
           )}
         />
       </TestGroup>
-      <TestHeader>标签页内容组件</TestHeader>
+      <TestHeader desc="基于 react-native-pager-view 封装，支持左右手势换页。你也可以参考 TabsPage 源码 +Tabs 封装自己的标签页内容组件。">标签页内容组件</TestHeader>
       <TestGroup noHorizontalPadding white>
         <TabsPage style={{ height: rpx(500) }}>
           <TabsPageItem text="标签页1">

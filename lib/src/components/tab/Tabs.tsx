@@ -119,7 +119,7 @@ export function Tabs(props: TabsProps) {
   const {
     tabs,
     width = deviceWidth,
-    height = rpx(80),
+    height = rpx(90),
     defaultItemWidth = rpx(100),
     defaultIndicatorWidth,
     itemStyle,
@@ -252,7 +252,7 @@ export function Tabs(props: TabsProps) {
           onPress={disabled ? undefined : () => onTabClick(index)}
           key={"tabItem" + index}
         >
-          <Badge hiddenIfZero content={0} { ...tabData.badgeProps }>
+          <Badge content={tabData.badgeProps ? undefined : 0} { ...tabData.badgeProps }>
             { typeof tabData.text === 'string' ? <Text
               style={[
                 styles.tabItemText,
@@ -413,8 +413,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 5,
-    paddingBottom: 10,
+    paddingTop: 10,
+    paddingBottom: 15,
   },
   tabItemText: {
     fontSize: 15,

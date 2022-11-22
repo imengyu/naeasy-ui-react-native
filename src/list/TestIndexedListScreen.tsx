@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, Text, Color, WhiteSpace } from '../lib';
+import { ColumnView, Text, Color, WhiteSpace, rpx } from '../lib';
 import { IndexBar, IndexedList } from '../../lib/src/components/list';
 import { TabsPage, TabsPageItem } from '../../lib/src/components/tab';
 
@@ -92,7 +92,7 @@ export class TestIndexedListScreen extends React.PureComponent<Props> {
             </ColumnView>)}
           />
         </TabsPageItem>
-        <TabsPageItem text="单独使用 IndexedBar">
+        <TabsPageItem text="单独使用 IndexedBar" width={rpx(300)}>
           <TestIndexedBar />
         </TabsPageItem>
       </TabsPage>
