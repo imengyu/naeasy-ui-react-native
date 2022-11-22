@@ -5,10 +5,11 @@ import { Cell, Toast, Dialog, CellGroup, ColumnView, Color, Text, Button, rpx } 
 import { RootStackParamList } from '../navigation';
 import { Field, Rate } from '../../lib/src/components/form';
 import { SimpleList } from '../../lib/src/components/list';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestDialog'>;
 
-export function TestDialogScreen(_props: Props) {
+export function TestDialogScreen(props: Props) {
 
   const [ show1, setShow1 ] = useState(false);
   const [ show2, setShow2 ] = useState(false);
@@ -20,7 +21,12 @@ export function TestDialogScreen(_props: Props) {
 
   return (
     <ScrollView>
-      <ColumnView center>
+      <ColumnView>
+        <TestPageHeader
+          title="Dialog 对话框"
+          desc="对话框组件，允许你在弹出简单的对话框，或者在对话框中插入自定义内容。"
+          navigation={props.navigation}
+        />
         <Dialog
           show={show1}
           onClose={() => setShow1(false)}

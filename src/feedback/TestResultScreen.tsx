@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, ColumnView, Result } from '../lib';
+import { CellGroup, ColumnView, Result, WhiteSpace } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestResult'>;
 interface State {
@@ -18,7 +19,12 @@ export class TestResultScreen extends React.PureComponent<Props, State> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center>
+        <ColumnView>
+          <TestPageHeader
+            title="Result 遮罩层"
+            desc="用于展示操作结果。当有重要操作需告知用户处理结果，且反馈内容较为复杂时使用。"
+            navigation={this.props.navigation}
+          />
           <CellGroup title="成功状态" inset>
             <ColumnView padding={15}>
               <Result
@@ -73,6 +79,7 @@ export class TestResultScreen extends React.PureComponent<Props, State> {
               />
             </ColumnView>
           </CellGroup>
+          <WhiteSpace size={100} />
         </ColumnView>
       </ScrollView>
     );

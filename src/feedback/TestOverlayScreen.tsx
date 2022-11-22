@@ -4,6 +4,7 @@ import { ScrollView, Image } from 'react-native';
 import { CellGroup, Cell, Color, ColumnView, rpx } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { Overlay } from '../../lib/src/components/dialog/Overlay';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestOverlay'>;
 
@@ -24,7 +25,12 @@ export class TestOverlayScreen extends React.PureComponent<Props, TestOverlayScr
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ paddingVertical: 10 }}>
+        <ColumnView>
+          <TestPageHeader
+            title="Overlay 遮罩层"
+            desc="创建一个遮罩层，用于强调特定的页面元素，并阻止用户进行其他操作。"
+            navigation={this.props.navigation}
+          />
           <Overlay
             show={this.state.showProp1}
             onClose={() => this.setState({ showProp1: false })}

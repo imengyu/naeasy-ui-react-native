@@ -1,8 +1,9 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AlertNative, RowView, Notify, Cell, CellGroup, ColumnView } from '../lib';
+import { AlertNative, RowView, Notify, Cell, CellGroup, ColumnView, WhiteSpace } from '../lib';
 import { Image, ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestNotify'>;
 
@@ -11,7 +12,12 @@ export class TestNotifyScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ paddingVertical: 10 }}>
+        <TestPageHeader
+          title="Notify 通知"
+          desc="在页面顶部展示消息提示。"
+          navigation={this.props.navigation}
+        />
+        <ColumnView center>
           <CellGroup title="基础用法" inset>
             <Cell title="显示通知" showArrow onPress={() => {
               Notify.show({ content: '这是一个通知' });
@@ -88,6 +94,7 @@ export class TestNotifyScreen extends React.PureComponent<Props> {
             }} />
           </CellGroup>
         </ColumnView>
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

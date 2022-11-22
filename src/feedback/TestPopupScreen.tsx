@@ -1,9 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text } from '../lib';
+import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestStyles } from '../styles/TestStyles';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPopup'>;
 
@@ -38,7 +39,12 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={{ paddingVertical: 10 }}>
+        <ColumnView>
+          <TestPageHeader
+            title="Popup 弹出层"
+            desc="弹出层容器，用于展示弹窗、信息提示等内容，支持多个弹出层叠加展示。"
+            navigation={this.props.navigation}
+          />
           <Popup
             show={this.state.showProp1}
             onClose={() => this.setState({ showProp1: false })}
@@ -171,6 +177,8 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             <Text style={TestStyles.TitleText}>无遮罩，可以操控下方组件。</Text>
             <Cell title="弹出" showArrow onPress={() => this.setState({ showProp9: true })} />
           </CellGroup>
+
+          <WhiteSpace size={100} />
         </ColumnView>
       </ScrollView>
     );
