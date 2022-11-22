@@ -5,10 +5,10 @@
  * @returns 字符串
  */
 function pad(num: number|string, n: number) : string {
-  let str = num.toString();
+  let str = typeof num === 'number' ? num.toString() : num;
   let len = str.length;
   while (len < n) {
-    str = "0" + num;
+    str = "0" + str;
     len++;
   }
   return str;
