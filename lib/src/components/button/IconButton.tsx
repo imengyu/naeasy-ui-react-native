@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewStyle } from 'react-native';
+import { ImageSourcePropType, ViewStyle } from 'react-native';
 import { TouchableHighlight } from "react-native";
 import { selectStyleType } from '../../utils/StyleTools';
 import { Color, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
@@ -11,7 +11,7 @@ export interface IconButtonProps extends IconProp {
   /**
    * 显示图标
    */
-  icon?: string;
+  icon?: string | ImageSourcePropType;
   /**
    * 按钮按下时的背景颜色
    */

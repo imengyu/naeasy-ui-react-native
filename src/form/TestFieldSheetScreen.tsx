@@ -25,6 +25,7 @@ export function TestFieldScreen(props: Props) {
   const [ value15, setValue15] = useState('');
   const [ value16, setValue16] = useState('');
   const [ value17, setValue17] = useState('');
+  const [ value18, setValue18] = useState('我是文字，点击按钮清除');
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={60}>
@@ -54,7 +55,7 @@ export function TestFieldScreen(props: Props) {
             <Field label="用户名" required showRequiredBadge placeholder="请输入用户名" errorMessage="请输入用户名" value={value7} onChangeText={setValue7} />
           </CellGroup>
           <CellGroup title="带清除按钮" inset>
-            <Field label="标题" clearButton clearButtonMode="unless-editing" placeholder="请输入文字" value={value6} onChangeText={setValue6} />
+            <Field clearButton clearButtonMode="unless-editing" placeholder="请输入文字" value={value18} onChangeText={setValue18} />
           </CellGroup>
           <CellGroup title="不同的自定义样式" inset>
             <Field placeholder="无左侧标签" value={value12} onChangeText={setValue12} />

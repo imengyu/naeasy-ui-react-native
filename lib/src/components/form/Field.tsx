@@ -12,7 +12,7 @@ import { RowView } from "../layout/RowView";
 import { Platform } from "react-native";
 import { Form } from "./Form";
 import { ThemeRender } from "../../theme/Theme";
-import { rpx } from "@imengyu/naeasy-ui-react-native";
+import { rpx } from "../../utils";
 
 export interface FieldProps extends Omit<TextInputProps, 'value'> {
   /**

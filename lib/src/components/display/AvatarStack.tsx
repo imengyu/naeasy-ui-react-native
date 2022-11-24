@@ -3,9 +3,8 @@ import { ImageSourcePropType, Text, TextStyle, View, ViewStyle } from 'react-nat
 import { Color } from '../../styles/ColorStyles';
 import { Avatar } from './Avatar';
 import { RowView } from '../layout/RowView';
-import { DynamicThemeStyleSheet, ThemeColor } from '../../styles';
+import { DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
-import { ThemeSelector } from '@imengyu/naeasy-ui-react-native';
 
 interface AvatarStackProp {
   /**

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ImageProps, ImageSourcePropType, ImageStyle, Text, TextStyle, ViewStyle } from 'react-native';
+import { Image, ImageProps, ImageSourcePropType, ImageStyle, Text, TextStyle, ViewStyle, Platform } from 'react-native';
 import { LocalSvg, SvgFromUri, SvgFromXml, SvgProps } from 'react-native-svg';
 import { Color, ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
@@ -103,7 +103,8 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   //参数
   const {
     icon,
-    svgProps, imageProps, style, color,
+    svgProps,
+    imageProps, style, color,
     size = 20,
     svgWhenIconIsResource = false,
   } = props;
@@ -114,7 +115,7 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   if (!name)
     name = icon;
   if (!name)
-    return renderFail();
+    return renderFail(0);
 
   //处理直接传入对象的情况
   if (typeof name === 'string') {
@@ -129,17 +130,25 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
     };
   }
 
-  if (!iconData)
-    return renderFail();
-
   const colorFinal = ThemeSelector.color(color, Color.black);
+
+  //web 平台下导入资源
+  if (!iconData && typeof name === 'string' && name.startsWith('data:') && Platform.OS === 'web')
+    return <img src={name} style={{ width: size, height: size, fill: colorFinal }} />;
+
+  if (!iconData)
+    return renderFail(1);
 
   //url svg
   function renderSvgUri() {
+    if (Platform.OS === 'web')
+      return <img src={iconData as string} style={{ width: size, height: size, fill: colorFinal }} />;
     return <SvgFromUri uri={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
   //xml文本式svg
   function renderSvgXml() {
+    if (Platform.OS === 'web')
+      return <div dangerouslySetInnerHTML={{ __html: iconData as string }} style={{ width: size, height: size, fill: colorFinal }} />;
     return <SvgFromXml xml={iconData as string} width={size} height={size} fill={colorFinal} style={style} {...svgProps} />;
   }
   //图片式
@@ -173,9 +182,9 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
       return renderImage(iconData.source);
   }
 
-  function renderFail() {
-    return <Text style={{ color: '#f00' }}>IconFail:{'' + name}</Text>;
+  function renderFail(type: number) {
+    return <Text style={{ color: '#f00' }}>IconFail:{type + '' + name}</Text>;
   }
 
-  return renderFail();
+  return renderFail(-1);
 });

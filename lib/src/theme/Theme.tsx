@@ -23,10 +23,10 @@ export function ThemeRender(props: {
 /**
  * 包装高阶组件，使这个组件在主题更新后刷新
  */
-export function ThemeWrapper<P>(component: React.ComponentClass<P, any>|((p: P) => JSX.Element)) : (p: P) => JSX.Element {
+export function ThemeWrapper<P extends {}>(component: React.ComponentClass<P, any>|React.FunctionComponent<P>|((props: P) => JSX.Element)) : (p: P) => JSX.Element {
   return ((props: unknown) => (
     <ThemeContext.Consumer>
-      { () => React.createElement(component as React.FunctionComponent, props as undefined) }
+      { () => React.createElement<P>(component as React.FunctionComponent<P>, props as P) }
     </ThemeContext.Consumer>
   ));
 }

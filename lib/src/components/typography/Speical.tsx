@@ -1,5 +1,5 @@
 import React from "react";
-import { Linking, TouchableWithoutFeedback } from "react-native";
+import { Linking, Platform, TouchableOpacity } from "react-native";
 import { DynamicColor, DynamicThemeStyleSheet } from "../../styles/DynamicThemeStyleSheet";
 import { ThemeWrapper } from "../../theme/Theme";
 import { Color } from "../../styles";
@@ -80,13 +80,16 @@ export const U = ThemeWrapper(function (props: TextProps) {
  */
 export const A = ThemeWrapper(function (props: LinkProps) {
   return (
-    <TouchableWithoutFeedback onPress={() => {
-      props.onPress?.();
-      if (props.href)
-        Linking.openURL(props.href);
-    }}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        props.onPress?.();
+        if (Platform.OS !== 'web' && props.href)
+          Linking.openURL(props.href);
+      }}
+    >
       <Text {...props} style={[ styles.link, props.style ]} />
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 });
 

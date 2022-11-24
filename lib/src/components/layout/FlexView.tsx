@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 /**
  * Flex组件，用于一些布局中快速写容器
  */
-class FlexViewComponent extends React.PureComponent<FlexViewProp> {
+export class FlexViewComponent extends React.PureComponent<FlexViewProp> {
   render(): React.ReactNode {
 
     const style = {
@@ -192,7 +192,4 @@ class FlexViewComponent extends React.PureComponent<FlexViewProp> {
   }
 }
 
-/**
- * Flex组件，用于一些布局中快速写容器
- */
 export const FlexView = ThemeWrapper(FlexViewComponent);

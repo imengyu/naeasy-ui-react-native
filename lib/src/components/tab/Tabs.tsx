@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextStyle, Animated, ViewStyle, View, Easing} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import PagerView, { PagerViewProps } from "react-native-pager-view";
 import { Color, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { deviceWidth, rpx } from '../../utils';
 import { Badge, BadgeProps } from '../display';
@@ -314,10 +313,6 @@ interface TabsPageProps {
    */
   tabsProps?: Omit<TabsProps, 'tabs'>,
   /**
-   * PagerView 组件的自定义属性
-   */
-  pagerProps?: PagerViewProps;
-  /**
    * 外层样式
    */
   style?: ViewStyle;
@@ -344,11 +339,7 @@ export function TabsPage(props: TabsPageProps) {
 
   const childs = props.children instanceof Array ? props.children : [ props.children ];
   const { onPageSelected } = props;
-
   const [ tabIndex, setTabIndex ] = useState(0);
-  const pagerRef = useRef<PagerView>(null);
-  const indicatorOffset = useRef(new Animated.ValueXY({ x: 0, y: 0}));
-  const canSetIndicatorOffset = useRef(false);
 
   return (
     <View
@@ -361,34 +352,12 @@ export function TabsPage(props: TabsPageProps) {
         tabs={childs.map(k => k.props)}
         currentIndex={tabIndex}
         onChange={(index) => {
-          pagerRef.current?.setPage(index);
           setTabIndex(index);
         }}
-        indicatorOffsetAnim={indicatorOffset.current}
         {...props.tabsProps}
       />
-      {/* Tab页面 */}
-      <PagerView
-        style={styles.tabPagePager}
-        { ...props.pagerProps }
-        ref={pagerRef}
-        onPageSelected={(e) => {
-          canSetIndicatorOffset.current = false;
-          setTabIndex(e.nativeEvent.position);
-          onPageSelected?.(e.nativeEvent.position);
-        }}
-        onPageScrollStateChanged={(e) => {
-          canSetIndicatorOffset.current = e.nativeEvent.pageScrollState === 'dragging';
-          if (e.nativeEvent.pageScrollState === 'idle')
-            indicatorOffset.current.setValue({ x: tabIndex, y: 0 });
-        }}
-        onPageScroll={(e) => {
-          if (canSetIndicatorOffset.current)
-            indicatorOffset.current.setValue({ x: e.nativeEvent.position, y: e.nativeEvent.offset });
-        }}
-      >
-        { childs.map(k => k?.props?.children || <></>) }
-      </PagerView>
+      {/* TODO: Tab页面 */}
+
     </View>
   );
 }
