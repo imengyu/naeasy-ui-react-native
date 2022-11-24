@@ -157,7 +157,8 @@ const styles = DynamicThemeStyleSheet.create({
   },
   buttonAuto: {
     flexShrink: 0,
-    flexGrow: 1,
+    flexGrow: 0,
+    flexBasis: 'auto',
   },
   buttonSizeLarger: paddingVH(SpaceDefines.button_pv_large, SpaceDefines.button_ph_large),
   buttonSizeLarge: paddingVH(SpaceDefines.button_pv_large, SpaceDefines.button_ph_large),

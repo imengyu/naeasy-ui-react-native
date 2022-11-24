@@ -113,13 +113,15 @@ const styles = DynamicThemeStyleSheet.create({
       ios: {
         paddingVertical: 8,
       },
+      web: {
+        paddingVertical: 8,
+      },
       android: {
         paddingVertical: 2,
       },
     }),
   },
   cancel: {
-    flex: 0,
     paddingVertical: 0,
     paddingHorizontal: 10,
   },

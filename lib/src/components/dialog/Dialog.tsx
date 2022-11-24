@@ -304,7 +304,7 @@ export const DialogInner = ThemeWrapper(function (props: Omit<DialogProps, 'show
       styles.dialog,
       { width: width },
     ]}>
-      <ColumnView padding={contentPadding}>
+      <ColumnView padding={contentPadding} align="center">
         {/* 图标 */}
         {
           icon ?

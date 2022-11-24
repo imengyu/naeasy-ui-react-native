@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     flex: 0,
     flexShrink: 0,
     flexGrow: 0,
+    flexBasis: 'auto',
     minWidth: 20,
     width: 'auto',
     alignSelf: 'center',

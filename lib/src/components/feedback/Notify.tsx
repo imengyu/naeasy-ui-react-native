@@ -117,7 +117,6 @@ const styles = DynamicThemeStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    maxWidth: '60%',
   },
   notifyText: {
     marginHorizontal: 5,

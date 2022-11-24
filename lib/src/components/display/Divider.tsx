@@ -73,7 +73,7 @@ const styles = DynamicThemeStyleSheet.create({
 });
 
 
-//TODO : 虚线与格式优化
+//TODO : 虚线与格式优化, 线分开
 
 /**
  * 分割线组件

@@ -35,9 +35,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     };
   }
 
+  static getDerivedStateFromError(error: unknown) {
+    return { hasError: true, errorInfo: error };
+  }
+
   componentDidCatch(error: unknown, info: unknown) {
     console.error('[ErrorBoundary]', error, info);
-    this.setState({ hasError: true, errorInfo: error });
   }
 
   onRetry() {
