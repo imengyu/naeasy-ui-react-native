@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color } from '../lib';
+import { Color, WingBlank } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { ScrollView } from 'react-native';
 import { NumberInput } from '../../lib/src/components/form';
@@ -50,15 +50,17 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
         </TestGroup>
         <TestHeader>格子间距</TestHeader>
         <TestGroup>
-          <NumberInput value={this.state.value3} onChangeText={(v) => this.setState({ value3: v })} gutter={14} autoSize />
+          <NumberInput value={this.state.value3} onChangeText={(v) => this.setState({ value3: v })} numberCount={4} gutter={14} autoSize />
         </TestGroup>
         <TestHeader>下划线边框</TestHeader>
         <TestGroup>
-          <NumberInput value={this.state.value4} onChangeText={(v) => this.setState({ value4: v })}
-            borderWidth={2}
-            borderColor={Color.darkBorder}
-            borderType="underline" activeBorderColor={Color.primary} gutter={10}
-          />
+          <WingBlank size="sm">
+            <NumberInput value={this.state.value4} onChangeText={(v) => this.setState({ value4: v })} numberCount={4}
+              borderWidth={2}
+              borderColor={Color.darkBorder}
+              borderType="underline" activeBorderColor={Color.primary} gutter={10}
+            />
+          </WingBlank>
         </TestGroup>
         <TestHeader>密码输入</TestHeader>
         <TestGroup>

@@ -55,6 +55,10 @@ export const Color = {
     light: '#efefef',
     dark: '#222222',
   },
+  skeleton: {
+    light: 'rgba(46,50,56, 0.05)',
+    dark: 'rgba(255,255,255,0.12)',
+  },
   switch: {
     light: '#dddddd',
     dark: '#333333',

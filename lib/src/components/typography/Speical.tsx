@@ -4,6 +4,7 @@ import { DynamicColor, DynamicThemeStyleSheet } from "../../styles/DynamicThemeS
 import { ThemeWrapper } from "../../theme/Theme";
 import { Color } from "../../styles";
 import { Text, TextProps } from "./Text";
+import { rpx } from "../../utils";
 
 const styles = DynamicThemeStyleSheet.create({
   italic: {
@@ -28,7 +29,7 @@ const styles = DynamicThemeStyleSheet.create({
   },
   p: {
     color: DynamicColor(Color.text),
-    marginVertical: 13,
+    marginVertical: rpx(15),
   },
 });
 

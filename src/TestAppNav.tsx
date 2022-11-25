@@ -65,6 +65,7 @@ import { TestResultScreen } from './feedback/TestResultScreen';
 import { ThemeSelector, Color } from './lib';
 import { TestTabsScreen } from './nav/TestTabsScreen';
 import { TestSwiperScreen } from './base/TestSwiperScreen';
+import { TestSkeletonScreen } from './display/TestSkeletonScreen';
 
 const Stack = createStackNavigator();
 
@@ -167,6 +168,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestResult" component={TestResultScreen as any} />
         <Stack.Screen name="TestTabs" component={TestTabsScreen as any} />
         <Stack.Screen name="TestSwiper" component={TestSwiperScreen as any} />
+        <Stack.Screen name="TestSkeleton" component={TestSkeletonScreen as any} />
       </Stack.Navigator>
     );
   }

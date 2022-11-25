@@ -376,9 +376,9 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
           return;
         if (e.translationY > 0 && !prev)
           return;
-        if (prev) prev.setValue(e.translationY - width);
+        if (prev) prev.setValue(e.translationY - height);
         if (now) now.setValue(e.translationY);
-        if (next) next.setValue(e.translationY + width);
+        if (next) next.setValue(e.translationY + height);
       } else {
         currentTransValue.current = e.translationX;
         if (e.translationX < 0 && !next)
@@ -405,7 +405,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     });
 
   if (vertical)
-    gesture.activeOffsetY([ -20, 20 ]);
+    gesture.activeOffsetY([ -2, 2 ]);
   else
     gesture.activeOffsetX([ -20, 20 ]);
 

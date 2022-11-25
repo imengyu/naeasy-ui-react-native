@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { Cell, CellGroup, ColumnView, ThemeSelector } from '../lib';
 import { RootStackParamList } from '../navigation';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 import { Switch } from '../../lib/src/components/form';
 import { TestPageHeader } from '../components/TestHeader';
 
@@ -31,7 +31,7 @@ export function TestThemeScreen(props: Props) {
       />
       <CellGroup title="暗黑模式">
         <Cell title="切换暗黑模式" renderRight={() => <Switch value={isDark} onValueChange={setIsDark} />} />
-        <Cell title="跟随系统切换 " renderRight={() => <Switch value={isFlowSystem} onValueChange={setIsFlowSystem} />} />
+        { Platform.OS !== 'web' ? <Cell title="跟随系统切换 " renderRight={() => <Switch value={isFlowSystem} onValueChange={setIsFlowSystem} />} /> : <></> }
       </CellGroup>
     </ColumnView>
   );

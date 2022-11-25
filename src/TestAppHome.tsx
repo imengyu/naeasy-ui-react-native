@@ -67,9 +67,9 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Progress 进度条" touchable showArrow onPress={() => this.props.navigation.push('TestProgress')} />
             <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />
             <Cell title="Sidebar 侧边导航" touchable showArrow onPress={() => this.props.navigation.push('TestSideBar')} />
-            <Cell title="[未完成] Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />
+            <Cell title="Skeleton 骨架屏" touchable showArrow onPress={() => this.props.navigation.push('TestSkeleton')} />
             <Cell title="Step 步骤条" touchable showArrow onPress={() => this.props.navigation.push('TestStep')} />
-            <Cell title="Swiper 轮播" touchable showArrow onPress={() => this.props.navigation.push('TestSwiper')} />
+            <Cell title="Swiper 轮播/滑块视图容器" touchable showArrow onPress={() => this.props.navigation.push('TestSwiper')} />
             <Cell title="SwipeableRow 侧滑操作" touchable showArrow onPress={() => this.props.navigation.push('TestSwipeableRow')} />
             <Cell title="Tag 标签" touchable showArrow onPress={() => this.props.navigation.push('TestTag')} />
           </CellGroup>
