@@ -5,7 +5,7 @@ import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
 import { Tabs, TabsPage, TabsPageItem } from '../../lib/src/components/tab/Tabs';
-import { rpx, RowView, Icon, Text, Color, ColumnView } from '../lib';
+import { rpx, RowView, Icon, Text, Color, ColumnView, deviceWidth } from '../lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestTabs', 'RootStack'>;
 
@@ -118,7 +118,7 @@ export function TestTabsScreen(props: Props) {
       </TestGroup>
       <TestHeader desc="基于 Swiper 组件封装，支持左右手势换页。你也可以参考 TabsPage 源码 +Tabs 封装自己的标签页内容组件。">标签页内容组件</TestHeader>
       <TestGroup noHorizontalPadding white>
-        <TabsPage style={{ height: rpx(500) }}>
+        <TabsPage style={{ width: deviceWidth, height: rpx(500), minHeight: rpx(250) }}>
           <TabsPageItem text="标签页1">
             <ColumnView flex={1} center>
               <Text>标签页内容1</Text>

@@ -21,3 +21,4 @@
 # ide
 /.vscode
 /.idea
+.dumi/tmp

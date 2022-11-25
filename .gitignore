@@ -66,3 +66,4 @@ lib-link
 
 # Expo
 .expo
+dist/

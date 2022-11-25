@@ -57,7 +57,7 @@ export class TestIconScreen extends React.PureComponent<Props, TestIconScreenSta
 
   render(): React.ReactNode {
     return (
-      <TabsPage>
+      <TabsPage swiperProps={{ disableTouch: true }}>
         <TabsPageItem text="使用方法">
           <ScrollView>
 

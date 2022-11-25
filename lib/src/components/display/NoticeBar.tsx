@@ -1,5 +1,5 @@
 import React from 'react';
-import MeasureText from '@newbanker/react-native-measure-text';
+import MeasureText from '../../utils/MeasureText';
 import { Animated, Easing, Image, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Icon, IconProp } from '../basic/Icon';

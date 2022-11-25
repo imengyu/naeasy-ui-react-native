@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import MeasureText from '@newbanker/react-native-measure-text';
+import MeasureText from '../../utils/MeasureText';
 import { Animated, Easing, LayoutChangeEvent, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { isIOS } from '../../utils';
 import { ThemeWrapper } from '../../theme/Theme';

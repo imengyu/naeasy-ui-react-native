@@ -176,8 +176,11 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
     else if (iconData.startsWith('http'))
       return iconData.endsWith('.svg') ? renderSvgUri() : renderImage({ uri: iconData });
   } else if (iconData) {
-    if (iconData.svg)
+    if (iconData.svg) {
+      if (Platform.OS === 'web')
+        return <img src={iconData.source as string} style={{ width: size, height: size, fill: colorFinal }} />;
       return <LocalSvg asset={iconData.source} width={size} height={size} style={style} {...svgProps} />;
+    }
     else
       return renderImage(iconData.source);
   }

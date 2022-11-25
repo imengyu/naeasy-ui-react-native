@@ -5,12 +5,12 @@ import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestPageHeader } from '../components/TestHeader';
 
-type Props = StackScreenProps<RootStackParamList, 'TestImagePreview'>;
+type Props = StackScreenProps<RootStackParamList, 'TestImagePicker'>;
 interface State {
   showTag: boolean
 }
 
-export class TestImagePreviewScreen extends React.PureComponent<Props, State> {
+export class TestImagePickerScreen extends React.PureComponent<Props, State> {
 
   state: Readonly<State> = {
     showTag: true,
@@ -21,8 +21,8 @@ export class TestImagePreviewScreen extends React.PureComponent<Props, State> {
       <ScrollView>
         <ColumnView>
           <TestPageHeader
-            title="ImagePreview 图片预览"
-            desc="图片大图预览组件，可以预览单张或者多张图片。"
+            title="ImagePicker 图片选择器"
+            desc="用于选择相册图片。Android 基于 https://github.com/LuckSiege/PictureSelector/ 封装， iOS 基于 https://github.com/SilenceLove/HXPHPicker 封装。"
             navigation={this.props.navigation}
           />
           <Result status="error" description="此组件不支持 Web, 请在手机上预览" />

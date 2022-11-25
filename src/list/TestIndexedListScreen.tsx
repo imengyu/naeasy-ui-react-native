@@ -69,7 +69,7 @@ export class TestIndexedListScreen extends React.PureComponent<Props> {
 
   render(): React.ReactNode {
     return (
-      <TabsPage>
+      <TabsPage swiperProps={{ disableTouch: true }}>
         <TabsPageItem text="基础列表">
           <IndexedList<string>
             data={data}
@@ -92,7 +92,7 @@ export class TestIndexedListScreen extends React.PureComponent<Props> {
             </ColumnView>)}
           />
         </TabsPageItem>
-        <TabsPageItem text="单独使用 IndexedBar" width={rpx(300)}>
+        <TabsPageItem text="单独使用 IndexedBar" width={rpx(350)}>
           <TestIndexedBar />
         </TabsPageItem>
       </TabsPage>

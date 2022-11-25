@@ -1,8 +1,7 @@
-import { Color } from '@imengyu/naeasy-ui-react-native';
 import React, { forwardRef, useState } from 'react';
 import { Image, ImageSourcePropType, ImageStyle, View, TextStyle, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { ThemeColor, ThemeSelector } from '../../styles';
+import { Color, ThemeColor, ThemeSelector } from '../../styles';
 import CheckTools from '../../utils/CheckTools';
 
 export interface AvatarProp {
@@ -41,7 +40,7 @@ export interface AvatarProp {
   /**
    * 头像背景颜色
    */
-  color: ThemeColor;
+  color?: ThemeColor;
   /**
    * 点击事件
    */

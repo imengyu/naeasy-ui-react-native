@@ -13,7 +13,7 @@ const babelLoaderConfiguration = {
   test: /\.(js|ts)$/,
   // Add every directory that needs to be compiled by Babel during the build.
   include: [
-    path.resolve(appDirectory, 'index.web.js'),
+    path.resolve(appDirectory, 'index.js'),
     path.resolve(appDirectory, 'src'),
     path.resolve(appDirectory, 'lib/src'),
     path.resolve(appDirectory, 'node_modules/react-native-uncompiled'),
@@ -36,7 +36,7 @@ module.exports = {
     // load any web API polyfills
     // path.resolve(appDirectory, 'polyfills-web.js'),
     // your web-specific entry file
-    path.resolve(appDirectory, 'index.web.js'),
+    path.resolve(appDirectory, 'index.js'),
   ],
 
   // configures where the build ends up

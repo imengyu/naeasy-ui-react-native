@@ -1,7 +1,7 @@
-import { ThemeColor } from '@imengyu/naeasy-ui-react-native';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, TranslateXTransform, TranslateYTransform, View, ViewProps, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { ThemeColor } from '../../styles';
 import { DotIndicatorInstance, DotIndicatorStateControl, DotIndicatorStateControlProps } from '../display';
 
 export interface SwiperProps {

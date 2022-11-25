@@ -5,7 +5,7 @@ import { selectStyleType, border as _border } from '../../utils/StyleTools';
 import { ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
 import { VerticalScrollText } from '../countdown';
-import MeasureText from '@newbanker/react-native-measure-text';
+import MeasureText from '../../utils/MeasureText';
 import CheckTools from '../../utils/CheckTools';
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';

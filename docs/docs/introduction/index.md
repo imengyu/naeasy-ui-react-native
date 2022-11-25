@@ -53,3 +53,12 @@ iOS的暂时没有（没有开发账号上架不方便）。
 ## License
 
 Licensed under the MIT License.
+
+```jsx | preview
+/**
+ * title: demo 标题
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/
+ * iframe: true
+ */
+import React from 'react';
+```

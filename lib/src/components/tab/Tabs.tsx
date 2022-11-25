@@ -368,6 +368,7 @@ export function TabsPage(props: TabsPageProps) {
           setTabIndex(index);
           onPageSelected?.(index);
         }}
+        style={props.style}
         { ...props.swiperProps }
       >
         { childs.map((k, i) => (
@@ -392,8 +393,9 @@ const styles = StyleSheet.create({
   },
   tab: {
     position: 'relative',
-    flex: 0,
+    flexShrink: 1,
     flexGrow: 0,
+    height: 'auto',
   },
   tabItem: {
     position: 'relative',
