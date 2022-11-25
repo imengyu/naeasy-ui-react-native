@@ -42,6 +42,10 @@ export interface SwiperProps {
    */
   vertical?: boolean;
   /**
+   * 是否禁止用户手势操作
+   */
+  disableTouch?: boolean;
+  /**
    * 子条目
    */
   children?: React.ReactElement<SwiperItemProps>[],
@@ -106,6 +110,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     vertical = false,
     circular = false,
     autoplay = false,
+    disableTouch = false,
     interval = 5000,
     duration = 200,
     style,
@@ -178,7 +183,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     const prev = getPage(-1);
     const now = getPage(0);
     const next = getPage(1);
-    const durationTimer = velocity ? (duration - (velocity / 2000) * (duration / 2)) : duration;
+    const durationTimer = velocity ? (duration - (velocity / 2000) * (duration / 3)) : duration;
 
     //上一页 到 当前页 0
     if (prev) {
@@ -222,7 +227,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     const prev = getPage(-1);
     const now = getPage(0);
     const next = getPage(1);
-    const durationTimer = velocity ? (duration - (Math.abs(velocity) / 2000) * (duration / 2)) : duration;
+    const durationTimer = velocity ? (duration - (Math.abs(velocity) / 2000) * (duration / 3)) : duration;
 
     //上一页 到 -moveSize
     if (prev) prev.setValue(moveSize);
@@ -263,6 +268,8 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
 
     if (typeof page !== 'undefined') {
+
+      const left = page > currentIndex.current;
       const last = getPage(0);
 
       currentIndex.current = page;
@@ -271,13 +278,13 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
       const now = getPage(0);
       if (last) {
         animArray.push(Animated.timing(last, {
-          toValue: -moveSize,
+          toValue: left ? -moveSize : moveSize,
           duration: duration,
           useNativeDriver: true,
         }));
       }
       if (now) {
-        now.setValue(moveSize);
+        now.setValue(left ? moveSize : -moveSize);
         animArray.push(Animated.timing(now, {
           toValue: 0,
           duration: duration,
@@ -345,7 +352,8 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
   //监听传入页码更改
 
   useEffect(() => {
-    switchPage(current);
+    if (currentIndex.current !== current)
+      switchPage(current);
   }, [ current, switchPage ]);
 
   //外部公开函数
@@ -357,17 +365,26 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
   }));
 
   const gesture = Gesture.Pan()
+    .maxPointers(1)
     .onUpdate((e) => {
       const prev = getPage(-1);
       const now = getPage(0);
       const next = getPage(1);
       if (vertical) {
         currentTransValue.current = e.translationY;
+        if (e.translationY < 0 && !next)
+          return;
+        if (e.translationY > 0 && !prev)
+          return;
         if (prev) prev.setValue(e.translationY - width);
         if (now) now.setValue(e.translationY);
         if (next) next.setValue(e.translationY + width);
       } else {
         currentTransValue.current = e.translationX;
+        if (e.translationX < 0 && !next)
+          return;
+        if (e.translationX > 0 && !prev)
+          return;
         if (prev) prev.setValue(e.translationX - width);
         if (now) now.setValue(e.translationX);
         if (next) next.setValue(e.translationX + width);
@@ -377,9 +394,9 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
       const moved = currentTransValue.current;
       const velocity = vertical ? e.velocityY : e.velocityX;
 
-      if ((moved < -moveSize / 3 || (moved < 0 && velocity > 500)) && nextPage(velocity)) {
+      if ((moved < -moveSize / 4 || (moved < 0 && velocity > 500)) && nextPage(velocity)) {
         //右移
-      } else if ((moved > moveSize / 3 || (moved > 0 && velocity > 500)) && prevPage(velocity)) {
+      } else if ((moved > moveSize / 4 || (moved > 0 && velocity > 500)) && prevPage(velocity)) {
         //左移
       } else {
         //回弹
@@ -387,6 +404,10 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
       }
     });
 
+  if (vertical)
+    gesture.activeOffsetY([ -20, 20 ]);
+  else
+    gesture.activeOffsetX([ -20, 20 ]);
 
   function renderChildren() {
     const result = [] as JSX.Element[];
@@ -401,9 +422,8 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     ));
     return result;
   }
-
-  return (
-    <GestureDetector gesture={gesture}>
+  function renderInner() {
+    return (
       <View
         style={[styles.container,style]}
         onLayout={(e) => {
@@ -414,7 +434,11 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
         { renderChildren() }
         { indicatorDots ? <DotIndicatorComponent ref={dotIndicator} activeColor={indicatorActiveColor} deactiveColor={indicatorColor} /> : <></> }
       </View>
-    </GestureDetector>
+    );
+  }
+
+  return (
+    disableTouch ? renderInner() : <GestureDetector gesture={gesture}>{ renderInner() }</GestureDetector>
   );
 });
 

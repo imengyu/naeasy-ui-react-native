@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, Text, TextStyle, Animated, ViewStyle, View, Eas
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { Color, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { deviceWidth, rpx } from '../../utils';
+import { Swiper, SwiperItem, SwiperProps } from '../basic/Swiper';
 import { Badge, BadgeProps } from '../display';
 
 //标签头组件
@@ -313,6 +314,10 @@ interface TabsPageProps {
    */
   tabsProps?: Omit<TabsProps, 'tabs'>,
   /**
+   * Swiper 组件的自定义属性
+   */
+  swiperProps?: Omit<SwiperProps, 'current'|'onPageChange'>,
+  /**
    * 外层样式
    */
   style?: ViewStyle;
@@ -356,8 +361,21 @@ export function TabsPage(props: TabsPageProps) {
         }}
         {...props.tabsProps}
       />
-      {/* TODO: Tab页面 */}
-
+      {/* Tab页面 */}
+      <Swiper
+        current={tabIndex}
+        onPageChange={(index) => {
+          setTabIndex(index);
+          onPageSelected?.(index);
+        }}
+        { ...props.swiperProps }
+      >
+        { childs.map((k, i) => (
+          <SwiperItem key={k.key || i}>
+            { k.props.children }
+          </SwiperItem>
+        )) }
+      </Swiper>
     </View>
   );
 }
