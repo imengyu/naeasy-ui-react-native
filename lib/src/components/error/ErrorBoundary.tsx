@@ -16,7 +16,7 @@ export interface ErrorBoundaryProps {
   /**
    * 子组件
    */
-  children?: React.ReactElement;
+  children?: React.ReactElement|JSX.Element[];
 }
 interface ErrorBoundaryState {
   hasError: boolean,

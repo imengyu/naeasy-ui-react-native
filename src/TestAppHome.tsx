@@ -63,7 +63,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Divider 分隔线" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
             <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => this.props.navigation.push('TestDropdownMenu')} />
             <Cell title="[未完成] Collapse 可折叠" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
-            <Cell title="[未完成] Carousel 轮播" touchable showArrow onPress={() => this.props.navigation.push('TestCarousel')} />
+            <Cell title="[未完成] Carousel 轮播" touchable showArrow onPress={() => this.props.navigation.push('TestSwiper')} />
             <Cell title="NoticeBar 公告栏" touchable showArrow onPress={() => this.props.navigation.push('TestNoticeBar')} />
             <Cell title="Progress 进度条" touchable showArrow onPress={() => this.props.navigation.push('TestProgress')} />
             <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />
