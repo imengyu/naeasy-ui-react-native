@@ -59,7 +59,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 单选框" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
-            <Cell title="Rate 评分" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
+            <Cell title="Rate 评星" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
             <Cell title="SearchBar 搜索框" touchable showArrow onPress={() => this.props.navigation.push('TestSearchBar')} />
             <Cell title="Slider 滑块" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
             <Cell title="Stepper 步进器" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
