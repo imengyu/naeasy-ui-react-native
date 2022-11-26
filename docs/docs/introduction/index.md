@@ -56,9 +56,9 @@ Licensed under the MIT License.
 
 ```jsx | preview
 /**
- * title: demo 标题
  * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/
  * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
  */
-import React from 'react';
+//此区域用来显示侧边的Demo
 ```

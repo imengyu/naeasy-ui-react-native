@@ -2,7 +2,7 @@ import { isIOS, isAndroid } from '../utils/PlatformTools';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const NaToolboxModule = isIOS ? NativeModules.ToolsManagerIOS : NativeModules.NaToolboxModule;
-const eventEmitter = new NativeEventEmitter(NaToolboxModule);
+const eventEmitter = (isIOS || isAndroid) ? new NativeEventEmitter(NaToolboxModule) : undefined;
 
 /**
  * App 信息
@@ -139,7 +139,7 @@ type Theme = 'light'|'dark';
 function addSystemThemeChangedListener(callback: (theme: Theme) => void) {
   if (isIOS)
     NaToolboxModule.addSystemThemeChangedListener();
-  return eventEmitter.addListener('onThemeChanged', (data) => callback(data.theme));
+  return eventEmitter?.addListener('onThemeChanged', (data) => callback(data.theme));
 }
 /**
  * 获取系统主题（是否是深色模式）

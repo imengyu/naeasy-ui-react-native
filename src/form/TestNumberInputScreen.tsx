@@ -33,7 +33,7 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
       <ScrollView>
         <TestPageHeader
           title="NumberInput 数字输入"
-          desc="专用于输入数字。每个输入框只允许输入一个字符，主要用于验证码、密码输入框等。。"
+          desc="专用于输入数字。每个输入框只允许输入一个字符，主要用于验证码、密码输入框等。"
           navigation={this.props.navigation}
         />
         <TestHeader>基础用法</TestHeader>
@@ -55,10 +55,15 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
         <TestHeader>下划线边框</TestHeader>
         <TestGroup>
           <WingBlank size="sm">
-            <NumberInput value={this.state.value4} onChangeText={(v) => this.setState({ value4: v })} numberCount={4}
+            <NumberInput
+              value={this.state.value4}
+              onChangeText={(v) => this.setState({ value4: v })}
+              numberCount={4}
               borderWidth={2}
               borderColor={Color.darkBorder}
-              borderType="underline" activeBorderColor={Color.primary} gutter={10}
+              borderType="underline"
+              activeBorderColor={Color.primary}
+              gutter={10}
             />
           </WingBlank>
         </TestGroup>

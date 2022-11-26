@@ -1,10 +1,10 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { ColumnView, RowView, Color, AlertNative } from '../lib';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { ColumnView, RowView, Color, WhiteSpace, Icon, Avatar, Text } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
-import { TestGroup } from '../components/TestGroup';
+import { showTestMessage, TestGroup } from '../components/TestGroup';
 
 
 type Props = StackScreenProps<RootStackParamList, 'TestLayout'>;
@@ -127,12 +127,25 @@ export class TestLayoutScreen extends React.PureComponent<Props> {
         </TestGroup>
         <TestHeader desc="支持点击的 View。">点击事件封装</TestHeader>
         <TestGroup>
-          <ColumnView backgroundColor="#f40" touchable padding={10} onPress={() => {
-            AlertNative.alert('提示', '点击了！');
-          }}>
+          <ColumnView backgroundColor="#f40" touchable padding={10} onPress={() => showTestMessage('点击了！')}>
             <Text>ABC</Text>
           </ColumnView>
         </TestGroup>
+        <TestHeader desc="这是一个简单的使用案例，展示了如何使用 Flex View 快速布局。你可以基于这些布局组件，快速拼装出你想要的界面。">使用案例</TestHeader>
+        <TestGroup>
+          <RowView align="center">
+            <Avatar color="blue" text="王" />
+            <ColumnView padding={10}>
+              <RowView align="center">
+                <Icon icon="favorite-filling" color="#f60" />
+                <WhiteSpace size={2}/>
+                <Text size={16}>小王</Text>
+              </RowView>
+              <Text>1234567890@qq.com</Text>
+            </ColumnView>
+          </RowView>
+        </TestGroup>
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

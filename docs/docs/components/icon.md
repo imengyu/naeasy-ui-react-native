@@ -1,3 +1,8 @@
+---
+group:
+  title: 基础组件
+---
+
 # Icon 图标
 
 ## 介绍
@@ -6,17 +11,21 @@
 
 Icon 支持基于字体的图标集、Svg 图标、图片，你只需要预先通过 IconUtils.configIconMap 设置自己的图标集，即可通过 name 快速显示一个图标。
 
-![示例图1](../images/icon.png)
+## 导入
+
+```jsx
+import { Icon, IconUtils } from '@imengyu/naeasy-ui-react-native/dist/components/basic'
+```
 
 ## 内置图标列表
 
-[查看内置图标列表](https://imengyu.top/pages/imengyu-ui-lib/demo_index.html)
+[查看内置图标列表](https://imengyu.top/pages/naeasy-ui-rn-web/iconfont/demo_index.html)
 
 ## 基础用法
 
 通过 name 属性来指定需要使用的图标，我们内置了一套图标库（见图标列表），可以直接传入对应的名称来使用。
 
-全部的内置图标名称见下方。
+全部的内置图标名称见内置图标列表。
 
 ```jsx
 <Icon icon="smile-filling" />
@@ -105,3 +114,12 @@ IconUtils.configIconMap({
 |svgProps|渲染Svg时使用的额外属性，具体请参考 react-native-svg 的配置|`SvgProps`|-|
 |imageProps|渲染Image时使用的额外属性|`ImageProps`|-|
 |fontFamily|图标文字字体类名|`string`|`'iconfont'`|
+
+```jsx | preview
+/**
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestIcon
+ * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
+ */
+//此区域用来显示侧边的Demo
+```

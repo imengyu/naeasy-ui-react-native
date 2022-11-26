@@ -7,6 +7,16 @@ import { RootStackParamList } from './navigation';
 type Props = StackScreenProps<RootStackParamList, 'Components'>;
 
 export class TestAppHome extends React.Component<Props> {
+
+  componentDidMount(): void {
+    const page = (window as any)?.getQueryVariable?.('page') as string;
+    console.log('page', page);
+
+    if (page) {
+      this.props.navigation.push(page as any);
+    }
+  }
+
   render() {
     return (
       <ScrollView>

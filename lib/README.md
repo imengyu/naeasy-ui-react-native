@@ -3,9 +3,11 @@
 
 ## 项目简介
 
-imengyu-ui-lib 是一款简单的 React Native 移动端UI组件库。提供了一些国内APP开发中经常使用的组件和相关功能，并封装，希望可以给您的开发带来便利！
+@imengyu/naeasy-ui-react-native 是一款简单的 React Native 移动端UI组件库。提供了一些国内APP开发中经常使用的组件和相关功能，并封装，希望可以给您的开发带来便利！
 
 > 注意：项目正在开发中，有许多功能不完善，请谨慎使用!
+
+[主页](https://github.com/imengyu/imengyu-ui-lib)
 
 ## 特性
 

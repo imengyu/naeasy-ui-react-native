@@ -47,7 +47,7 @@ const px = dp2px(100);
 
 |名称|说明|
 |--|--|
-|deviceHeight|屏幕宽度（dp），等同于 `Dimensions.get("window").width`|
+|deviceWidth|屏幕宽度（dp），等同于 `Dimensions.get("window").width`|
 |deviceHeight|屏幕高度（dp），等同于 `Dimensions.get("window").height`|
 |deviceFontScale|字体缩放，等同于 `Dimensions.get("window").fontScale`|
 |deviceScale|DPI，等同于 `Dimensions.get("window").scale`|

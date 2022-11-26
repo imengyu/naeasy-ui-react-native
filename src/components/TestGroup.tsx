@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ViewProps } from 'react-native';
+import { View, StyleSheet, ViewProps, Platform } from 'react-native';
 import { AlertNative, Color, ThemeSelector } from '../lib';
 
 const styles = StyleSheet.create({
@@ -25,5 +25,9 @@ export function TestGroup(props: TestGroupProps) {
 }
 
 export function showTestMessage(str: string) {
-  AlertNative.alert('提示', str);
+  if (Platform.OS === 'web') {
+    (window as any).alert(str);
+  } else {
+    AlertNative.alert('提示', str);
+  }
 }

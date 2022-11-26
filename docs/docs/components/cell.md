@@ -1,10 +1,19 @@
+---
+group:
+  title: 基础组件
+---
+
 # Cell 单元格
 
 ## 介绍
 
 单元格为列表中的单个展示项。
 
-![示例图](../images/cell.png)
+## 导入
+
+```jsx
+import { CellGroup, Cell } from '@imengyu/naeasy-ui-react-native/dist/components/basic'
+```
 
 ## 基础用法
 
@@ -119,3 +128,12 @@ Cell 可以单独使用，也可以与 CellGroup 搭配使用，CellGroup 可以
 |rightIconStyle|自定义右侧图标样式|`TextStyle&#124;ImageStyle`|-|
 |padding|强制控制按钮的边距.如果是数字，则设置所有方向边距；两位数组 [vetical,horizontal]；四位数组 [top,right,down,left]|`number&#124;number[]`|-|
 |onPress|点击事件|`() => void`|-|
+
+```jsx | preview
+/**
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestCell
+ * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
+ */
+//此区域用来显示侧边的Demo
+```

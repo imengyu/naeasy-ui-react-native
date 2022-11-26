@@ -133,6 +133,7 @@ export const GridItem = ThemeWrapper(function (props: GridItemProp) {
   const {
     icon,
     highlightColor,
+    backgroundColor,
     iconColor,
     iconSize = 22,
     iconProps,
@@ -165,6 +166,7 @@ export const GridItem = ThemeWrapper(function (props: GridItemProp) {
       style={[
         styles.itemView,
         style,
+        { backgroundColor: ThemeSelector.color(backgroundColor) },
       ]}
     >
       <FlexView style={styles.itemView} center flex={1} direction={direction === 'horizontal' ? 'row' : 'column'}>

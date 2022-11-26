@@ -32,8 +32,8 @@ export class TestFormScreen extends React.PureComponent<Props, State> {
       <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
         <ScrollView>
           <TestPageHeader
-            title="Icon 图标"
-            desc="Icon是基于矢量图的图标集，你可以通过 Icon 组件使用，也可以在其他组件中通过 icon 属性引用。支持引入 iconfont 图标库。"
+            title="Form 表单"
+            desc="用于数据录入、校验，支持输入框、单选框、复选框、文件上传等类型，需要与 Field 输入框 组件搭配使用。"
             navigation={this.props.navigation}
           />
           <TestHeader>基础用法</TestHeader>

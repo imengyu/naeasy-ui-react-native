@@ -1,11 +1,19 @@
+---
+group:
+  title: 基础组件
+---
+
 # Button 按钮
 
 ## 介绍
 
 按钮用于触发一个操作，如提交表单。
 
-![示例图1](../images/button1.png)
-![示例图2](../images/button2.png)
+## 导入
+
+```jsx
+import { Button } from '@imengyu/naeasy-ui-react-native/dist/components/button'
+```
 
 ## 基础用法
 
@@ -135,3 +143,12 @@
 |viewProps|外层容器参数|ViewProps|-|
 |renderIcon|自定义图标渲染|`(isLeft: boolean, name: string&#124;ImageSourcePropType&#124;undefined) => JSX.Element`|-|
 |onPress|点击事件|`() => void`|-|
+
+```jsx | preview
+/**
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestButton
+ * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
+ */
+//此区域用来显示侧边的Demo
+```

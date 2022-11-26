@@ -1,10 +1,19 @@
+---
+group:
+  title: 基础组件
+---
+
 # Image 图片
 
 ## 介绍
 
 图片包装组件。为图片增加了一些属性以方便使用。
 
-![示例图1](../images/image.png)
+## 导入
+
+```jsx
+import { Image } from '@imengyu/naeasy-ui-react-native/dist/components/basic'
+```
 
 ## 基础用法
 
@@ -70,3 +79,12 @@
 |radius|当round为true的圆角大小，默认是图片宽度一半|number|-|
 |onPress|图片点击事件|`() => void`|-|
 |onPress|图片长按事件|`() => void`|-|
+
+```jsx | preview
+/**
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestImage
+ * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
+ */
+//此区域用来显示侧边的Demo
+```

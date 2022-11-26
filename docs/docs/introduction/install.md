@@ -53,7 +53,7 @@ Provider 用于为主题、全局配置、弹出框等等提供功能：
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Provider> { /* 用 Provider 包裹根组件 */ }
-              <NavigationContainer> { /* 下面是自己的内容 */ }
+              <NavigationContainer> { /* 这里使用了react-navigation，如果不使用，则下面直接放自己的内容 */ }
                 <TestAppNav />
               </NavigationContainer>
             </Provider>

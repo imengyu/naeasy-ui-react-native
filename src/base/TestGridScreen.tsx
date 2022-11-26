@@ -88,10 +88,10 @@ export class TestGridScreen extends React.PureComponent<Props> {
               <Image source={require('../images/apple-1.jpeg')} style={{ width: rpx(200), height: rpx(200) }} resizeMode="contain" />
             </GridItem>
             <GridItem>
-              <Image source={require('../images/apple-1.jpeg')} style={{ width: rpx(200), height: rpx(200) }} resizeMode="contain" />
+              <Image source={require('../images/apple-2.jpeg')} style={{ width: rpx(200), height: rpx(200) }} resizeMode="contain" />
             </GridItem>
             <GridItem>
-              <Image source={require('../images/apple-1.jpeg')} style={{ width: rpx(200), height: rpx(200) }} resizeMode="contain" />
+              <Image source={require('../images/apple-3.jpeg')} style={{ width: rpx(200), height: rpx(200) }} resizeMode="contain" />
             </GridItem>
           </Grid>
         </TestGroup>

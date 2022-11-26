@@ -33,7 +33,7 @@ function App() {
       }
     });
     return () => {
-      event.remove();
+      event?.remove();
     };
   }, []);
 

@@ -1,16 +1,22 @@
+---
+group:
+  title: 基础组件
+---
+
 # Typography 排版
 
 ## 介绍
 
 文本的基本格式。
 
-![示例图](../images/typography.png)
-
 ## 标题
 
 提供了类似 Html 的 H1~H6 标签，用于不同文本标题。标题样式中自带下边距和字号。
 
 ```jsx
+import { H1, H2, H3, H4, H5, H6 } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <H1>这是标题一</H1>
   <H2>这是标题二</H2>
@@ -28,6 +34,9 @@
 `I` 斜体文字组件。类似于 HTML 中的 i 标签。
 
 ```jsx
+import { B, I } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <B>这是粗体文字</B>
   <I>这是斜体文字</I>
@@ -41,6 +50,9 @@
 `U` 下划线文字组件。类似于 HTML 中的 u 标签。
 
 ```jsx
+import { S, U } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <S>这段字符串中间有条删除线</S>
   <U>这段字符串有条下划线</U>
@@ -50,6 +62,9 @@
 ## 换行
 
 ```jsx
+import { Text, Br } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <Text>Br用于将文字换行。<Br />这一行文字在这里换行。</Text>
 </ColumnView>
@@ -62,6 +77,9 @@
 `A` 组件默认调用 `Linking.openURL` 打开链接，你也可以不提供 `href` 属性，使用 `onPress` 回调自由处理点击事件。
 
 ```jsx
+import { A } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <A href="https://www.bing.com">点击我打开 www.bing.com</A>
 </ColumnView>
@@ -72,6 +90,9 @@
 对Text组件做了一个封装。提供了一些方便开发的属性。
 
 ```jsx
+import { Text } from '@imengyu/naeasy-ui-react-native/dist/components/typography'
+import { ColumnView } from '@imengyu/naeasy-ui-react-native/dist/components/layout'
+
 <ColumnView padding={10}>
   <Text underline>可以使用封装的组件快速设置样式</Text>
   <Text color={Color.danger}>文字颜色</Text>
@@ -126,3 +147,12 @@
 ### 其他组件
 
 其他组件属性均继承于 Text，可以使用 Text 上的所有属性。
+
+```jsx | preview
+/**
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestTypography
+ * iframe: true
+ * hideActions: ["CSB","EXTERNAL"]
+ */
+//此区域用来显示侧边的Demo
+```

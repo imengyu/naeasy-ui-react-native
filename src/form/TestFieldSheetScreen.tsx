@@ -114,7 +114,7 @@ export function TestFieldScreen(props: Props) {
           </CellGroup>
           <CellGroup title="插入按钮" inset>
             <Field
-              label="短信验证码"
+              label=""
               required
               center
               placeholder="请输入短信验证码"
