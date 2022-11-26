@@ -60,7 +60,7 @@ export class TestRateScreen extends React.PureComponent<Props, State> {
         <TestGroup>
           <Rate value={this.state.value5} disabled onValueChange={(page) => this.setState({ value5: page })} />
         </TestGroup>
-        <TestHeader>只读状态</TestHeader>
+        <TestHeader desc="只读，不可选择。">只读状态</TestHeader>
         <TestGroup>
           <Rate value={this.state.value6} readonly onValueChange={(page) => this.setState({ value6: page })} />
         </TestGroup>

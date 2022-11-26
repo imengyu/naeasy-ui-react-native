@@ -155,7 +155,7 @@ sideKeys：配置侧边栏的按键。
 
 ```jsx | preview
 /**
- * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestTypography
+ * demoUrl: https://imengyu.top/pages/naeasy-ui-rn-web/?page=TestNumberKeyBoard
  * iframe: true
  * hideActions: ["CSB","EXTERNAL"]
  */
