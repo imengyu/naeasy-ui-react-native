@@ -155,7 +155,7 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
 
     //计算文字的宽度
     if (contentString) {
-      MeasureText.width({
+      MeasureText.measureText({
         fontSize: fontSize,
         text: contentString,
         height: badgeSize,

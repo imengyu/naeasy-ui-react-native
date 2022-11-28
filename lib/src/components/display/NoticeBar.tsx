@@ -116,7 +116,7 @@ class NoticeBarComponent extends React.PureComponent<NoticeBarProps, NoticeBarSt
   startScroll() {
 
     //计算文字的宽度
-    MeasureText.width({
+    MeasureText.measureText({
       fontSize: this.props.textStyle?.fontSize || 14,
       text: this.props.content || '',
       height: this.scrollParentHeight,

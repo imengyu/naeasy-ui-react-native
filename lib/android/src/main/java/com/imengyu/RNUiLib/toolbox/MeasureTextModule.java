@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MeasureTextModule extends ReactContextBaseJavaModule {
-  private static ReactApplicationContext reactContext;
+  private final ReactApplicationContext reactContext;
 
   @NonNull
   @Override
@@ -48,11 +48,8 @@ public class MeasureTextModule extends ReactContextBaseJavaModule {
     return "NaMeasureTextModule";
   }
 
-  private static MeasureTextModule singleton = null;
-
   public MeasureTextModule(ReactApplicationContext context) {
     super(context);
-    singleton = this;
     reactContext = context;
   }
 

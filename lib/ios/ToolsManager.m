@@ -237,5 +237,47 @@ RCT_EXPORT_METHOD(addSystemThemeChangedListener)
   }
 }
 
+#pragma mark - 字体宽度计算
+
+RCT_EXPORT_METHOD(measureText:(NSDictionary *)options
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    float height = [RCTConvert float:options[@"height"]];
+    CGFloat fontSize = [RCTConvert CGFloat:options[@"fontSize"]];
+    NSString *text = [RCTConvert NSArray:options[@"text"]];
+    NSString *fontFamily = [RCTConvert NSString:options[@"fontFamily"]];
+    NSString *fontWeight = [RCTConvert NSString:options[@"fontWeight"]];
+    
+    UIFont *font = [self getFont:fontFamily size:fontSize weight:fontWeight];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize: CGSizeMake(FLT_MAX, height)];
+    CGRect resultRect = [self fitText:text withFont:font container:textContainer];
+
+    resolve([NSNumber numberWithFloat:resultRect.size.width]);
+}
+
+
+- (CGRect)fitText:(NSString*)text withFont:(UIFont *)font container:(NSTextContainer *)textContainer {
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithString:text];
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+
+    [layoutManager addTextContainer:textContainer];
+    [textStorage addLayoutManager:layoutManager];
+    
+    [textStorage addAttribute:NSFontAttributeName value:font
+                        range:NSMakeRange(0, [textStorage length])];
+    [textContainer setLineFragmentPadding:0.0];
+    (void) [layoutManager glyphRangeForTextContainer:textContainer];
+    return [layoutManager usedRectForTextContainer:textContainer];
+}
+
+- (UIFont *)getFont:(NSString *)fontFamily size:(CGFloat)fontSize weight:(NSString*)fontWeight {
+    if (fontWeight == nil) {
+        fontWeight = @"normal";
+    };
+    return fontFamily == nil ?
+        [RCTConvert UIFont:@{@"fontWeight": fontWeight, @"fontSize": [NSNumber numberWithFloat:fontSize]}] :
+        [RCTConvert UIFont:@{@"fontFamily": fontFamily, @"fontSize": [NSNumber numberWithFloat:fontSize], @"fontWeight": fontWeight}];
+}
 
 @end

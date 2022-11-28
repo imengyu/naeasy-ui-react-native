@@ -60,7 +60,7 @@ export const TextScrollable = ThemeWrapper(function (props: TextScrollableProps)
   }, []);
   const startScroll = useCallback(() => {
 
-    MeasureText.width({
+    MeasureText.measureText({
       fontSize: props.textStyle?.fontSize || 14,
       text: props.children || '',
       height: scrollParentHeight.current,
