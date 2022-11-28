@@ -13,6 +13,7 @@ import com.imengyu.RNUiLib.smartrefresh.header.ClassicsHeaderManager;
 import com.imengyu.RNUiLib.smartrefresh.header.DefaultHeaderMananger;
 import com.imengyu.RNUiLib.smartrefresh.header.MaterialHeaderManager;
 import com.imengyu.RNUiLib.smartrefresh.header.AnyHeaderManager;
+import com.imengyu.RNUiLib.toolbox.MeasureTextModule;
 import com.imengyu.RNUiLib.toolbox.ToolboxAndroidModule;
 
 import com.facebook.react.ReactPackage;
@@ -43,6 +44,7 @@ public class RNUiLibPackage implements ReactPackage {
   public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
     modules.add(new ToolboxAndroidModule(reactContext));
+    modules.add(new MeasureTextModule(reactContext));
     modules.add(new ActionSheetAndroidModule(reactContext));
     modules.add(new DialogAndroidModule(reactContext));
     modules.add(new PickerViewAndroidModule(reactContext));
