@@ -30,7 +30,7 @@ NaEasy UI 是一款简单的 React Native 移动端UI组件库。
 
 ## Demo 体验
 
-目前暂时只有 [Android Demo](https://pan.baidu.com/s/12iCSc8TH8zmSDPT1iKbXWA?pwd=a3ey) 可下载体验。
+目前暂时只有 [Android Demo](https://pan.baidu.com/s/1ZaEbVAGy1tlxKziLfoZ5IQ?pwd=3isq) 可下载体验。
 
 iOS的暂时没有（没有开发账号上架不方便）。
 

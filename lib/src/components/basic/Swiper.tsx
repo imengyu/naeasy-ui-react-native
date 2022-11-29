@@ -144,14 +144,14 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     if (width > 0 && height > 0 && itemCount.current !== children.length) {
       setAnimatedX(new Array(children.length).fill(null).map(() => new Animated.Value(0)));
       setAnimatedY(new Array(children.length).fill(null).map(() => new Animated.Value(0)));
-      setOpacity(new Array(children.length).fill(null).map((_, i) => new Animated.Value(i === currentIndex.current ? 1 : 0)));
       itemCount.current = children.length;
       dotIndicator.current?.setCount(itemCount.current);
 
       setTimeout(() => {
+        setOpacity(new Array(children.length).fill(null).map((_, i) => new Animated.Value(i === currentIndex.current ? 1 : 0)));
         setAnimatedX(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? 0 : (i === currentIndex.current ? 0 : width))));
         setAnimatedY(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? (i === currentIndex.current ? 0 : height) : 0)));
-      }, 200);
+      }, 300);
     }
   }, [ children, width, height, vertical ]);
 

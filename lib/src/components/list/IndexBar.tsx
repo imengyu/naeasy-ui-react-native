@@ -124,10 +124,10 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
   }));
 
   function onResponderMove(e: GestureResponderEvent) {
-    if (e.nativeEvent.pageX < outBarX.current
-      || e.nativeEvent.pageY < outBarY.current
-      || e.nativeEvent.pageY > outBarY.current + outBarHeight.current)
-      return;
+   // if (e.nativeEvent.pageX < outBarX.current
+    //  || e.nativeEvent.pageY < outBarY.current
+    //  || e.nativeEvent.pageY > outBarY.current + outBarHeight.current)
+    ///  return;
 
     const y = e.nativeEvent.locationY;
 
