@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
-import { ColumnView, Text, Color } from '../lib';
+import { ColumnView, Text, Color, Toast } from '../lib';
 import { TabsPage, TabsPageItem } from '../../lib/src/components/tab';
 import { SimpleList } from '../../lib/src/components/list';
 
@@ -38,18 +38,20 @@ export class TestSimpleListScreen extends React.PureComponent<Props> {
         <TabsPageItem text="基础列表">
           <SimpleList<string>
             data={data}
+            onItemPress={(item) => Toast.info('点击了：' + item)}
           />
         </TabsPageItem>
         <TabsPageItem text="自定义渲染">
           <SimpleList<string>
             data={data}
+            onItemPress={(item) => Toast.info('点击了：' + item)}
             renderItemContent={(k, i) => (<ColumnView>
               <Text>Index: {i}</Text>
               <Text color={i % 2 === 0 ? Color.danger : Color.success}>{k}</Text>
             </ColumnView>)}
           />
         </TabsPageItem>
-        <TabsPageItem text="选择模式">
+        <TabsPageItem text="单选择式">
           <SimpleList<string>
             data={data}
             mode="single-check"

@@ -14,9 +14,13 @@ export interface AvatarProp {
    */
   url?: string;
   /**
-   * 头像的大小
+   * 头像的大小。默认：40
    */
   size?: number,
+  /**
+   * 头像圆角大小，在 round=false 时有效 。默认：0
+   */
+  radius?: number,
   /**
    * 头像是否是圆形的
    */
@@ -38,9 +42,13 @@ export interface AvatarProp {
    */
   textStyle?: TextStyle;
   /**
+   * 文字的大小
+   */
+  textSize?: number,
+  /**
    * 头像背景颜色
    */
-  color?: ThemeColor;
+  background?: ThemeColor;
   /**
    * 点击事件
    */
@@ -56,9 +64,13 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
     round = true,
     url,
     defaultAvatar = {},
-    size = 30,
-    color = Color.primary,
+    size = 40,
+    background = Color.primary,
     textColor = '#fff',
+    textSize = 16,
+    radius = 0,
+    textStyle,
+    style,
     onPress,
   } = props;
 
@@ -72,17 +84,17 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
           onError={() => setError(true)}
           source={((error || CheckTools.isNullOrEmpty(url))) ? (defaultAvatar || {}) : { uri: url }}
           style={{
-            borderRadius: round ? size / 2 : 4,
+            borderRadius: round ? size / 2 : radius,
             width: size,
             height: size,
-            ...props.style,
+            ...style,
           }}
         />  :
         <View style={{
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: ThemeSelector.color(color),
-          borderRadius: round ? size / 2 : 4,
+          backgroundColor: ThemeSelector.color(background),
+          borderRadius: round ? size / 2 : radius,
           width: size,
           height: size,
           ...props.style,
@@ -90,9 +102,9 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
           <Text style={[
             {
               color: ThemeSelector.color(textColor),
-              fontSize: size - 10,
+              fontSize: textSize,
             },
-            props.textStyle,
+            textStyle,
           ]}>{props.text}</Text>
         </View>
       }

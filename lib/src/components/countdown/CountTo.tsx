@@ -2,7 +2,7 @@ import StringTools from "../../utils/StringTools";
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { TextProps } from "react-native";
 import { Text } from "../typography/Text";
-import { VerticalScrollText } from "./VerticalScrollNumberText";
+import { VerticalScrollText } from "../typography/VerticalScrollNumberText";
 
 export interface CountToProps extends Omit<TextProps, 'children'> {
   /**

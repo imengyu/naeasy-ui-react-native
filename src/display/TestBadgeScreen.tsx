@@ -115,9 +115,9 @@ export function TestBadgeScreen(props: Props) {
           <WhiteSpace />
           <Badge color={Color.success} />
           <WhiteSpace />
-          <Badge color={Color.waring} />
+          <Badge color={Color.warning} />
           <WhiteSpace />
-          <Badge color={Color.notice} />
+          <Badge color={Color.danger} />
         </RowView>
         <RowView center>
           <Badge />

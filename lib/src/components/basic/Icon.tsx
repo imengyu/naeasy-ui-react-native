@@ -115,7 +115,7 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
   if (!name)
     name = icon;
   if (!name)
-    return renderFail(0);
+    return <></>;
 
   //处理直接传入对象的情况
   if (typeof name === 'string') {

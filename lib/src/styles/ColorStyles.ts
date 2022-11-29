@@ -68,12 +68,12 @@ export const Color = {
     dark: '#222222',
   },
   divider: {
-    light: '#efefef',
-    dark: '#212121',
-  },
-  border: {
     light: '#dfdfdf',
     dark: '#444444',
+  },
+  border: {
+    light: '#efefef',
+    dark: '#212121',
   },
   mask: {
     light: 'rgba(0,0,0,0.4)',

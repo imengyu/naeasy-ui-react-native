@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View, ViewStyle } from 'react-native';
+import { Animated, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { Color, ThemeColor, ThemeSelector } from '../../styles';
 import { selectStyleType } from '../../utils/StyleTools';
 import { ThemeWrapper } from '../../theme/Theme';
@@ -36,6 +36,21 @@ export interface ProgressProp {
    */
   width?: number;
   /**
+   * 是否显示进度文字
+   */
+  showProgressText?: boolean;
+  /**
+   * 进度文字的位置。默认：flow
+   * * center 居中
+   * * right 居右
+   * * flow 跟随进度
+   */
+  progressPos?: 'left'|'right'|'flow';
+  /**
+   * 进度文字的自定义样式
+   */
+  progressTextStyle?: TextStyle;
+  /**
    * 背景样式
    */
   style?: ViewStyle,
@@ -43,6 +58,10 @@ export interface ProgressProp {
    * 是否是圆角，默认是
    */
   round?: boolean;
+  /**
+   * round=true 时的圆角大小
+   */
+  radius?: number;
   /**
    * 是否有动画效果，默认否
    */
@@ -60,40 +79,71 @@ export interface ProgressProp {
 const styles = StyleSheet.create({
   view: {
     position: 'relative',
-    overflow: 'hidden',
   },
   progress: {
     position: 'absolute',
   },
+  progressText: {
+    position: 'absolute',
+    width: 40,
+    textAlign: 'center',
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 10,
+    fontSize: 12,
+    color: '#fff',
+  },
 });
-
-//TODO: 进度条文字
 
 /**
  * 进度条
  */
 export const Progress = ThemeWrapper(function (props: ProgressProp) {
-  const type = props.type || 'left-right';
-  const width = props.height || 10;
-  const barWidth = props.width || '100%';
-  const animateDuration = props.animateDuration || 300;
+  const {
+    type = 'left-right',
+    progressPos = 'flow',
+    width: barWidth = '100%',
+    height = 5,
+    animateDuration = 300,
+    showProgressText = false,
+    animate = false,
+    round = true,
+    radius = 10,
+    progressTextStyle,
+  } = props;
+
+  const value = Math.min(100, Math.max(props.value || 0, 0));
+  const barColor = ThemeSelector.color(props.progressColor || Color.primary);
+  const barBackgroundColor = ThemeSelector.color(props.backgroundColor || Color.grey);
+  const barRadius = round ? radius : height;
+  const isHorizontal = (typeof type === 'undefined' || type === 'left-right' || type === 'right-left');
 
   const [ barRealWidth, setBarRealWidth ] = useState(0);
+  const [ barTextRealWidth, setBarTextRealWidth ] = useState(0);
   const sideAnimValue = useRef(new Animated.Value(0)).current;
+  const sideAnimProgressTextValue = useRef(new Animated.Value(0)).current;
   const sideAnim = useRef<Animated.CompositeAnimation|null>();
 
   useEffect(() => {
     if (sideAnim.current)
       sideAnim.current.stop();
-    if (props.animate) {
-      sideAnim.current = Animated.timing(sideAnimValue, {
-        toValue: (props.value / 100) * barRealWidth,
-        duration: animateDuration,
-        useNativeDriver: false,
-      });
+    if (animate) {
+      sideAnim.current = Animated.parallel([
+        Animated.timing(sideAnimValue, {
+          toValue: (value / 100) * barRealWidth,
+          duration: animateDuration,
+          useNativeDriver: false,
+        }),
+        Animated.timing(sideAnimProgressTextValue, {
+          toValue: (value / 100) * barRealWidth - (value / 100) * barTextRealWidth,
+          duration: animateDuration,
+          useNativeDriver: false,
+        }),
+      ]);
       sideAnim.current.start(() => { sideAnim.current = null; });
     } else {
-      sideAnimValue.setValue((props.value / 100) * barRealWidth);
+      sideAnimValue.setValue((value / 100) * barRealWidth);
+      sideAnimProgressTextValue.setValue((value / 100) * barRealWidth - (value / 100) * barTextRealWidth);
     }
     return () => {
       if (sideAnim.current) {
@@ -101,64 +151,74 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
         sideAnim.current = null;
       }
     };
-  }, [ sideAnimValue, barRealWidth, animateDuration, props.value, props.animate ]);
+  }, [
+    sideAnimValue, sideAnimProgressTextValue,
+    barRealWidth, barTextRealWidth,
+    animateDuration, value, animate,
+  ]);
 
   const progressStyles = [
     styles.progress,
-    { backgroundColor: ThemeSelector.color(props.progressColor || Color.primary) },
+    {
+      borderRadius: barRadius,
+      backgroundColor: barColor,
+    },
     selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
-      'left-right': { left: 0, height: width },
-      'right-left': { right: 0, height: width },
-      'top-bottom': { top: 0, width: width },
-      'bottom-top': { bottom: 0, width: width },
+      'left-right': { left: 0, height: height },
+      'right-left': { right: 0, height: height },
+      'top-bottom': { top: 0, width: height },
+      'bottom-top': { bottom: 0, width: height },
     }),
   ];
 
   return (
-    <View style={[
-      styles.view,
-      selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
-        'left-right': {
-          height: width,
-          width: barWidth,
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
+    <View
+      style={[
+        styles.view,
+        selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
+          'left-right': {
+            height: height,
+            width: barWidth,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'flex-start',
+          },
+          'right-left': {
+            height: height,
+            width: barWidth,
+            flexDirection: 'row',
+            alignItems: 'center',
+            alignSelf: 'flex-start',
+          },
+          'top-bottom': {
+            width: height,
+            height: barWidth,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignSelf: 'flex-start',
+          },
+          'bottom-top': {
+            width: height,
+            height: barWidth,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignSelf: 'flex-start',
+          },
+        }),
+        {
+          borderRadius: barRadius,
+          backgroundColor: barBackgroundColor,
         },
-        'right-left': {
-          height: width,
-          width: barWidth,
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-        },
-        'top-bottom': {
-          width: width,
-          height: barWidth,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-        },
-        'bottom-top': {
-          width: width,
-          height: barWidth,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-        },
-      }),
+        props.style,
+      ]}
+      onLayout={(e) => setBarRealWidth(
+        isHorizontal ?
+          e.nativeEvent.layout.width :
+          e.nativeEvent.layout.height)
+      }
+    >
       {
-        borderRadius: props.round === false ? 0 : width,
-        backgroundColor: ThemeSelector.color(props.backgroundColor || Color.grey),
-      },
-      props.style,
-    ]} onLayout={(e) => setBarRealWidth(
-      (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
-        e.nativeEvent.layout.width :
-        e.nativeEvent.layout.height)
-    }>
-      {
-        (typeof type === 'undefined' || type === 'left-right' || type === 'right-left') ?
+        isHorizontal ?
           <Animated.View style={[
             ...progressStyles,
             { width: sideAnimValue },
@@ -167,6 +227,36 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
             ...progressStyles,
             { height: sideAnimValue },
           ]} />
+      }
+      {
+        showProgressText ?
+          <Animated.Text
+            style={[
+              styles.progressText,
+              { backgroundColor: barColor },
+              selectStyleType(progressPos, 'flow', {
+                left: {
+                  left: 0,
+                },
+                right: {
+                  right: 0,
+                },
+                flow: {},
+              }),
+              progressTextStyle,
+              {
+                transform: progressPos === 'flow' ? (isHorizontal ?
+                  [ { translateX: sideAnimProgressTextValue } ] :
+                  [ { translateY: sideAnimProgressTextValue } ]) : [],
+              },
+            ]}
+            onLayout={(e) => setBarTextRealWidth(
+              isHorizontal ?
+                e.nativeEvent.layout.width :
+                e.nativeEvent.layout.height)
+            }
+          >{value}%</Animated.Text> :
+          <></>
       }
     </View>
   );

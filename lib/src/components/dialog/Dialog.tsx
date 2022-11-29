@@ -121,8 +121,8 @@ const styles = DynamicThemeStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
-    ...borderTop(1, 'solid', Color.divider, true),
-    ...borderRight(1, 'solid', Color.divider, true),
+    ...borderTop(1, 'solid', Color.border, true),
+    ...borderRight(1, 'solid', Color.border, true),
   },
   dialogButtonHorz: {
     flex: 1,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, ThemeSelector, rpx } from '../lib';
+import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, ThemeSelector, rpx, Toast } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Field } from '../../lib/src/components/form';
@@ -66,7 +66,7 @@ export function TestFieldScreen(props: Props) {
                 paddingVertical: rpx(10),
                 paddingHorizontal: rpx(20),
                 borderBottomColor: ThemeSelector.color(Color.border),
-                borderBottomWidth: rpx(2),
+                borderBottomWidth: rpx(4),
                 backgroundColor: ThemeSelector.color(Color.white),
               }} activeFieldStyle={{
                 borderBottomColor: ThemeSelector.color(Color.primary),
@@ -120,7 +120,7 @@ export function TestFieldScreen(props: Props) {
               placeholder="请输入短信验证码"
               value={value6}
               onChangeText={setValue6}
-              renderRightButton={() => (<Button size="small" type="primary">发送验证码</Button>)}
+              renderRightButton={() => (<Button size="small" type="primary" onPress={() => Toast.info('发送验证码')}>发送验证码</Button>)}
             />
           </CellGroup>
           <CellGroup title="添加图标" inset>
@@ -137,7 +137,7 @@ export function TestFieldScreen(props: Props) {
               value={value16}
               onChangeText={setValue16}
               renderLeftIcon={() => <Icon icon="lock" style={{ marginRight: 10 }} />}
-              renderRightButton={() => (<Button size="small" type="primary">发送验证码</Button>)}
+              renderRightButton={() => (<Button size="small" type="primary" onPress={() => Toast.info('发送验证码')}>发送验证码</Button>)}
             />
           </CellGroup>
           <CellGroup title="多行文字" inset>

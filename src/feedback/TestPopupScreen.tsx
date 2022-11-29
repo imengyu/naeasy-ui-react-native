@@ -3,8 +3,8 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
 import { CellGroup, Cell, Popup, Icon, Color, Button, ColumnView, Text, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
-import { TestStyles } from '../styles/TestStyles';
-import { TestPageHeader } from '../components/TestHeader';
+import { TestHeader, TestPageHeader } from '../components/TestHeader';
+import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPopup'>;
 
@@ -158,25 +158,38 @@ export class TestPopupScreen extends React.PureComponent<Props, TestPopupScreenS
             )}
           />
 
-          <CellGroup title="基础用法" inset>
-            <Cell title="普通弹出框，不可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp1: true })} />
-            <Cell title="弹出框，可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp2: true })} />
-          </CellGroup>
-          <CellGroup title="弹出位置" inset>
-            <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp3: true })} />
-            <Cell title="顶部弹出" showArrow onPress={() => this.setState({ showProp4: true })} />
-            <Cell title="左侧弹出" showArrow onPress={() => this.setState({ showProp5: true })} />
-            <Cell title="右侧弹出" showArrow onPress={() => this.setState({ showProp6: true })} />
-          </CellGroup>
-          <CellGroup title="圆角弹出层" inset>
-            <Text style={TestStyles.TitleText}>设置 round 属性后，弹窗会根据弹出位置添加不同的圆角样式。</Text>
-            <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp7: true })} />
-            <Cell title="顶部弹出" showArrow onPress={() => this.setState({ showProp8: true })} />
-          </CellGroup>
-          <CellGroup title="无遮罩的弹出层" inset>
-            <Text style={TestStyles.TitleText}>无遮罩，可以操控下方组件。</Text>
-            <Cell title="弹出" showArrow onPress={() => this.setState({ showProp9: true })} />
-          </CellGroup>
+          <TestHeader>基础用法</TestHeader>
+          <TestGroup noHorizontalPadding>
+            <CellGroup inset>
+              <Cell title="普通弹出框，不可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp1: true })} />
+              <Cell title="弹出框，可点击遮罩关闭" showArrow onPress={() => this.setState({ showProp2: true })} />
+            </CellGroup>
+          </TestGroup>
+
+          <TestHeader desc="通过 position 属性设置弹出位置，默认居中弹出，可以设置为 top、bottom、left、right。">弹出位置</TestHeader>
+          <TestGroup noHorizontalPadding>
+            <CellGroup inset>
+              <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp3: true })} />
+              <Cell title="顶部弹出" showArrow onPress={() => this.setState({ showProp4: true })} />
+              <Cell title="左侧弹出" showArrow onPress={() => this.setState({ showProp5: true })} />
+              <Cell title="右侧弹出" showArrow onPress={() => this.setState({ showProp6: true })} />
+            </CellGroup>
+          </TestGroup>
+
+          <TestHeader desc="设置 round 属性后，弹窗会根据弹出位置添加不同的圆角样式。">圆角弹出层</TestHeader>
+          <TestGroup noHorizontalPadding>
+            <CellGroup inset>
+              <Cell title="底部弹出" showArrow onPress={() => this.setState({ showProp7: true })} />
+              <Cell title="顶部弹出" showArrow onPress={() => this.setState({ showProp8: true })} />
+            </CellGroup>
+          </TestGroup>
+
+          <TestHeader desc="无遮罩，可以操控下方组件。">无遮罩的弹出层</TestHeader>
+          <TestGroup noHorizontalPadding>
+            <CellGroup inset>
+              <Cell title="弹出" showArrow onPress={() => this.setState({ showProp9: true })} />
+            </CellGroup>
+          </TestGroup>
 
           <WhiteSpace size={100} />
         </ColumnView>

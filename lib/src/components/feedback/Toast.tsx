@@ -126,6 +126,13 @@ function show(props: ToastProps) : ToastPublicInstance {
 
   return toastPublicInstance;
 }
+function text(text: string) {
+  return show({
+    position: 'center',
+    content: text,
+    type: 'text',
+  });
+}
 function info(text: string) {
   return show({
     position: 'center',
@@ -173,6 +180,7 @@ function offline(props: string|ToastProps) {
  * 规则: 有 Icon 的 Toast，字数为 4-6 个；没有 Icon 的 Toast，字数不宜超过 14 个。
  */
 export const Toast = {
+  text,
   info,
   show,
   success,

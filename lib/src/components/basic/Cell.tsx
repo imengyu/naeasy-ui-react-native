@@ -1,6 +1,6 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { Image, ImageSourcePropType, ImageStyle, Text, TextStyle, TouchableHighlight, View, ViewStyle } from 'react-native';
+import { ImageSourcePropType, ImageStyle, Text, TextStyle, TouchableHighlight, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { borderBottom, borderTop, styleConfigPadding } from '../../utils/StyleTools';
@@ -176,7 +176,7 @@ const styles = DynamicThemeStyleSheet.create({
 /**
  * 单元格组件, 为列表中的单个展示项。
  */
- export const Cell = ThemeWrapper(function (props: CellProp) {
+export const Cell = ThemeWrapper(function (props: CellProp) {
   function getStyle() {
 
     const style = {
@@ -229,29 +229,23 @@ const styles = DynamicThemeStyleSheet.create({
     );
 
     function renderLeftIconInner() {
-      if (typeof props.icon === 'string' && !CheckTools.isNullOrEmpty(props.icon)) {
-        //图标
-        if (props.icon.startsWith('http'))
-          return <Image key="leftIcon" style={{width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={{ uri: props.icon }} />;
-        return <Icon key="leftIcon" icon={props.icon} {...props.iconProps} style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle}} />;
-      }
-      if (typeof props.icon === 'object' || typeof props.icon === 'number')
-        return <Image key="leftIcon" style={{ width: iconSize, height: iconSize, ...props.iconStyle as ImageStyle}} source={props.icon} />;
-      return <View />;
+      return <Icon
+        key="leftIcon"
+        icon={props.icon}
+        {...props.iconProps}
+        style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle }}
+      />;
     }
   }
   function renderRightIcon() {
     if (props.renderIcon)
       return props.renderIcon(false, props.rightIcon);
-    const iconSize = props.rightIconSize || 15;
-    if (typeof props.rightIcon === 'string') {
-      if (props.rightIcon.startsWith('http'))
-        return <Image key="rightIcon" style={{width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} source={{ uri: props.rightIcon }} />;
-      return <Icon key="rightIcon" icon={props.rightIcon} {...props.rightIconProps} style={{...styles.titleIcon, fontSize: iconSize, ...props.rightIconStyle as TextStyle}} />;
-    }
-    if (typeof props.rightIcon === 'object' || typeof props.rightIcon === 'number')
-      return <Image style={{ width: iconSize, height: iconSize, ...props.rightIconStyle as ImageStyle }} key="rightIcon" source={props.rightIcon} />;
-    return <View key="rightIcon" />;
+    return <Icon
+      key="rightIcon"
+      icon={props.rightIcon}
+      {...props.rightIconProps}
+      style={{...styles.titleIcon, fontSize: props.rightIconSize || 15, ...props.rightIconStyle as TextStyle}}
+    />;
   }
   function renderBase() {
     const arr = [];
@@ -310,8 +304,8 @@ const styles = DynamicThemeStyleSheet.create({
         styles.view,
         getStyle(),
         {
-          ...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.divider)) : {}),
-          ...(props.topBorder === true ? borderTop(1, 'solid', ThemeSelector.color(Color.divider)) : {}),
+          ...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.border)) : {}),
+          ...(props.topBorder === true ? borderTop(1, 'solid', ThemeSelector.color(Color.border)) : {}),
         },
         props.style,
       ]}

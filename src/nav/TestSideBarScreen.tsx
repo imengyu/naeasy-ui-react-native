@@ -2,9 +2,9 @@ import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ColumnView, Toast, Text, RowView } from '../lib';
 import { ScrollView, StyleSheet } from 'react-native';
-import { TestStyles } from '../styles/TestStyles';
 import { RootStackParamList } from '../navigation';
 import { SideBar, SideBarItem } from '../../lib/src/components/nav';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestSideBar', 'RootStack'>;
 interface State {
@@ -17,6 +17,9 @@ interface State {
 const styles = StyleSheet.create({
   sideStyle: {
     width: 100,
+  },
+  TitleText: {
+
   },
 });
 
@@ -31,10 +34,16 @@ export class TestSideBarScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
+        <TestPageHeader
+          title="SideBar 侧边导航"
+          desc="垂直展示的导航栏，用于在不同的内容区域之间进行切换。"
+          navigation={this.props.navigation}
+        />
+
         <ColumnView padding={20}>
           <RowView justify="space-around">
             <ColumnView>
-              <Text style={TestStyles.TitleText}>基础用法</Text>
+              <Text style={styles.TitleText}>基础用法</Text>
               <SideBar
                 style={styles.sideStyle}
                 selectedItemName={this.state.value1}
@@ -48,7 +57,7 @@ export class TestSideBarScreen extends React.PureComponent<Props> {
             </ColumnView>
 
             <ColumnView>
-              <Text style={TestStyles.TitleText}>徽标提示</Text>
+              <Text style={styles.TitleText}>徽标提示</Text>
               <SideBar
                 style={styles.sideStyle}
                 selectedItemName={this.state.value2}
@@ -65,7 +74,7 @@ export class TestSideBarScreen extends React.PureComponent<Props> {
 
           <RowView justify="space-around" margin={[20, 0,0,0]}>
             <ColumnView>
-              <Text style={TestStyles.TitleText}>禁用选项</Text>
+              <Text style={styles.TitleText}>禁用选项</Text>
               <SideBar
                 style={styles.sideStyle}
                 selectedItemName={this.state.value3}
@@ -78,7 +87,7 @@ export class TestSideBarScreen extends React.PureComponent<Props> {
               </SideBar>
             </ColumnView>
             <ColumnView>
-              <Text style={TestStyles.TitleText}>监听切换事件</Text>
+              <Text style={styles.TitleText}>监听切换事件</Text>
               <SideBar
                 style={styles.sideStyle}
                 selectedItemName={this.state.value4}

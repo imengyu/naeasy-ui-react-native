@@ -4,7 +4,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { CellGroup, Cell, Toast, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 import StringTools from '../utils/StringTools';
-import { TestStyles } from '../styles/TestStyles';
 import { Picker } from '../../lib/src/components/picker';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPicker'>;
@@ -13,7 +12,7 @@ export class TestPickerScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
-        <ColumnView center style={TestStyles.PaddingH}>
+        <ColumnView center>
           <CellGroup title="基础用法" inset>
             <Cell title="选择日期" showArrow onPress={() => {
               Picker.showTimePickerView({

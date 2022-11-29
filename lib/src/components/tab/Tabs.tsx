@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextStyle, Animated, ViewStyle, View, Easing} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
 import { Color, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { deviceWidth, rpx } from '../../utils';
 import { Swiper, SwiperItem, SwiperProps } from '../basic/Swiper';
@@ -114,6 +115,9 @@ export interface TabsProps {
   renderTab?: (tab: TabsItemData, active: boolean, itemWidth: number, index: number, onTabClick: () => void) => JSX.Element;
 }
 
+/**
+ * 标签页顶部条组件
+ */
 export function Tabs(props: TabsProps) {
 
   const {
@@ -393,7 +397,11 @@ const styles = StyleSheet.create({
   },
   tab: {
     position: 'relative',
-    flexShrink: 1,
+    ...Platform.select({
+      web: {
+        flexShrink: 1,
+      },
+    }),
     flexGrow: 0,
     height: 'auto',
   },

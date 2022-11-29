@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView } from '../lib';
+import { ColumnView, Icon, Color } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { NoticeBar } from '../../lib/src/components/display/NoticeBar';
@@ -32,6 +32,9 @@ export class TestNoticeBarScreen extends React.PureComponent<Props, State> {
 
           <Text style={{ padding: 10 }}>自定义样式</Text>
           <NoticeBar content="米袋虽空——樱花开哉！" scroll={false} icon="smile" backgroundColor="rgb(236, 249, 255)" textColor="rgb(25, 137, 250)" />
+
+          <Text style={{ padding: 10 }}>自定义右侧图标</Text>
+          { this.state.show ? <NoticeBar content="米袋虽空——樱花开哉！" renderRight={() => <Icon icon="arrow-right-bold" color={Color.warning} />} scroll={false} onClose={() => this.setState({ show: false })} /> : <></> }
 
           <Text style={{ padding: 10 }}>可以关闭</Text>
           { this.state.show ? <NoticeBar content="米袋虽空——樱花开哉！" closeable scroll={false} onClose={() => this.setState({ show: false })} /> : <></> }

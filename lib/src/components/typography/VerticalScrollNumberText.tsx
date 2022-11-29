@@ -17,6 +17,10 @@ export interface VerticalScrollTextProps extends Omit<VerticalScrollOneNumberTex
    * 文字字符串
    */
   numberString: string;
+  /**
+   * 居中
+   */
+  center?: boolean,
 }
 
 const styles = StyleSheet.create({
@@ -46,23 +50,29 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
   const [ textHeight, setTextHeight ] = useState(0);
 
   const oneStrPrev = useRef(oneStr);
+  const noResetNext = useRef(false);
 
   const scrollAnimCurrent = useRef(new Animated.Value(0));
-  const scrollAnimNext = useRef(new Animated.Value(-100));
+  const scrollAnimNext = useRef(new Animated.Value(-1000));
   const scrollAnimHandle = useRef<Animated.CompositeAnimation|null>();
 
   useEffect(() => {
+    if (textHeight <= 0)
+      return;
+
     //执行数字切换动画
     if (oneStrPrev.current !== oneStr) {
       setTextCurrent(oneStrPrev.current);
       setTextNext(oneStr);
 
       //停止之前动画
-      if (scrollAnimHandle.current)
+      if (scrollAnimHandle.current) {
+        noResetNext.current = true;
         scrollAnimHandle.current.stop();
+      }
 
       //减小
-      if (oneStrPrev.current > oneStr) {
+      if (oneStrPrev.current > oneStr && oneStrPrev.current !== '9' && oneStr !== '0') {
         scrollAnimCurrent.current.setValue(0);
         scrollAnimNext.current.setValue(-textHeight);
 
@@ -81,6 +91,11 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
         ]);
         scrollAnimHandle.current.start(() => {
           scrollAnimHandle.current = null;
+
+          if (noResetNext.current) {
+            noResetNext.current = false;
+            return;
+          }
           //动画结束后重置位置
           scrollAnimCurrent.current.setValue(-textHeight);
           scrollAnimNext.current.setValue(0);
@@ -106,6 +121,10 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
         ]);
         scrollAnimHandle.current.start(() => {
           scrollAnimHandle.current = null;
+          if (noResetNext.current) {
+            noResetNext.current = false;
+            return;
+          }
           //动画结束后重置位置
           scrollAnimCurrent.current.setValue(textHeight);
           scrollAnimNext.current.setValue(0);
@@ -161,7 +180,7 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
  */
 export function VerticalScrollText(props: VerticalScrollTextProps) {
   return (
-    <RowView alignSelf="flex-start" center>
+    <RowView alignSelf={props.center ? 'center' : "flex-start"} center>
       { (props.numberString || '').split('').map((str, i) => <VerticalScrollOneNumberText {...props} key={'VSCroll' + i} oneStr={str} />) }
     </RowView>
   );

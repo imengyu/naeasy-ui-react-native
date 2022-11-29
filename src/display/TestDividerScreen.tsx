@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColumnView, RowView, Divider, Color, Text } from '../lib';
+import { ColumnView, RowView, Divider, Color, Text, WhiteSpace } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
@@ -27,17 +27,23 @@ export class TestDividerScreen extends React.PureComponent<Props, State> {
         />
         <TestHeader desc="通过 Divider 组件显示分割线。">基础用法</TestHeader>
         <TestGroup>
-          <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor. Duis volutpat ultricies placerat. </Text>
+          <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor.</Text>
           <Divider />
-          <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor. Duis volutpat ultricies placerat. </Text>
+          <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor.</Text>
         </TestGroup>
-        <TestHeader>虚线分割线</TestHeader>
+        <TestHeader desc="设置 dashed 或者 dotted 可显示虚线。">虚线分割线</TestHeader>
         <TestGroup>
-          <Divider text="我是虚线分割线" dashed />
+          <Divider text="我是虚线分割线 + 文字" dashed />
+          <Divider dashed color={Color.danger} width={2} />
+          <Text>上面是 dashed 分割线。</Text>
+          <Divider dotted color={Color.danger} width={2} />
+          <Text>上面是 dotted 分割线。</Text>
         </TestGroup>
         <TestHeader>带文字分割线</TestHeader>
         <TestGroup>
           <Divider text="我是带文字分割线" />
+          <Divider text="文字在左侧分割线" orientation="left" />
+          <Divider text="文字在右侧分割线" orientation="right" />
         </TestGroup>
         <TestHeader>自定义高度分割线</TestHeader>
         <TestGroup>
@@ -45,23 +51,24 @@ export class TestDividerScreen extends React.PureComponent<Props, State> {
         </TestGroup>
         <TestHeader>自定义颜色与粗细</TestHeader>
         <TestGroup>
-          <ColumnView padding={10}>
-          <Divider color={Color.success} />
-          <Text>上面是自定义颜色分割线。</Text>
-          <Divider color={Color.danger} width={5} />
-          <Text>上面是自定义粗细分割线。</Text>
-        </ColumnView>
+          <ColumnView>
+            <Divider color={Color.success} />
+            <Text>上面是自定义颜色分割线。</Text>
+            <Divider color={Color.danger} width={5} />
+            <Text>上面是自定义粗细分割线。</Text>
+          </ColumnView>
         </TestGroup>
-        <TestHeader desc="说明">垂直的分割线</TestHeader>
+        <TestHeader desc="设置 type=vertical 使分割线垂直。">垂直的分割线</TestHeader>
         <TestGroup>
-          <RowView padding={10}>
+          <RowView>
             <Text>垂直的分割线</Text>
             <Divider type="vertical" color={Color.danger} />
             <Text>分割线</Text>
-            <Divider type="vertical" color={Color.success} width={2} dashed />
+            <Divider type="vertical" color={Color.success} dashed />
             <Text>垂直的分割线</Text>
           </RowView>
         </TestGroup>
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

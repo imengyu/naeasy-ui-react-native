@@ -40,6 +40,14 @@ export class TestProgressScreen extends React.PureComponent<Props, State> {
         <TestGroup>
           <Progress type="right-left" value={this.state.progress} />
         </TestGroup>
+        <TestHeader bar={false}>线条粗细</TestHeader>
+        <TestGroup>
+          <Progress height={10} value={this.state.progress} />
+        </TestGroup>
+        <TestHeader bar={false}>显示进度文字</TestHeader>
+        <TestGroup>
+          <Progress value={this.state.progress} showProgressText />
+        </TestGroup>
         <TestHeader bar={false}>竖向进度条</TestHeader>
         <TestGroup>
           <RowView style={{ height: 100 }}>

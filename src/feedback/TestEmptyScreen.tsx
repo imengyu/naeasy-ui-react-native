@@ -3,7 +3,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { WhiteSpace, Empty, RowView, Button, WingBlank, ColumnView, Text } from '../lib';
 import { ScrollView } from 'react-native';
 import { RootStackParamList } from '../navigation';
-import { TestStyles } from '../styles/TestStyles';
 import { LoadingView } from '../../lib/src/components/loading';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
@@ -37,7 +36,7 @@ export class TestEmptyScreen extends React.PureComponent<Props, State> {
         <TestGroup>
           <Empty image="error" description="描述文字" imageSize={140} />
         </TestGroup>
-        <TestHeader desc="说明">需要自定义图片时，可以在 image 属性中传入任意图片。</TestHeader>
+        <TestHeader desc="需要自定义图片时，可以在 image 属性中传入任意图片。">自定义图片</TestHeader>
         <TestGroup>
           <Empty image={{ uri: 'https://imengyu.top/assets/images/test/2.jpg' }} description="描述文字" />
         </TestGroup>
@@ -50,7 +49,7 @@ export class TestEmptyScreen extends React.PureComponent<Props, State> {
         </TestGroup>
         <TestHeader desc="可以使用一个加载中状态视图，来包裹正在加载的内容。">加载中状态</TestHeader>
         <TestGroup>
-          <RowView style={TestStyles.TitleText}>
+          <RowView padding={10}>
             <Button text={'切换加载中状态: ' + (this.state.loading ? 'true' : 'false')} onPress={() => this.setState((prev) => ({ loading: !prev.loading })) } />
           </RowView>
           <ColumnView padding={10}>

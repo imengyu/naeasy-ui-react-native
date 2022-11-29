@@ -1,6 +1,7 @@
 import React from 'react';
+import { StyleSheet, Image, Text } from 'react-native';
 import { Button } from '../button/Button';
-import { Empty } from '../feedback/Empty';
+import { ColumnView } from '../layout';
 
 export interface ErrorBoundaryProps {
   /**
@@ -51,12 +52,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   renderError() {
     return this.props.renderErrorView ? this.props.renderErrorView(this.state.errorInfo, () => this.onRetry()) : (
-      <Empty
-        image="error"
-        description={'组件渲染异常：' + this.state.errorInfo}
-      >
+      <ColumnView center style={styles.container}>
+        <Image style={styles.image} source={require('../../images/empty-image-error.png')} />
+        <Text style={styles.text}>{'组件渲染错误：' + this.state.errorInfo}</Text>
         <Button type="primary" shape="round" onPress={() => this.onRetry()}>重试</Button>
-      </Empty>
+      </ColumnView>
     );
   }
 
@@ -66,3 +66,19 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return this.props.renderChildren ? this.props.renderChildren() : this.props.children;
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  text: {
+    fontSize: 12,
+    color: '#999',
+    marginBottom: 20,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+});

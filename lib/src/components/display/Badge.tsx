@@ -4,9 +4,9 @@ import { Color } from "../../styles/ColorStyles";
 import { selectStyleType, border as _border } from '../../utils/StyleTools';
 import { ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
-import { VerticalScrollText } from '../countdown';
 import MeasureText from '../../utils/MeasureText';
 import CheckTools from '../../utils/CheckTools';
+import { VerticalScrollText } from '../typography';
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';
 
@@ -98,14 +98,14 @@ const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
     zIndex: 100,
-    borderRadius: 20,
-    minWidth: 10,
+    borderRadius: 30,
     textAlign: 'center',
     alignSelf: 'flex-start',
     overflow: 'hidden',
   },
   badgeText: {
     color: Color.white.light,
+    fontSize: 11,
     textAlign: 'center',
   },
 });
@@ -132,9 +132,9 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
     offset,
     badgeSize = 10,
     radius = 20,
-    fontSize = 12.5,
-    paddingVertical = 2,
-    paddingHorizontal = 4,
+    fontSize = 10,
+    paddingVertical = 1,
+    paddingHorizontal = 3,
     hiddenIfZero = true,
   } = props;
 
@@ -204,7 +204,8 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
         (contentString ? {
           paddingHorizontal: paddingHorizontal,
           paddingVertical: paddingVertical,
-          width: textWidth ? (textWidth + 4 + paddingHorizontal * 2 + (border ? borderWidth * 2 : 0)) : undefined,
+          width: textWidth ? (textWidth + 6 + paddingHorizontal * 2 + (border ? borderWidth * 2 : 0)) : undefined,
+          aspectRatio: textWidth && contentString.length === 1 ? 1 : undefined,
         } : {
           height: badgeSize,
           width: badgeSize,
@@ -302,7 +303,7 @@ function BadgeInner(props: {
       { content ? (
         anim && CheckTools.isNumber(content) ?
           //数字滚动
-          <VerticalScrollText numberString={content} style={textStyle} /> :
+          <VerticalScrollText center numberString={content} style={textStyle} /> :
           //正常文字
           <Text style={textStyle}>{content}</Text>
       ) : <></> }

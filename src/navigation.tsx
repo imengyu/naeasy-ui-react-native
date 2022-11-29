@@ -71,6 +71,7 @@ export type RootStackParamList = {
   TestDropdownMenu: undefined;
   TestTabs: undefined;
   TestSwiper: undefined;
+  TestAvatar: undefined;
 };
 
 /**

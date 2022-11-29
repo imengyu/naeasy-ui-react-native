@@ -1,6 +1,6 @@
 import React from 'react';
 import MeasureText from '../../utils/MeasureText';
-import { Animated, Easing, Image, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { Animated, Easing, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Icon, IconProp } from '../basic/Icon';
 import { Color, ThemeColor, ThemeSelector, ThemeUtils } from '../../styles';
@@ -52,6 +52,14 @@ export interface NoticeBarProps {
    * 是否可以关闭，默认否。
    */
   closeable?: boolean;
+  /**
+   * 自定义渲染左侧图标区域
+   */
+  renderLeft?: () => JSX.Element,
+  /**
+   * 自定义渲染右侧图标区域
+   */
+  renderRight?: () => JSX.Element,
   /**
    * 用户点击关闭时的回调
    */
@@ -159,16 +167,13 @@ class NoticeBarComponent extends React.PureComponent<NoticeBarProps, NoticeBarSt
 
   renderLeftIcon() {
     const icon = this.props.icon || 'notification';
-    if (typeof icon === 'string') {
-      if (icon.startsWith('http'))
-        return <Image key="leftIcon" style={[ styles.icon, this.props.iconStyle as ImageStyle ]} source={{ uri: icon }} />;
-      return <Icon key="leftIcon" icon={icon} {...this.props.iconProps} style={{
-        ...styles.icon,
-        ...this.props.iconStyle,
-      }} color={this.props.textColor || Color.warning} />;
-    }
-    if (typeof icon === 'object' || typeof icon === 'number')
-      return <Image key="leftIcon" style={[ styles.icon, this.props.iconStyle as ImageStyle ]} source={icon} />;
+    if (typeof this.props.renderLeft === 'function')
+      return this.props.renderLeft();
+    return <Icon key="leftIcon" style={styles.icon} color={this.props.textColor || Color.warning} icon={icon}{...this.props.iconProps} />;
+  }
+  renderRightIcon() {
+    if (typeof this.props.renderRight === 'function')
+      return this.props.renderRight();
     return <></>;
   }
   renderClose() {
@@ -222,6 +227,7 @@ class NoticeBarComponent extends React.PureComponent<NoticeBarProps, NoticeBarSt
       ]} onPress={this.props.onPress}>
         { this.renderLeftIcon() }
         { this.props.scroll === false ? this.renderText() : this.renderScrollText() }
+        { this.renderRightIcon() }
         { this.renderClose() }
       </RowView>
     );

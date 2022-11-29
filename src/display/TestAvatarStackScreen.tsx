@@ -73,7 +73,7 @@ export class TestAvatarStackScreen extends React.PureComponent<Props> {
             'https://imengyu.top/assets/images/test/3.jpg',
             'https://imengyu.top/assets/images/test/4.jpg',
             'https://imengyu.top/assets/images/test/5.jpg',
-          ]} round border maxCount={6} />
+          ]} size={50} round border borderWidth={3} maxCount={6} />
         </TestGroup>
 
         <TestHeader>设置头像之间的间距</TestHeader>

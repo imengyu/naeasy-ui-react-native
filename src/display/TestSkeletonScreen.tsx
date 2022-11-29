@@ -37,7 +37,7 @@ export function TestSkeletonScreen(props: Props) {
         </RowView>
         <WhiteSpace size="sm" />
         <Skeleton placeholder={<Skeleton.Avatar />} loading={display1}>
-          <Avatar color="blue" style={{ marginBottom: 10 }} text="U" />
+          <Avatar background="blue" style={{ marginBottom: 10 }} text="U" />
         </Skeleton>
         <WhiteSpace size="sm" />
         <Skeleton placeholder={<Skeleton.Image style={{ width: 200, height: 150 }} />} loading={display1}>
@@ -82,7 +82,7 @@ export function TestSkeletonScreen(props: Props) {
           </RowView>
         } loading={display2} active>
           <RowView style={styles.test1}>
-            <Avatar color="blue" style={{ marginRight: 12 }} text="UI" />
+            <Avatar background="blue" style={{ marginRight: 12 }} text="UI" />
             <ColumnView>
               <H3>诗句</H3>
               <P>山有木兮木有枝，心悦君兮君不知。</P>

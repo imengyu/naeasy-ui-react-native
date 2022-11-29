@@ -25,7 +25,7 @@ export function TestCountToScreen(props: Props) {
       <TestGroup>
         <CountTo endValue={9999} />
       </TestGroup>
-      <TestHeader>设置起始值与时间</TestHeader>
+      <TestHeader>设置切换时间</TestHeader>
       <TestGroup>
         <CountTo startValue={0} endValue={9999} duration={8000} />
       </TestGroup>

@@ -38,6 +38,10 @@ export interface SwiperProps {
    */
   circular?: boolean;
   /**
+   * 	是否采淡出淡入动画效果
+   */
+  fadeIn?: boolean;
+  /**
    * 滑动方向是否为纵向
    */
   vertical?: boolean;
@@ -65,6 +69,7 @@ export interface SwiperProps {
 export interface SwiperItemProps extends ViewProps {
   translateX?: Animated.Value,
   translateY?: Animated.Value,
+  opacity?: Animated.Value,
 }
 export interface SwiperInstance {
   /**
@@ -96,6 +101,7 @@ export function SwiperItem(props: SwiperItemProps) {
       styles.item,
       props.style,
       { transform: transform },
+      { opacity: props.opacity || 0 },
     ]} { ...props } />
   );
 }
@@ -111,6 +117,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     circular = false,
     autoplay = false,
     disableTouch = false,
+    fadeIn = false,
     interval = 5000,
     duration = 200,
     style,
@@ -123,6 +130,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
   const [ animatedX, setAnimatedX ] = useState<Animated.Value[]>([]);
   const [ animatedY, setAnimatedY ] = useState<Animated.Value[]>([]);
+  const [ opacity, setOpacity ] = useState<Animated.Value[]>([]);
   const [ width, setWidth ] = useState(0);
   const [ height, setHeight ] = useState(0);
   const currentIndex = useRef(current);
@@ -134,10 +142,16 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
   useEffect(() => {
     if (width > 0 && height > 0 && itemCount.current !== children.length) {
-      setAnimatedX(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? 0 : (i === currentIndex.current ? 0 : width))));
-      setAnimatedY(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? (i === currentIndex.current ? 0 : height) : 0)));
+      setAnimatedX(new Array(children.length).fill(null).map(() => new Animated.Value(0)));
+      setAnimatedY(new Array(children.length).fill(null).map(() => new Animated.Value(0)));
+      setOpacity(new Array(children.length).fill(null).map((_, i) => new Animated.Value(i === currentIndex.current ? 1 : 0)));
       itemCount.current = children.length;
       dotIndicator.current?.setCount(itemCount.current);
+
+      setTimeout(() => {
+        setAnimatedX(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? 0 : (i === currentIndex.current ? 0 : width))));
+        setAnimatedY(new Array(children.length).fill(null).map((_, i) => new Animated.Value(vertical ? (i === currentIndex.current ? 0 : height) : 0)));
+      }, 200);
     }
   }, [ children, width, height, vertical ]);
 
@@ -151,28 +165,37 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     switch (page) {
       case -1:
         //上一页
-        if (index > 0) return animated[index - 1];
-        else if (circular && index !== 0) return animated[index - 1]; //循环情况下就从末尾开始
+        if (index > 0) return [ animated[index - 1], opacity[index - 1] ];
+        else if (circular && index !== 0) return [ animated[index - 1], opacity[index - 1] ]; //循环情况下就从末尾开始
         break;
       case 0:
         //当前页
-        return animated[index];
+        return [ animated[index], opacity[index]];
       case 1:
         //下一页
         if (index < itemCount.current - 1)
-          return animated[index + 1];
+          return [ animated[index + 1], opacity[index + 1]];
         else if (circular && index !== 0) //循环情况下就从头开始
-          return animated[0];
+          return [ animated[0], opacity[0] ];
         break;
     }
     return null;
-  }, [ animatedX, animatedY, circular, vertical ]);
+  }, [ animatedX, animatedY, opacity, circular, vertical ]);
   const pageChangeHandler = useCallback(() => {
     dotIndicator.current?.setCurrent(currentIndex.current);
     onPageChange?.(currentIndex.current);
   }, [ onPageChange ]);
 
   //换页控制函数
+
+  const createTransAnim = useCallback((value: Animated.Value, target: number, durationTime: number) => {
+    return Animated.timing(value, {
+      toValue: target,
+      duration: durationTime,
+      useNativeDriver: true,
+      easing: Easing.ease,
+    })
+  }, []);
 
   const prevPage = useCallback((velocity?: number) => {
 
@@ -187,26 +210,23 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
     //上一页 到 当前页 0
     if (prev) {
-      if (!velocity)
-        prev.setValue(moveSize);
-      animArray.push(Animated.timing(prev, {
-        toValue: 0,
-        duration: durationTimer,
-        useNativeDriver: true,
-        easing: Easing.ease,
-      }));
+      if (!velocity) {
+        prev[0].setValue(moveSize);
+        prev[1].setValue(0);
+      }
+      animArray.push(createTransAnim(prev[0], 0, durationTimer));
+      animArray.push(createTransAnim(prev[1], 1, fadeIn ? durationTimer : 2000));
     }
     //当前页 到 下页 moveSize
     if (now) {
-      animArray.push(Animated.timing(now, {
-        toValue: moveSize,
-        duration: durationTimer,
-        useNativeDriver: true,
-        easing: Easing.ease,
-      }));
+      animArray.push(createTransAnim(now[0], moveSize, durationTimer));
+      animArray.push(createTransAnim(now[1], moveSize, fadeIn ? durationTimer : 2000));
     }
     //下一页 到 下页 moveSize
-    if (next) next.setValue(moveSize);
+    if (next) {
+      next[0].setValue(moveSize);
+      next[1].setValue(0);
+    }
 
     if (currentIndex.current === 0)
       currentIndex.current = itemCount.current - 1; //循环时自动回到末尾
@@ -217,7 +237,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     Animated.parallel(animArray).start();
 
     return true;
-  }, [ circular, duration, getPage, moveSize, pageChangeHandler]);
+  }, [ circular, duration, fadeIn, createTransAnim, getPage, moveSize, pageChangeHandler]);
   const nextPage = useCallback((velocity?: number) => {
 
     if (!circular && currentIndex.current >= itemCount.current - 1)
@@ -230,27 +250,24 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     const durationTimer = velocity ? (duration - (Math.abs(velocity) / 2000) * (duration / 3)) : duration;
 
     //上一页 到 -moveSize
-    if (prev) prev.setValue(moveSize);
+    if (prev) {
+      prev[0].setValue(moveSize);
+      prev[1].setValue(0);
+    }
 
     //当前页 到 上页 -moveSize
     if (now) {
-      animArray.push(Animated.timing(now, {
-        toValue: -moveSize,
-        duration: durationTimer,
-        useNativeDriver: true,
-        easing: Easing.ease,
-      }));
+      animArray.push(createTransAnim(now[0], -moveSize, durationTimer));
+      animArray.push(createTransAnim(now[1], 0, fadeIn ? durationTimer : 2000));
     }
     //下一页 到 当前页 0
     if (next) {
-      if (!velocity)
-        next.setValue(moveSize);
-      animArray.push(Animated.timing(next, {
-        toValue: 0,
-        duration: durationTimer,
-        useNativeDriver: true,
-        easing: Easing.ease,
-      }));
+      if (!velocity) {
+        next[0].setValue(moveSize);
+        next[1].setValue(1);
+      }
+      animArray.push(createTransAnim(next[0], 0, durationTimer));
+      animArray.push(createTransAnim(next[1], 1, fadeIn ? durationTimer : 2000));
     }
 
     if (currentIndex.current >= itemCount.current - 1)
@@ -262,10 +279,9 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     Animated.parallel(animArray).start();
 
     return true;
-  }, [ circular, duration, getPage, moveSize, pageChangeHandler ]);
+  }, [ circular, duration, fadeIn, createTransAnim, getPage, moveSize, pageChangeHandler ]);
   const switchPage = useCallback((page?: number) => {
     const animArray = [] as Animated.CompositeAnimation[];
-
 
     if (typeof page !== 'undefined') {
 
@@ -277,19 +293,34 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
       const now = getPage(0);
       if (last) {
-        animArray.push(Animated.timing(last, {
+        animArray.push(Animated.timing(last[0], {
           toValue: left ? -moveSize : moveSize,
           duration: duration,
           useNativeDriver: true,
         }));
+        if (fadeIn)
+          animArray.push(Animated.timing(last[1], {
+            toValue: 0,
+            duration: duration,
+            useNativeDriver: true,
+          }));
       }
       if (now) {
-        now.setValue(left ? moveSize : -moveSize);
-        animArray.push(Animated.timing(now, {
+        now[0].setValue(left ? moveSize : -moveSize);
+        animArray.push(Animated.timing(now[0], {
           toValue: 0,
           duration: duration,
           useNativeDriver: true,
         }));
+        if (fadeIn) {
+          now[1].setValue(0);
+          animArray.push(Animated.timing(now[1], {
+            toValue: 1,
+            duration: duration,
+            useNativeDriver: true,
+          }));
+        } else
+          now[1].setValue(1);
       }
     } else {
       const prev = getPage(-1);
@@ -297,31 +328,22 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
       const next = getPage(1);
       //上一页 到 上一页 -moveSize
       if (prev) {
-        animArray.push(Animated.timing(prev, {
-          toValue: -moveSize,
-          duration: duration,
-          useNativeDriver: true,
-        }));
+        animArray.push(createTransAnim(prev[0], -moveSize, duration));
+        animArray.push(createTransAnim(prev[1], -moveSize, fadeIn ? duration : 2000));
       }
       //当前页 到 0
       if (now) {
-        animArray.push(Animated.timing(now, {
-          toValue: 0,
-          duration: duration,
-          useNativeDriver: true,
-        }));
+        animArray.push(createTransAnim(now[0], 0, duration));
+        animArray.push(createTransAnim(now[1], 1, fadeIn ? duration : 2000));
       }
       //下一页 到 下页 moveSize
       if (next) {
-        animArray.push(Animated.timing(next, {
-          toValue: moveSize,
-          duration: duration,
-          useNativeDriver: true,
-        }));
+        animArray.push(createTransAnim(next[0], moveSize, duration));
+        animArray.push(createTransAnim(next[1], 0, fadeIn ? duration : 2000));
       }
     }
     Animated.parallel(animArray).start();
-  }, [ duration, getPage, moveSize, pageChangeHandler ]);
+  }, [ duration, getPage, moveSize, fadeIn, createTransAnim, pageChangeHandler ]);
 
   //自动播放控制
 
@@ -376,18 +398,46 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
           return;
         if (e.translationY > 0 && !prev)
           return;
-        if (prev) prev.setValue(e.translationY - height);
-        if (now) now.setValue(e.translationY);
-        if (next) next.setValue(e.translationY + height);
+        const transPrecent = Math.abs(e.translationY) / moveSize;
+        const transPrecentCurr = 1 - transPrecent;
+        if (prev) {
+          prev[0].setValue(e.translationY - height);
+          if (fadeIn) prev[1].setValue(transPrecent);
+          else prev[1].setValue(1);
+        }
+        if (now) {
+          now[0].setValue(e.translationY);
+          if (fadeIn) now[1].setValue(transPrecentCurr);
+          else now[1].setValue(1);
+        }
+        if (next) {
+          next[0].setValue(e.translationY + height);
+          if (fadeIn) next[1].setValue(transPrecent);
+          else next[1].setValue(1);
+        }
       } else {
         currentTransValue.current = e.translationX;
         if (e.translationX < 0 && !next)
           return;
         if (e.translationX > 0 && !prev)
           return;
-        if (prev) prev.setValue(e.translationX - width);
-        if (now) now.setValue(e.translationX);
-        if (next) next.setValue(e.translationX + width);
+        const transPrecent = Math.abs(e.translationX - moveSize / 3) / moveSize;
+        const transPrecentCurr = 1 - transPrecent;
+        if (prev) {
+          prev[0].setValue(e.translationX - width);
+          if (fadeIn) prev[1].setValue(transPrecent);
+          else prev[1].setValue(1);
+        }
+        if (now) {
+          now[0].setValue(e.translationX);
+          if (fadeIn) now[1].setValue(transPrecentCurr);
+          else now[1].setValue(1);
+        }
+        if (next) {
+          next[0].setValue(e.translationX + width);
+          if (fadeIn) next[1].setValue(transPrecent);
+          else next[1].setValue(1);
+        }
       }
     })
     .onEnd((e) => {
@@ -417,6 +467,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
         key={child.key || i}
         translateX={animatedX[i]}
         translateY={animatedY[i]}
+        opacity={opacity[i]}
         { ...child.props }
       />)
     ));
