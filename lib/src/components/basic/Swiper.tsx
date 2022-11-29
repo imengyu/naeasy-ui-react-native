@@ -194,7 +194,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
       duration: durationTime,
       useNativeDriver: true,
       easing: Easing.ease,
-    })
+    });
   }, []);
 
   const prevPage = useCallback((velocity?: number) => {
