@@ -13,7 +13,7 @@
     "expo-android": "expo start --android",
     "expo-ios": "expo start --ios",
     "web": "webpack-dev-server --config ./web/webpack.config.js --hot --progress --mode development",
-    "build-web": "webpack --config ./web/webpack.config.js --mode production"
+    "build-web": "webpack --config ./web/webpack.config.js --progress --mode production"
   },
   "dependencies": {
     "@imengyu/naeasy-ui-react-native": "^0.2.6",

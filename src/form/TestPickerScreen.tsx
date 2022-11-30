@@ -36,11 +36,17 @@ export class TestPickerScreen extends React.PureComponent<Props> {
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择选项" showArrow onPress={() => {
-              const options = [ '苹果', '香蕉', '橘子', '葡萄', '菠萝' ];
-              Picker.showOptionsPickerView<string>({
+              const options = [
+                { label: '苹果', value: '1'},
+                { label: '香蕉', value: '2'},
+                { label: '橘子', value: '3'},
+                { label: '葡萄', value: '4'},
+                { label: '菠萝', value: '5'},
+              ];
+              Picker.showOptionsPickerView({
                 nPicker: [ options ],
-              }, (i) => {
-                Toast.info('选择了 ' + options[i]);
+              }, (i, j) => {
+                Toast.info('选择了 ' + j.join(''));
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="选择农历日期" showArrow onPress={() => {
@@ -59,15 +65,29 @@ export class TestPickerScreen extends React.PureComponent<Props> {
               }, () => Toast.info('取消选择'));
             }} />
             <Cell title="联动数据" showArrow onPress={() => {
-              const options = [ '水果', '食品' ];
+              const options = [
+                { label: '水果', value: '1'},
+                { label: '食品', value: '2'},
+              ];
               const options2 = [
-                [ '苹果', '香蕉', '橘子', '葡萄', '菠萝' ],
-                [ '披萨', '汉堡', '薯条', '爆米花' ],
+                [
+                  { label: '苹果', value: '1-1'},
+                  { label: '香蕉', value: '1-2'},
+                  { label: '橘子', value: '1-3'},
+                  { label: '葡萄', value: '1-4'},
+                  { label: '菠萝', value: '1-5'},
+                ],
+                [
+                  { label: '披萨', value: '2-1'},
+                  { label: '汉堡', value: '2-2'},
+                  { label: '薯条', value: '2-3'},
+                  { label: '爆米花', value: '2-4'},
+                ],
               ];
               Picker.showOptionsPickerView({
                 picker: [ options, options2 ],
               }, (i, j) => {
-                Toast.info('选择了 ' + options[i] + ' ' + options2[i][j]);
+                Toast.info('选择了 ' + j.join(' '));
               }, () => Toast.info('取消选择'));
             }} />
           </CellGroup>
