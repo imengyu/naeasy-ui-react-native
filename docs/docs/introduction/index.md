@@ -15,6 +15,8 @@ NaEasy UI 是一款简单的 React Native 移动端UI组件库。
 在设计的时候参考了 [vant](https://vant-contrib.gitee.io/vant/#/zh-CN)，
 如果你使用过vant，那么使用本组件库也可以得心应手。
 
+> **注：本文档还在完善中**
+
 ## 特性
 
 * 支持 Android & iOS
@@ -33,6 +35,8 @@ NaEasy UI 是一款简单的 React Native 移动端UI组件库。
 目前暂时只有 [Android Demo](https://pan.baidu.com/s/1ZaEbVAGy1tlxKziLfoZ5IQ?pwd=3isq) 可下载体验。
 
 iOS的暂时没有（没有开发账号上架不方便）。
+
+右侧是在 web 中的预览 Demo ，可能会出现某些渲染或者布局问题，请以手机上渲染的效果为主。
 
 ## Bug 反馈
 

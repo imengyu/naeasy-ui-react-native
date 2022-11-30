@@ -5,16 +5,14 @@
 本项目依赖以下项目，在安装之前你需要先安装这些依赖：
 
 ```shell
-+ async-validator@4.2.5
 + react-native-gesture-handler@2.8.0
 + react-native-pager-view@6.0.2
 + react-native-safe-area-context@4.4.1
 + react-native-svg@13.5.0
-+ @newbanker/react-native-measure-text@0.2.0
 ```
 
 ```shell
-npm i -S @newbanker/react-native-measure-text async-validator react-native-gesture-handler react-native-pager-view react-native-safe-area-context react-native-svg
+npm i -S react-native-gesture-handler react-native-pager-view react-native-safe-area-context react-native-svg
 ```
 
 ## 安装步骤

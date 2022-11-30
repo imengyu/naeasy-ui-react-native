@@ -1,7 +1,7 @@
 ---
 hero:
   title: NaEasy UI
-  desc: 一款简单的 React Native 移动端UI组件库
+  desc: 一款简单的 React Native 移动端UI组件库（注：本文档还在完善中）
   actions:
     - text: 快速上手
       link: /introduction
