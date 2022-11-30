@@ -2,7 +2,7 @@ import CheckTools from "../../utils/CheckTools";
 import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { IconButton } from "../button/IconButton";
-import { TextScrollable } from "../typography/TextScrollable";
+import { HorizontalScrollText } from "../typography/HorizontalScrollText";
 import { Color, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 import { IconProp } from "../basic/Icon";
@@ -177,7 +177,7 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
         props.title && (typeof props.title === 'string' ?
           (
             titleScroll ?
-              <TextScrollable
+              <HorizontalScrollText
                 style={{
                   flex: 1,
                 }}
@@ -188,7 +188,7 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
                   color: ThemeSelector.color(props.textColor || Color.black),
                 }}
                 scrollDuration={20000}
-              >{props.title}</TextScrollable> :
+              >{props.title}</HorizontalScrollText> :
               <Text
                 style={[
                   style.titleText,

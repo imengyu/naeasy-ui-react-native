@@ -222,6 +222,7 @@ interface State {
   focused: boolean;
 }
 
+//TODO: 优化子组件的表单相关事件
 
 const styles = DynamicThemeStyleSheet.create({
   field: {

@@ -4,7 +4,7 @@ import { Animated, Easing, LayoutChangeEvent, StyleSheet, TextStyle, View, ViewS
 import { isIOS } from '../../utils';
 import { ThemeWrapper } from '../../theme/Theme';
 
-export interface TextScrollableProps {
+export interface HorizontalScrollTextProps {
   children?: string;
   /**
    * 外围容器的样式
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 /**
  * 可以滚动的文字组件。
  */
-export const TextScrollable = ThemeWrapper(function (props: TextScrollableProps) {
+export const HorizontalScrollText = ThemeWrapper(function (props: HorizontalScrollTextProps) {
 
   const [ mesuredTextWidth, setMesuredTextWidth ] = useState(300);
   const [ scrollParentWidth, setScrollParentWidth ] = useState(0);

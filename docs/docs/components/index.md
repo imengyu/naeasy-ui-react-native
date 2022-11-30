@@ -77,7 +77,7 @@ nav:
 * [SwipeableRow](./button.md)
 * [SwipeableRightActionsRow](./button.md)
 * [Tag](./button.md)
-* [TextScrollable](./button.md)
+* [HorizontalScrollText](./button.md)
 * [Toast](./button.md)
 
 * [ThemedStatusBar](./button.md)

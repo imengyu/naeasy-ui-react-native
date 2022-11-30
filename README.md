@@ -33,3 +33,22 @@ iOS的暂时没有（没有开发账号上架不方便）。
 ## License
 
 Licensed under the MIT License.
+
+## TODO
+
+* ~~Skeleton 组件~~
+* ~~Swipe 组件~~
+* ~~Tabs 组件~~
+* Picker 组件
+* Upload 组件
+* Cascader 组件
+* DropdownMenu 组件
+* Collapse 组件
+* Calendar 组件
+* 完善文档
+* 样式变量与全局样式provider
+
+## Roadmap
+
+* 制作 vue3 版(1)
+* 制作 Uniapp 版(2)

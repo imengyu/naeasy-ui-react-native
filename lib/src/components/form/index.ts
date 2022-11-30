@@ -11,3 +11,4 @@ export * from './Slider';
 export * from './Stepper';
 export * from './Switch';
 export * from './SearchBar';
+export * from './Uploader';

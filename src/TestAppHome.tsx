@@ -64,6 +64,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Slider 滑块" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
             <Cell title="Stepper 步进器" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
             <Cell title="Switch 开关" touchable showArrow onPress={() => this.props.navigation.push('TestSwitch')} />
+            <Cell title="[未完成] Uploader 上传" touchable showArrow onPress={() => this.props.navigation.push('TestUploader')} />
           </CellGroup>
           <CellGroup inset title="展示组件">
             <Cell title="Avatar 头像" touchable showArrow onPress={() => this.props.navigation.push('TestAvatar')} />
@@ -74,6 +75,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Divider 分隔线" touchable showArrow onPress={() => this.props.navigation.push('TestDivider')} />
             <Cell title="[未完成] DropdownMenu 下拉菜单" touchable showArrow onPress={() => this.props.navigation.push('TestDropdownMenu')} />
             <Cell title="[未完成] Collapse 可折叠" touchable showArrow onPress={() => this.props.navigation.push('TestCollapse')} />
+            <Cell title="Marquee 滚动文字" touchable showArrow onPress={() => this.props.navigation.push('TestMarquee')} />
             <Cell title="NoticeBar 公告栏" touchable showArrow onPress={() => this.props.navigation.push('TestNoticeBar')} />
             <Cell title="Progress 进度条" touchable showArrow onPress={() => this.props.navigation.push('TestProgress')} />
             <Cell title="SimpleList 简单列表" touchable showArrow onPress={() => this.props.navigation.push('TestSimpleList')} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, TextProps, Animated, Text } from "react-native";
 import { RowView } from "../layout";
 
-export interface VerticalScrollOneNumberTextProps extends Omit<TextProps, 'children'> {
+export interface VerticalScrollOneTextProps extends Omit<TextProps, 'children'> {
   /**
    * 文字
    */
@@ -11,8 +11,12 @@ export interface VerticalScrollOneNumberTextProps extends Omit<TextProps, 'child
    * 动画时长。默认：230
    */
   animDuration?: number,
+  /**
+   * 动画方向。默认 auto
+   */
+  animDirection?: 'down'|'up'|'auto';
 }
-export interface VerticalScrollTextProps extends Omit<VerticalScrollOneNumberTextProps, 'oneStr'> {
+export interface VerticalScrollTextProps extends Omit<VerticalScrollOneTextProps, 'oneStr'> {
   /**
    * 文字字符串
    */
@@ -21,6 +25,16 @@ export interface VerticalScrollTextProps extends Omit<VerticalScrollOneNumberTex
    * 居中
    */
   center?: boolean,
+}
+export interface VerticalScrollTextsProps extends Omit<VerticalScrollOneTextProps, 'oneStr'> {
+  /**
+   * 文字字符串
+   */
+  texts: string[];
+  /**
+   * 切换延时
+   */
+  interval: number;
 }
 
 const styles = StyleSheet.create({
@@ -38,11 +52,12 @@ const styles = StyleSheet.create({
 /**
  * 垂直滚动切换动画单个文字
  */
-export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextProps) {
+export function VerticalScrollOneText(props: VerticalScrollOneTextProps) {
 
   const {
     oneStr,
     animDuration = 230,
+    animDirection = 'auto',
   } = props;
 
   const [ textCurrent, setTextCurrent ] = useState(oneStr);
@@ -71,8 +86,12 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
         scrollAnimHandle.current.stop();
       }
 
+      const isDown = animDirection === 'down' ||
+        //根据数字自动判断应该往上还是往下
+        (animDirection === 'auto' && oneStr.length === 1 && oneStrPrev.current > oneStr && oneStrPrev.current !== '9' && oneStr !== '0');
+
       //减小
-      if (oneStrPrev.current > oneStr && oneStrPrev.current !== '9' && oneStr !== '0') {
+      if (isDown) {
         scrollAnimCurrent.current.setValue(0);
         scrollAnimNext.current.setValue(-textHeight);
 
@@ -133,7 +152,7 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
 
       oneStrPrev.current = oneStr;
     }
-  }, [ oneStr, textHeight, animDuration ]);
+  }, [ oneStr, textHeight, animDuration, animDirection ]);
 
   const sourceStyle = props.style ? (props.style instanceof Array ? props.style : [ props.style ]) : [];
 
@@ -181,8 +200,38 @@ export function VerticalScrollOneNumberText(props: VerticalScrollOneNumberTextPr
 export function VerticalScrollText(props: VerticalScrollTextProps) {
   return (
     <RowView alignSelf={props.center ? 'center' : "flex-start"} center>
-      { (props.numberString || '').split('').map((str, i) => <VerticalScrollOneNumberText {...props} key={'VSCroll' + i} oneStr={str} />) }
+      { (props.numberString || '').split('').map((str, i) => <VerticalScrollOneText {...props} key={'VSCroll' + i} oneStr={str} />) }
     </RowView>
   );
 }
 
+/**
+ * 垂直滚动切换动画文字（数组）
+ */
+export function VerticalScrollTexts(props: VerticalScrollTextsProps) {
+  const {
+    interval,
+    texts,
+  } = props;
+
+  const currentIndex = useRef(0);
+  const [ currentText, setCurrentText ] = useState(texts[0] || '');
+
+  useEffect(() => {
+
+    const timer = setInterval(() => {
+      setCurrentText(texts[currentIndex.current]);
+      currentIndex.current++;
+      if (currentIndex.current >= texts.length)
+        currentIndex.current = 0;
+    }, interval);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [ interval, texts ]);
+
+  return (
+    <VerticalScrollOneText {...props} oneStr={currentText} />
+  );
+}
