@@ -348,6 +348,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
   //自动播放控制
 
   const autoPlayTimer = useRef(0);
+  const isPressed = useRef(false);
 
   useEffect(() => {
     //清除之前定时器
@@ -358,6 +359,9 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     //设置切换定时器
     if (autoplay && interval > 0) {
       autoPlayTimer.current = setInterval(() => {
+        //用户按下时不进行自动换页
+        if (isPressed.current)
+          return;
         if (currentIndex.current >= itemCount.current - 1 && !circular) switchPage(0);
         else nextPage();
       }, interval) as unknown as number;
@@ -388,6 +392,9 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
   const gesture = Gesture.Pan()
     .maxPointers(1)
+    .onBegin(() => {
+      isPressed.current = true;
+    })
     .onUpdate((e) => {
       const prev = getPage(-1);
       const now = getPage(0);
@@ -452,6 +459,7 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
         //回弹
         switchPage();
       }
+      isPressed.current = false;
     });
 
   if (vertical)

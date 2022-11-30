@@ -54,7 +54,7 @@ export default {
         (NativeModules.ToolsManagerIOS.measureText(options) as Promise<number>).then(resolve).catch(reject);
       else if (isWeb) {
         // eslint-disable-next-line no-eval
-        const canvas = canvasGlobal || eval('canvasGlobal = (document as any).createElement(\'canvas\')');
+        const canvas = canvasGlobal || eval('canvasGlobal = document.createElement(\'canvas\')');
         const context = canvas.getContext('2d');
         context.font = `${options.fontFamily} ${options.fontSize}px`;
         const metrics = context.measureText(options.text);

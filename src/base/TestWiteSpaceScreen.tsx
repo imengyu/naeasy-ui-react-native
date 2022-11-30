@@ -11,7 +11,6 @@ type Props = StackScreenProps<RootStackParamList, 'TestWhiteSpace'>;
 const styles = StyleSheet.create({
   box: {
     width: '100%',
-    textAlign: 'center',
   },
   box2: {
     width: '100%',

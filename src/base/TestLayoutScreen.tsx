@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ColumnView, RowView, Color, WhiteSpace, Icon, Avatar, Text } from '../lib';
+import { ColumnView, RowView, Color, WhiteSpace, Icon, Avatar, Text, Button } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { showTestMessage, TestGroup } from '../components/TestGroup';
@@ -133,16 +133,19 @@ export class TestLayoutScreen extends React.PureComponent<Props> {
         </TestGroup>
         <TestHeader desc="这是一个简单的使用案例，展示了如何使用 Flex View 快速布局。你可以基于这些布局组件，快速拼装出你想要的界面。">使用案例</TestHeader>
         <TestGroup>
-          <RowView align="center">
-            <Avatar color="blue" text="王" />
-            <ColumnView padding={10}>
-              <RowView align="center">
-                <Icon icon="favorite-filling" color="#f60" />
-                <WhiteSpace size={2}/>
-                <Text size={16}>小王</Text>
-              </RowView>
-              <Text>1234567890@qq.com</Text>
-            </ColumnView>
+          <RowView justify="space-between" align="center">
+            <RowView align="center">
+              <Avatar background="blue" text="王" />
+              <ColumnView padding={10}>
+                <RowView align="center">
+                  <Icon icon="favorite-filling" color="#f60" />
+                  <WhiteSpace size={2}/>
+                  <Text size={16}>小王</Text>
+                </RowView>
+                <Text>1234567890@qq.com</Text>
+              </ColumnView>
+            </RowView>
+            <Button type="text">详情</Button>
           </RowView>
         </TestGroup>
         <WhiteSpace size={100} />

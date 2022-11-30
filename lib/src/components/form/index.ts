@@ -4,6 +4,7 @@ export * from './Form';
 export * from './ImageCheckBox';
 export * from './ImageRadio';
 export * from './NumberInput';
+export * from './Picker';
 export * from './Radio';
 export * from './Rate';
 export * from './Slider';

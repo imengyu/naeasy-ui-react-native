@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   swiper: {
     width: '100%',
     height: rpx(300),
+    minHeight: rpx(300),
   },
 });
 

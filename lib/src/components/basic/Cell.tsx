@@ -281,13 +281,14 @@ export const Cell = ThemeWrapper(function (props: CellProp) {
           {
             props.showArrow ?
               <Icon
-                key="rightIcon"
+                key="rightArrow"
                 icon="arrow-right"
                 size={(textStyle.fontSize || 16)}
                 color={(textStyle.color || styles.titleIcon.color) as string}
               /> :
-              renderRightIcon()
+              <></>
           }
+          { renderRightIcon() }
         </RowView>
       );
     }

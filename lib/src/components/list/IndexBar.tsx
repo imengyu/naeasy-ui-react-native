@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { GestureResponderEvent, Text, TextStyle, View, ViewStyle } from "react-native";
 import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeUtils } from "../../styles";
 import { ThemeRender } from "../../theme/Theme";
@@ -109,11 +109,6 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
   const data = props.data;
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const outBarHeight = useRef(0);
-  const outBarX = useRef(0);
-  const outBarY = useRef(0);
-  const refOutBar = useRef<View>(null);
-
   const emitChangeCurrentVal = useRef(0);
 
   useImperativeHandle(ref, () => ({
@@ -124,13 +119,7 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
   }));
 
   function onResponderMove(e: GestureResponderEvent) {
-   // if (e.nativeEvent.pageX < outBarX.current
-    //  || e.nativeEvent.pageY < outBarY.current
-    //  || e.nativeEvent.pageY > outBarY.current + outBarHeight.current)
-    ///  return;
-
     const y = e.nativeEvent.locationY;
-
     let v = Math.abs(Math.ceil((y) / (itemSize + itemSpace) - 1));
     if (v !== emitChangeCurrentVal.current) {
       emitChangeCurrentVal.current = v;
@@ -138,16 +127,6 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
       props.onActiveIndexChange && props.onActiveIndexChange(emitChangeCurrentVal.current);
     }
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      refOutBar.current?.measure((x,y,w,h,pageX,pageY) => {
-        outBarHeight.current = h;
-        outBarX.current = pageX;
-        outBarY.current = pageY;
-      });
-    }, 500);
-  }, [ refOutBar ]);
 
   const sizeStyle = {
     width: itemSize,
@@ -162,7 +141,6 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
         pointerEvents="box-none"
       >
         <View
-          ref={refOutBar}
           style={styles.barInner}
           pointerEvents="box-only"
           onResponderMove={onResponderMove}

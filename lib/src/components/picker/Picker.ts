@@ -173,13 +173,17 @@ export interface PickerTimeOptions extends PickerBaseProps {
    */
   cyclic?: boolean,
 }
-export interface PickerAddressProps extends PickerOptionsProps<string>  {
+export interface PickerAddressProps extends PickerOptionsProps  {
   /**
    * 选择器初始选择的地址(三个地名用空格隔开)，如果同时设置了selectOptions，则selectOptions无效
    */
   intitalAddress?: string;
 }
-export interface PickerOptionsProps<T> extends PickerBaseProps  {
+export interface PickerItem {
+  label: string,
+  value: unknown,
+}
+export interface PickerOptionsProps extends PickerBaseProps  {
   /**
    * 设置X轴偏移量，形成弧度
    */
@@ -195,36 +199,23 @@ export interface PickerOptionsProps<T> extends PickerBaseProps  {
     cyclicThree: boolean,
   },
   /**
-   * 当传入数据是对象时，需要填写此字段用于显示
-   */
-  objectType?: {
-    /**
-     * 当传入数据是对象时，用于显示的键名称
-     */
-    labelKey: string;
-    /**
-     * 当传入数据是对象时，用于选中索引判断的键名称
-     */
-    valueKey: string;
-  }
-  /**
    * 不联动数据
    * 注意：nPicker 和 picker只能二选一
    */
-  nPicker?: [ T[] ]|[ T[], T[] ]|[ T[], T[], T[] ],
+  nPicker?: [ PickerItem[] ]|[ PickerItem[], PickerItem[] ]|[ PickerItem[], PickerItem[], PickerItem[] ],
   /**
    * 联动数据
    * 注意：nPicker 和 picker只能二选一
    */
   picker?: [
-    T[]
+    PickerItem[]
   ]|[
-    T[],
-    T[][]
+    PickerItem[],
+    PickerItem[][]
   ]|[
-    T[],
-    T[][],
-    T[][][]
+    PickerItem[],
+    PickerItem[][],
+    PickerItem[][][]
   ],
   /**
    * 初始选中的条目索引
@@ -272,7 +263,7 @@ function convertTimePickerModeToIOSPicker(options?: boolean[]) {
   return PickerViewIOS.BRDatePickerModeDate;
 }
 
-type OptionsPickerViewSelectCallback = (option1: number, option2: number, option3: number) => void;
+type OptionsPickerSelectCallback = (selectedValue: unknown[], selectedLabel: (string|undefined)[], selectedIndex: number[]) => void;
 
 /**
  * 内置选择器
@@ -324,72 +315,127 @@ export const Picker = {
    * @param options 参数配置
    * @param selectCallback 选择回调
    * @param dismissCallback 取消回调
-   * TODO: 自定义选择器支持传入对象数据
    */
-  showOptionsPickerView<T>(options: PickerOptionsProps<T>, selectCallback: OptionsPickerViewSelectCallback, dismissCallback?: () => void) {
+  showOptionsPickerView(options: PickerOptionsProps, selectCallback: OptionsPickerSelectCallback, dismissCallback?: () => void) {
+    const {
+      nPicker,
+      picker,
+      selectOptions,
+      titleText,
+    } = options;
+
+    function selectedHandler(option1: number, option2: number, option3: number) {
+      const selectedIndex = [ option1, option2, option3 ];
+      //非联动数据
+      if (nPicker)
+        selectCallback([
+          nPicker[0][option1].value,
+          nPicker[1]?.[option2].value,
+          nPicker[2]?.[option3].value,
+        ], [
+          nPicker[0][option1].label,
+          nPicker[1]?.[option2].label,
+          nPicker[2]?.[option3].label,
+        ], selectedIndex);
+      //联动数据
+      else if (picker) {
+        const selectedValue = [] as unknown[];
+        const selectedLabel = [] as (string|undefined)[];
+        if (picker.length === 1) {
+          selectedValue.push(picker[0][option1].value);
+          selectedLabel.push(picker[0][option1].label);
+        }
+        else if (picker.length === 2) {
+          selectedValue.push(picker[0][option1].value);
+          selectedLabel.push(picker[0][option1].label);
+          selectedValue.push(picker[1][option1][option2].value);
+          selectedLabel.push(picker[1][option1][option2].label);
+        }
+        else if (picker.length === 3) {
+          selectedValue.push(picker[0][option1].value);
+          selectedLabel.push(picker[0][option1].label);
+          selectedValue.push(picker[1][option1][option2].value);
+          selectedLabel.push(picker[1][option1][option2].label);
+          selectedValue.push(picker[2][option1][option2][option3].value);
+          selectedLabel.push(picker[2][option1][option2][option3].label);
+        }
+        selectCallback(selectedValue, selectedLabel, selectedIndex);
+      }
+      else {
+        selectCallback([], [], selectedIndex);
+      }
+    }
+
     if (isAndroid) {
-      PickerViewAndroid.showOptionsPickerView(options, selectCallback, dismissCallback || (() => {}));
+      //android/ com/imengyu/RNUiLib/pickerview/PickerViewAndroidModule.java
+      PickerViewAndroid.showOptionsPickerView(options, selectedHandler, dismissCallback || (() => {}));
     }
     else if (isIOS) {
+      //ios/PickerManager.m
       const finalOptions = {
         pickerMode: 0,
-        title: options.titleText,
+        title: titleText,
         pickerStyle: convertStyleToIOSPickerStyle(options),
         array: [] as unknown[],
         selectIndexs: [] as number[]|undefined,
         selectIndex: 0,
       };
-      if (options.nPicker) {
-        if (options.nPicker.length === 1) {
+      //非联动数据处理
+      if (nPicker) {
+        if (nPicker.length === 1) {
           finalOptions.pickerMode = PickerViewIOS.BRStringPickerComponentSingle;
-          finalOptions.array = options.nPicker[0];
-          finalOptions.selectIndex = options.selectOptions ? options.selectOptions[0] : 0;
+          finalOptions.array = nPicker[0];
+          finalOptions.selectIndex = selectOptions ? selectOptions[0] : 0;
         }
         else {
           finalOptions.pickerMode = PickerViewIOS.BRStringPickerComponentMulti;
-          finalOptions.array = options.nPicker;
-          finalOptions.selectIndexs = options.selectOptions ? options.selectOptions : undefined;
+          finalOptions.array = nPicker;
+          finalOptions.selectIndexs = selectOptions ? selectOptions : undefined;
         }
-      } else if (options.picker) {
+      }
+      //联动数据处理
+      else if (picker) {
         finalOptions.pickerMode = PickerViewIOS.BRStringPickerComponentLinkage;
-        finalOptions.selectIndexs = options.selectOptions ? options.selectOptions : undefined;
+        finalOptions.selectIndexs = selectOptions ? selectOptions : undefined;
 
-        //这代码糟糕，不想改了。
-        //把多维数组展平
-        if (options.picker) {
+        //把多维数组展平，以适应原生端数据
+        //原生数据是 { parentKey, key, value } 这种格式
+        if (picker) {
           const arr = finalOptions.array;
-          const picker = options.picker;
           if (picker.length === 1) {
-            picker[0].forEach((v, i) => {
+            picker[0].forEach(v => {
               arr.push({
                 parentKey: '-1',
-                key: i,
-                value: v,
+                key: v.value,
+                value: v.label,
               });
             });
-          } else if (options.picker.length >= 2) {
-            let key = 0;
-            options.picker[0].forEach((v, i) => {
+          } else if (picker.length >= 2) {
+            let key = '';
+            picker[0].forEach((v, i) => {
+              key = '' + v.value;
               arr.push({
                 parentKey: '-1',
-                key: (++key).toString(),
-                value: '' + v,
+                key: key,
+                value: v.label,
               });
               if (picker[1]) {
-                const parentKey1 = key.toString();
+                const parentKey1 = key;
                 picker[1][i].forEach((v1, j) => {
+                  key = '' + v1.value;
                   arr.push({
                     parentKey: parentKey1,
-                    key: (++key).toString(),
-                    value: '' + v1,
+                    key: key,
+                    value: v1.label,
                   });
                   if (picker[2] && picker.length === 3) {
-                    const parentKey2 = key.toString();
+                    const parentKey2 = key;
                     picker[2][i][j].forEach((v2) => {
+                      key = '' + v2.value;
                       arr.push({
                         parentKey: parentKey2,
-                        key: (++key).toString(),
-                        value: '' + v2,
+                        key: +key,
+                        value: v2.label,
                       });
                     });
                   }
@@ -400,8 +446,9 @@ export const Picker = {
         }
       }
 
-      PickerViewIOS.showOptionsPickerView(finalOptions, selectCallback, dismissCallback || (() => {}));
-    } else {
+      PickerViewIOS.showOptionsPickerView(finalOptions, selectedHandler, dismissCallback || (() => {}));
+    }
+    else {
       throw new Error('Not implemented');
     }
   },

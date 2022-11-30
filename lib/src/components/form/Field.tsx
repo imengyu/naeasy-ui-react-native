@@ -14,7 +14,7 @@ import { Form } from "./Form";
 import { ThemeRender } from "../../theme/Theme";
 import { rpx } from "../../utils";
 
-export interface FieldProps extends Omit<TextInputProps, 'value'> {
+export interface FieldProps extends Omit<TextInputProps, 'value'>, Omit<FormItemFieldProps, 'onBlurValid'> {
   /**
    * 输入框左侧文本
    */
@@ -23,10 +23,6 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    * 名称，作为提交表单时的标识符
    */
   name?: string;
-  /**
-   * 当前输入的值
-   */
-  value?: unknown;
   /**
    * 输入框类型
    */
@@ -155,6 +151,10 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    */
   showLabel?: boolean;
   /**
+   * 是否显右边箭头，默认 false
+   */
+  showRightArrow?: boolean;
+  /**
    * 输入框自定义后缀
    */
   suffix?: JSX.Element;
@@ -170,14 +170,6 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    * 文字更改回调
    */
   onChangeText?: (text: string) => void;
-  /**
-   * 用于表单，更改时验证回调
-   */
-  onValueChange?: (text: unknown) => void;
-  /**
-   * 用于表单，获得点时验证回调
-   */
-  onFocusValid?: (instance: Field) => void;
   /**
    * 用于表单，失去焦点时验证回调
    */
@@ -202,6 +194,28 @@ export interface FieldProps extends Omit<TextInputProps, 'value'> {
    * 渲染输入框区域
    */
   renderInput?: () => JSX.Element;
+}
+
+/**
+ * 用于表单项的统一接口
+ */
+export interface FormItemFieldProps {
+  /**
+   * 当前输入的值
+   */
+  value?: unknown;
+  /**
+   * 用于表单，更改时验证回调
+   */
+  onValueChange?: (value: unknown) => void;
+  /**
+   * 用于表单，获得点时验证回调
+   */
+  onFocusValid?: (instance: Field) => void;
+  /**
+   * 用于表单，失去焦点时验证回调
+   */
+  onBlurValid?: (value: unknown) => void;
 }
 
 interface State {
@@ -271,7 +285,6 @@ const styles = DynamicThemeStyleSheet.create({
  * 表单条目组件
  */
 export class Field extends React.Component<FieldProps, State> {
-
 
   state: Readonly<State> = {
     focused: false,
@@ -389,40 +402,17 @@ export class Field extends React.Component<FieldProps, State> {
 
   render(): React.ReactNode {
     const {
-      label,
-      labelColor = Color.text,
-      labelDisableColor = Color.grey,
-      labelFlex,
-      inputDisableColor = Color.grey,
-      inputColor = Color.text,
-      inputFlex = 5,
-      error = false,
-      colon = true,
-      fieldStyle = {},
-      activeFieldStyle = {},
-      labelStyle,
-      inputStyle,
-      required,
-      center,
-      showWordLimit,
-      clearButton,
-      clearButtonMode,
-      labelWidth,
-      labelAlign = "left",
-      inputAlign = "left",
+      label, labelColor = Color.text, labelDisableColor = Color.grey, labelFlex,
+      inputDisableColor = Color.grey, inputColor = Color.text, inputFlex = 5,
+      error = false, errorMessage, colon = true,
+      fieldStyle = {}, activeFieldStyle = {}, labelStyle, inputStyle, activeInputStyle,
+      required, center, showWordLimit, clearButton, clearButtonMode,
+      labelWidth, labelAlign = "left", inputAlign = "left",
       type = "text",
-      disabled = false,
-      editable = true,
-      errorMessage,
-      showLabel = true,
-      activeInputStyle,
-      showRequiredBadge = true,
-      suffix,
-      prefix,
-      onPress,
-      renderLeftIcon,
-      renderRightButton,
-      renderLeftButton,
+      disabled = false, editable = true,
+      showLabel = true, showRequiredBadge = true, showRightArrow = false,
+      suffix, prefix,
+      onPress, renderLeftIcon, renderRightButton, renderLeftButton,
     } = this.props;
 
     return (
@@ -463,7 +453,10 @@ export class Field extends React.Component<FieldProps, State> {
                       //劫持子元素的数据更改事件
                       value: this.props.value,
                       onValueChange: this.props.onValueChange,
-                      onBlurValid: this.props.onBlurValid,
+                      onFocus: this.props.onFocus,
+                      onBlur: this.props.onBlur,
+                      onFocusValid: this.props.onFocusValid,
+                      onBlurValid: (value: unknown) => this.props?.onBlurValid?.(this, value),
                     }) : <TextInput
                       ref={(input) => {this.inputRef = input;}}
                       style={[
@@ -503,6 +496,7 @@ export class Field extends React.Component<FieldProps, State> {
                 }
                 { suffix }
                 { renderRightButton ? renderRightButton() : <></> }
+                { showRightArrow ? <Icon key="rightArrow" icon="arrow-right" size={16} /> : <></> }
               </RowView>
               { CheckTools.isNullOrEmpty(errorMessage) ? <></> : <Text style={styles.errorMessage}>{errorMessage}</Text> }
               { showWordLimit ? this.renderWordLimit() : <></> }
