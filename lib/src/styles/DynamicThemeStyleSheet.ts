@@ -95,11 +95,20 @@ export namespace DynamicThemeStyleSheet {
 /**
  * 标记这是一个动态主题颜色，请与 DynamicThemeStyleSheet 搭配使用。
  */
-export function DynamicColor(params: ColorInfoItem) : ColorValue {
-  return {
-    ...params,
+export function DynamicColor(src: ColorInfoItem) : ColorValue {
+  const obj = {
     __isDaymicThemeProp__: true,
     __daymicThemePropType__: DYNAMIC_PROPTYPE_COLOR,
     __TYPE__: 'Color',
-  } as unknown as ColorValue;
+  };
+
+  for (const key in src) {
+    Object.defineProperty(obj, key, {
+      get: function () {
+        return src[key];
+      },
+    });
+  }
+
+  return obj as unknown as ColorValue;
 }

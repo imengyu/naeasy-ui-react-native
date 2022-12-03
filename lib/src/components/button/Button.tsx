@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, ColorValue, ImageSourcePropType, Text, TextStyle, TouchableHighlight, ViewProps, ViewStyle } from 'react-native';
 import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines, DynamicThemeStyleSheet, DynamicColor } from '../../styles';
@@ -6,7 +6,7 @@ import { FonstSizes } from '../../styles/TextStyles';
 import { border, paddingVH, selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeContext, ThemeRender } from '../../theme/Theme';
 
 type ButtomType = 'default'|'primary'|'success'|'warning'|'danger'|'custom'|'text';
 type ButtomSizeType = 'small'|'medium'|'large'|'larger'|'mini';
@@ -194,7 +194,7 @@ const ButtonSizeChoices = {
 /**
  * 按钮组件。
  */
-export const Button = ThemeWrapper(function (props: ButtonProp) {
+export function Button(props: ButtonProp) {
 
   const {
     loading, loadingText, children, touchable,
@@ -208,7 +208,7 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
   } = props;
 
   //按钮样式生成
-  const getStyle = useCallback(() => {
+  const getStyle = useCallback((_data: unknown) => {
     const colorStyle = selectStyleType<ViewStyle|TextStyle, ButtomType>(type, 'default', plain ? {
       default: () => styles.plainButtonDefault,
       primary: () => styles.plainButtonPrimary,
@@ -224,11 +224,7 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
       },
     } : {
       default: () => styles.plainButtonDefault,
-      primary: () => {
-        console.log('primary', styles.buttonPrimary);
-        
-        return styles.buttonPrimary;
-      },
+      primary: () => styles.buttonPrimary,
       success: () => styles.buttonSuccess,
       warning: () => styles.buttonWarning,
       danger: () => styles.buttonDanger,
@@ -270,7 +266,6 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
   ]);
 
   const currentText = loading ? (loadingText || children || text) : children || text;
-  const currentStyleObj = useRef(getStyle());
 
   //渲染样式
   function doRenderIcon(left: boolean, nowColor: ColorValue|undefined) {
@@ -281,7 +276,7 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
     if (left && loading)
       return <ActivityIndicator
         size="small"
-        color={ThemeSelector.color(loadingColor || Color.white) || currentStyleObj.current?.color}
+        color={ThemeSelector.color(loadingColor || Color.white) || currentStyleObj.color}
         style={{
           marginRight: CheckTools.isNullOrEmpty(currentText) ? undefined : 5,
         }}
@@ -300,47 +295,50 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
     /> : <></>;
   }
 
+  const theme = useContext(ThemeContext);
+
   //当对应参数更改时，重新生成样式对象
-  useEffect(() => {
-    currentStyleObj.current = getStyle();
-  }, [ getStyle ]);
+  const currentStyleObj = useMemo(() => getStyle(theme), [ getStyle, theme ]);
 
   return (
-    //点击处理
-    <TouchableHighlight
-      onPress={(touchable === false || loading === true) ? undefined : onPress}
-      underlayColor={pressedColor || type === 'custom' ? ThemeSelector.color(pressedColor || Color.default) :
-        ThemeSelector.color((plain || type === 'text') ?
-          PressedColor(Color.notice) :
-          PressedColor(selectObjectByType(type, 'notice', Color)))
-      }
-      style={[
-        styles.view,
-        currentStyleObj.current?.style,
-        style,
-      ]}
-      { ...viewProps }
-    >
-      <RowView center>
-        {
-          //左图标
-          doRenderIcon(true, currentStyleObj.current?.color)
-        }
-        {/* 文本 */}
-        <Text style={[
-          styles.title,
-          {
-            color: ThemeSelector.color(textColor) || currentStyleObj.current?.color,
-            fontSize: selectStyleType(size, 'medium', FonstSizes),
-          },
-          type === 'text' ? { fontWeight: 'bold' } : {},
-          textStyle,
-        ]}>{ currentText }</Text>
-        {
-          //右图标
-          doRenderIcon(false, currentStyleObj.current?.color)
-        }
-      </RowView>
-    </TouchableHighlight>
+    <ThemeRender>
+      {() => (
+        <TouchableHighlight
+          onPress={(touchable === false || loading === true) ? undefined : onPress}
+          underlayColor={pressedColor || type === 'custom' ? ThemeSelector.color(pressedColor, Color.default) :
+            ThemeSelector.color((plain || type === 'text') ?
+              PressedColor(Color.notice) :
+              PressedColor(selectObjectByType(type, 'notice', Color)))
+          }
+          style={[
+            styles.view,
+            currentStyleObj.style,
+            style,
+          ]}
+          { ...viewProps }
+        >
+          <RowView center>
+            {
+              //左图标
+              doRenderIcon(true, currentStyleObj.color)
+            }
+            {/* 文本 */}
+            <Text style={[
+              styles.title,
+              {
+                color: ThemeSelector.color(textColor) || currentStyleObj.color,
+                fontSize: selectStyleType(size, 'medium', FonstSizes),
+              },
+              type === 'text' ? { fontWeight: 'bold' } : {},
+              textStyle,
+            ]}>{ currentText }</Text>
+            {
+              //右图标
+              doRenderIcon(false, currentStyleObj.color)
+            }
+          </RowView>
+        </TouchableHighlight>
+      )}
+    </ThemeRender>
   );
-});
+}
