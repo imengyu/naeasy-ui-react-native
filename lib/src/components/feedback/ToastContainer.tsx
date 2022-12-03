@@ -131,7 +131,7 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
     this.setState({
       toast: props,
     });
-    if (props.duration !== this.state.toast.duration) {
+    if (typeof props.duration !== 'undefined') {
       setTimeout(() => {
         this.noEndNext = true;
         this.loadAnim();

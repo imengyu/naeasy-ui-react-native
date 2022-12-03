@@ -210,11 +210,11 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
   //按钮样式生成
   const getStyle = useCallback(() => {
     const colorStyle = selectStyleType<ViewStyle|TextStyle, ButtomType>(type, 'default', plain ? {
-      default: styles.plainButtonDefault,
-      primary: styles.plainButtonPrimary,
-      success: styles.plainButtonSuccess,
-      warning: styles.plainButtonWarning,
-      danger: styles.plainButtonDanger,
+      default: () => styles.plainButtonDefault,
+      primary: () => styles.plainButtonPrimary,
+      success: () => styles.plainButtonSuccess,
+      warning: () => styles.plainButtonWarning,
+      danger: () => styles.plainButtonDanger,
       custom: {
         ...border(1, 'solid', ThemeSelector.color(color || Color.primary)),
         color: ThemeSelector.color(color),
@@ -223,11 +223,15 @@ export const Button = ThemeWrapper(function (props: ButtonProp) {
         color: ThemeSelector.color(color),
       },
     } : {
-      default: styles.plainButtonDefault,
-      primary: styles.buttonPrimary,
-      success: styles.buttonSuccess,
-      warning: styles.buttonWarning,
-      danger: styles.buttonDanger,
+      default: () => styles.plainButtonDefault,
+      primary: () => {
+        console.log('primary', styles.buttonPrimary);
+        
+        return styles.buttonPrimary;
+      },
+      success: () => styles.buttonSuccess,
+      warning: () => styles.buttonWarning,
+      danger: () => styles.buttonDanger,
       custom: {
         backgroundColor: ThemeSelector.color(touchable === false ? disabledColor : color),
         color: ThemeSelector.color(textColor),

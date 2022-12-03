@@ -1,6 +1,6 @@
 import React, { createRef } from 'react';
-import { TextStyle, ViewStyle } from 'react-native';
 import Portal from '../../portal';
+import { TextStyle, ViewStyle } from 'react-native';
 import { IconProp } from '../basic/Icon';
 import { ToastContainer, IToastPosition } from './ToastContainer';
 
@@ -84,6 +84,10 @@ let currentDefaultProps = { ...defaultProps } as ToastProps;
 let currentToastId = 0;
 let currentToastRef = createRef<ToastContainer>();
 
+/**
+ * 显示土司
+ * @param props
+ */
 function show(props: ToastProps) : ToastPublicInstance {
 
   const { content } = props;
@@ -126,20 +130,32 @@ function show(props: ToastProps) : ToastPublicInstance {
 
   return toastPublicInstance;
 }
-function text(text: string) {
+/**
+ * 显示文字土司
+ * @param textString 文字
+ */
+function text(textString: string) {
   return show({
     position: 'center',
-    content: text,
+    content: textString,
     type: 'text',
   });
 }
-function info(text: string) {
+/**
+ * 显示文字土司
+ * @param textString 文字
+ */
+function info(textString: string) {
   return show({
     position: 'center',
-    content: text,
+    content: textString,
     type: 'text',
   });
 }
+/**
+ * 显示带成功图标的土司
+ * @param props
+ */
 function success(props: string|ToastProps) {
   return show({
     position: 'center',
@@ -148,6 +164,10 @@ function success(props: string|ToastProps) {
     type: 'success',
   });
 }
+/**
+ * 显示带失败图标的土司
+ * @param props
+ */
 function fail(props: string|ToastProps) {
   return show({
     position: 'center',
@@ -156,6 +176,10 @@ function fail(props: string|ToastProps) {
     type: 'fail',
   });
 }
+/**
+ * 显示带加载中的土司
+ * @param props
+ */
 function loading(props: string|ToastProps) {
   return show({
     position: 'center',
@@ -165,6 +189,10 @@ function loading(props: string|ToastProps) {
     type: 'loading',
   });
 }
+/**
+ * 显示带无网络图标的土司
+ * @param props
+ */
 function offline(props: string|ToastProps) {
   return show({
     position: 'center',
@@ -172,6 +200,15 @@ function offline(props: string|ToastProps) {
     ...(typeof props === 'object' ? props : {}),
     type: 'offline',
   });
+}
+/**
+ * 关闭当前显示的 Toast
+ */
+function close() {
+  if (currentToastId > 0) {
+    Portal.remove(currentToastId);
+    currentToastId = 0;
+  }
 }
 
 /**
@@ -187,6 +224,7 @@ export const Toast = {
   fail,
   loading,
   offline,
+  close,
   /**
    * 	重置默认配置
    */

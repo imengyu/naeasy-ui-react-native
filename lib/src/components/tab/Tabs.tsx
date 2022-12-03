@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import { ScrollView, StyleSheet, Text, TextStyle, Animated, ViewStyle, View, Easing} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
@@ -316,7 +316,7 @@ interface TabsPageProps {
   /**
    * Tabs 标签组件的自定义属性
    */
-  tabsProps?: Omit<TabsProps, 'tabs'>,
+  tabsProps?: Omit<TabsProps, 'tabs'|'currentIndex'|'onChange'>,
   /**
    * Swiper 组件的自定义属性
    */
@@ -333,6 +333,13 @@ interface TabsPageProps {
 interface TabsPageItemProps extends TabsItemData {
   children: React.ReactNode;
 }
+interface TabsPageInstance {
+  /**
+   * 切换页面
+   * @param index 页码
+   */
+  switchPage?: (index: number, animate?: boolean) => void;
+}
 
 /**
  * TabsPage 的子级组件，用来表示标签页。
@@ -344,11 +351,15 @@ export function TabsPageItem(_props: TabsPageItemProps) {
 /**
  * 标签页组件，带内容切换
  */
-export function TabsPage(props: TabsPageProps) {
+export const TabsPage = forwardRef<TabsPageInstance, TabsPageProps>((props, ref) => {
 
   const childs = props.children instanceof Array ? props.children : [ props.children ];
   const { onPageSelected } = props;
   const [ tabIndex, setTabIndex ] = useState(0);
+
+  useImperativeHandle(ref, () => ({
+    switchPage: (p) => setTabIndex(p),
+  }));
 
   return (
     <View
@@ -383,7 +394,7 @@ export function TabsPage(props: TabsPageProps) {
       </Swiper>
     </View>
   );
-}
+});
 
 
 const styles = StyleSheet.create({

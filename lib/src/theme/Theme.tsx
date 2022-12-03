@@ -1,21 +1,27 @@
 import React from "react";
 
+
+export interface ThemeContextData {
+  theme: ThemeType,
+}
+export type ThemeType = 'light'|'dark'|string;
+
 /**
  * 全局的主题上下文
  */
-export const ThemeContext = React.createContext('');
-
-export type ThemeType = 'light'|'dark'|string;
+export const ThemeContext = React.createContext<ThemeContextData>({
+  theme: 'light',
+});
 
 /**
  * 提供一个包装组件，允许渲染时获取主题的值
  */
 export function ThemeRender(props: {
-  children: (theme: ThemeType) => JSX.Element|JSX.Element[],
+  children: (theme: ThemeType, data: ThemeContextData) => JSX.Element|JSX.Element[],
 }) {
   return (
     <ThemeContext.Consumer>
-      {value => props.children(value as ThemeType)}
+      {value => props.children(value.theme, value)}
     </ThemeContext.Consumer>
   );
 }

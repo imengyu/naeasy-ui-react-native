@@ -236,8 +236,9 @@ export function bottomRight(b: StringSize, r: StringSize) {
  * @param type 字符串参数
  * @param styleObject 样式对象，子对象key是名称。
  */
-export function selectStyleType<T, K extends string>(type: K|undefined, defaultTypeName: K, styleObject: { [P in K]: T }) {
-  return type ? styleObject[type] : styleObject[defaultTypeName];
+export function selectStyleType<T, K extends string>(type: K|undefined, defaultTypeName: K, styleObject: { [P in K]: T|(() => T) }) {
+  const result = type ? styleObject[type] : styleObject[defaultTypeName];
+  return typeof result === 'function' ? result() : result;
 }
 
 /**

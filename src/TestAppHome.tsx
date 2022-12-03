@@ -32,8 +32,8 @@ export class TestAppHome extends React.Component<Props> {
               <A href="https://github.com/imengyu/imengyu-ui-lib">https://github.com/imengyu/imengyu-ui-lib</A>
             </ColumnView>
           </CellGroup>
-          <CellGroup inset title="暗黑模式">
-            <Cell title="暗黑模式" touchable showArrow onPress={() => this.props.navigation.push('TestTheme')} />
+          <CellGroup inset title="主题">
+            <Cell title="Theme 主题" touchable showArrow onPress={() => this.props.navigation.push('TestTheme')} />
           </CellGroup>
           <CellGroup inset title="基础组件">
             <Cell title="Typography 段落" touchable showArrow onPress={() => this.props.navigation.push('TestTypography')} />

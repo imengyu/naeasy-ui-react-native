@@ -1,6 +1,13 @@
 import { ImageStyle, TextStyle, ViewStyle, ColorValue } from "react-native";
 import { ColorInfoItem } from "./ColorStyles";
-import { ThemeSelector } from "./ThemeSelector";
+import { ThemeColor, ThemeSelector } from "./ThemeSelector";
+
+const DYNAMIC_PROPTYPE_COLOR = 'Color';
+
+export const DynamicThemeStyleSheetVar = {
+  __globalColorChangeCount: 0,
+  __theme: '',
+};
 
 export namespace DynamicThemeStyleSheet {
   type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
@@ -14,20 +21,24 @@ export namespace DynamicThemeStyleSheet {
       const oldStyleObject = styles[key] as Record<string, unknown>;
       const finalStyleObject = {} as Record<string, unknown>;
 
-      let findThemeableKeys = [] as string[];
+      let findThemeableKeys = new Map<string, string>();
+      let hasDynamicColor = false;
 
       for (const key2 in oldStyleObject) {
         //找到当前样式对象中是否有动态主题属性
-        const styleValue = oldStyleObject[key2];
-        if (typeof styleValue === 'object' && (styleValue as Record<string, unknown>)?.__isDaymicThemeProp__ === true)
-          findThemeableKeys.push(key2);
-        else {
+        const styleValue = oldStyleObject[key2] as Record<string, unknown>;
+        if (typeof styleValue === 'object' && styleValue.__isDaymicThemeProp__ === true) {
+          const proptype = styleValue.__daymicThemePropType__ as string;
+          findThemeableKeys.set(key2, proptype);
+          if (proptype === DYNAMIC_PROPTYPE_COLOR)
+            hasDynamicColor = true;
+        } else {
           if (typeof styleValue !== 'undefined')
             finalStyleObject[key2] = styleValue;
         }
       }
 
-      if (findThemeableKeys.length === 0) {
+      if (findThemeableKeys.size === 0) {
         //没有动态主题属性，原样返回
         resultObjects[key] = finalStyleObject;
         continue;
@@ -37,22 +48,41 @@ export namespace DynamicThemeStyleSheet {
 
       const __lastDaymicThemeObj__ = `__lastDaymicThemeObj${key}__`;
       const __lastDaymicThemeValue__ = `__lastDaymicThemeValue${key}__`;
+      const __lastDaymicColorValue__ = `__lastDaymicColorValue${key}__`;
 
       Object.defineProperty(resultObjects, key, {
         get: function () {
+
+          let needRecreate = this[__lastDaymicThemeObj__] === undefined;
+          if (!needRecreate) {
+            needRecreate =
+              (hasDynamicColor && DynamicThemeStyleSheetVar.__globalColorChangeCount !== this[__lastDaymicColorValue__])
+              || this[__lastDaymicThemeValue__] !== DynamicThemeStyleSheetVar.__theme;
+          }
+
           //样式没有更改，则返回上一次的对象
-          if (this[__lastDaymicThemeObj__] && this[__lastDaymicThemeValue__] === ThemeSelector.theme)
+          if (!needRecreate)
             return this[__lastDaymicThemeObj__];
 
           //否则需要重新生成样式对象
           const resultStyleObj = { ...finalStyleObject } as Record<string, unknown>;
 
+
           //对动态的属性需要重新赋值生成
-          for (const themeableKey of findThemeableKeys)
-            resultStyleObj[themeableKey] = ThemeSelector.color(oldStyleObject[themeableKey] as unknown as ColorInfoItem);
+          for (const [themeableKey, type] of findThemeableKeys) {
+            switch (type) {
+              case DYNAMIC_PROPTYPE_COLOR:
+                resultStyleObj[themeableKey] = ThemeSelector.color(oldStyleObject[themeableKey] as unknown as ThemeColor);
+                break;
+              default:
+                resultStyleObj[themeableKey] = ThemeSelector.select(oldStyleObject[themeableKey] as Record<string, unknown>);
+                break;
+            }
+          }
 
           this[__lastDaymicThemeObj__] = resultStyleObj;
-          this[__lastDaymicThemeValue__] = ThemeSelector.theme;
+          this[__lastDaymicThemeValue__] = DynamicThemeStyleSheetVar.__theme;
+          this[__lastDaymicColorValue__] = DynamicThemeStyleSheetVar.__globalColorChangeCount;
 
           return resultStyleObj;
         },
@@ -69,6 +99,7 @@ export function DynamicColor(params: ColorInfoItem) : ColorValue {
   return {
     ...params,
     __isDaymicThemeProp__: true,
+    __daymicThemePropType__: DYNAMIC_PROPTYPE_COLOR,
     __TYPE__: 'Color',
   } as unknown as ColorValue;
 }

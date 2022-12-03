@@ -1,5 +1,6 @@
 import { ThemeType } from "../theme/Theme";
 import { ColorInfoItem } from "./ColorStyles";
+import { DynamicThemeStyleSheetVar } from "./DynamicThemeStyleSheet";
 
 export type ThemeColor = ColorInfoItem|string;
 
@@ -7,8 +8,6 @@ export type ThemeColor = ColorInfoItem|string;
  * 根据当前主题选择不同的颜色或者变量
  */
 export class ThemeSelector {
-  public static theme : ThemeType = 'light';
-
   /**
    * 根据当前主题选择不同的颜色
    * @param object 类型预定义
@@ -19,9 +18,9 @@ export class ThemeSelector {
     if (!object) {
       if (typeof defaultValue === 'string')
         return defaultValue;
-      return defaultValue?.[ThemeSelector.theme];
+      return defaultValue?.[DynamicThemeStyleSheetVar.__theme];
     }
-    return object[ThemeSelector.theme];
+    return object[DynamicThemeStyleSheetVar.__theme];
   }
   /**
     * 根据当前主题选择不同的颜色
@@ -35,6 +34,6 @@ export class ThemeSelector {
    * @param object 类型预定义
    */
   public static select<T>(object: Record<ThemeType, T>) {
-    return object[ThemeSelector.theme];
+    return object[DynamicThemeStyleSheetVar.__theme];
   }
 }
