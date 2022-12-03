@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Cell, CellGroup, ColumnView, rpx, RowView, ThemeUtils, Text, Button, Progress, WhiteSpace, Tag } from '../lib';
+import { Cell, CellGroup, ColumnView, rpx, RowView, ThemeUtils, Text, Button, Progress, WhiteSpace, Tag, useThemeContext } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { DeviceEventEmitter, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckBox, Radio, Switch, Slider } from '../../lib/src/components/form';
@@ -21,7 +21,9 @@ const style = StyleSheet.create({
 
 export function TestThemeScreen(props: Props) {
 
-  const [ isDark, setIsDark ] = useState(false);
+  const themeData = useThemeContext();
+
+  const [ isDark, setIsDark ] = useState(themeData.theme === 'dark');
   const [ isFlowSystem, setIsFlowSystem ] = useState(false);
 
   useEffect(() => {
