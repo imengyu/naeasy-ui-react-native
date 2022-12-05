@@ -3,14 +3,12 @@ import CheckTools from '../../utils/CheckTools';
 import { ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, TouchableHighlight, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
-import { borderBottom, borderTop, styleConfigPadding } from '../../utils/StyleTools';
+import { styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from './Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { RowView } from '../layout/RowView';
 import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
-
-//TODO: 优化代码样式
 
 interface CellProp {
   /**
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
 
 /**
  * 单元格组件, 为列表中的单个展示项。
- * 
+ *
  * 主题变量：
  * |名称|类型|默认值|
  * |--|--|--|
@@ -196,16 +194,41 @@ export function Cell(props: CellProp) {
     size = themeContext.getThemeData('CellSize', 'medium'),
     padding = themeContext.getThemeData('CellPadding', []),
     pressedColor = themeContext.getThemeData('CellPressedColor', PressedColor(Color.white)),
-    bottomBorder = true,
-    topBorder = false,
+    bottomBorder = themeContext.getThemeData('CellBottomBorder', true),
+    topBorder = themeContext.getThemeData('CellTopBorder', true),
+    center = true,
+    title,
+    label,
+    value,
+    icon,
+    iconPlaceholder = false,
+    iconWidth = themeContext.getThemeData('CellIconWidth', 20),
+    iconSize = themeContext.getThemeData('CellIconSize', 15),
+    iconStyle,
+    iconProps,
+    rightIcon,
+    rightIconProps,
+    rightIconStyle,
+    rightIconSize = themeContext.getThemeData('CellIconSize', 15),
+    showArrow = false,
+    valueSelectable = false,
+    children,
+    renderRight,
+    renderRightPrepend,
+    renderIcon,
+    renderLeft,
+    onPress,
   } = props;
-  
+
   const borderColor = themeContext.getThemeColorData('CellBorderColor', PressedColor(Color.white));
   const borderWidth = themeContext.getThemeData('CellBorderWidth', 1);
+  const CellFontSizeLarge = themeContext.getThemeData('CellFontSizeLarge', 15.5);
+  const CellFontSizeSmall = themeContext.getThemeData('CellFontSizeSmall', 11.5);
+  const CellFontSizeMedium = themeContext.getThemeData('CellFontSizeMedium', 14);
 
   //外层样式
   const style = useMemo(() => {
-    const style = {
+    const styleObj = {
       backgroundColor: themeContext.getThemeColor(backgroundColor),
     } as ViewStyle;
 
@@ -227,47 +250,43 @@ export function Cell(props: CellProp) {
     //内边距样式的强制设置
     styleConfigPadding(style, padding);
 
-    //...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.border)) : {}),
-    //...(props.topBorder === true ? borderT op(1, 'solid', ThemeSelector.color(Color.border)) : {}),
-
     //边框设置
     if (topBorder) {
       style.borderTopWidth = borderWidth;
-
+      style.borderTopColor = borderColor;
+      style.borderStyle = 'solid';
     }
     if (bottomBorder) {
       style.borderBottomWidth = borderWidth;
-      
+      style.borderBottomColor = borderColor;
+      style.borderStyle = 'solid';
     }
 
-
-    return style;
-  }, [ backgroundColor, size, padding, bottomBorder, topBorder ]);
-  //
+    return styleObj;
+  }, [
+    themeContext,
+    backgroundColor, size, padding,
+    bottomBorder, topBorder, borderColor, borderWidth,
+  ]);
+  //文字样式
   const textStyle = useMemo(() => {
     switch (size) {
-      case 'large': return { fontSize: 15 };
-      case 'small': return { fontSize: 12 };
+      case 'large':
+        return { fontSize: CellFontSizeLarge };
+      default:
+        return { fontSize: CellFontSizeMedium };
+      case 'small':
+        return { fontSize: CellFontSizeSmall };
     }
-    return { fontSize: 14 };
-  }, [ size ]);
-
-
-  function getTitleStyle() : TextStyle {
-    switch (props.size) {
-      case 'large': return { fontSize: 17 };
-      case 'small': return { fontSize: 13 };
-    }
-    return { fontSize: 15 };
-  }
+  }, [
+    size, CellFontSizeLarge,
+    CellFontSizeMedium, CellFontSizeSmall,
+  ]);
 
   function renderLeftIcon() {
-    const leftIconWidth = props.iconWidth || 20;
-    const iconSize = props.iconSize || 15;
-
     return (
-      <RowView key="leftIcon" width={(props.iconPlaceholder || props.icon) ? leftIconWidth : 0} justify="center">
-        { props.renderIcon ? props.renderIcon(true, props.icon) : <></> }
+      <RowView key="leftIcon" width={(iconPlaceholder || icon) ? iconWidth : 0} justify="center">
+        { renderIcon ? renderIcon(true, icon) : <></> }
         { renderLeftIconInner() }
       </RowView>
     );
@@ -275,60 +294,55 @@ export function Cell(props: CellProp) {
     function renderLeftIconInner() {
       return <Icon
         key="leftIcon"
-        icon={props.icon}
-        {...props.iconProps}
-        style={{...styles.titleIcon, fontSize: iconSize, ...props.iconStyle as TextStyle }}
+        icon={icon}
+        {...iconProps}
+        style={{...themeStyles.titleIcon, fontSize: iconSize, ...iconStyle as TextStyle }}
       />;
     }
   }
   function renderRightIcon() {
-    if (props.renderIcon)
-      return props.renderIcon(false, props.rightIcon);
+    if (renderIcon)
+      return renderIcon(false, rightIcon);
     return <Icon
       key="rightIcon"
-      icon={props.rightIcon}
-      {...props.rightIconProps}
-      style={{...styles.titleIcon, fontSize: props.rightIconSize || 15, ...props.rightIconStyle as TextStyle}}
+      icon={rightIcon}
+      {...rightIconProps}
+      style={{...styles.titleIcon, fontSize: rightIconSize || 15, ...rightIconStyle as TextStyle}}
     />;
   }
   function renderBase() {
     const arr = [];
-    const textStyle = getTextStyle();
-    if (props.renderLeft)
-      arr.push(<RowView key="left">{ props.renderLeft() }</RowView>);
+    if (renderLeft)
+      arr.push(<RowView key="left">{ renderLeft() }</RowView>);
     else {
       arr.push(
         <RowView key="left" center>
           {renderLeftIcon()}
-          <ColumnView style={styles.leftView}>
-            <Text style={[
-              styles.title,
-              getTitleStyle(),
-              { display: CheckTools.isNullOrEmpty(props.title) ? 'none' : 'flex' },
-            ]}>{props.title}</Text>
-            <Text style={[
-              styles.label,
-              textStyle,
-              { display: CheckTools.isNullOrEmpty(props.label) ? 'none' : 'flex' },
-            ]}>{props.label}</Text>
+          <ColumnView style={themeStyles.leftView}>
+            { CheckTools.isNullOrEmpty(title) ? <></> : <Text style={[ themeStyles.title, textStyle ]}>{title}</Text> }
+            { CheckTools.isNullOrEmpty(label) ? <></> : <Text style={[ themeStyles.label, textStyle ]}>{label}</Text> }
           </ColumnView>
         </RowView>
       );
     }
-    if (props.renderRight)
-      arr.push(<RowView key="right">{ props.renderRight() }</RowView>);
+    if (renderRight)
+      arr.push(<RowView key="right">{ renderRight() }</RowView>);
     else {
       arr.push(
         <RowView key="right" center>
-          { props.renderRightPrepend ? props.renderRightPrepend() : <></> }
-          { (!props.value || (typeof props.value === 'string' && props.value === '')) ? <></> : <Text key="value" selectable={props.valueSelectable === true} style={{...styles.value,...getTextStyle()}}>{'' + props.value}</Text> }
+          { renderRightPrepend ? renderRightPrepend() : <></> }
           {
-            props.showArrow ?
+            (!value || (typeof value === 'string' && value === '')) ?
+              <></> :
+              <Text key="value" selectable={valueSelectable} style={[ styles.value, textStyle ]}>{'' + value}</Text>
+          }
+          {
+            showArrow ?
               <Icon
                 key="rightArrow"
                 icon="arrow-right"
                 size={(textStyle.fontSize || 16)}
-                color={(textStyle.color || styles.titleIcon.color) as string}
+                color={styles.titleIcon.color as string}
               /> :
               <></>
           }
@@ -341,19 +355,17 @@ export function Cell(props: CellProp) {
 
   return (
     <TouchableHighlight
-      onPress={props.onPress}
+      onPress={onPress}
       underlayColor={themeContext.getThemeColor(pressedColor)}
       style={[
         styles.view,
         style,
-        {
-        },
-        props.style,
+        style,
       ]}
     >
-      <RowView flex={1} align={props.center !== false ? 'center' : 'flex-start'} justify="space-between">
-        { props.children ? props.children : renderBase() }
+      <RowView flex={1} align={center ? 'center' : 'flex-start'} justify="space-between">
+        { children ? children : renderBase() }
       </RowView>
     </TouchableHighlight>
   );
-});
+}
