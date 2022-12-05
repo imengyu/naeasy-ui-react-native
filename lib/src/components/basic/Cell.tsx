@@ -181,8 +181,18 @@ const styles = StyleSheet.create({
  * |CellSize|`string` or `number`|`'medium'`|
  * |CellPressedColor|`ColorInfoItem`|`PressedColor(Color.white)`|
  * |CellPadding|-|`[]`|
- * |--|--|--|
- * |--|--|--|
+ * |CellBottomBorder|`boolean`|`true`|
+ * |CellTopBorder|`boolean`|`false`|
+ * |CellIconWidth|`number`|`20`|
+ * |CellIconSize|`number`|`15`|
+ * |CellBorderColor|`ColorInfoItem`|`Color.boder`|
+ * |CellBorderWidth|`number`|`1`|
+ * |CellFontSizeLarge|`number`|`15.5`|
+ * |CellFontSizeMedium|`number`|`13`|
+ * |CellFontSizeSmall|`number`|`11.5`|
+ * ||``|``|
+ * ||``|``|
+ * ||``|``|
  */
 export function Cell(props: CellProp) {
 
@@ -220,11 +230,11 @@ export function Cell(props: CellProp) {
     onPress,
   } = props;
 
-  const borderColor = themeContext.getThemeColorData('CellBorderColor', PressedColor(Color.white));
+  const borderColor = themeContext.getThemeColorData('CellBorderColor', Color.boder);
   const borderWidth = themeContext.getThemeData('CellBorderWidth', 1);
   const CellFontSizeLarge = themeContext.getThemeData('CellFontSizeLarge', 15.5);
   const CellFontSizeSmall = themeContext.getThemeData('CellFontSizeSmall', 11.5);
-  const CellFontSizeMedium = themeContext.getThemeData('CellFontSizeMedium', 14);
+  const CellFontSizeMedium = themeContext.getThemeData('CellFontSizeMedium', 13);
 
   //外层样式
   const style = useMemo(() => {
@@ -307,7 +317,7 @@ export function Cell(props: CellProp) {
       key="rightIcon"
       icon={rightIcon}
       {...rightIconProps}
-      style={{...styles.titleIcon, fontSize: rightIconSize || 15, ...rightIconStyle as TextStyle}}
+      style={{...styles.titleIcon, fontSize: rightIconSize, ...rightIconStyle as TextStyle}}
     />;
   }
   function renderBase() {
@@ -341,7 +351,7 @@ export function Cell(props: CellProp) {
               <Icon
                 key="rightArrow"
                 icon="arrow-right"
-                size={(textStyle.fontSize || 16)}
+                size={textStyle.fontSize}
                 color={styles.titleIcon.color as string}
               /> :
               <></>
@@ -360,7 +370,7 @@ export function Cell(props: CellProp) {
       style={[
         styles.view,
         style,
-        style,
+        props.style,
       ]}
     >
       <RowView flex={1} align={center ? 'center' : 'flex-start'} justify="space-between">

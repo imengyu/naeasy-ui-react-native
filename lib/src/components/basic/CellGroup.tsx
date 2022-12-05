@@ -1,11 +1,11 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { Text, TextStyle, View } from 'react-native';
+import { Text, TextStyle, View, StyleSheet } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { ColumnView } from '../layout/ColumnView';
-import { DynamicColor, StyleSheet } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { useThemeContext } from '../../theme/Theme';
 
 interface CellGroupProp {
   /**
@@ -61,19 +61,62 @@ const styles = StyleSheet.create({
 
 /**
  * 单元格分组组件
+ *
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |CellGroupTitleDark|`boolean`|`false`|
+ * |CellGroupInset|`boolean`|`false`|
+ * |CellGroupShowTopMargin|`boolean`|`true`|
+ * |CellGroupShowBottomMargin|`boolean`|`false`|
+ * |CellGroupTopMarginSize|`number`|`rpx(6)`|
+ * |CellGroupDarkTitleBackgroundColor|`ColorInfoItem`|`Color.lightBorder`|
+ * |CellGroupInsetPaddingHorizontal|`number`|`rpx(48)`|
+ * |CellGroupPaddingHorizontal|`number`|`rpx(35)`|
  */
-export const CellGroup = ThemeWrapper(function (props: CellGroupProp) {
-  const titleStyle = {
-    ...styles.title,
-    backgroundColor: props.titleDark ? Color.lightBorder : undefined,
-    paddingHorizontal: props.inset ? rpx(48) : rpx(35),
-    ...props.titleStyle,
+export function CellGroup(props: CellGroupProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    titleDark = themeContext.getThemeData('CellGroupTitleDark', false),
+    inset = themeContext.getThemeData('CellGroupInset', false),
+    title,
+    titleStyle,
+    showTopMargin = themeContext.getThemeData('CellGroupShowTopMargin', true),
+    showBottomMargin = themeContext.getThemeData('CellGroupShowBottomMargin', false),
+    showTopMarginSize = themeContext.getThemeData('CellGroupTopMarginSize', rpx(6)),
+    children,
+  } = props;
+
+  const CellGroupDarkTitleBackgroundColor = themeContext.getThemeColorData('CellGroupDarkTitleBackgroundColor', Color.lightBorder);
+  const CellGroupInsetPaddingHorizontal = themeContext.getThemeData('CellGroupInsetPaddingHorizontal', rpx(48));
+  const CellGroupPaddingHorizontal = themeContext.getThemeData('CellGroupPaddingHorizontal', rpx(35));
+
+  const titleSpeicalStyle = {
+    ...themeStyles.title,
+    backgroundColor: titleDark ? CellGroupDarkTitleBackgroundColor : undefined,
+    paddingHorizontal: inset ? CellGroupInsetPaddingHorizontal : CellGroupPaddingHorizontal,
   } as TextStyle;
+
   return (
-    <ColumnView style={styles.view}>
-      { CheckTools.isNullOrEmpty(props.title) ? (props.showTopMargin === false ? <></> : <View style={[titleStyle, { paddingTop: props.showTopMarginSize || rpx(6) }]} />) : <Text style={titleStyle}>{props.title}</Text> }
-      { props.inset ? (<View style={styles.insetView}>{props.children as JSX.Element}</View>) : props.children as JSX.Element }
-      { props.showBottomMargin ? <View style={titleStyle} /> : <></> }
+    <ColumnView style={themeStyles.view}>
+      {
+        CheckTools.isNullOrEmpty(title) ?
+          (showTopMargin ? <View style={[titleStyle, { paddingTop: showTopMarginSize }]} /> : <></>) :
+          <Text style={[titleSpeicalStyle, titleStyle]}>{title}</Text>
+      }
+      {
+        inset ?
+          (<View style={themeStyles.insetView}>{children as JSX.Element}</View>) :
+          children as JSX.Element
+      }
+      {
+        showBottomMargin ?
+          <View style={[titleSpeicalStyle, titleStyle]} /> :
+          <></>
+      }
     </ColumnView>
   );
-});
+}
