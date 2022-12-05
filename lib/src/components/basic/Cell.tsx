@@ -181,7 +181,10 @@ const styles = StyleSheet.create({
  * |--|--|--|
  * |CellBackground|`ColorInfoItem`|`Color.white`|
  * |CellSize|`string` or `number`|`'medium'`|
- * |CellBackground|`ColorInfoItem`|`Color.white`|
+ * |CellPressedColor|`ColorInfoItem`|`PressedColor(Color.white)`|
+ * |CellPadding|-|`[]`|
+ * |--|--|--|
+ * |--|--|--|
  */
 export function Cell(props: CellProp) {
 
@@ -192,8 +195,15 @@ export function Cell(props: CellProp) {
     backgroundColor = themeContext.getThemeData('CellBackground', Color.white),
     size = themeContext.getThemeData('CellSize', 'medium'),
     padding = themeContext.getThemeData('CellPadding', []),
+    pressedColor = themeContext.getThemeData('CellPressedColor', PressedColor(Color.white)),
+    bottomBorder = true,
+    topBorder = false,
   } = props;
+  
+  const borderColor = themeContext.getThemeColorData('CellBorderColor', PressedColor(Color.white));
+  const borderWidth = themeContext.getThemeData('CellBorderWidth', 1);
 
+  //外层样式
   const style = useMemo(() => {
     const style = {
       backgroundColor: themeContext.getThemeColor(backgroundColor),
@@ -217,22 +227,32 @@ export function Cell(props: CellProp) {
     //内边距样式的强制设置
     styleConfigPadding(style, padding);
 
+    //...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.border)) : {}),
+    //...(props.topBorder === true ? borderT op(1, 'solid', ThemeSelector.color(Color.border)) : {}),
+
+    //边框设置
+    if (topBorder) {
+      style.borderTopWidth = borderWidth;
+
+    }
+    if (bottomBorder) {
+      style.borderBottomWidth = borderWidth;
+      
+    }
+
+
     return style;
-
-    return 
-  }, []);
-
-  function getStyle() {
-
-   
-  }
-  function getTextStyle() : TextStyle {
-    switch (props.size) {
+  }, [ backgroundColor, size, padding, bottomBorder, topBorder ]);
+  //
+  const textStyle = useMemo(() => {
+    switch (size) {
       case 'large': return { fontSize: 15 };
       case 'small': return { fontSize: 12 };
     }
     return { fontSize: 14 };
-  }
+  }, [ size ]);
+
+
   function getTitleStyle() : TextStyle {
     switch (props.size) {
       case 'large': return { fontSize: 17 };
@@ -240,6 +260,7 @@ export function Cell(props: CellProp) {
     }
     return { fontSize: 15 };
   }
+
   function renderLeftIcon() {
     const leftIconWidth = props.iconWidth || 20;
     const iconSize = props.iconSize || 15;
@@ -318,18 +339,14 @@ export function Cell(props: CellProp) {
     return arr.flat();
   }
 
-  const pressedColor = ThemeSelector.color(props.pressedColor || PressedColor(Color.white));
-
   return (
     <TouchableHighlight
       onPress={props.onPress}
-      underlayColor={pressedColor}
+      underlayColor={themeContext.getThemeColor(pressedColor)}
       style={[
         styles.view,
-        getStyle(),
+        style,
         {
-          ...(props.bottomBorder !== false ? borderBottom(1, 'solid', ThemeSelector.color(Color.border)) : {}),
-          ...(props.topBorder === true ? borderTop(1, 'solid', ThemeSelector.color(Color.border)) : {}),
         },
         props.style,
       ]}
