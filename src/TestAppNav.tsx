@@ -62,7 +62,6 @@ import { TestImagePickerScreen } from './media/TestImagePickerScreen';
 import { TestErrorBoundaryScreen } from './base/TestErrorBoundaryScreen';
 import { TestOverlayScreen } from './feedback/TestOverlayScreen';
 import { TestResultScreen } from './feedback/TestResultScreen';
-import { ThemeSelector, Color } from './lib';
 import { TestTabsScreen } from './nav/TestTabsScreen';
 import { TestSwiperScreen } from './base/TestSwiperScreen';
 import { TestSkeletonScreen } from './display/TestSkeletonScreen';
@@ -78,7 +77,7 @@ export class TestAppNav extends React.Component {
         screenOptions={{
           presentation: 'card',
           headerTitleAlign: 'center',
-          headerStyle: { backgroundColor: ThemeSelector.color(Color.background) },
+          headerStyle: { backgroundColor: 'transparent' },
           ...TransitionPresets.SlideFromRightIOS,
           ...Platform.select<StackNavigationOptions>({
             android: {

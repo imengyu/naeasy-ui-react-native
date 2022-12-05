@@ -5,7 +5,7 @@ import { ActivityIndicator, Animated, ListRenderItemInfo, Text, TextStyle, Touch
 import { deviceHeight, selectStyleType } from '../../utils';
 import { Icon, IconProp } from '../basic/Icon';
 import { Button } from '../button/Button';
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, ThemeSelector } from '../../styles';
 import { useDidMountEffect } from '../../hooks/CommonHooks';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemeRender, ThemeWrapper } from '../../theme/Theme';
@@ -81,7 +81,7 @@ function destroyAllNotify() {
 
 //#region 通知渲染容器
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   container:  {
     position: 'absolute',
     top: 0,

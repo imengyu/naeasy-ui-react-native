@@ -1,4 +1,5 @@
 export * from '../lib/src/index';
+export * from '../lib/src/portal';
 export * from '../lib/src/components/basic';
 export * from '../lib/src/components/button';
 export * from '../lib/src/components/typography';

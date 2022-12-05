@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from '../../theme/Theme';
 
 interface LoadingViewProps {
@@ -33,7 +33,7 @@ interface LoadingViewProps {
   children?: JSX.Element,
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     position: 'relative',
   },

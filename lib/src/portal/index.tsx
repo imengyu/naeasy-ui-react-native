@@ -1,2 +1,2 @@
-import Portal from './portal';
-export default Portal;
+export * from './portal-host';
+export * from './portal';

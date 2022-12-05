@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
 import { Text, TextInput, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from '../../styles';
 import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
 import { ThemeWrapper } from '../../theme/Theme';
@@ -94,7 +94,7 @@ export interface SearchBarProp {
   renderCancelButton?: () => JSX.Element;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     position: 'relative',
     backgroundColor: DynamicColor(Color.white),

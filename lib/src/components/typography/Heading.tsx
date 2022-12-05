@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Text, TextProps } from "./Text";
-import { Color, DynamicColor, DynamicThemeStyleSheet } from "../../styles";
+import { Color, DynamicColor, StyleSheet } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 
 /**
@@ -9,7 +9,7 @@ import { ThemeWrapper } from "../../theme/Theme";
  */
 
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   h1: {
     marginBottom: 10,
     fontSize: 32,

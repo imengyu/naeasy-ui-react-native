@@ -4,7 +4,7 @@ import { Text, TextStyle, View } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { ColumnView } from '../layout/ColumnView';
-import { DynamicColor, DynamicThemeStyleSheet } from '../../styles';
+import { DynamicColor, StyleSheet } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
 
 interface CellGroupProp {
@@ -39,7 +39,7 @@ interface CellGroupProp {
   children?: JSX.Element|JSX.Element[],
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     width: '100%',
   },

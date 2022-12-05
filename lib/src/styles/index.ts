@@ -1,14 +1,11 @@
 import { Color, ColorInfo } from './ColorStyles';
 import { SpaceDefines } from './SizeStyles';
 import { FonstSizes } from './TextStyles';
-import { DeviceEventEmitter } from 'react-native';
 
 export * from './TextStyles';
 export * from './SizeStyles';
 export * from './CommonStyles';
 export * from './ColorStyles';
-export * from './ThemeSelector';
-export * from './DynamicThemeStyleSheet';
 
 /**
  * 样式相关工具类
@@ -34,8 +31,6 @@ export const ThemeUtils = {
       for (const key2 in newObj)
         oldObj[key2] = newObj[key2];
     }
-
-    DeviceEventEmitter.emit('notifyGlobalColorChanged');
   },
   /**
    * 配置默认的FonstSizes数据。请在组件初始化之前配置。

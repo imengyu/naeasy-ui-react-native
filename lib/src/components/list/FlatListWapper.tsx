@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button } from "../button/Button";
 import { XBarSpace } from "../space/XBarSpace";
 import { Empty } from "../feedback/Empty";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeSelector } from "../../styles";
 import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { rpx } from "../../utils/StyleConsts";
 import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
@@ -606,7 +606,7 @@ export function FlatListLoader(props: FlatListLoaderProps) {
   </View>);
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     flex: 1,
     position: 'relative',

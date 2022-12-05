@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, ViewStyle, TextStyle, StyleSheet, FlatList, Text, TouchableHighlight, FlatListProps } from 'react-native';
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeSelector } from '../../styles';
 import { CheckBoxDefaultButton, CheckBoxDefaultButtonProps } from '../form/CheckBox';
 import { ThemeRender } from '../../theme/Theme';
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 20,
     paddingVertical: 15,

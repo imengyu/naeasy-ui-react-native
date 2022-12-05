@@ -2,7 +2,7 @@ import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import { Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../display/Badge";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 
 //公共的SideBarItem
@@ -189,7 +189,7 @@ export const SideBar = ThemeWrapper(function (props: SideBarProps) {
   );
 });
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',

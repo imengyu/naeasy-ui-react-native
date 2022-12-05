@@ -5,7 +5,7 @@ import { ImageSourcePropType, TouchableOpacity, Image as ReactNativeImage, Image
 import { deviceWidth } from '../../utils/StyleConsts';
 import { topLeft } from '../../utils/StyleTools';
 import { ColumnView } from '../layout/ColumnView';
-import { Color, ThemeColor, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
+import { Color, ThemeColor, DynamicColor, StyleSheet, ThemeSelector } from '../../styles';
 import { ThemeRender } from '../../theme/Theme';
 
 export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
@@ -75,7 +75,7 @@ export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
   onLongPress?: () => void;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   loadingView: {
     width: '100%',
     height: '100%',

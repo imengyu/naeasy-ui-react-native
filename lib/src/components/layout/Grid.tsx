@@ -4,12 +4,12 @@ import ObjectUtils from '../../utils/ObjectUtils';
 import { borderTop } from '../../utils/StyleTools';
 import { ImageSourcePropType, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableHighlight } from 'react-native';
-import { ThemeSelector, Color, ThemeColor, PressedColor } from '../../styles';
+import { Color, PressedColor } from '../../styles';
 import { Icon, IconProp } from '../basic/Icon';
 import { FlexView } from './FlexView';
 import { RowView } from './RowView';
-import { DynamicColor, DynamicThemeStyleSheet } from '../../styles/DynamicThemeStyleSheet';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor, ThemeWrapper } from '../../theme/Theme';
+import { DynamicColor } from '../../theme/ThemeStyleSheet';
 
 interface GridProp {
   /**
@@ -108,7 +108,7 @@ interface GridItemProp {
   children?: JSX.Element|JSX.Element[],
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   itemView: {
     padding: 8,
   },

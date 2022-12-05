@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text } from 'react-native';
 import { TouchableHighlight } from 'react-native';
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { RowView } from "../layout/RowView";
 import { ThemeWrapper } from '../../theme/Theme';
 
@@ -70,7 +70,7 @@ interface PaginationItemProps {
   onPress?: () => void;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   simpleText: {
     paddingHorizontal: 10,
     paddingVertical: 5,

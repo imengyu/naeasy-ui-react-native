@@ -1,6 +1,6 @@
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { border, borderBottom, selectStyleType } from '../../utils/StyleTools';
 import { Text, TextStyle, TouchableHighlight, View, ViewStyle, TextInput, Animated } from 'react-native';
 import { ColumnView } from '../layout/ColumnView';
@@ -104,7 +104,7 @@ export interface NumberInputProps {
 }
 
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     position: 'relative',
     flexDirection: 'row',

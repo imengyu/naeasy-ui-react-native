@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CheckTools from "../../utils/CheckTools";
 import { Text, TextInput, View } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet } from "../../styles";
+import { Color, DynamicColor, StyleSheet } from "../../styles";
 import { IconButton } from "../button/IconButton";
 import { RowView } from "../layout/RowView";
 import { ThemeWrapper } from "../../theme/Theme";
@@ -53,7 +53,7 @@ export interface StepperProps {
   integer?: boolean;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     borderRadius: 0,
     backgroundColor: DynamicColor(Color.light),

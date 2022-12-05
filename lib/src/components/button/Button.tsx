@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, ColorValue, ImageSourcePropType, Text, TextStyle, TouchableHighlight, ViewProps, ViewStyle } from 'react-native';
-import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines, DynamicThemeStyleSheet, DynamicColor } from '../../styles';
+import { ThemeSelector, Color, ThemeColor, PressedColor, SpaceDefines, StyleSheet, DynamicColor } from '../../styles';
 import { FonstSizes } from '../../styles/TextStyles';
 import { border, paddingVH, selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from '../basic/Icon';
@@ -121,7 +121,7 @@ export interface ButtonProp {
   onPress?: () => void,
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     minWidth: 50,
     width: 'auto',

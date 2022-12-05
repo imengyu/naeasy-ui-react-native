@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text, DynamicThemeStyleSheet, DynamicColor, Color, ThemeRender, ColumnView, useDidMountEffect } from '../lib';
+import { Text, StyleSheet, DynamicColor, Color, ThemeRender, ColumnView, useDidMountEffect } from '../lib';
 import { View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   titleLine: {
     width: 30,
     height: 3,

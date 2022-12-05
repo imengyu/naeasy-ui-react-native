@@ -1,7 +1,7 @@
 import CheckTools from "../../utils/CheckTools";
 import React, { useRef } from "react";
 import { GestureResponderEvent, LayoutChangeEvent, PanResponder, View, ViewStyle } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 
 export interface SliderProps {
@@ -67,7 +67,7 @@ export interface SliderProps {
   renderButton?: (valuepos: number) => JSX.Element;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   barContainer: {
     position: 'relative',
     flexDirection: 'row',

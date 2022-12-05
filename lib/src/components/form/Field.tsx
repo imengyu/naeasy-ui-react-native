@@ -4,7 +4,7 @@ import { TextInputFocusEventData, View } from "react-native";
 import { NativeSyntheticEvent } from "react-native";
 import { Text, TextInput, TextInputProps, TextStyle, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { selectStyleType } from "../../utils/StyleTools";
 import { Icon } from "../basic/Icon";
 import { ColumnView } from "../layout/ColumnView";
@@ -224,7 +224,7 @@ interface State {
 
 //TODO: 优化子组件的表单相关事件
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   field: {
     paddingVertical: rpx(16),
     paddingHorizontal: rpx(32),

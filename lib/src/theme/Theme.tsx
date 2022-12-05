@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-
+import { ColorInfoItem } from '../styles';
 
 export interface ThemeContextData {
   /**
@@ -10,6 +10,18 @@ export interface ThemeContextData {
    * 全局数据
    */
   themeData: Record<string, unknown>;
+  /**
+   * 获取主题数据
+   */
+  getThemeData: <T>(key: string, defaultValue: T) => T;
+  /**
+   * 获取主题颜色数据。相当于 getThemeColor(getThemeData(xx))
+   */
+  getThemeColorData: (key: string, defaultValue?: ThemeColor) => string;
+  /**
+   * 将可变颜色转为当前主题所对应的颜色。
+   */
+  getThemeColor: (srcColor: ThemeColor) => string;
   /**
    * 设置当前的主题
    */
@@ -27,6 +39,9 @@ export const ThemeContext = React.createContext<ThemeContextData>({
   theme: 'light',
   themeData: {},
   setTheme: () => console.warn('No data provider, Did you add Provider component in your root?'),
+  getThemeColor: () => '#f0f',
+  getThemeData: (key, defaultValue) => defaultValue,
+  getThemeColorData: (key, defaultValue) => defaultValue as string || '#f0f',
 });
 
 /**
@@ -42,7 +57,7 @@ export const useThemeContext = () => useContext(ThemeContext);
  * 提供一个包装组件，允许渲染时获取主题的值
  */
 export function ThemeRender(props: {
-  children: (theme: ThemeType, data: ThemeContextData) => JSX.Element|JSX.Element[],
+  children: (theme: ThemeType, context: ThemeContextData) => JSX.Element|JSX.Element[],
 }) {
   return (
     <ThemeContext.Consumer>
@@ -50,13 +65,42 @@ export function ThemeRender(props: {
     </ThemeContext.Consumer>
   );
 }
+
+//ThemeSelector
+//=======================================
+
+export type ThemeColor = ColorInfoItem|string;
+
 /**
- * 包装高阶组件，使这个组件在主题更新后刷新
+ * 根据当前主题选择不同的颜色或者变量
  */
-export function ThemeWrapper<P extends {}>(component: React.ComponentClass<P, any>|React.FunctionComponent<P>|((props: P) => JSX.Element)) : (p: P) => JSX.Element {
-  return ((props: unknown) => (
-    <ThemeContext.Consumer>
-      { () => React.createElement<P>(component as React.FunctionComponent<P>, props as P) }
-    </ThemeContext.Consumer>
-  ));
+export class ThemeSelector {
+  /**
+   * 根据当前主题选择不同的颜色
+   * @param object 类型预定义
+   */
+  public static color(theme: ThemeType, object: ThemeColor|undefined|null, defaultValue?: ThemeColor|string) {
+    if (typeof object === 'string')
+      return object;
+    if (!object) {
+      if (typeof defaultValue === 'string')
+        return defaultValue;
+      return defaultValue?.[theme];
+    }
+    return object[theme];
+  }
+  /**
+    * 根据当前主题选择不同的颜色
+    * @param object 类型预定义
+    */
+  public static colorNoNull(theme: ThemeType, object: ThemeColor|undefined, defaultValue?: ThemeColor|string) {
+    return ThemeSelector.color(theme, object, defaultValue) as string;
+  }
+  /**
+   * 根据当前主题选择不同的变量
+   * @param object 类型预定义
+   */
+  public static select<T>(theme: ThemeType, object: Record<ThemeType, T>) {
+    return object[theme];
+  }
 }

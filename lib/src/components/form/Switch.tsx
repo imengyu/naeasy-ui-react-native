@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { FeedbackNative } from "../tools/Feedback";
 import { ThemeWrapper } from "../../theme/Theme";
 import { Switch as NativeSwitch } from 'react-native';
@@ -50,7 +50,7 @@ export interface SwitchProps {
   size?: number;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   toggleOut: {
     position: 'relative',
     overflow: 'hidden',

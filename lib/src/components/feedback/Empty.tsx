@@ -1,13 +1,12 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { ImageSourcePropType, ImageStyle, Text, ViewStyle, Image } from 'react-native';
+import { ImageSourcePropType, ImageStyle, Text, ViewStyle, Image, StyleSheet } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { ColumnView } from '../layout/ColumnView';
 import { selectStyleType } from '../../utils/StyleTools';
-import { DynamicColor, DynamicThemeStyleSheet } from '../../styles/DynamicThemeStyleSheet';
-import { ThemeWrapper } from '../../theme/Theme';
-
+import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { useThemeContext } from '../../theme/Theme';
 
 type EmptyImageType = 'default'|'error'|'network'|'search';
 
@@ -17,7 +16,7 @@ export interface EmptyProp {
    */
   description?: string,
   /**
-   * 图片类型，可选值为 error network search，支持传入图片
+   * 图片类型，可选值为 `error` `network` `search`，支持传入图片
    */
   image?: EmptyImageType|ImageSourcePropType,
   /**
@@ -35,7 +34,7 @@ export interface EmptyProp {
   children?: JSX.Element|JSX.Element[],
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     width: '100%',
     flexDirection: 'column',
@@ -52,26 +51,45 @@ const styles = DynamicThemeStyleSheet.create({
 });
 
 /**
- * 空状态组件。提供空状态时的占位提示。
+ * 空状态组件
+ *
+ * 提供空状态时的占位提示。
+ *
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |EmptyImageSize|number|100|
  */
-export const Empty = ThemeWrapper(function (props: EmptyProp) {
+export function Empty(props: EmptyProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    imageSize = themeContext.getThemeData('EmptyImageSize', 100),
+    image,
+    description = '',
+    children,
+  } = props;
+
   const imageStyle = {
-    width: props.imageSize || 100,
-    height: props.imageSize || 100,
+    width: imageSize,
+    height: imageSize,
   } as ImageStyle;
+
   return (
-    <ColumnView style={{ ...styles.view, ...props.style}} center pointerEvents={props.pointerEvents}>
-      { typeof props.image === 'string' ?
-        selectStyleType<JSX.Element, EmptyImageType>(props.image, 'default', {
+    <ColumnView style={[ themeStyles.view, props.style || {} ]} center pointerEvents={props.pointerEvents}>
+      { typeof image === 'string' ?
+        selectStyleType<JSX.Element, EmptyImageType>(image, 'default', {
           default: <Image source={require('../../images/empty-image-default.png')} style={imageStyle} />,
           error: <Image source={require('../../images/empty-image-error.png')} style={imageStyle} />,
           network: <Image source={require('../../images/empty-image-netowok.png')} style={imageStyle} />,
           search: <Image source={require('../../images/empty-image-search.png')} style={imageStyle} />,
         }) :
-        (typeof props.image !== 'undefined' ? <Image source={props.image as ImageSourcePropType} style={imageStyle} /> : <></>)
+        (typeof image !== 'undefined' ? <Image source={image as ImageSourcePropType} style={imageStyle} /> : <></>)
       }
-      { CheckTools.isNullOrEmpty(props.description) ? <></> : <Text style={styles.descriptionStyle}>{props.description}</Text> }
-      { props.children as JSX.Element }
+      { CheckTools.isNullOrEmpty(description) ? <></> : <Text style={styles.descriptionStyle}>{description}</Text> }
+      { children as JSX.Element }
     </ColumnView>
   );
-});
+}

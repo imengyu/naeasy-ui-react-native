@@ -2,7 +2,7 @@ import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../display/Badge";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { Icon, IconProp } from "../basic/Icon";
 import { ThemeWrapper } from "../../theme/Theme";
 
@@ -193,7 +193,7 @@ export const TabBar = ThemeWrapper(function (props: TabBarProps) {
   );
 });
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   tabBar: {
     position: 'relative',
     backgroundColor: DynamicColor(Color.white),

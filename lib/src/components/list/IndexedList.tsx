@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IndexBar, IndexBarInstance } from './IndexBar';
 import { ViewStyle, TextStyle, StyleSheet, FlatList, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableHighlight, FlatListProps } from 'react-native';
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeSelector } from '../../styles';
 import { ThemeRender } from '../../theme/Theme';
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   list: {
     backgroundColor: DynamicColor(Color.white),
   },

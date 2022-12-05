@@ -2,7 +2,7 @@ import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import ArrayUtils from "../../utils/ArrayUtils";
 import { Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { border, selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
 import { Icon } from "../basic/Icon";
@@ -423,7 +423,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
   );
 });
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   checkBox: {
     alignSelf: 'flex-start',
     marginHorizontal: 4,

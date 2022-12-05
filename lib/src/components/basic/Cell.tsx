@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { ImageSourcePropType, ImageStyle, Text, TextStyle, TouchableHighlight, ViewStyle } from 'react-native';
+import { ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, TouchableHighlight, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { borderBottom, borderTop, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from './Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { RowView } from '../layout/RowView';
-import { DynamicColor, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 //TODO: 优化代码样式
 
@@ -140,7 +140,7 @@ interface CellProp {
   onPress?: () => void,
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   view: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -175,15 +175,31 @@ const styles = DynamicThemeStyleSheet.create({
 
 /**
  * 单元格组件, 为列表中的单个展示项。
+ * 
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |CellBackground|`ColorInfoItem`|`Color.white`|
+ * |CellSize|`string` or `number`|`'medium'`|
+ * |CellBackground|`ColorInfoItem`|`Color.white`|
  */
-export const Cell = ThemeWrapper(function (props: CellProp) {
-  function getStyle() {
+export function Cell(props: CellProp) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    backgroundColor = themeContext.getThemeData('CellBackground', Color.white),
+    size = themeContext.getThemeData('CellSize', 'medium'),
+    padding = themeContext.getThemeData('CellPadding', []),
+  } = props;
+
+  const style = useMemo(() => {
     const style = {
-      backgroundColor: ThemeSelector.color(props.backgroundColor || Color.white),
+      backgroundColor: themeContext.getThemeColor(backgroundColor),
     } as ViewStyle;
 
-    switch (props.size) {
+    switch (size) {
       case 'large':
         style.minHeight = rpx(125);
         style.paddingVertical = rpx(15);
@@ -199,9 +215,16 @@ export const Cell = ThemeWrapper(function (props: CellProp) {
     }
 
     //内边距样式的强制设置
-    styleConfigPadding(style, props.padding);
+    styleConfigPadding(style, padding);
 
     return style;
+
+    return 
+  }, []);
+
+  function getStyle() {
+
+   
   }
   function getTextStyle() : TextStyle {
     switch (props.size) {

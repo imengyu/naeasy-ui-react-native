@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TextStyle, View, ViewStyle } from "react-native";
 import { selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
-import { Color, ThemeColor, DynamicColor, DynamicThemeStyleSheet, ThemeSelector } from '../../styles';
+import { Color, ThemeColor, DynamicColor, StyleSheet, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
 
 type DividerOrientationTypes = 'left' | 'right' | 'center';
@@ -50,7 +50,7 @@ export interface DividerProps {
   size?: number;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   horizontalView: {
     position: 'relative',
     justifyContent: 'center',

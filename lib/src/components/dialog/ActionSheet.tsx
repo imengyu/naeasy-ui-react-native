@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { ScrollView } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { deviceHeight, rpx } from "../../utils/StyleConsts";
 import { displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
@@ -88,7 +88,7 @@ export interface ActionSheetItem {
   disabled?: boolean;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   topScroll: {
     maxHeight: deviceHeight - 200,
   },

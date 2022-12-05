@@ -14,12 +14,12 @@ interface GlobalStyle {
 }
 
 /**
- * 全局样式变量配置
+ * 全局静态样式变量配置
  */
 export const GlobalStyle = {} as GlobalStyle;
 
 /**
- * 配置全局样式变量
+ * 配置全局静态样式变量
  * @param props 变量数据。如果已存在相同键的数据，则会覆盖
  */
 export function ConfigGlobalStyle(props: GlobalStyle) {
@@ -30,7 +30,7 @@ export function ConfigGlobalStyle(props: GlobalStyle) {
 }
 
 /**
- * 获取全局样式变量配置
+ * 获取全局静态样式变量配置
  * @param key 键
  * @param defaultValue 默认值
  * @returns 返回变量

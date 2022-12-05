@@ -5,7 +5,7 @@ import { RowView } from '../layout/RowView';
 import { Popup } from '../basic/Popup';
 import { WhiteSpace } from '../space/WhiteSpace';
 import { Button } from '../button/Button';
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
 import { FeedbackNative } from '../tools/Feedback';
 import { Icon } from '../basic/Icon';
 import { rpx } from '../../utils';
@@ -167,7 +167,7 @@ const keysWordText = [
 ];
 const keysLastWordText = ['港', '澳', '学', '领', '警'];
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',

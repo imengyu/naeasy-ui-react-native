@@ -1,7 +1,7 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import { Text, TextStyle, ViewStyle } from "react-native";
-import { Color, DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
 import { RowView } from "../layout/RowView";
 import { ThemeWrapper } from "../../theme/Theme";
 import { CheckBoxDefaultButton } from "./CheckBox";
@@ -203,7 +203,7 @@ export function RadioGroup(props: RadioGroupProps) {
   );
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   radio: {
     alignSelf: 'flex-start',
     alignItems: 'center',

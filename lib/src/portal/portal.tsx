@@ -1,6 +1,6 @@
 import React from 'react';
-import PortalConsumer from './portal-consumer';
-import PortalHost, { portal, PortalContext } from './portal-host';
+import { PortalConsumer } from './portal-consumer';
+import { portal, PortalHost, PortalContext } from './portal-host';
 
 export type PortalProps = {
   /**

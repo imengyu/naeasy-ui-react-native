@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { WingBlank, Color, DynamicThemeStyleSheet, DynamicColor } from '../lib';
+import { WingBlank, Color, StyleSheet, DynamicColor } from '../lib';
 import { ScrollView, Text } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
@@ -8,7 +8,7 @@ import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestWingBlank'>;
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   title: {
     backgroundColor: DynamicColor(Color.warning),
     color: DynamicColor(Color.white),

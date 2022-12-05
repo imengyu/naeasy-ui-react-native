@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { GestureResponderEvent, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, ThemeUtils } from "../../styles";
+import { Color, DynamicColor, StyleSheet, ThemeUtils } from "../../styles";
 import { ThemeRender } from "../../theme/Theme";
 
 export interface IndexBarProps {
@@ -45,7 +45,7 @@ export interface IndexBarInstance {
   setActiveIndex: (index: number) => void;
 }
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   bar: {
     position: 'absolute',
     right: 0,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActivityIndicator, TouchableHighlight, Text } from "react-native";
 import { ScrollView } from "react-native";
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { deviceHeight, deviceWidth } from "../../utils/StyleConsts";
 import { borderRight, borderTop, displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
@@ -109,7 +109,7 @@ export interface DialogProps extends Omit<PopupContainerProps, 'onClose'|'positi
 }
 export type DialogConfirmProps = Omit<DialogProps, 'show'|'showCancel'|'onClose'>;
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   dialog: {
     minWidth: deviceWidth - deviceWidth / 3,
     maxWidth: deviceWidth - deviceWidth / 10,

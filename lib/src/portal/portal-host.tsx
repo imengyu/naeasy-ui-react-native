@@ -70,7 +70,7 @@ export const portal = new PortalGuard();
  *
  * Here any `Portal` elements under `<App />` are rendered alongside `<App />` and will appear above `<App />` like a `Modal`.
  */
-export default class PortalHost extends React.Component<PortalHostProps> {
+export class PortalHost extends React.Component<PortalHostProps> {
   static displayName = 'Portal.Host'
 
   _nextKey = 0

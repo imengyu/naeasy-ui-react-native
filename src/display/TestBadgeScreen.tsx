@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { WhiteSpace, DynamicColor, DynamicThemeStyleSheet, RowView, Color, Button } from '../lib';
+import { WhiteSpace, DynamicColor, StyleSheet, RowView, Color, Button } from '../lib';
 import { ScrollView, View } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Badge } from '../../lib/src/components/display/Badge';
@@ -9,7 +9,7 @@ import { TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestBadge', 'RootStack'>;
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   box: {
     width: 39,
     height: 39,

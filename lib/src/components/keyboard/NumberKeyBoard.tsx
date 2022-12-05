@@ -7,7 +7,7 @@ import { RowView } from "../layout/RowView";
 import { Popup } from "../basic/Popup";
 import { FeedbackNative } from "../tools/Feedback";
 import { WhiteSpace } from "../space/WhiteSpace";
-import { Color, DynamicColor, DynamicThemeStyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
 import { ThemeWrapper } from "../../theme/Theme";
 import { deviceWidth } from "../../utils";
 
@@ -182,7 +182,7 @@ export const NumberKeyBoardSideKeys = [
   { key: 'finish', span: 2 },
 ] as NumberKeyBoardSideKey[];
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flexDirection: 'column',

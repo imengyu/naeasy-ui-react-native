@@ -1,11 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PortalHost, ThemeProvider, Color, ThemeRender } from './lib';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider, ThemeSelector, ThemeRender, Color } from './lib';
-import { TestAppNav } from './TestAppNav';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { NavigationContainer } from '@react-navigation/native';
-import { DeviceEventEmitter } from 'react-native';
+import { TestAppNav } from './TestAppNav';
+import { DeviceEventEmitter, StatusBar } from 'react-native';
 
 function App() {
 
@@ -23,28 +23,34 @@ function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Provider theme={theme}>
-          <ThemeRender>{
-            (themeNow) =>
-              <NavigationContainer
-                theme={{
-                  //React react-navigation 的样式特殊处理
-                  dark: themeNow === 'dark',
-                  colors: {
-                    primary: ThemeSelector.select(Color.primary),
-                    background: ThemeSelector.select(Color.background),
-                    card: ThemeSelector.select(Color.light),
-                    text: ThemeSelector.select(Color.text),
-                    border: ThemeSelector.select(Color.border),
-                    notification: ThemeSelector.select(Color.warning),
-                  },
-                }}
-              >
+        {/* 弹出框等等组件使用了 Portal，需要引入 PortalHost */}
+        <PortalHost>
+          {/* 主题支持 */}
+          <ThemeProvider theme={theme}>
+            {/* 用于在主题更改时为 react-navigation 和 StatusBar 更换颜色 */}
+            <ThemeRender>
+              {(themeNow, context) => <NavigationContainer theme={{
+                //React react-navigation 的样式特殊处理
+                dark: themeNow === 'dark',
+                colors: {
+                  primary: context.getThemeColor(Color.primary),
+                  background: context.getThemeColor(Color.background),
+                  card: context.getThemeColor(Color.light),
+                  text: context.getThemeColor(Color.text),
+                  border: context.getThemeColor(Color.border),
+                  notification: context.getThemeColor(Color.warning),
+                },
+              }}>
+                {/* 状态栏的样式处理 */}
+                <StatusBar
+                  barStyle={themeNow === 'dark' ? 'light-content' : 'dark-content'}
+                  backgroundColor={context.getThemeColor(Color.background)}
+                />
                 <TestAppNav />
-              </NavigationContainer>
-            }
-          </ThemeRender>
-        </Provider>
+              </NavigationContainer>}
+            </ThemeRender>
+          </ThemeProvider>
+        </PortalHost>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

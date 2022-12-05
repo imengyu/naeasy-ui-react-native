@@ -3,7 +3,7 @@ import { ImageSourcePropType, Text, TextStyle, View, ViewStyle } from 'react-nat
 import { Color } from '../../styles/ColorStyles';
 import { Avatar } from './Avatar';
 import { RowView } from '../layout/RowView';
-import { DynamicThemeStyleSheet, ThemeColor, ThemeSelector } from '../../styles';
+import { StyleSheet, ThemeColor, ThemeSelector } from '../../styles';
 import { ThemeWrapper } from '../../theme/Theme';
 
 interface AvatarStackProp {
@@ -66,7 +66,7 @@ interface AvatarStackProp {
 }
 
 
-const styles = DynamicThemeStyleSheet.create({
+const styles = StyleSheet.create({
   overflowCount: {
     backgroundColor: Color.white.light,
     flexDirection: 'row',
