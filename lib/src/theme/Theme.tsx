@@ -28,7 +28,7 @@ export interface ThemeContextData {
    * @param srcColor 可变颜色
    * @returns 可变颜色在当前主题所对应的颜色
    */
-  resolveThemeColor: (srcColor: ThemeColor, defaultValue?: ThemeColor) => string;
+  resolveThemeColor: (srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) => string;
   /**
    * 获取主题数据
    * @param key 主题属性的名称

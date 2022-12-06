@@ -6,19 +6,23 @@ import { CurrentTime, useCountDown } from "./CountdownHook";
 
 export interface CountDownProps extends TextProps {
   /**
-   * 倒计时时长，单位毫秒，默认： 0
+   * 倒计时时长，单位毫秒
+   * @default 0
    */
   time?: number;
   /**
-   * 时间格式，默认：	HH:mm:ss
+   * 时间格式
+   * @default 'HH:mm:ss'
    */
   format?: string;
   /**
-   * 是否自动开始倒计时，默认：true
+   * 是否自动开始倒计时
+   * @default true
    */
   autoStart?: boolean;
   /**
-   * 是否开启毫秒级渲染，默认：false
+   * 是否开启毫秒级渲染
+   * @default false
    */
   millisecond?: boolean;
   /**

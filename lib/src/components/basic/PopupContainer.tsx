@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import { Color } from '../../styles';
 import { isAndroid } from '../../utils/PlatformTools';
 import { deviceHeight, deviceWidth } from '../../utils/StyleConsts';
-import { displayIf, selectStyleType, solveSize } from '../../utils/StyleTools';
+import { selectStyleType } from '../../utils/StyleTools';
 import { Icon } from './Icon';
 import { RowView } from '../layout/RowView';
 import { SafeAreaMargin } from '../space/SafeAreaMargin';
@@ -15,18 +15,6 @@ import { ThemeColor, ThemeContext, ThemeRender } from '../../theme/Theme';
  * Popup 组件的主要实现容器。
  * 提供了 Popup 显示动画、显示位置、安全区等功能。
  * 你可以使用 Popup 组件来调用 Popup，不需要直接使用这个容器。
- */
-
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |PopupMaskColor|`ColorInfoItem`|`Color.mask`|
- * |PopupBackgroundColor|`ColorInfoItem`|`Color.white`|
- * |PopupRadius|`number`|`12`|
- * |PopupCloseIconName|`string`|`'close'`|
- * |PopupCloseIconSize|`number`|`25`|
- * |PopupCloseIconColor|`string`|`Color.text`|
  */
 
 /**
@@ -310,11 +298,15 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
     return (
       <RowView
         pointerEvents="box-none"
-        style={[ styles.dialogTitle, displayIf(closeable === true && closeIcon !== false), {
-          top: top ? 0 : undefined,
-          bottom: top ? undefined : 0,
-          justifyContent: selectStyleType(closeIconPosition, 'right', { left: 'flex-start', right: 'flex-end' }),
-        }]}
+        style={[
+          styles.dialogTitle,
+          {
+            display: (closeable === true && closeIcon !== false) ? 'flex' : 'none',
+            top: top ? 0 : undefined,
+            bottom: top ? undefined : 0,
+            justifyContent: selectStyleType(closeIconPosition, 'right', { left: 'flex-start', right: 'flex-end' }),
+          },
+        ]}
       >
         {
           closeable === true && closeIcon !== false ?
@@ -400,25 +392,25 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
                     borderBottomLeftRadius: radius,
                     borderBottomRightRadius: radius,
                     width: deviceWidth,
-                    minHeight: solveSize(size),
+                    minHeight: size,
                   },
                   bottom: {
                     borderTopLeftRadius: radius,
                     borderTopRightRadius: radius,
                     width: deviceWidth,
-                    minHeight: solveSize(size),
+                    minHeight: size,
                   },
                   left: {
                     borderTopRightRadius: radius,
                     borderBottomRightRadius: radius,
                     height: deviceHeight,
-                    minWidth: solveSize(size),
+                    minWidth: size,
                   },
                   right: {
                     borderTopLeftRadius: radius,
                     borderBottomLeftRadius: radius,
                     height: deviceHeight,
-                    minWidth: solveSize(size),
+                    minWidth: size,
                   },
                 }),
                 {

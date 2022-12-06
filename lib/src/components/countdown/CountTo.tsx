@@ -6,7 +6,8 @@ import { VerticalScrollText } from "../typography/VerticalScrollNumberText";
 
 export interface CountToProps extends Omit<TextProps, 'children'> {
   /**
-   * 开始值。默认：0
+   * 开始值
+   * @default 0
    */
   startValue?: number;
   /**
@@ -14,11 +15,13 @@ export interface CountToProps extends Omit<TextProps, 'children'> {
    */
   endValue: number;
   /**
-   * 持续时间。默认：3000
+   * 持续时间
+   * @default 3000
    */
   duration?: number;
   /**
-   * 是否将数字转换为千分符。默认：否
+   * 是否将数字转换为千分符
+   * @default false
    */
   thousand?: boolean;
   /**
@@ -26,7 +29,8 @@ export interface CountToProps extends Omit<TextProps, 'children'> {
    */
   numberCount?: number,
   /**
-   * 保留小数位数，默认：0
+   * 保留小数位数
+   * @default 0
    */
   decimalCount?: number,
   /**

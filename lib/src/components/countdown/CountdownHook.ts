@@ -4,10 +4,12 @@ import { useMemo, useRef, useState, useCallback } from "react";
 interface CountDownComposeOptions {
   /**
    * 倒计时时长，单位毫秒
+   * @default 0
    */
   time: number,
   /**
-   * 是否开启毫秒级渲染，默认否
+   * 是否开启毫秒级渲染
+   * @default false
    */
   millisecond?: boolean,
   /**

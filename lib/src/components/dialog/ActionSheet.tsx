@@ -1,23 +1,26 @@
 import React from "react";
-import { Text, TouchableHighlight, View } from "react-native";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { ScrollView } from "react-native";
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, PressedColor } from "../../styles";
 import { deviceHeight, rpx } from "../../utils/StyleConsts";
-import { displayNoneIfEmpty } from "../../utils/StyleTools";
 import { ColumnView } from "../layout/ColumnView";
 import { Popup } from "../basic/Popup";
 import { PopupContainerProps } from "../basic/PopupContainer";
-import { ThemeWrapper } from "../../theme/Theme";
 import { RowView } from "../layout/RowView";
 import { Button } from "../button/Button";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import CheckTools from "../../utils/CheckTools";
+import { DynamicColorVar, DynamicVar } from "../../theme/ThemeStyleSheet";
 
 export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'position'|'renderContent'> {
   /**
    * 是否显示动作面板
+   * @default false
    */
   show: boolean;
   /**
-   * 是否显示取消按扭，默认否
+   * 是否显示取消按扭
+   * @default false
    */
   showCancel?: boolean;
   /**
@@ -37,11 +40,13 @@ export interface ActionSheetProps extends Omit<PopupContainerProps, 'onClose'|'p
    */
   actions?: ActionSheetItem[];
   /**
-   * 是否在点击条目后自动关闭，默认否
+   * 是否在点击条目后自动关闭
+   * @default false
    */
   autoClose?: boolean;
   /**
    * 是否在屏幕居中显示
+   * @default false
    */
   center?: boolean;
   /**
@@ -90,51 +95,50 @@ export interface ActionSheetItem {
 
 const styles = StyleSheet.create({
   topScroll: {
-    maxHeight: deviceHeight - 200,
+    maxHeight: DynamicVar('ActionSheetMaxScrollHeight', deviceHeight - 200),
   },
   view: {
     position: 'relative',
   },
   viewCancel: {
     position: 'relative',
-    backgroundColor: DynamicColor(Color.light),
-    paddingTop: 10,
+    backgroundColor: DynamicColorVar('', Color.light),
+    paddingTop: DynamicVar('', 10),
   },
   item: {
-    paddingVertical: 13,
+    paddingVertical: DynamicVar('ActionSheetItemPaddingVertical', 13),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: DynamicColor(Color.white),
+    backgroundColor: DynamicColorVar('ActionSheetItemBackgroundColor', Color.white),
   },
   itemTitle: {
-    fontSize: 16,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('ActionSheetItemTitleFontSize', 16),
+    color: DynamicColorVar('ActionSheetItemTitleColor', Color.text),
   },
   itemSubTitle: {
-    fontSize: 13,
-    color: DynamicColor(Color.textSecond),
-    marginTop: 4,
+    fontSize: DynamicVar('ActionSheetItemSubTitleFontSize', 13),
+    color: DynamicColorVar('ActionSheetItemSubTitleColor', Color.textSecond),
+    marginTop: DynamicVar('ActionSheetItemSubTitleMarginTop', 4),
   },
   titleView: {
-    paddingVertical: 8,
+    paddingVertical: DynamicVar('', 8),
   },
   titleViewBorder: {
-    paddingVertical: 8,
-    borderColor: DynamicColor(Color.white),
-    borderBottomColor: DynamicColor(Color.border),
+    borderColor: DynamicColorVar('', Color.white),
+    borderBottomColor: DynamicColorVar('', Color.border),
     borderWidth: 1,
   },
   titleTextView: {
-    paddingVertical: 5,
+    paddingVertical: DynamicVar('', 5),
   },
   title: {
-    fontSize: 16,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('', 16),
+    color: DynamicColorVar('', Color.text),
   },
   description: {
-    fontSize: 13,
-    color: DynamicColor(Color.textSecond),
+    fontSize: DynamicVar('', 13),
+    color: DynamicColorVar('', Color.textSecond),
   },
 });
 
@@ -152,20 +156,28 @@ export interface ActionSheetItemProps {
 /**
  * 动作面板条目按扭组件
  */
-export const ActionSheetItem = ThemeWrapper(function (props: ActionSheetItemProps) {
+export function ActionSheetItem(props: ActionSheetItemProps) {
+  const themeContext = useThemeContext();
+
   return (
     <TouchableHighlight
       style={styles.item}
-      underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+      underlayColor={themeContext.getThemeColorVar('ActionSheetItemPressedColor', PressedColor(Color.white))}
       onPress={props.disabled === true ? undefined : props.onPress}
     >
       <ColumnView center>
-        <Text style={[ styles.itemTitle, { color: ThemeSelector.color(props.disabled === true ? Color.grey : (props.color || Color.text)), fontWeight: props.bold ? 'bold' : 'normal' } ]}>{props.name}</Text>
-        <Text style={[ styles.itemSubTitle, displayNoneIfEmpty(props.subname) ]}>{props.subname}</Text>
+        <Text style={[
+          styles.itemTitle,
+          {
+            color: themeContext.resolveThemeColor(props.disabled === true ? themeContext.getThemeColorVar('ActionSheetItemDisabledTextColor', Color.grey) : props.color),
+            fontWeight: props.bold ? 'bold' : 'normal',
+          },
+        ]}>{props.name}</Text>
+        { CheckTools.isNullOrEmpty(props.subname) ? <></> : <Text style={styles.itemSubTitle}>{props.subname}</Text> }
       </ColumnView>
     </TouchableHighlight>
   );
-});
+}
 
 //#endregion
 
@@ -193,6 +205,7 @@ export function ActionSheetTitle(props: {
   confirmText?: string,
   /**
    * 取消按钮文字颜色
+   * @default Color.text
    */
   cancelTextColor?: ThemeColor,
   /**
@@ -200,7 +213,8 @@ export function ActionSheetTitle(props: {
    */
   confirmTextColor?: ThemeColor,
   /**
-   * 是否显示底部边框，默认是
+   * 是否显示底部边框
+   * @default true
    */
   border?: boolean;
   /**
@@ -213,25 +227,33 @@ export function ActionSheetTitle(props: {
   onConfirmPressed?: () => void;
 }) {
   const {
-    title, description, cancelText, confirmText, cancelTextColor = Color.text,
+    title,
+    description,
+    cancelText,
+    confirmText,
+    cancelTextColor = Color.text,
     border = true,
-    confirmTextColor = Color.primary, onCancelPressed, onConfirmPressed,
+    confirmTextColor = Color.primary,
+    onCancelPressed,
+    onConfirmPressed,
   } = props;
 
   return (
     (title || description || cancelText || confirmText) ? (
-    <RowView style={border ? styles.titleViewBorder : styles.titleView} justify="space-between">
+    <RowView style={[
+      border ? styles.titleViewBorder : styles.titleView
+       ]} justify="space-between">
       { cancelText ? <Button type="text" textColor={cancelTextColor} onPress={onCancelPressed}>{cancelText}</Button> : <View /> }
       <ColumnView style={styles.titleTextView} center>
-        <Text style={[ styles.title, displayNoneIfEmpty(title) ]}>{title}</Text>
-        <Text style={[ styles.description, displayNoneIfEmpty(description) ]}>{description}</Text>
+        { CheckTools.isNullOrEmpty(title) ? <></> : <Text style={styles.title}>{title}</Text>}
+        { CheckTools.isNullOrEmpty(description) ? <></> : <Text style={styles.description}>{description}</Text>}
       </ColumnView>
       { confirmText ? <Button type="text" textColor={confirmTextColor} onPress={onConfirmPressed}>{confirmText}</Button> : <View /> }
     </RowView>) : <></>
   );
 }
 
-const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
+function ActionSheetInner(props: ActionSheetProps) {
 
   function onItemClick(item: ActionSheetItem, index: number) {
     if (typeof props.onSelect === 'function')
@@ -244,6 +266,8 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
       props.onClose();
   }
 
+  const themeContext = useThemeContext();
+
   return (
     <ScrollView style={[
       styles.topScroll,
@@ -255,8 +279,8 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
           { props.actions?.map((item, index) => <ActionSheetItem
             key={index}
             name={item.name}
-            bold={item.bold || false}
-            color={ThemeSelector.color(item.color || props.textColor || Color.text)}
+            bold={item.bold || themeContext.getThemeVar('ActionSheetItemBold', false)}
+            color={themeContext.resolveThemeColor(item.color || props.textColor || themeContext.getThemeColorVar('ActionSheetItemColor', Color.text))}
             subname={item.subname}
             disabled={item.disabled}
             onPress={() => onItemClick(item, index)}
@@ -265,8 +289,8 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
         { props.showCancel === true ? <ColumnView style={styles.viewCancel}>
           <ActionSheetItem
             name={props.cancelText || '取消'}
-            bold={false}
-            color={ThemeSelector.color(props.textColor || Color.text)}
+            bold={themeContext.getThemeVar('ActionSheetCancelBold', false)}
+            color={themeContext.resolveThemeColor(props.textColor || themeContext.getThemeColorVar('ActionSheetCancelColor', Color.text))}
             subname={''}
             disabled={false}
             onPress={onCancelClick}
@@ -275,7 +299,7 @@ const ActionSheetInner = ThemeWrapper(function (props: ActionSheetProps) {
       </ColumnView>
     </ScrollView>
   );
-});
+}
 
 /**
  * 动作面板。底部弹起的模态面板，包含与当前情境相关的多个选项。

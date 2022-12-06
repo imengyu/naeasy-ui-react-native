@@ -8,13 +8,6 @@ import { selectStyleType } from '../../utils/StyleTools';
 import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { useThemeContext } from '../../theme/Theme';
 
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |EmptyImageSize|number|100|
- */
-
 type EmptyImageType = 'default'|'error'|'network'|'search';
 
 export interface EmptyProp {

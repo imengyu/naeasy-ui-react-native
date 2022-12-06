@@ -7,27 +7,6 @@ import { ColumnView } from '../layout/ColumnView';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { useThemeContext } from '../../theme/Theme';
 
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |CellGroupTitleDark|`boolean`|`false`|
- * |CellGroupInset|`boolean`|`false`|
- * |CellGroupShowTopMargin|`boolean`|`true`|
- * |CellGroupShowBottomMargin|`boolean`|`false`|
- * |CellGroupTopMarginSize|`number`|`rpx(6)`|
- * |CellGroupDarkTitleBackgroundColor|`ColorInfoItem`|`Color.lightBorder`|
- * |CellGroupInsetPaddingHorizontal|`number`|`rpx(48)`|
- * |CellGroupPaddingHorizontal|`number`|`rpx(35)`|
- * |CellGroupInsetMarginHorizontal|`number`|`rpx(30)`|
- * |CellGroupInsetMarginVertical|`number`|`0`|
- * |CellGroupInsetBorderRadius|`number`|`rpx(20)`|
- * |CellGroupInsetBackgroundColor|`ColorInfoItem`|`Color.white`|
- * |CellGroupTitleColor|`ColorInfoItem`|`Color.textSecond`|
- * |CellGroupTitlePaddingTop|`number`|`rpx(24)`|
- * |CellGroupTitlePaddingBottom|`number`|`rpx(12)`|
- */
-
 interface CellGroupProp {
   /**
    * 分组标题

@@ -36,6 +36,7 @@ export interface ImageOpacityButtonProps {
   disabled?: boolean|undefined;
   /**
    * 图片
+   * @required true
    */
   source: ImageSourcePropType;
 }

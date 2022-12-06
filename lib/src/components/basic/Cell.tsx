@@ -10,36 +10,6 @@ import { RowView } from '../layout/RowView';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |CellBackground|`ColorInfoItem`|`Color.white`|
- * |CellSize|`string` or `number`|`'medium'`|
- * |CellPressedColor|`ColorInfoItem`|`PressedColor(Color.white)`|
- * |CellPadding|-|`[]`|
- * |CellBottomBorder|`boolean`|`true`|
- * |CellTopBorder|`boolean`|`false`|
- * |CellIconWidth|`number`|`20`|
- * |CellIconSize|`number`|`15`|
- * |CellBorderColor|`ColorInfoItem`|`Color.boder`|
- * |CellBorderWidth|`number`|`1`|
- * |CellFontSizeLarge|`number`|`15.5`|
- * |CellFontSizeMedium|`number`|`13`|
- * |CellFontSizeSmall|`number`|`11.5`|
- * |CellTitleColor|`ColorInfoItem`|`Color.text`|
- * |CellLabelColor|`ColorInfoItem`|`Color.textSecond`|
- * |CellValueColor|`ColorInfoItem`|`Color.textSecond`|
- * |CellHeightLarge|`number`|`rpx(125)`|
- * |CellHeightMedium|`number`|`rpx(100)`|
- * |CellHeightSmall|`number`|`rpx(80)`|
- * |CellPaddingLarge|`number`|`rpx(15)`|
- * |CellPaddingMedium|`number`|`rpx(10)`|
- * |CellPaddingSmall|`number`|`rpx(7)`|
- * |CellPaddingHorizontal|`number`|`rpx(20)`|
- * |CellValuePaddingHorizontal|`number`|`rpx(20)`|
- */
-
 interface CellProp {
   /**
    * 左侧标题

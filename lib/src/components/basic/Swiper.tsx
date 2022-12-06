@@ -5,17 +5,6 @@ import { Color } from '../../styles';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DotIndicatorInstance, DotIndicatorStateControl, DotIndicatorStateControlProps } from '../display';
 
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |SwiperInterval|`number`|`5000`|
- * |SwiperDuration|`number`|`200`|
- * |SwiperIndicatorVisible|`boolean`|`false`|
- * |SwiperIndicatorActiveColor|`ColorInfoItem`|`Color.primary`|
- * |SwiperIndicatorColor|`ColorInfoItem`|`Color.gray`|
- */
-
 export interface SwiperProps {
   /**
    * 是否显示面板指示点

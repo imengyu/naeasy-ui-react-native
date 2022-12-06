@@ -2,13 +2,13 @@ import React from 'react';
 import { Image, ImageSourcePropType, ImageStyle, ViewStyle, Text, TextStyle } from 'react-native';
 import { TouchableOpacity } from "react-native";
 import { selectStyleType } from '../../utils/StyleTools';
-import { ThemeWrapper } from '../../theme/Theme';
 
 export type ImageButtonShapeType = 'round'|'square-full'|'custom';
 
 export interface ImageButtonProps {
   /**
    * 按钮按下时的透明度
+   * @default 0.75
    */
   activeOpacity?: number,
   /**
@@ -21,6 +21,7 @@ export interface ImageButtonProps {
   padding?: number,
   /**
    * 图片大小
+   * @default undefined
    */
   size?: number,
   /**
@@ -33,14 +34,17 @@ export interface ImageButtonProps {
   style?: ViewStyle;
   /**
    * 按钮形状预设
+   * @default custom
    */
   shape?: ImageButtonShapeType;
   /**
    * 是否禁用
+   * @default false
    */
   disabled?: boolean|undefined;
   /**
    * 图片
+   * @required true
    */
   source: ImageSourcePropType;
   /**
@@ -56,7 +60,8 @@ export interface ImageButtonProps {
 /**
  * 显示图片的按钮
  */
-export const ImageButton = ThemeWrapper(function (props: ImageButtonProps) {
+export function ImageButton(props: ImageButtonProps) {
+
   return (
     <TouchableOpacity
       style={{
@@ -92,4 +97,4 @@ export const ImageButton = ThemeWrapper(function (props: ImageButtonProps) {
       { props.text ? <Text style={props.textStyle}>{props.text}</Text> : <></> }
     </TouchableOpacity>
   );
-});
+}

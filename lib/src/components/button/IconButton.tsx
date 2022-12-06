@@ -2,10 +2,10 @@ import React from 'react';
 import { ImageSourcePropType, ViewStyle } from 'react-native';
 import { TouchableHighlight } from "react-native";
 import { selectStyleType } from '../../utils/StyleTools';
-import { Color, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
+import { Color, PressedColor } from "../../styles";
 import { Icon, IconProp } from "../basic/Icon";
 import { ImageButtonShapeType } from './ImageButton';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 export interface IconButtonProps extends IconProp {
   /**
@@ -14,6 +14,7 @@ export interface IconButtonProps extends IconProp {
   icon?: string | ImageSourcePropType;
   /**
    * 按钮按下时的背景颜色
+   * @default PressedColor(Color.white)
    */
   pressedBackgroundColor?: ThemeColor,
   /**
@@ -22,6 +23,7 @@ export interface IconButtonProps extends IconProp {
   padding?: number,
   /**
    * 按钮形状预设
+   * @default round
    */
   shape?: ImageButtonShapeType;
   /**
@@ -34,16 +36,18 @@ export interface IconButtonProps extends IconProp {
   buttonStyle?: ViewStyle;
   /**
    * 是否禁用
+   * @default false
    */
   disabled?: boolean|undefined;
 }
 
 /**
- * 显示图标的按钮
- *
- * 当前项目使用图标库, 图标的名字请在开发者》测试页面》组件》Icon页面中查看
+ * 显示图标的按钮。图标同 Icon 组件。
  */
-export const IconButton = ThemeWrapper(function (props: IconButtonProps) {
+export function IconButton(props: IconButtonProps) {
+
+  const themeContext = useThemeContext();
+
   return (
     <TouchableHighlight
       style={{
@@ -53,7 +57,7 @@ export const IconButton = ThemeWrapper(function (props: IconButtonProps) {
         padding: props.padding,
         ...selectStyleType(props.shape, 'round', {
           "round": {
-            borderRadius: 50,
+            borderRadius: themeContext.getThemeVar('IconButtonRoundBorderRadius', 50),
           },
           "custom": {},
           "square-full": {
@@ -63,12 +67,15 @@ export const IconButton = ThemeWrapper(function (props: IconButtonProps) {
           },
         }),
         ...props.buttonStyle,
-        opacity: props.disabled ? 0.3 : 1,
+        opacity: props.disabled ? themeContext.getThemeVar('IconButtonDisabledOpacity', 0.4) : 1,
       }}
-      underlayColor={ThemeSelector.color(props.pressedBackgroundColor || PressedColor(Color.white))}
+      underlayColor={themeContext.resolveThemeColor(
+        props.pressedBackgroundColor,
+        themeContext.getThemeVar('IconButtonPressedColor', PressedColor(Color.white))
+      )}
       onPress={props.disabled ? undefined : props.onPress}
     >
       { props.icon ? <Icon {...props} /> : <></> }
     </TouchableHighlight>
   );
-});
+}

@@ -2,25 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { ImageSourcePropType, TouchableOpacity, Image as ReactNativeImage, ImageStyle, ImageProps, View, ViewStyle, ActivityIndicator, Text } from 'react-native';
 import { deviceWidth } from '../../utils/StyleConsts';
-import { topLeft } from '../../utils/StyleTools';
 import { ColumnView } from '../layout/ColumnView';
 import { Color } from '../../styles';
 import { ThemeColor, ThemeRender, useThemeContext } from '../../theme/Theme';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
-
-
-/**
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |ImageLoadingColor|`ColorInfoItem`|`Color.white`|
- * |ImageGreyBackgroundColor|`ColorInfoItem`|`Color.background`|
- * |ImageRound|`boolean`|`false`|
- * |ImageShowGrey|`boolean`|`true`|
- * |ImageErrorViewTextColor|`ColorInfoItem`|`Color.text`|
- * |ImageErrorViewTextFontSize|`number`|`13`|
- * |ImageErrorViewBackgroundColor|`ColorInfoItem`|`Color.background`|
- */
 
 export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
   /**
@@ -94,14 +79,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     position: 'absolute',
-    ...topLeft(0,0),
+    top: 0,
+    left: 0,
   },
   errorView: {
     position: 'absolute',
     width: '100%',
     height: '100%',
     backgroundColor: DynamicColorVar('ImageErrorViewBackgroundColor', Color.background),
-    ...topLeft(0,0),
+    top: 0,
+    left: 0,
   },
   errorViewText: {
     fontSize: DynamicVar('ImageErrorViewTextFontSize', 13),
