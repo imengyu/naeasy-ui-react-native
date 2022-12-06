@@ -1,5 +1,5 @@
 {
-  "bundleDependencies": false,
+  "bundleDependencies": [],
   "deprecated": false,
   "license": "MIT",
   "types": "dist/index.d.ts",
@@ -10,12 +10,12 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
     "@types/react": "^18.0.21",
     "@types/react-native": "^0.70.6",
     "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
-    "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-prettier": "^3.1.2",

@@ -31,7 +31,7 @@ export type PortalProps = {
  * }
  * ```
  */
-class Portal extends React.Component<PortalProps> {
+export class Portal extends React.Component<PortalProps> {
   static Host = PortalHost
   static add = portal.add
   static remove = portal.remove
@@ -47,5 +47,3 @@ class Portal extends React.Component<PortalProps> {
     );
   }
 }
-
-export default Portal;

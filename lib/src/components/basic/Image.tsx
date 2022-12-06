@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
-import CheckTools from '../../utils/CheckTools';
-import { ImageURISource } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ImageSourcePropType, TouchableOpacity, Image as ReactNativeImage, ImageStyle, ImageProps, View, ViewStyle, ActivityIndicator, Text } from 'react-native';
 import { deviceWidth } from '../../utils/StyleConsts';
 import { topLeft } from '../../utils/StyleTools';
 import { ColumnView } from '../layout/ColumnView';
-import { Color, ThemeColor, DynamicColor, StyleSheet, ThemeSelector } from '../../styles';
-import { ThemeRender } from '../../theme/Theme';
+import { Color } from '../../styles';
+import { ThemeColor, ThemeRender, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
+
+
+/**
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |ImageLoadingColor|`ColorInfoItem`|`Color.white`|
+ * |ImageGreyBackgroundColor|`ColorInfoItem`|`Color.background`|
+ * |ImageRound|`boolean`|`false`|
+ * |ImageShowGrey|`boolean`|`true`|
+ * |ImageErrorViewTextColor|`ColorInfoItem`|`Color.text`|
+ * |ImageErrorViewTextFontSize|`number`|`13`|
+ * |ImageErrorViewBackgroundColor|`ColorInfoItem`|`Color.background`|
+ */
 
 export interface ImageWrapProps extends Omit<ImageProps, 'width'|'height'> {
   /**
@@ -86,12 +100,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: DynamicColor(Color.background),
+    backgroundColor: DynamicColorVar('ImageErrorViewBackgroundColor', Color.background),
     ...topLeft(0,0),
   },
   errorViewText: {
-    fontSize: 13,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('ImageErrorViewTextFontSize', 13),
+    color: DynamicColorVar('ImageErrorViewTextColor', Color.text),
   },
 });
 
@@ -101,33 +115,45 @@ const styles = StyleSheet.create({
  */
 export function Image(props: ImageWrapProps) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    showGrey = themeContext.getThemeVar('ImageShowGrey', true),
+    round = themeContext.getThemeVar('ImageRound', false),
+    loadingColor = themeContext.getThemeVar('ImageLoadingColor', Color.white),
+    aspectRatio, height, width, radius,
+    source, failedSource,
+    showFailed, showLoading,
+    touchable = false,
+    onPress,
+    onLongPress,
+  } = props;
+
   const [ loading, setLoading ] = useState(props.loading || false);
   const [ loadFailed, setLoadFailed ] = useState(false);
 
   const style = {
     position: "relative",
-    backgroundColor: props.showGrey !== false ? ThemeSelector.color(Color.background) : undefined,
-    aspectRatio: props.aspectRatio,
-    height: props.height,
-    width: props.width,
-    borderRadius: props.round ? (props.radius || deviceWidth) : 0,
+    backgroundColor: showGrey ? themeContext.getThemeColorVar('ImageGreyBackgroundColor', Color.background) : undefined,
+    aspectRatio: aspectRatio,
+    height: height,
+    width: width,
+    borderRadius: round ? (radius || deviceWidth) : 0,
     overflow: 'hidden',
     ...props.style,
   };
 
   const renderImage = () => {
-    let source = props.source;
-    if (typeof source === 'object' && typeof (source as ImageURISource).uri === 'string' && CheckTools.isNullOrEmpty((source as ImageURISource).uri))
-      source = props.defaultSource || {};
     return (
       <ReactNativeImage
         { ...props as ImageProps }
         resizeMode={props.resizeMode || "contain"}
         source={loadFailed && props.failedSource ? props.failedSource : source}
         style={{
-          height: props.height,
-          width: props.width,
-          aspectRatio: props.aspectRatio,
+          height: height,
+          width: width,
+          aspectRatio: aspectRatio,
           ...props.style,
         }}
         onLoadStart={() => setLoading(true)}
@@ -141,13 +167,13 @@ export function Image(props: ImageWrapProps) {
   };
   const renderLoading = () => {
     return (
-      (props.showLoading && loading) ?
+      (showLoading && loading) ?
       <ColumnView
         center
-        style={styles.loadingView}
+        style={themeStyles.loadingView}
       >
         <ThemeRender>
-          { () => <ActivityIndicator color={ThemeSelector.color(props.loadingColor || Color.white)} /> }
+          { () => <ActivityIndicator color={themeContext.resolveThemeColor(loadingColor)} /> }
         </ThemeRender>
       </ColumnView>
       : <></>
@@ -155,13 +181,13 @@ export function Image(props: ImageWrapProps) {
   };
   const renderFailed = () => {
     return (
-      (props.showFailed !== false && loadFailed && !props.failedSource) ?
+      (showFailed !== false && loadFailed && !failedSource) ?
         <ColumnView
           center
-          style={styles.errorView}
+          style={themeStyles.errorView}
         >
           <ThemeRender>
-            { () => <Text style={styles.errorViewText}>加载失败</Text> }
+            { () => <Text style={themeStyles.errorViewText}>加载失败</Text> }
           </ThemeRender>
         </ColumnView> :
         <></>
@@ -169,12 +195,12 @@ export function Image(props: ImageWrapProps) {
   };
 
   return (
-    props.touchable ?
+    touchable ?
       <TouchableOpacity
         activeOpacity={0.86}
         style={style as ViewStyle}
-        onPress={props.onPress}
-        onLongPress={props.onLongPress}
+        onPress={onPress}
+        onLongPress={onLongPress}
       >
         {renderImage()}
         {renderLoading()}

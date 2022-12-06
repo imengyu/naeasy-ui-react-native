@@ -1,20 +1,32 @@
 import React from 'react';
 import { Animated, BackHandler, Easing, NativeEventSubscription, StyleSheet, ViewStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
+import { Color } from '../../styles';
 import { isAndroid } from '../../utils/PlatformTools';
 import { deviceHeight, deviceWidth } from '../../utils/StyleConsts';
 import { displayIf, selectStyleType, solveSize } from '../../utils/StyleTools';
 import { Icon } from './Icon';
 import { RowView } from '../layout/RowView';
 import { SafeAreaMargin } from '../space/SafeAreaMargin';
-import { ThemeRender } from '../../theme/Theme';
+import { ThemeColor, ThemeContext, ThemeRender } from '../../theme/Theme';
 
 /**
  * 说明：
  * Popup 组件的主要实现容器。
  * 提供了 Popup 显示动画、显示位置、安全区等功能。
  * 你可以使用 Popup 组件来调用 Popup，不需要直接使用这个容器。
+ */
+
+/**
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |PopupMaskColor|`ColorInfoItem`|`Color.mask`|
+ * |PopupBackgroundColor|`ColorInfoItem`|`Color.white`|
+ * |PopupRadius|`number`|`12`|
+ * |PopupCloseIconName|`string`|`'close'`|
+ * |PopupCloseIconSize|`number`|`25`|
+ * |PopupCloseIconColor|`string`|`Color.text`|
  */
 
 /**
@@ -26,6 +38,9 @@ export type PopupContainerPosition = 'center'|'top'|'bottom'|'left'|'right';
  */
 export type PopupCloseButtonPosition = 'left'|'right';
 
+/**
+ * Popup 组件属性
+ */
 export interface PopupContainerProps {
   /**
    * 渲染内容回调
@@ -131,6 +146,10 @@ const styles = StyleSheet.create({
  * Popup 组件的主要实现容器。你可以使用 Popup 组件来调用 Popup，不需要直接使用这个容器。
  */
 export class PopupContainer extends React.PureComponent<PopupContainerProps, PopupContainerState> {
+
+  static contextType = ThemeContext;
+
+  context!: React.ContextType<typeof ThemeContext>;
 
   state: Readonly<PopupContainerState> = {
   };
@@ -301,9 +320,9 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
           closeable === true && closeIcon !== false ?
           <TouchableOpacity onPress={() => this.callUpClose()}>
             <Icon
-              icon={closeIcon || 'close'}
-              size={this.props.closeIconSize || 25}
-              color={ThemeSelector.color(Color.text)}
+              icon={closeIcon || this.context.getThemeVar('PopupCloseIconName', 'close')}
+              size={this.props.closeIconSize || this.context.getThemeVar('PopupCloseIconSize', 25)}
+              color={this.context.getThemeVar('PopupCloseIconColor', Color.text)}
             />
           </TouchableOpacity> : <></>
         }
@@ -312,13 +331,20 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
   }
 
   render(): React.ReactNode {
-    const { position, maskColor, style, closeable, round } = this.props;
-    const radius = round ? 10 : 0;
-    const mask = this.props.mask !== false;
-    const safeArea = this.props.safeArea !== false;
-    const size = this.props.size || '10%';
-    const backgroundColor = this.props.backgroundColor || Color.white;
-    const margin = this.props.margin;
+    const {
+      position,
+      maskColor,
+      style,
+      closeable,
+      round,
+      mask = true,
+      safeArea = true,
+      size = '10%',
+      backgroundColor = this.context.getThemeVar('PopupBackgroundColor', Color.white),
+      margin,
+    } = this.props;
+
+    const radius = round ? this.context.getThemeVar('PopupRadius', 12) : 0;
 
     return (
       <ThemeRender>
@@ -354,7 +380,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
             { mask ? <Animated.View
               style={[styles.mask, {
                 opacity: this.animFadeValue,
-                backgroundColor: ThemeSelector.color(maskColor || Color.mask),
+                backgroundColor: this.context.resolveThemeColor(maskColor || this.context.getThemeVar('PopupMaskColor', Color.mask)),
               }]}
               onTouchEnd={() => {
                 if (closeable)
@@ -396,7 +422,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
                   },
                 }),
                 {
-                  backgroundColor: ThemeSelector.color(backgroundColor),
+                  backgroundColor: this.context.resolveThemeColor(backgroundColor),
                   transform: position !== 'center' && this.animSideValue ? [
                     { translateX: this.animSideValue.x },
                     { translateY: this.animSideValue.y },

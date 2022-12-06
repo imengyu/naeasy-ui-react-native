@@ -50,7 +50,8 @@ interface CellProp {
    */
   value?: string|number,
   /**
-   * 设置右侧内容是否可以选择，默认否
+   * 设置右侧内容是否可以选择
+   * @default false
    */
   valueSelectable?: boolean,
   /**
@@ -67,18 +68,22 @@ interface CellProp {
   iconProps?: IconProp;
   /**
    * 当左侧图标未设置时，是否在左侧追加一个占位区域，以和其他单元格对齐
+   * @default false
    */
   iconPlaceholder?: boolean,
   /**
-   * 左侧图标区域的宽度，默认是 20
+   * 左侧图标区域的宽度
+   * @default 20
    */
   iconWidth?: number|'auto',
   /**
-   * 左侧图标的大小，默认是 15
+   * 左侧图标的大小
+   * @default 15
    */
   iconSize?: number,
   /**
-   * 右侧图标的大小，默认是 15
+   * 右侧图标的大小
+   * @default 15
    */
   rightIconSize?: number,
   /**
@@ -91,22 +96,27 @@ interface CellProp {
   rightIconProps?: IconProp;
   /**
    * 是否可以点击
+   * @default false
    */
   touchable?: boolean,
   /**
    * 是否展示右侧箭头
+   * @default false
    */
   showArrow?: boolean,
   /**
    * 是否使内容垂直居中
+   * @default false
    */
   center?: boolean,
   /**
    * 大小
+   * @default medium
    */
   size?:'small'|'medium'|'large',
   /**
    * 背景颜色
+   * @default Color.white
    */
   backgroundColor?: ThemeColor;
   /**
@@ -131,15 +141,18 @@ interface CellProp {
   children?: JSX.Element,
 
   /**
-   * 是否显示顶部边框，默认否
+   * 是否显示顶部边框
+   * @default false
    */
   topBorder?: boolean;
   /**
-   * 是否显示底部边框，默认是
+   * 是否显示底部边框
+   * @default true
    */
   bottomBorder?: boolean;
   /**
    * 按下的背景颜色
+   * @default PressedColor(Color.white)
    */
   pressedColor?: ThemeColor,
   /**
@@ -155,10 +168,7 @@ interface CellProp {
    */
   rightIconStyle?: TextStyle|ImageStyle,
   /**
-   * 强制控制按钮的边距
-   * * 如果是数字，则设置所有方向边距
-   * * 两位数组 [vetical,horizontal]
-   * * 四位数组 [top,right,down,left]
+   * 强制控制按钮的边距。如果是数字，则设置所有方向边距;两位数组 [vetical,horizontal];四位数组 [top,right,down,left]
    */
   padding?: number|number[],
 
@@ -333,7 +343,7 @@ export function Cell(props: CellProp) {
       key="rightIcon"
       icon={rightIcon}
       {...rightIconProps}
-      style={{...styles.titleIcon, fontSize: rightIconSize, ...rightIconStyle as TextStyle}}
+      style={{...themeStyles.titleIcon, fontSize: rightIconSize, ...rightIconStyle as TextStyle}}
     />;
   }
   function renderBase() {
@@ -360,7 +370,7 @@ export function Cell(props: CellProp) {
           {
             (!value || (typeof value === 'string' && value === '')) ?
               <></> :
-              <Text key="value" selectable={valueSelectable} style={[ styles.value, textStyle ]}>{'' + value}</Text>
+              <Text key="value" selectable={valueSelectable} style={[ themeStyles.value, textStyle ]}>{'' + value}</Text>
           }
           {
             showArrow ?
@@ -368,7 +378,7 @@ export function Cell(props: CellProp) {
                 key="rightArrow"
                 icon="arrow-right"
                 size={textStyle.fontSize}
-                color={styles.titleIcon.color as string}
+                color={(themeStyles.titleIcon as TextStyle).color as string}
               /> :
               <></>
           }
@@ -384,7 +394,7 @@ export function Cell(props: CellProp) {
       onPress={onPress}
       underlayColor={themeContext.resolveThemeColor(pressedColor)}
       style={[
-        styles.view,
+        themeStyles.view,
         style,
         props.style,
       ]}

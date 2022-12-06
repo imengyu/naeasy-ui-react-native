@@ -1,24 +1,40 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, TranslateXTransform, TranslateYTransform, View, ViewProps, ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { ThemeColor } from '../../styles';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DotIndicatorInstance, DotIndicatorStateControl, DotIndicatorStateControlProps } from '../display';
+
+/**
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |SwiperInterval|`number`|`5000`|
+ * |SwiperDuration|`number`|`200`|
+ * |SwiperIndicatorVisible|`boolean`|`false`|
+ * |SwiperIndicatorActiveColor|`ColorInfoItem`|`Color.primary`|
+ * |SwiperIndicatorColor|`ColorInfoItem`|`Color.gray`|
+ */
 
 export interface SwiperProps {
   /**
    * 是否显示面板指示点
+   * @default false
    */
 	indicatorDots?: boolean,
   /**
    * 指示点颜色
+   * @default Color.gray
    */
   indicatorColor?: ThemeColor,
   /**
    * 指示点激活颜色
+   * @default Color.primary
    */
   indicatorActiveColor?: ThemeColor,
   /**
    * 是否自动切换
+   * @default false
    */
   autoplay?: boolean;
   /**
@@ -27,26 +43,32 @@ export interface SwiperProps {
   current?: number;
   /**
    * 自动切换时间间隔
+   * @default 5000
    */
   interval?: number;
   /**
    * 滑动动画时长
+   * @default 200
    */
   duration?: number;
   /**
-   * 	是否采用衔接滑动
+   * 是否采用衔接滑动
+   * @default false
    */
   circular?: boolean;
   /**
-   * 	是否采淡出淡入动画效果
+   * 是否采淡出淡入动画效果
+   * @default false
    */
   fadeIn?: boolean;
   /**
    * 滑动方向是否为纵向
+   * @default false
    */
   vertical?: boolean;
   /**
    * 是否禁止用户手势操作
+   * @default false
    */
   disableTouch?: boolean;
   /**
@@ -59,6 +81,7 @@ export interface SwiperProps {
   style?: ViewStyle;
   /**
    * 自定义指示器组件
+   * @default DotIndicatorStateControl
    */
   DotIndicatorComponent?: React.ComponentType<DotIndicatorStateControlProps>;
   /**
@@ -82,6 +105,7 @@ export interface SwiperInstance {
   prevPage: () => void;
   /**
    * 切换页
+   * @param page 页码
    */
   switchPage: (page: number) => void;
 }
@@ -110,6 +134,8 @@ export function SwiperItem(props: SwiperItemProps) {
  */
 export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
 
+  const themeContext = useThemeContext();
+
   const {
     children = [],
     current = 0,
@@ -118,12 +144,12 @@ export const Swiper = forwardRef<SwiperInstance, SwiperProps>((props, ref) => {
     autoplay = false,
     disableTouch = false,
     fadeIn = false,
-    interval = 5000,
-    duration = 200,
+    interval = themeContext.getThemeVar('SwiperInterval', 5000),
+    duration = themeContext.getThemeVar('SwiperDuration', 200),
     style,
-    indicatorDots = false,
-    indicatorActiveColor,
-    indicatorColor,
+    indicatorDots = themeContext.getThemeVar('SwiperIndicatorVisible', false),
+    indicatorActiveColor = themeContext.getThemeColorVar('SwiperIndicatorActiveColor', Color.primary),
+    indicatorColor = themeContext.getThemeColorVar('SwiperIndicatorColor', Color.gray),
     DotIndicatorComponent = DotIndicatorStateControl,
     onPageChange,
   } = props;

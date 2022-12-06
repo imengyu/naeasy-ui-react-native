@@ -4,8 +4,29 @@ import { Text, TextStyle, View, StyleSheet } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { ColumnView } from '../layout/ColumnView';
-import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { useThemeContext } from '../../theme/Theme';
+
+/**
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |CellGroupTitleDark|`boolean`|`false`|
+ * |CellGroupInset|`boolean`|`false`|
+ * |CellGroupShowTopMargin|`boolean`|`true`|
+ * |CellGroupShowBottomMargin|`boolean`|`false`|
+ * |CellGroupTopMarginSize|`number`|`rpx(6)`|
+ * |CellGroupDarkTitleBackgroundColor|`ColorInfoItem`|`Color.lightBorder`|
+ * |CellGroupInsetPaddingHorizontal|`number`|`rpx(48)`|
+ * |CellGroupPaddingHorizontal|`number`|`rpx(35)`|
+ * |CellGroupInsetMarginHorizontal|`number`|`rpx(30)`|
+ * |CellGroupInsetMarginVertical|`number`|`0`|
+ * |CellGroupInsetBorderRadius|`number`|`rpx(20)`|
+ * |CellGroupInsetBackgroundColor|`ColorInfoItem`|`Color.white`|
+ * |CellGroupTitleColor|`ColorInfoItem`|`Color.textSecond`|
+ * |CellGroupTitlePaddingTop|`number`|`rpx(24)`|
+ * |CellGroupTitlePaddingBottom|`number`|`rpx(12)`|
+ */
 
 interface CellGroupProp {
   /**
@@ -44,35 +65,22 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   insetView: {
-    marginHorizontal: rpx(30),
-    marginVertical: 0,
+    marginHorizontal: DynamicVar('CellGroupInsetMarginHorizontal', rpx(30)),
+    marginVertical: DynamicVar('CellGroupInsetMarginVertical', rpx(0)),
     flexDirection: 'column',
-    borderRadius: rpx(20),
-    backgroundColor: DynamicColor(Color.white),
+    borderRadius: DynamicVar('CellGroupInsetBorderRadius', rpx(20)),
+    backgroundColor: DynamicColorVar('CellGroupInsetBackgroundColor', Color.white),
     overflow: 'hidden',
   },
   title: {
-    color: DynamicColor(Color.textSecond),
-    paddingVertical: rpx(12),
-    paddingTop: rpx(24),
-    paddingBottom: rpx(12),
+    color: DynamicColorVar('CellGroupTitleColor', Color.textSecond),
+    paddingTop: DynamicVar('CellGroupTitlePaddingTop', rpx(24)),
+    paddingBottom: DynamicVar('CellGroupTitlePaddingBottom', rpx(12)),
   },
 });
 
 /**
  * 单元格分组组件
- *
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |CellGroupTitleDark|`boolean`|`false`|
- * |CellGroupInset|`boolean`|`false`|
- * |CellGroupShowTopMargin|`boolean`|`true`|
- * |CellGroupShowBottomMargin|`boolean`|`false`|
- * |CellGroupTopMarginSize|`number`|`rpx(6)`|
- * |CellGroupDarkTitleBackgroundColor|`ColorInfoItem`|`Color.lightBorder`|
- * |CellGroupInsetPaddingHorizontal|`number`|`rpx(48)`|
- * |CellGroupPaddingHorizontal|`number`|`rpx(35)`|
  */
 export function CellGroup(props: CellGroupProp) {
 

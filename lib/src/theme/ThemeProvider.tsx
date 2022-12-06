@@ -42,8 +42,8 @@ export function ThemeProvider(props: ThemeProviderProps) {
     getThemeVars,
   };
 
-  function resolveThemeColor(srcColor: ThemeColor) {
-    return ThemeSelector.color(theme, srcColor) as string;
+  function resolveThemeColor(srcColor: ThemeColor, defaultValue?: ThemeColor) {
+    return ThemeSelector.colorNoNull(theme, srcColor, defaultValue);
   }
   function getThemeColorVar(key: string, defaultValue: ThemeColor|undefined) {
     return ThemeSelector.colorNoNull(theme, themeData[key] as ThemeColor, defaultValue);

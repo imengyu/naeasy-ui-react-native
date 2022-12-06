@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { PopupContainer, PopupContainerProps } from './PopupContainer';
-import Portal from '../../portal';
+import { Portal } from '../../portal';
 
 interface PopupState {
   currentShowKey: number|null,

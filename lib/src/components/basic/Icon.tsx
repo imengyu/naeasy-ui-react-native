@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image, ImageProps, ImageSourcePropType, ImageStyle, Text, TextStyle, ViewStyle, Platform } from 'react-native';
+import { Image, ImageProps, ImageSourcePropType, ImageStyle, Text, TextStyle, ViewStyle, Platform, StyleSheet } from 'react-native';
 import { LocalSvg, SvgFromUri, SvgFromXml, SvgProps } from 'react-native-svg';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 export interface IconProp {
   /**
@@ -57,6 +57,9 @@ let iconMap = (require('../../data/DefaultIcon.json') || {}) as IconMap;
 //CheckBox 使用的勾图标
 iconMap['check-mark'] = '<svg viewBox="0 0 1024 1024"><path d="M448,624.5l-192-192l-64,128l256,256l384-448l-64-128L448,624.5z"></path></svg>';
 
+/**
+ * 图标工具类，用于管理图标数据。
+ */
 export const IconUtils = {
   /**
    * 设置 Icon 组件的图标名称映射。
@@ -95,21 +98,28 @@ export const IconUtils = {
  * 设置自己的图标集，即可通过 name 快速显示一个图标。
  *
  * * 也可传入 URL 或者 `require('image')` 显示单独的图标图像
+ * * 当找不到图标时，会显示一个红色标记。
  *
  * 内置图标请参考 TODO
  */
-export const Icon = ThemeWrapper(function (props: IconProp) {
+export function Icon(props: IconProp) {
 
   //参数
   const {
     icon,
     svgProps,
-    imageProps, style, color,
+    imageProps,
+    style,
+    color,
     size = 20,
     svgWhenIconIsResource = false,
   } = props;
   let name : string|ImageSourcePropType|undefined = props.name;
   let iconData : IconItem|null = null;
+
+  //颜色
+  const themeContext = useThemeContext();
+  const colorFinal = themeContext.resolveThemeColor(color || Color.black);
 
   //兼容性写法
   if (!name)
@@ -129,8 +139,6 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
       svg: svgWhenIconIsResource,
     };
   }
-
-  const colorFinal = ThemeSelector.color(color, Color.black);
 
   //web 平台下导入资源
   if (!iconData && typeof name === 'string' && name.startsWith('data:') && Platform.OS === 'web')
@@ -168,6 +176,17 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
     }}>{iconData as string}</Text>;
   }
 
+  /*
+    根据iconData选择不同的显示方式
+    * 字符串
+      * 一个字符，认为是 unicode 字体图标
+      * 多字符
+        * <svg 开头则显示 SvgXml
+        * http 则根据后缀 是 .svg 则 SvgUri，否则正常 Image 网络图片
+    * 对象
+      * svg=true，LocalSvg
+      * svg=false，Image
+  */
   if (typeof iconData === 'string') {
     if (iconData.length === 1)
       return renderText();
@@ -185,9 +204,21 @@ export const Icon = ThemeWrapper(function (props: IconProp) {
       return renderImage(iconData.source);
   }
 
+  //失败的情况
   function renderFail(type: number) {
-    return <Text style={{ color: '#f00' }}>IconFail:{type + '' + name}</Text>;
+    return <Text style={styles.fail}>Fail:{type + '' + name}</Text>;
   }
 
   return renderFail(-1);
+}
+
+const styles = StyleSheet.create({
+  fail: {
+    backgroundColor: '#f00',
+    borderRadius: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    fontSize: 11,
+    color: '#fff',
+  },
 });
