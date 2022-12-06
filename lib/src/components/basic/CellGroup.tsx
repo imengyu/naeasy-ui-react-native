@@ -80,19 +80,19 @@ export function CellGroup(props: CellGroupProp) {
   const themeStyles = useThemeStyles(styles);
 
   const {
-    titleDark = themeContext.getThemeData('CellGroupTitleDark', false),
-    inset = themeContext.getThemeData('CellGroupInset', false),
+    titleDark = themeContext.getThemeVar('CellGroupTitleDark', false),
+    inset = themeContext.getThemeVar('CellGroupInset', false),
     title,
     titleStyle,
-    showTopMargin = themeContext.getThemeData('CellGroupShowTopMargin', true),
-    showBottomMargin = themeContext.getThemeData('CellGroupShowBottomMargin', false),
-    showTopMarginSize = themeContext.getThemeData('CellGroupTopMarginSize', rpx(6)),
+    showTopMargin = themeContext.getThemeVar('CellGroupShowTopMargin', true),
+    showBottomMargin = themeContext.getThemeVar('CellGroupShowBottomMargin', false),
+    showTopMarginSize = themeContext.getThemeVar('CellGroupTopMarginSize', rpx(6)),
     children,
   } = props;
 
-  const CellGroupDarkTitleBackgroundColor = themeContext.getThemeColorData('CellGroupDarkTitleBackgroundColor', Color.lightBorder);
-  const CellGroupInsetPaddingHorizontal = themeContext.getThemeData('CellGroupInsetPaddingHorizontal', rpx(48));
-  const CellGroupPaddingHorizontal = themeContext.getThemeData('CellGroupPaddingHorizontal', rpx(35));
+  const CellGroupDarkTitleBackgroundColor = themeContext.getThemeColorVar('CellGroupDarkTitleBackgroundColor', Color.lightBorder);
+  const CellGroupInsetPaddingHorizontal = themeContext.getThemeVar('CellGroupInsetPaddingHorizontal', rpx(48));
+  const CellGroupPaddingHorizontal = themeContext.getThemeVar('CellGroupPaddingHorizontal', rpx(35));
 
   const titleSpeicalStyle = {
     ...themeStyles.title,

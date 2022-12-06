@@ -69,13 +69,13 @@ export function transformThemeStyle(sourceStyle: ViewStyle | TextStyle | ImageSt
       switch (proptype) {
         case DYNAMIC_PROPTYPE_COLOR:
           //动态颜色
-          finalStyleObject[key2] = themeData.getThemeColor(styleValue as unknown as ColorInfoItem);
+          finalStyleObject[key2] = themeData.resolveThemeColor(styleValue as unknown as ColorInfoItem);
           break;
         case DYNAMIC_PROPTYPE_COLOR_VAR: {
           //动态颜色变量
           const propKey = styleValue.__daymicThemePropKey__ as string;
           const propDefaultValue = styleValue.__daymicThemePropDefaultValue__ as ColorInfoItem;
-          finalStyleObject[key2] = themeData.getThemeColorData(propKey, propDefaultValue);
+          finalStyleObject[key2] = themeData.getThemeColorVar(propKey, propDefaultValue);
           break;
         }
         default:
@@ -83,7 +83,7 @@ export function transformThemeStyle(sourceStyle: ViewStyle | TextStyle | ImageSt
           //动态属性
           const propKey = styleValue.__daymicThemePropKey__ as string;
           const propDefaultValue = styleValue.__daymicThemePropDefaultValue__ as string;
-          finalStyleObject[key2] = themeData.getThemeData(propKey, propDefaultValue);
+          finalStyleObject[key2] = themeData.getThemeVar(propKey, propDefaultValue);
           break;
         }
       }

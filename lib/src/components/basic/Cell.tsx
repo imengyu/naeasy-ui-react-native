@@ -7,8 +7,38 @@ import { styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from './Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { RowView } from '../layout/RowView';
-import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
+
+/**
+ * 主题变量：
+ * |名称|类型|默认值|
+ * |--|--|--|
+ * |CellBackground|`ColorInfoItem`|`Color.white`|
+ * |CellSize|`string` or `number`|`'medium'`|
+ * |CellPressedColor|`ColorInfoItem`|`PressedColor(Color.white)`|
+ * |CellPadding|-|`[]`|
+ * |CellBottomBorder|`boolean`|`true`|
+ * |CellTopBorder|`boolean`|`false`|
+ * |CellIconWidth|`number`|`20`|
+ * |CellIconSize|`number`|`15`|
+ * |CellBorderColor|`ColorInfoItem`|`Color.boder`|
+ * |CellBorderWidth|`number`|`1`|
+ * |CellFontSizeLarge|`number`|`15.5`|
+ * |CellFontSizeMedium|`number`|`13`|
+ * |CellFontSizeSmall|`number`|`11.5`|
+ * |CellTitleColor|`ColorInfoItem`|`Color.text`|
+ * |CellLabelColor|`ColorInfoItem`|`Color.textSecond`|
+ * |CellValueColor|`ColorInfoItem`|`Color.textSecond`|
+ * |CellHeightLarge|`number`|`rpx(125)`|
+ * |CellHeightMedium|`number`|`rpx(100)`|
+ * |CellHeightSmall|`number`|`rpx(80)`|
+ * |CellPaddingLarge|`number`|`rpx(15)`|
+ * |CellPaddingMedium|`number`|`rpx(10)`|
+ * |CellPaddingSmall|`number`|`rpx(7)`|
+ * |CellPaddingHorizontal|`number`|`rpx(20)`|
+ * |CellValuePaddingHorizontal|`number`|`rpx(20)`|
+ */
 
 interface CellProp {
   /**
@@ -144,7 +174,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: rpx(20),
+    paddingHorizontal: DynamicVar('CellPaddingHorizontal', rpx(20)),
   },
   innerView: {
     width: '100%',
@@ -153,73 +183,66 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   title: {
-    fontSize: 15,
-    color: DynamicColor(Color.text),
+    color: DynamicColorVar('CellTitleColor', Color.text),
   },
   titleIcon: {
-    fontSize: 18,
-    color: DynamicColor(Color.black),
+    color: DynamicColorVar('CellTitleColor', Color.black),
   },
   label: {
-    fontSize: 14,
-    color: DynamicColor(Color.textSecond),
+    color: DynamicColorVar('CellLabelColor', Color.textSecond),
   },
   value: {
-    fontSize: 14,
-    color: DynamicColor(Color.textSecond),
-    marginHorizontal: 10,
+    color: DynamicColorVar('CellValueColor', Color.textSecond),
+    marginHorizontal: DynamicVar('CellValuePaddingHorizontal', rpx(10)),
   },
 });
 
 /**
  * 单元格组件, 为列表中的单个展示项。
- *
- * 主题变量：
- * |名称|类型|默认值|
- * |--|--|--|
- * |CellBackground|`ColorInfoItem`|`Color.white`|
- * |CellSize|`string` or `number`|`'medium'`|
- * |CellPressedColor|`ColorInfoItem`|`PressedColor(Color.white)`|
- * |CellPadding|-|`[]`|
- * |CellBottomBorder|`boolean`|`true`|
- * |CellTopBorder|`boolean`|`false`|
- * |CellIconWidth|`number`|`20`|
- * |CellIconSize|`number`|`15`|
- * |CellBorderColor|`ColorInfoItem`|`Color.boder`|
- * |CellBorderWidth|`number`|`1`|
- * |CellFontSizeLarge|`number`|`15.5`|
- * |CellFontSizeMedium|`number`|`13`|
- * |CellFontSizeSmall|`number`|`11.5`|
- * ||``|``|
- * ||``|``|
- * ||``|``|
  */
 export function Cell(props: CellProp) {
 
   const themeContext = useThemeContext();
   const themeStyles = useThemeStyles(styles);
+  const themeVars = themeContext.getThemeVars({
+    CellBorderWidth: 1,
+    CellFontSizeLarge: 15.5,
+    CellFontSizeMedium: 13,
+    CellFontSizeSmall: 11.5,
+    CellIconSize: 15,
+    CellIconWidth: 20,
+    CellHeightLarge: rpx(125),
+    CellHeightMedium: rpx(100),
+    CellHeightSmall: rpx(80),
+    CellPaddingLarge: rpx(15),
+    CellPaddingMedium: rpx(10),
+    CellPaddingSmall: rpx(7),
+  });
+  const themeColorVars = themeContext.getThemeColorVars({
+    CellBorderColor: Color.boder,
+  });
 
   const {
-    backgroundColor = themeContext.getThemeData('CellBackground', Color.white),
-    size = themeContext.getThemeData('CellSize', 'medium'),
-    padding = themeContext.getThemeData('CellPadding', []),
-    pressedColor = themeContext.getThemeData('CellPressedColor', PressedColor(Color.white)),
-    bottomBorder = themeContext.getThemeData('CellBottomBorder', true),
-    topBorder = themeContext.getThemeData('CellTopBorder', true),
+    backgroundColor = themeContext.getThemeVar('CellBackground', Color.white),
+    size = themeContext.getThemeVar('CellSize', 'medium'),
+    padding = themeContext.getThemeVar('CellPadding', []),
+    pressedColor = themeContext.getThemeVar('CellPressedColor', PressedColor(Color.white)),
+    bottomBorder = themeContext.getThemeVar('CellBottomBorder', true),
+    topBorder = themeContext.getThemeVar('CellTopBorder', true),
     center = true,
     title,
     label,
     value,
     icon,
     iconPlaceholder = false,
-    iconWidth = themeContext.getThemeData('CellIconWidth', 20),
-    iconSize = themeContext.getThemeData('CellIconSize', 15),
+    iconWidth = themeVars.CellIconWidth,
+    iconSize = themeVars.CellIconSize,
     iconStyle,
     iconProps,
     rightIcon,
     rightIconProps,
     rightIconStyle,
-    rightIconSize = themeContext.getThemeData('CellIconSize', 15),
+    rightIconSize = themeVars.CellIconSize,
     showArrow = false,
     valueSelectable = false,
     children,
@@ -230,31 +253,25 @@ export function Cell(props: CellProp) {
     onPress,
   } = props;
 
-  const borderColor = themeContext.getThemeColorData('CellBorderColor', Color.boder);
-  const borderWidth = themeContext.getThemeData('CellBorderWidth', 1);
-  const CellFontSizeLarge = themeContext.getThemeData('CellFontSizeLarge', 15.5);
-  const CellFontSizeSmall = themeContext.getThemeData('CellFontSizeSmall', 11.5);
-  const CellFontSizeMedium = themeContext.getThemeData('CellFontSizeMedium', 13);
-
   //外层样式
   const style = useMemo(() => {
     const styleObj = {
-      backgroundColor: themeContext.getThemeColor(backgroundColor),
+      backgroundColor: themeContext.resolveThemeColor(backgroundColor),
     } as ViewStyle;
 
     switch (size) {
       case 'large':
-        style.minHeight = rpx(125);
-        style.paddingVertical = rpx(15);
+        style.minHeight = themeVars.CellHeightLarge as number;
+        style.paddingVertical = themeVars.CellPaddingLarge as number;
         break;
       default:
       case 'medium':
-        style.minHeight = rpx(100);
-        style.paddingVertical = rpx(10);
+        style.minHeight = themeVars.CellHeightMedium as number;
+        style.paddingVertical = themeVars.CellPaddingMedium as number;
         break;
       case 'small':
-        style.minHeight = rpx(80);
-        style.paddingVertical = rpx(7);
+        style.minHeight = themeVars.CellHeightSmall as number;
+        style.paddingVertical = themeVars.CellPaddingSmall as number;
     }
 
     //内边距样式的强制设置
@@ -262,35 +279,34 @@ export function Cell(props: CellProp) {
 
     //边框设置
     if (topBorder) {
-      style.borderTopWidth = borderWidth;
-      style.borderTopColor = borderColor;
+      style.borderTopWidth = themeVars.CellBorderWidth;
+      style.borderTopColor = themeColorVars.CellBorderColor;
       style.borderStyle = 'solid';
     }
     if (bottomBorder) {
-      style.borderBottomWidth = borderWidth;
-      style.borderBottomColor = borderColor;
+      style.borderBottomWidth = themeVars.CellBorderWidth;
+      style.borderBottomColor = themeColorVars.CellBorderColor;
       style.borderStyle = 'solid';
     }
 
     return styleObj;
   }, [
-    themeContext,
+    themeContext, themeVars, themeColorVars,
     backgroundColor, size, padding,
-    bottomBorder, topBorder, borderColor, borderWidth,
+    bottomBorder, topBorder,
   ]);
   //文字样式
   const textStyle = useMemo(() => {
     switch (size) {
       case 'large':
-        return { fontSize: CellFontSizeLarge };
+        return { fontSize: themeVars.CellFontSizeLarge };
       default:
-        return { fontSize: CellFontSizeMedium };
+        return { fontSize: themeVars.CellFontSizeMedium };
       case 'small':
-        return { fontSize: CellFontSizeSmall };
+        return { fontSize: themeVars.CellFontSizeSmall };
     }
   }, [
-    size, CellFontSizeLarge,
-    CellFontSizeMedium, CellFontSizeSmall,
+    size, themeVars,
   ]);
 
   function renderLeftIcon() {
@@ -366,7 +382,7 @@ export function Cell(props: CellProp) {
   return (
     <TouchableHighlight
       onPress={onPress}
-      underlayColor={themeContext.getThemeColor(pressedColor)}
+      underlayColor={themeContext.resolveThemeColor(pressedColor)}
       style={[
         styles.view,
         style,

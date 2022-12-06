@@ -7,23 +7,43 @@ export interface ThemeContextData {
    */
   theme: ThemeType;
   /**
-   * 全局数据
+   * 主题全局数据
    */
   themeData: Record<string, unknown>;
   /**
-   * 获取主题数据
+   * 获取主题颜色数据。相当于 getThemeColor(getThemeVar(xx))
+   * @param key 主题属性的名称
+   * @param srcColor 默认值
+   * @returns 可变颜色在当前主题所对应的颜色
    */
-  getThemeData: <T>(key: string, defaultValue: T) => T;
+  getThemeColorVar: (key: string, defaultValue?: ThemeColor) => string;
   /**
-   * 获取主题颜色数据。相当于 getThemeColor(getThemeData(xx))
+   * 批量获取主题颜色数据 （getThemeColorVar）
+   * @param keyAndDefaults 一个对象，key 是获取主题属性的名称，value是默认值。
+   * @returns 返回可变颜色在当前主题所对应的颜色集，key 与传入的数据名称相同。
    */
-  getThemeColorData: (key: string, defaultValue?: ThemeColor) => string;
+  getThemeColorVars: <K extends string>(keyAndDefaults: { [P in K]: ThemeColor }) => { [P in K]: string };
   /**
    * 将可变颜色转为当前主题所对应的颜色。
+   * @param srcColor 可变颜色
+   * @returns 可变颜色在当前主题所对应的颜色
    */
-  getThemeColor: (srcColor: ThemeColor) => string;
+  resolveThemeColor: (srcColor: ThemeColor) => string;
+  /**
+   * 获取主题数据
+   * @param key 主题属性的名称
+   * @param srcColor 默认值
+   * @returns 主题数据
+   */
+  getThemeVar: <T>(key: string, defaultValue: T) => T;
+  /**
+   * 批量获取主题数据（getThemeVar）
+   * @param keyAndDefaults 一个对象，key 是获取主题属性的名称，value是默认值。
+   */
+  getThemeVars: <T, K extends string>(keyAndDefaults: { [P in K]: T }) => { [P in K]: T };
   /**
    * 设置当前的主题
+   * @param theme 当前主题
    */
   setTheme: (theme: ThemeType) => void;
 }
@@ -35,14 +55,7 @@ export type ThemeType = 'light'|'dark'|string;
 /**
  * 全局的主题上下文
  */
-export const ThemeContext = React.createContext<ThemeContextData>({
-  theme: 'light',
-  themeData: {},
-  setTheme: () => console.warn('No data provider, Did you add Provider component in your root?'),
-  getThemeColor: () => '#f0f',
-  getThemeData: (key, defaultValue) => defaultValue,
-  getThemeColorData: (key, defaultValue) => defaultValue as string || '#f0f',
-});
+export const ThemeContext = React.createContext<ThemeContextData>({} as ThemeContextData);
 
 /**
  * useContext(ThemeContext) 的简写

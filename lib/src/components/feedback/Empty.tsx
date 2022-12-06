@@ -66,7 +66,7 @@ export function Empty(props: EmptyProp) {
   const themeStyles = useThemeStyles(styles);
 
   const {
-    imageSize = themeContext.getThemeData('EmptyImageSize', 100),
+    imageSize = themeContext.getThemeVar('EmptyImageSize', 100),
     image,
     description = '',
     children,
