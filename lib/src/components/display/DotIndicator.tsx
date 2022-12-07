@@ -1,7 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
+
+//TODO: 垂直模式
+//TODO: 仿IOS长按操作
 
 /**
  * 指示器的参数
@@ -16,15 +20,18 @@ export interface DotIndicatorProp {
    */
   currentIndex: number,
   /**
-   * 圆点大小，默认10
+   * 圆点大小
+   * @default 10
    */
   size?: number;
   /**
    * 指示器圆点激活时的颜色
+   * @default Color.primary
    */
   activeColor?: ThemeColor,
   /**
    * 指示器圆点的颜色
+   * @default Color.grey
    */
   deactiveColor?: ThemeColor,
   /**
@@ -47,15 +54,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
-  },
-  activeDot: {
-    borderRadius: 5,
-    marginRight: 4,
+    margin: DynamicVar('DotIndicatorMargin', 5),
   },
   dot: {
-    borderRadius: 5,
-    marginRight: 4,
+    borderRadius: DynamicVar('DotIndicatorDotRadius', 5),
+    marginHorizontal: DynamicVar('DotIndicatorDotMarginHorizontal', 2),
   },
 });
 
@@ -85,28 +88,47 @@ export const DotIndicatorStateControl = forwardRef<DotIndicatorInstance, DotIndi
 /**
  * 一个显示圆点的指示器，不可操作
  */
-export const DotIndicator = ThemeWrapper(function (props: DotIndicatorProp) {
-  const size = props.size || 8;
-  const deactiveColor = props.deactiveColor || Color.grey;
-  const activeColor = props.activeColor || Color.primary;
+export function DotIndicator(props: DotIndicatorProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    currentIndex,
+    count,
+    size = themeContext.getThemeVar('DotIndicatorSize', 8),
+    deactiveColor = themeContext.getThemeVar('DotIndicatorDeactiveColor', Color.grey),
+    activeColor = themeContext.getThemeVar('DotIndicatorActiveColor', Color.primary),
+  } = props;
 
   return (
-    <View style={[styles.view, props.containerStyle]}>
-      { new Array(props.count).fill(0).map((_,index) =>
-      <View key={index} style={index === props.currentIndex ? {
-          width: size,
-          height: size,
-          backgroundColor: ThemeSelector.color(activeColor),
-          ...styles.activeDot,
-          ...props.activeDotStyle,
-        } : {
-          width: size,
-          height: size,
-          backgroundColor: ThemeSelector.color(deactiveColor),
-          ...styles.dot,
-          ...props.dotStyle,
-        }}
-      />) }
+    <View style={[themeStyles.view, props.containerStyle]}>
+      {
+        new Array(count).fill(0).map((_,index) =>
+          <View
+            key={index}
+            style={
+              index === currentIndex ? [
+                {
+                  width: size,
+                  height: size,
+                  backgroundColor: themeContext.resolveThemeColor(activeColor),
+                },
+                themeStyles.dot,
+                props.activeDotStyle,
+              ] : [
+                {
+                  width: size,
+                  height: size,
+                  backgroundColor: themeContext.resolveThemeColor(deactiveColor),
+                },
+                themeStyles.dot,
+                props.dotStyle,
+              ]
+            }
+          />
+        )
+      }
     </View>
   );
-});
+}

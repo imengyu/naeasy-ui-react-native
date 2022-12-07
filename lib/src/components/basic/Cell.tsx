@@ -29,7 +29,7 @@ interface CellProp {
    */
   label?: string,
   /**
-   * 左侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
+   * 左侧图标名称或图片链接（http/https），等同于 Icon 组件的 icon
    */
   icon?: string|ImageSourcePropType,
   /**
@@ -57,7 +57,7 @@ interface CellProp {
    */
   rightIconSize?: number,
   /**
-   * 右侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
+   * 右侧图标名称或图片链接（http/https），等同于 Icon 组件的 icon
    */
   rightIcon?: string|ImageSourcePropType,
   /**

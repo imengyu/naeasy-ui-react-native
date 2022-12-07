@@ -1,8 +1,9 @@
 import React, { forwardRef, useState } from 'react';
+import CheckTools from '../../utils/CheckTools';
 import { Image, ImageSourcePropType, ImageStyle, View, TextStyle, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
-import CheckTools from '../../utils/CheckTools';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 export interface AvatarProp {
   /**
@@ -14,15 +15,18 @@ export interface AvatarProp {
    */
   url?: string;
   /**
-   * 头像的大小。默认：40
+   * 头像的大小。
+   * @default 40
    */
   size?: number,
   /**
-   * 头像圆角大小，在 round=false 时有效 。默认：0
+   * 头像圆角大小，在 round=false 时有效
+   * @default 0
    */
   radius?: number,
   /**
    * 头像是否是圆形的
+   * @default true
    */
   round?: boolean,
   /**
@@ -35,6 +39,7 @@ export interface AvatarProp {
   text?: string;
   /**
    * 文字的颜色
+   * @default '#fff'
    */
   textColor?: ThemeColor;
   /**
@@ -43,10 +48,12 @@ export interface AvatarProp {
   textStyle?: TextStyle;
   /**
    * 文字的大小
+   * @default 16
    */
   textSize?: number,
   /**
    * 头像背景颜色
+   * @default Color.primaty
    */
   background?: ThemeColor;
   /**
@@ -60,15 +67,17 @@ export interface AvatarProp {
  */
 export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
 
+  const themeContext = useThemeContext();
+
   const {
     round = true,
     url,
     defaultAvatar = {},
-    size = 40,
-    background = Color.primary,
-    textColor = '#fff',
-    textSize = 16,
-    radius = 0,
+    size = themeContext.getThemeVar('AvatarSize', 40),
+    background = themeContext.getThemeVar('AvatarBackground', Color.primary),
+    textColor = themeContext.getThemeVar('AvatarTextColor', '#fff'),
+    textSize = themeContext.getThemeVar('AvatarTextSize', 16),
+    radius = themeContext.getThemeVar('AvatarRadius', 0),
     textStyle,
     style,
     onPress,
@@ -93,7 +102,7 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
         <View style={{
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: ThemeSelector.color(background),
+          backgroundColor: themeContext.resolveThemeColor(background),
           borderRadius: round ? size / 2 : radius,
           width: size,
           height: size,
@@ -101,7 +110,7 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
         }}>
           <Text style={[
             {
-              color: ThemeSelector.color(textColor),
+              color: themeContext.resolveThemeColor(textColor),
               fontSize: textSize,
             },
             textStyle,

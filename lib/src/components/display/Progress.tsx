@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { selectStyleType } from '../../utils/StyleTools';
-import { ThemeWrapper } from '../../theme/Theme';
 
 type ProgressTypes = 'left-right'|'right-left'|'top-bottom'|'bottom-top';
 
@@ -12,11 +13,13 @@ export interface ProgressProp {
    */
   value: number,
   /**
-   * 背景的颜色, 默认 gray
+   * 背景的颜色
+   * @default Color.gray
    */
   backgroundColor?: ThemeColor,
   /**
-   * 进度的颜色，默认 primary
+   * 进度的颜色
+   * @default Color.primary
    */
   progressColor?: ThemeColor,
   /**
@@ -25,6 +28,7 @@ export interface ProgressProp {
    * * right-left 横向，从右到左
    * * top-bottom 竖向，从上到下
    * * bottom-top 竖向，从下到上
+   * @default 'left-right'
    */
   type?: ProgressTypes;
   /**
@@ -33,6 +37,7 @@ export interface ProgressProp {
   height?: number;
   /**
    * 进度条宽度，默认100%沾满父容器
+   * @default '100%'
    */
   width?: number;
   /**
@@ -40,10 +45,8 @@ export interface ProgressProp {
    */
   showProgressText?: boolean;
   /**
-   * 进度文字的位置。默认：flow
-   * * center 居中
-   * * right 居右
-   * * flow 跟随进度
+   * 进度文字的位置。center 居中；right 居右；flow 跟随进度
+   * @default 'flow'
    */
   progressPos?: 'left'|'right'|'flow';
   /**
@@ -55,19 +58,23 @@ export interface ProgressProp {
    */
   style?: ViewStyle,
   /**
-   * 是否是圆角，默认是
+   * 是否是圆角
+   * @default true
    */
   round?: boolean;
   /**
    * round=true 时的圆角大小
+   * @default 10
    */
   radius?: number;
   /**
-   * 是否有动画效果，默认否
+   * 是否有动画效果
+   * @default false
    */
   animate?: boolean;
   /**
-   * 动画效果时长，默认300ms
+   * 动画效果时长，ms
+   * @default 300
    */
   animateDuration?: number;
   /**
@@ -85,36 +92,40 @@ const styles = StyleSheet.create({
   },
   progressText: {
     position: 'absolute',
-    width: 40,
-    textAlign: 'center',
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-    borderRadius: 10,
-    fontSize: 12,
-    color: '#fff',
+    width: DynamicVar('ProgressTextWidth', 40),
+    textAlign: DynamicVar('ProgressTextAlign', 'center'),
+    paddingVertical: DynamicVar('ProgressTextPaddingVertical', 2),
+    paddingHorizontal: DynamicVar('ProgressTextPaddingHorizontal', 4),
+    borderRadius: DynamicVar('ProgressTextBorderRadius', 10),
+    fontSize: DynamicVar('ProgressTextFontSize', 12),
+    color: DynamicVar('ProgressTextColor', '#fff'),
   },
 });
 
 /**
  * 进度条
  */
-export const Progress = ThemeWrapper(function (props: ProgressProp) {
+export function Progress(props: ProgressProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     type = 'left-right',
     progressPos = 'flow',
     width: barWidth = '100%',
-    height = 5,
-    animateDuration = 300,
-    showProgressText = false,
-    animate = false,
-    round = true,
-    radius = 10,
+    height = themeContext.getThemeVar('ProgressHeight', 5),
+    animateDuration = themeContext.getThemeVar('ProgressAnimateDuration', 300),
+    showProgressText = themeContext.getThemeVar('ProgressShowProgressText', false),
+    animate = themeContext.getThemeVar('ProgressAnimate', false),
+    round = themeContext.getThemeVar('ProgressRound', true),
+    radius = themeContext.getThemeVar('ProgressRadius', 10),
     progressTextStyle,
   } = props;
 
   const value = Math.min(100, Math.max(props.value || 0, 0));
-  const barColor = ThemeSelector.color(props.progressColor || Color.primary);
-  const barBackgroundColor = ThemeSelector.color(props.backgroundColor || Color.grey);
+  const barColor = themeContext.resolveThemeColor(props.progressColor, themeContext.getThemeVar('ProgressProgressColor', Color.primary));
+  const barBackgroundColor = themeContext.resolveThemeColor(props.backgroundColor, themeContext.getThemeVar('ProgressBackgroundColor', Color.grey));
   const barRadius = round ? radius : height;
   const isHorizontal = (typeof type === 'undefined' || type === 'left-right' || type === 'right-left');
 
@@ -158,7 +169,7 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
   ]);
 
   const progressStyles = [
-    styles.progress,
+    themeStyles.progress,
     {
       borderRadius: barRadius,
       backgroundColor: barColor,
@@ -174,7 +185,7 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
   return (
     <View
       style={[
-        styles.view,
+        themeStyles.view,
         selectStyleType<ViewStyle, ProgressTypes>(type, 'left-right', {
           'left-right': {
             height: height,
@@ -232,7 +243,7 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
         showProgressText ?
           <Animated.Text
             style={[
-              styles.progressText,
+              themeStyles.progressText,
               { backgroundColor: barColor },
               selectStyleType(progressPos, 'flow', {
                 left: {
@@ -260,4 +271,4 @@ export const Progress = ThemeWrapper(function (props: ProgressProp) {
       }
     </View>
   );
-});
+}

@@ -52,7 +52,7 @@ export interface ButtonProp {
    */
   shape?: 'square'|'round',
   /**
-   * 左侧图标。支持 IconFont 组件里的所有图标，也可以传入图标的图片 URL（http/https）。
+   * 左侧图标。支持 Icon 组件里的所有图标，也可以传入图标的图片 URL（http/https）。
    */
   icon?: string|ImageSourcePropType,
   /**
@@ -60,7 +60,7 @@ export interface ButtonProp {
    */
   iconProps?: IconProp;
   /**
-   * 右侧图标。支持 IconFont 组件里的所有图标，也可以传入图标的图片 URL（http/https）。
+   * 右侧图标。支持 Icon 组件里的所有图标，也可以传入图标的图片 URL（http/https）。
    */
   rightIcon?: string|ImageSourcePropType,
   /**

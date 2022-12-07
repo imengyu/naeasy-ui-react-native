@@ -1,10 +1,10 @@
 
 import React from "react";
-import { StyleSheet, Text, TouchableHighlight } from "react-native";
-import { Color, PressedColor, ThemeColor, ThemeSelector } from "../../styles";
-import { border } from "../../utils/StyleTools";
+import { StyleSheet, Text, TextStyle, TouchableHighlight, ViewStyle } from "react-native";
+import { Color, PressedColor } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 import { RowView } from "../layout/RowView";
-import { ThemeWrapper } from "../../theme/Theme";
 
 const styles = StyleSheet.create({
   item: {
@@ -12,12 +12,12 @@ const styles = StyleSheet.create({
     alignSelf: 'auto',
     justifyContent: 'center',
     alignContent: 'center',
-    paddingHorizontal: 4,
-    paddingVertical: 8,
+    paddingHorizontal: DynamicVar('SegmentedControlItemPaddingHorizontal', 4),
+    paddingVertical: DynamicVar('SegmentedControlItemPaddingVertical', 8),
     textAlign: 'center',
   },
   itemText: {
-    fontSize: 13,
+    fontSize: DynamicVar('SegmentedControlItemFontSize', 13),
     textAlign: 'center',
   },
 });
@@ -29,7 +29,8 @@ export interface SegmentedControlCustomItem {
 }
 export interface SegmentedControlProps {
   /**
-   * 如果为false，用户将无法与控件交互。默认值为true。
+   * 如果为false，用户将无法与控件交互。
+   * @default true
    */
   touchable?: boolean | undefined;
 
@@ -49,14 +50,17 @@ export interface SegmentedControlProps {
 
   /**
    * 控制器的主颜色。
+   * @default Color.primary
    */
   tintColor?: ThemeColor | undefined;
   /**
    * 条目激活时的文字颜色。
+   * @default Color.white
    */
   activeTextColor?: ThemeColor | undefined;
   /**
    * 圆角
+   * @default 5
    */
   radius?: number;
   /**
@@ -68,52 +72,26 @@ export interface SegmentedControlProps {
 /**
  * 分段控制器组件。
  */
-export const SegmentedControl = ThemeWrapper(function (props: SegmentedControlProps) {
+export function SegmentedControl(props: SegmentedControlProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const {
     touchable = true,
-    tintColor: activeColor = Color.primary,
-    activeTextColor = Color.white,
+    tintColor: activeColor = themeContext.getThemeVar('SegmentedControlTintColor', Color.primary),
+    activeTextColor = themeContext.getThemeVar('SegmentedControlActiveTextColor', Color.white),
     values = [],
-    radius = 5,
+    radius = themeContext.getThemeVar('SegmentedControlRadius', 5),
   } = props;
 
-  function SegmentedControlItem(itemProps: {
-    label: string,
-    active: boolean,
-    index: number,
-    disabled: boolean|undefined,
-  }) {
-    const disabled = itemProps.disabled || touchable === false;
-    return (
-      <TouchableHighlight
-        style={[
-          styles.item,
-          border(1, 'solid', ThemeSelector.color(activeColor)),
-          disabled ? { opacity: 0.5 } : {},
-          (itemProps.index === 0 ? {
-            borderTopLeftRadius: radius,
-            borderBottomLeftRadius: radius,
-          } : {}),
-          (itemProps.index !== values.length - 1 ? {
-            borderRightWidth: 0,
-          } : {}),
-          (itemProps.index === values.length - 1 ? {
-            borderTopRightRadius: radius,
-            borderBottomRightRadius: radius,
-          } : {}),
-          { backgroundColor: itemProps.active ? ThemeSelector.color(activeColor) : undefined },
-        ]}
-        underlayColor={ThemeSelector.color(PressedColor(Color.white))}
-        onPress={disabled ? undefined : () => onItemPress(itemProps.index)}
-      >
-        <Text style={[
-          styles.itemText,
-          { color: ThemeSelector.color(itemProps.active ? activeTextColor : activeColor) },
-        ]}>{itemProps.label}</Text>
-      </TouchableHighlight>
-    );
-  }
+  const themeVars = themeContext.getThemeVars({
+    SegmentedControlBorderWidth: 1,
+    SegmentedControlPressedOpacity: 0.4,
+  });
+  const themeColorVars = themeContext.getThemeColorVars({
+    SegmentedControlPressedColor: PressedColor(Color.white),
+  });
 
   function onItemPress(index: number) {
     if (typeof props.onChange === 'function')
@@ -125,16 +103,98 @@ export const SegmentedControl = ThemeWrapper(function (props: SegmentedControlPr
   return (
     <RowView>
       {
-        values.map((item, i) => (
-          <SegmentedControlItem
-            key={i}
-            index={i}
-            label={typeof item === 'object' ? item.label : item}
-            disabled={typeof item === 'object' ? item.disabled : false}
-            active={i === props.selectedIndex}
-          />
-        ))
+        values.map((item, i) => {
+
+          const activeTextColorV = themeContext.resolveThemeColor(activeTextColor);
+          const activeColorV = themeContext.resolveThemeColor(activeColor);
+          const itemStyles = [
+            themeStyles.item,
+            {
+              borderWidth: themeVars.SegmentedControlBorderWidth,
+              borderColor: activeTextColorV,
+            },
+          ];
+
+          const maxLen = values.length;
+          const pressedColor = themeContext.resolveThemeColor(themeColorVars.SegmentedControlPressedColor);
+
+          return (
+            <SegmentedControlItem
+              key={i}
+              index={i}
+              maxLen={maxLen}
+              radius={radius}
+              activeColor={activeColorV}
+              activeTextColor={activeTextColorV}
+              pressedColor={pressedColor}
+              label={typeof item === 'object' ? item.label : item}
+              disabled={!touchable || (typeof item === 'object' ? item.disabled || false : false)}
+              active={i === props.selectedIndex}
+              itemStyles={itemStyles}
+              itemTextStyle={themeStyles.itemText}
+              onItemPress={() => onItemPress(i)}
+            />
+          );
+        })
       }
     </RowView>
   );
-});
+}
+
+function SegmentedControlItem(props: {
+  label: string,
+  active: boolean,
+  index: number,
+  disabled: boolean,
+  radius: number,
+  maxLen: number,
+  activeColor: string,
+  activeTextColor: string,
+  pressedColor: string,
+  itemStyles: ViewStyle[],
+  itemTextStyle: TextStyle,
+  onItemPress?: () => void,
+}) {
+  const {
+    label,
+    active,
+    radius,
+    index,
+    disabled,
+    itemStyles,
+    itemTextStyle,
+    activeColor,
+    pressedColor,
+    activeTextColor,
+    maxLen,
+    onItemPress,
+  } = props;
+
+  return (
+    <TouchableHighlight
+      style={[
+        ...itemStyles,
+        disabled ? { opacity: 0.5 } : {},
+        (index === 0 ? {
+          borderTopLeftRadius: radius,
+          borderBottomLeftRadius: radius,
+        } : {}),
+        (index !== maxLen ? {
+          borderRightWidth: 0,
+        } : {}),
+        (index === maxLen ? {
+          borderTopRightRadius: radius,
+          borderBottomRightRadius: radius,
+        } : {}),
+        { backgroundColor: active ? activeColor : undefined },
+      ]}
+      underlayColor={pressedColor}
+      onPress={disabled ? undefined : onItemPress}
+    >
+      <Text style={[
+        itemTextStyle,
+        { color: active ? activeTextColor : activeColor },
+      ]}>{label}</Text>
+    </TouchableHighlight>
+  );
+}

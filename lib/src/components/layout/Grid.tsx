@@ -65,7 +65,7 @@ interface GridItemProp {
    */
   highlightColor?: ThemeColor,
   /**
-   * 图标名称或图片链接（http/https），等同于 IconFont 组件的 icon
+   * 图标名称或图片链接（http/https），等同于 Icon 组件的 icon
    */
   icon?: string|ImageSourcePropType,
   /**

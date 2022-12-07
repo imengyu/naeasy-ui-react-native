@@ -105,13 +105,13 @@ Cell 可以单独使用，也可以与 CellGroup 搭配使用，CellGroup 可以
 |value|右侧内容|`string &#124; number`|-|-|
 |valueSelectable|设置右侧内容是否可以选择|`boolean`|-|`false`|
 |label|标题下方的描述信息|`string`|-|-|
-|icon|左侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon|`string &#124; ImageSourcePropType`|-|-|
+|icon|左侧图标名称或图片链接（http/https），等同于 Icon 组件的 icon|`string &#124; ImageSourcePropType`|-|-|
 |iconProps|当使用图标时，左图标的附加属性|`IconProp`|-|-|
 |iconPlaceholder|当左侧图标未设置时，是否在左侧追加一个占位区域，以和其他单元格对齐|`boolean`|-|`false`|
 |iconWidth|左侧图标区域的宽度|`number &#124; "auto"`|-|`20`|
 |iconSize|左侧图标的大小|`number`|-|`15`|
 |rightIconSize|右侧图标的大小|`number`|-|`15`|
-|rightIcon|右侧图标名称或图片链接（http/https），等同于 IconFont 组件的 icon|`string &#124; ImageSourcePropType`|-|-|
+|rightIcon|右侧图标名称或图片链接（http/https），等同于 Icon 组件的 icon|`string &#124; ImageSourcePropType`|-|-|
 |rightIconProps|当使用图标时，右图标的附加属性|`IconProp`|-|-|
 |touchable|是否可以点击|`boolean`|-|`false`|
 |showArrow|是否展示右侧箭头|`boolean`|-|`false`|

@@ -1,10 +1,10 @@
 import React from 'react';
-import { ImageSourcePropType, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { ImageSourcePropType, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import { Color } from '../../styles/ColorStyles';
 import { Avatar } from './Avatar';
 import { RowView } from '../layout/RowView';
-import { StyleSheet, ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 interface AvatarStackProp {
   /**
@@ -16,39 +16,48 @@ interface AvatarStackProp {
    */
   urls: string[],
   /**
-   * 最大显示多少个头像，超过后显示数字，默认 5
+   * 最大显示多少个头像，超过后显示数字
+   * @default 5
    */
   maxCount?: number,
   /**
-   * 超过最大显示后是否显示数字，默认 true
+   * 超过最大显示后是否显示数字
+   * @default true
    */
   showOverflowCount?: boolean,
   /**
-   * 设置头像之间的距离。默认：-大小/3
+   * 设置头像之间的距离
+   * @default size / 3
    */
   imageMargin?: number,
   /**
-   * 头像的大小，默认30
+   * 头像的大小
+   * @default 30
    */
   size?: number,
   /**
-   * 头像是否是圆形的，默认 true
+   * 头像是否是圆形的
+   * @default true
    */
   round?: boolean,
   /**
-   * 头像是圆角的大小，仅在 round=false 时有效，默认 0
+   * 头像是圆角的大小，仅在 round=false 时有效
+   * @default 0
    */
   radius?: number,
   /**
-   * 是否为头像添加边框，默认 false
+   * 是否为头像添加边框
+   * @default false
    */
   border?: boolean,
   /**
-   * 头像边框宽度，默认 1
+   * 头像边框宽度
+   * @default 1.5
    */
   borderWidth?: number,
   /**
-   * 头像边框颜色，默认 Color.white
+   * 头像边框颜色
+   * @default Color.white
    */
   borderColor?: ThemeColor,
   /**
@@ -68,15 +77,14 @@ interface AvatarStackProp {
 
 const styles = StyleSheet.create({
   overflowCount: {
-    backgroundColor: Color.white.light,
+    backgroundColor: DynamicColorVar('AvatarStackOverflowCountBackgroundColor', Color.white),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 100,
   },
   overflowCountText: {
-    fontSize: 12,
-    color: Color.text.light,
+    fontSize: DynamicVar('AvatarStackOverflowCountTextFontSize', 12),
+    color: DynamicColorVar('AvatarStackOverflowCountTextColor', Color.text),
   },
 });
 
@@ -84,18 +92,21 @@ const styles = StyleSheet.create({
 /**
  * 头像堆叠组件，用于显示一组圆的头像
  */
-export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
+export function AvatarStack(props: AvatarStackProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const {
     imageMargin,
-    maxCount = 5,
-    border,
-    borderWidth = 1.5,
-    borderColor = Color.white,
-    round = true,
-    size = 30,
-    radius = 0,
-    showOverflowCount = true,
+    maxCount = themeContext.getThemeVar('AvatarStackMaxCount', 5),
+    border = false,
+    borderWidth = themeContext.getThemeVar('AvatarStackBorderWidth', 1.5),
+    borderColor = themeContext.getThemeVar('AvatarStackBorderColor', Color.white),
+    round = themeContext.getThemeVar('AvatarStackRound', true),
+    size = themeContext.getThemeVar('AvatarStackSize', 30),
+    radius = themeContext.getThemeVar('AvatarStackRadius', 0),
+    showOverflowCount = themeContext.getThemeVar('AvatarStackShowOverflowCount', true),
     overflowCountStyle,
     overflowCountTextStyle,
     urls,
@@ -108,7 +119,7 @@ export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
       marginLeft: imageMargin || -(size / 3),
       borderRadius: round ? (size / 2) : radius,
       borderWidth: border ? borderWidth : 0,
-      borderColor: ThemeSelector.color(borderColor),
+      borderColor: themeContext.resolveThemeColor(borderColor),
       width: size,
       height: size,
     };
@@ -127,11 +138,11 @@ export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
           array.push(
             <View key={i} style={[
               imageStyle,
-              styles.overflowCount,
+              themeStyles.overflowCount,
               overflowCountStyle,
             ]}>
               <Text style={[
-                styles.overflowCountText,
+                themeStyles.overflowCountText,
                 overflowCountTextStyle,
               ]}>+{urls.length - i}</Text>
             </View>
@@ -145,4 +156,4 @@ export const AvatarStack = ThemeWrapper(function (props: AvatarStackProp) {
   }
 
   return (<RowView center>{renderImages()}</RowView>);
-});
+}

@@ -1,18 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewStyle, Animated, Easing } from "react-native";
 import { Color } from "../../styles/ColorStyles";
-import { selectStyleType, border as _border } from '../../utils/StyleTools';
-import { ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { selectStyleType } from '../../utils/StyleTools';
 import MeasureText from '../../utils/MeasureText';
 import CheckTools from '../../utils/CheckTools';
 import { VerticalScrollText } from '../typography';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 type BadgePositionTypes = 'topRight'|'topLeft'|'bottomRight'|'bottomLeft';
 
 export interface BadgeProps {
   /**
    * 控制是否显示
+   * @default true
    */
   show?: boolean,
   /**
@@ -25,26 +26,32 @@ export interface BadgeProps {
   maxCount?: number,
   /**
    * 徽标颜色
+   * @default Color.danger
    */
   color?: ThemeColor,
   /**
    * 是否增加描边
+   * @default false
    */
   border?: boolean;
   /**
-   * 描边宽度。默认：2
+   * 描边宽度
+   * @default 2
    */
   borderWidth?: number;
   /**
-   * 描边颜色。默认：Color.white
+   * 描边颜色
+   * @default Color.white
    */
   borderColor?: ThemeColor;
   /**
-   * 徽标在父级所处位置，默认是 top-right
+   * 徽标在父级所处位置
+   * @default 'top-right'
    */
   position?: BadgePositionTypes;
   /**
-   * 是否在切换时有动画效果。默认：false
+   * 是否在切换时有动画效果
+   * @default false
    */
   anim?: boolean,
   /**
@@ -64,27 +71,33 @@ export interface BadgeProps {
    */
   containerStyle?: ViewStyle;
   /**
-   * 徽标无文字情况下的徽标大小。默认：10
+   * 徽标无文字情况下的徽标大小
+   * @default 10
    */
   badgeSize?: number;
   /**
-   * 字号。默认是12.5
+   * 字号
+   * @default 12.5
    */
   fontSize?: number,
   /**
-   * 圆角的大小。默认：20
+   * 圆角的大小
+   * @default 20
    */
   radius?: number;
   /**
-   * 徽标有文字情况下的垂直内边距。默认：2
+   * 徽标有文字情况下的垂直内边距
+   * @default 2
    */
   paddingVertical?: number,
   /**
-   * 徽标有文字情况下的水平内边距。默认：4
+   * 徽标有文字情况下的水平内边距
+   * @default 4
    */
   paddingHorizontal?: number,
   /**
-   * 如果 content===0 是否隐藏红点，默认是
+   * 如果 content===0 是否隐藏红点
+   * @default true
    */
   hiddenIfZero?: boolean;
 
@@ -98,14 +111,13 @@ const styles = StyleSheet.create({
   badge: {
     position: 'absolute',
     zIndex: 100,
-    borderRadius: 30,
     textAlign: 'center',
     alignSelf: 'flex-start',
     overflow: 'hidden',
   },
   badgeText: {
-    color: Color.white.light,
-    fontSize: 11,
+    color: DynamicVar('BadgeTextColor', Color.white.light),
+    fontSize: DynamicVar('BadgeTextFontSize', 11),
     textAlign: 'center',
   },
 });
@@ -114,32 +126,35 @@ const styles = StyleSheet.create({
  * 徽标组件。通常用于在头像，某些按钮上显示小红点或者数量
  */
 
-export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
+export function Badge(props: BadgeProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const {
-    color,
+    color = Color.danger,
     show = true,
-    anim = false,
+    anim = themeContext.getThemeVar('BadgeAnim', false),
     content = '',
     children,
-    border,
-    borderWidth = 2,
-    borderColor = Color.white,
-    position,
+    border = themeContext.getThemeVar('BadgeBorder', false),
+    borderWidth = themeContext.getThemeVar('BadgeBorderWidth', 2),
+    borderColor = themeContext.getThemeVar('BadgeBorderColor', Color.white),
+    position = themeContext.getThemeVar('BadgePosition', 'topLeft'),
     badgeStyle,
     containerStyle,
     textStyle,
-    offset,
-    badgeSize = 10,
-    radius = 20,
-    fontSize = 10,
-    paddingVertical = 1,
-    paddingHorizontal = 3,
+    offset = themeContext.getThemeVar('BadgeOffset', { x: 0, y: 0 }),
+    badgeSize = themeContext.getThemeVar('BadgeSize', 10),
+    radius = themeContext.getThemeVar('BadgeRadius', 20),
+    fontSize = themeContext.getThemeVar('BadgeFontSize', 10),
+    paddingVertical = themeContext.getThemeVar('BadgePaddingVertical', 1),
+    paddingHorizontal = themeContext.getThemeVar('BadgePaddingHorizontal', 3),
     hiddenIfZero = true,
   } = props;
 
-  const [ currentStyle, setCurrentStyle ] = useState<ViewStyle[]>([ styles.badge ]);
-  const [ currentTextStyle, setCurrentTextStyle ] = useState<TextStyle[]>([ styles.badgeText ]);
+  const [ currentStyle, setCurrentStyle ] = useState<ViewStyle[]>([ themeStyles.badge ]);
+  const [ currentTextStyle, setCurrentTextStyle ] = useState<TextStyle[]>([ themeStyles.badgeText ]);
 
   //文字处理
   let contentString : string|undefined;
@@ -176,11 +191,13 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
       }
 
       setCurrentStyle([
-        styles.badge,
+        themeStyles.badge,
         badgeStyle as TextStyle,
         {
-          backgroundColor: ThemeSelector.color(color || Color.danger),
+          backgroundColor: themeContext.resolveThemeColor(color),
           borderRadius: radius,
+          borderWidth,
+          borderColor: themeContext.resolveThemeColor(borderColor),
         },
         selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
           topRight: {
@@ -200,7 +217,6 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
             left: -offsetX,
           },
         }),
-        (border ? _border(borderWidth, 'solid', ThemeSelector.color(borderColor)) : {}),
         (contentString ? {
           paddingHorizontal: paddingHorizontal,
           paddingVertical: paddingVertical,
@@ -214,11 +230,12 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
 
       setCurrentTextStyle([
         { fontSize },
-        styles.badgeText,
+        themeStyles.badgeText,
         textStyle as TextStyle,
       ]);
     }
   }, [
+    themeStyles, themeContext,
     textStyle, badgeSize, badgeStyle, color,
     border, borderWidth, borderColor, radius,
     contentString, fontSize, offset, position,
@@ -233,13 +250,13 @@ export const Badge = ThemeWrapper(function Badge(props: BadgeProps) {
 
   return (
     children ?
-      (<View style={[ styles.view, containerStyle ]}>
+      (<View style={[ themeStyles.view, containerStyle ]}>
         <BadgeInner show={showBadge} anim={anim} content={contentString} textStyle={currentTextStyle} currentStyle={currentStyle} />
         { children }
       </View>) :
       <BadgeInner relative={true} show={showBadge} anim={anim} content={contentString} textStyle={currentTextStyle} currentStyle={currentStyle} />
   );
-});
+}
 
 function BadgeInner(props: {
   show: boolean,
