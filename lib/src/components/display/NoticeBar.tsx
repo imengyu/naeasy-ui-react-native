@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MeasureText from '../../utils/MeasureText';
 import { Animated, Easing, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Icon, IconProp } from '../basic/Icon';
-import { Color, ThemeColor, ThemeSelector, ThemeUtils } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { Color, ThemeUtils } from '../../styles';
 import { RowView } from '../layout';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { useRef } from 'react';
+import { useCallback } from 'react';
 
 export interface NoticeBarProps {
   /**
@@ -30,26 +33,32 @@ export interface NoticeBarProps {
   textStyle?: TextStyle;
   /**
    * 背景颜色
+   * @default ThemeUtils.makeAplhaColor(Color.warning, 0.15)
    */
   backgroundColor?: ThemeColor;
   /**
    * 文字颜色
+   * @default Color.warning
    */
   textColor?: ThemeColor;
   /**
-   * 是否滚动播放，默认是。
+   * 是否滚动播放
+   * @default true
    */
   scroll?: boolean;
   /**
-   * 滚动动画时长（毫秒），默认10000毫秒
+   * 滚动动画时长（毫秒）
+   * @default 100000
    */
   scrollDuration?: number;
   /**
-   * 文字是否换行，仅在非滚动播放时生效，默认否。
+   * 文字是否换行，仅在非滚动播放时生效
+   * @default false
    */
   wrap?: boolean;
   /**
-   * 是否可以关闭，默认否。
+   * 是否显示关闭按钮。用户点击后会触发 `onClose` 事件，请自行处理 NoticeBar 的显示与否。
+   * @default false
    */
   closeable?: boolean;
   /**
@@ -69,21 +78,18 @@ export interface NoticeBarProps {
    */
   onPress?: () => void;
 }
-interface NoticeBarState {
-  mesuredTextWidth: number;
-}
 
 const styles = StyleSheet.create({
   view: {
     position: 'relative',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: DynamicVar('NoticeBarPaddingHorizontal', 10),
+    paddingVertical: DynamicVar('NoticeBarPaddingVertical', 6),
     flexGrow: 1,
     justifyContent: 'space-between',
     alignContent: 'center',
   },
   icon: {
-    marginRight: 5,
+    marginRight: DynamicVar('NoticeBarIconMarginRight', 5),
   },
   contentView: {
     flex: 1,
@@ -91,150 +97,147 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * 通知栏组件。用于循环播放展示一组消息通知。
+ */
+export function NoticeBar(props: NoticeBarProps) {
 
-class NoticeBarComponent extends React.PureComponent<NoticeBarProps, NoticeBarState> {
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
+  const {
+    content = '',
+    icon = 'notification',
+    iconProps,
+    scroll = false,
+    closeable = false,
+    wrap = false,
+    scrollDuration = themeContext.getThemeVar('NoticeBarScrollDuration', 10000),
+    backgroundColor = themeContext.getThemeVar('NoticeBarBackgroundColor', ThemeUtils.makeAplhaColor(Color.warning, 0.15)),
+    textColor = themeContext.getThemeVar('NoticeBarTextColor', Color.warning),
+    textStyle = { fontSize: themeContext.getThemeVar('NoticeBarTextFontSize', 14) },
+    renderLeft,
+    renderRight,
+    onClose,
+    onPress,
+  } = props;
 
-  state: Readonly<NoticeBarState> = {
-    mesuredTextWidth: 100,
-  };
-  scrollAnimValue = new Animated.Value(0);
-  scrollAnim: Animated.CompositeAnimation | null = null;
+  const [ mesuredTextWidth, setMesuredTextWidth ] = useState(0);
+  const scrollParentWidth = useRef(0);
+  const scrollParentHeight = useRef(0);
 
-  componentDidMount() {
-    if (this.props.scroll !== false) {
-      setTimeout(() => this.startScroll(), 100);
-    }
-  }
-  componentWillUnmount() {
-    this.stopScroll();
-  }
-  componentDidUpdate() {
-    //监听状态更改
-    if (this.props.scroll !== false && this.scrollAnim == null) {
-      this.startScroll();
-    } else if (this.props.scroll === false && this.scrollAnim != null) {
-      this.stopScroll();
-    }
-  }
+  const scrollAnimValue = useRef(new Animated.Value(0));
+  const scrollAnim = useRef<Animated.CompositeAnimation|null>(null);
 
-  scrollParentWidth = 0;
-  scrollParentHeight = 0;
-
-  startScroll() {
+  const startScroll = useCallback(() => {
 
     //计算文字的宽度
     MeasureText.measureText({
-      fontSize: this.props.textStyle?.fontSize || 14,
-      text: this.props.content || '',
-      height: this.scrollParentHeight,
+      fontSize: textStyle.fontSize,
+      text: content,
+      height: scrollParentHeight.current,
     }).then((textWidth) => {
 
       //开始播放动画，从屏幕右边滚动至 -textWidth 位置。
-      this.scrollAnimValue.setValue(this.scrollParentWidth);
-      this.scrollAnim = Animated.timing(this.scrollAnimValue, {
+      scrollAnimValue.current.setValue(scrollParentWidth.current);
+      scrollAnim.current = Animated.timing(scrollAnimValue.current, {
         toValue: -textWidth,
-        duration: this.props.scrollDuration || 10000,
+        duration: scrollDuration,
         useNativeDriver: true,
         easing: Easing.linear,
       });
       const startAnim = () => {
-        if (this.scrollAnim) {
-          this.scrollAnim.start(() => {
+        if (scrollAnim.current) {
+          scrollAnim.current.start(() => {
             //动画结束后立即重新开始
-            this.scrollAnimValue.setValue(this.scrollParentWidth);
+            scrollAnimValue.current.setValue(scrollParentWidth.current);
             startAnim();
           });
         }
       };
       startAnim();
-
-      this.setState({ mesuredTextWidth: textWidth });
+      setMesuredTextWidth(textWidth);
     });
-  }
-  stopScroll() {
-    if (this.scrollAnim) {
-      this.scrollAnim.stop();
-      this.scrollAnim = null;
+  }, [ content, scrollDuration, textStyle ]);
+  const stopScroll = useCallback(() => {
+    if (scrollAnim.current) {
+      scrollAnim.current.stop();
+      scrollAnim.current = null;
     }
-  }
+  }, []);
 
-  onScrollParentLayout(e: LayoutChangeEvent) {
+  useEffect(() => {
+    if (scroll)
+      startScroll();
+    return () => {
+      stopScroll();
+    };
+  }, [ scroll, startScroll, stopScroll ]);
+
+  function onScrollParentLayout(e: LayoutChangeEvent) {
     //容器宽度获取
-    this.scrollParentWidth = e.nativeEvent.layout.width;
-    this.scrollParentHeight = e.nativeEvent.layout.height;
+    scrollParentWidth.current = e.nativeEvent.layout.width;
+    scrollParentHeight.current = e.nativeEvent.layout.height;
   }
 
-  renderLeftIcon() {
-    const icon = this.props.icon || 'notification';
-    if (typeof this.props.renderLeft === 'function')
-      return this.props.renderLeft();
-    return <Icon key="leftIcon" style={styles.icon} color={this.props.textColor || Color.warning} icon={icon}{...this.props.iconProps} />;
+  function renderLeftIcon() {
+    if (typeof renderLeft === 'function')
+      return renderLeft();
+    return <Icon key="leftIcon" style={themeStyles.icon} color={textColor} icon={icon} {...iconProps} />;
   }
-  renderRightIcon() {
-    if (typeof this.props.renderRight === 'function')
-      return this.props.renderRight();
+  function renderRightIcon() {
+    if (typeof renderRight === 'function')
+      return renderRight();
     return <></>;
   }
-  renderClose() {
+  function renderClose() {
     return (
-      this.props.closeable ?
-        <TouchableOpacity onPress={this.props.onClose}>
-          <Icon key="closeIcon" icon="close" style={styles.icon} color={this.props.textColor || Color.warning} />
+      closeable ?
+        <TouchableOpacity onPress={onClose}>
+          <Icon key="closeIcon" icon="close" style={themeStyles.icon} color={textColor} />
         </TouchableOpacity> : <></>
     );
   }
   //渲染不会滚动的文字
-  renderText() {
+  function renderText() {
     return (
-      <Text numberOfLines={this.props.wrap ? undefined : 1} style={{
+      <Text numberOfLines={wrap ? undefined : 1} style={{
         width: 'auto',
         flex: 1,
-        color: ThemeSelector.color(this.props.textColor || Color.warning),
+        color: themeContext.resolveThemeColor(textColor),
         alignSelf: 'auto',
-      }}>{this.props.content}</Text>
+      }}>{content}</Text>
     );
   }
   //渲染会滚动的文字
-  renderScrollText() {
+  function renderScrollText() {
     return (
-      <View onLayout={(e)=>this.onScrollParentLayout(e)} style={styles.contentView}>
-        <Text style={this.props.textStyle} />
+      <View onLayout={onScrollParentLayout} style={themeStyles.contentView}>
+        <Text style={textStyle} />
         <Animated.Text style={{
-          ...this.props.textStyle,
+          ...textStyle,
           position: 'absolute',
           left: 0,
           top: 0,
-          width: this.state.mesuredTextWidth + 20,
-          color: ThemeSelector.color(this.props.textColor || Color.warning),
-          transform: [{
-            translateX: this.scrollAnimValue,
-          }],
-        }}>{this.props.content}</Animated.Text>
+          width: mesuredTextWidth + 20,
+          color: themeContext.resolveThemeColor(textColor),
+          transform: [{ translateX: scrollAnimValue.current }],
+        }}>{content}</Animated.Text>
       </View>
     );
   }
 
-  render(): React.ReactNode {
-    return (
-      <RowView touchable style={[
-        styles.view,
-        {
-          backgroundColor: this.props.backgroundColor ?
-            ThemeSelector.color(this.props.backgroundColor) :
-            ThemeUtils.makeAplhaColor(ThemeSelector.colorNoNull(Color.warning), 0.15),
-        },
-      ]} onPress={this.props.onPress}>
-        { this.renderLeftIcon() }
-        { this.props.scroll === false ? this.renderText() : this.renderScrollText() }
-        { this.renderRightIcon() }
-        { this.renderClose() }
-      </RowView>
-    );
-  }
+  return (
+    <RowView touchable style={[
+      styles.view,
+      {
+        backgroundColor: themeContext.resolveThemeColor(backgroundColor),
+      },
+    ]} onPress={onPress}>
+      { renderLeftIcon() }
+      { scroll ? renderScrollText() : renderText() }
+      { renderRightIcon() }
+      { renderClose() }
+    </RowView>
+  );
 }
-
-/**
- * 通知栏组件。用于循环播放展示一组消息通知。
- */
-export const NoticeBar = ThemeWrapper(NoticeBarComponent);

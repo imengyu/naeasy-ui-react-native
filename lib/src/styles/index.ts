@@ -1,4 +1,5 @@
-import { Color, ColorInfo } from './ColorStyles';
+import { parseColor, strinifyColor } from '../utils';
+import { Color, ColorInfo, ColorInfoItem } from './ColorStyles';
 import { SpaceDefines } from './SizeStyles';
 import { FonstSizes } from './TextStyles';
 
@@ -17,8 +18,20 @@ export const ThemeUtils = {
    * @param alpha 透明度（0-1）
    * @returns
    */
-  makeAplhaColor(color: string, alpha: number) {
-    return `${color}${(Math.floor(alpha * 255)).toString(16)}`;
+  makeAplhaColor<T extends string|ColorInfoItem>(color: T, alpha: number) : T {
+    if (typeof color === 'string') {
+      const colorObj = parseColor(color);
+      colorObj.a = alpha;
+      return strinifyColor(colorObj) as T;
+    }
+
+    const resultObj = {} as ColorInfoItem;
+    for (const key in color) {
+      const colorObj = parseColor((color as ColorInfoItem)[key]);
+      colorObj.a = alpha;
+      resultObj[key] = strinifyColor(colorObj) as string;
+    }
+    return resultObj as T;
   },
   /**
    * 配置颜色。请在组件初始化之前配置。

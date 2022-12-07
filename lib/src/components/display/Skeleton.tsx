@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, ViewStyle } from "react-native";
-import { Color, ThemeColor, ThemeSelector } from "../../styles";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 import { rpx, selectStyleType } from "../../utils";
 import { ColumnView } from "../layout";
 
@@ -11,10 +13,12 @@ export interface SkeletonProps {
   placeholder?: JSX.Element;
   /**
    * 为 true 时，显示占位元素。反之则显示子组件
+   * @default false
    */
   loading?: boolean;
   /**
    * 是否展示动画效果
+   * @default false
    */
   active?: boolean;
   /**
@@ -23,6 +27,7 @@ export interface SkeletonProps {
   children?: JSX.Element|JSX.Element[];
   /**
    * 占位元素颜色
+   * @default Color.skeleton
    */
   color?: ThemeColor;
 }
@@ -44,7 +49,13 @@ export function Skeleton(props: SkeletonProps) {
     children,
   } = props;
 
-  const color = ThemeSelector.colorNoNull(props.color, Color.skeleton);
+  const themeContext = useThemeContext();
+  const themeVars = themeContext.getThemeVars({
+    SkeletonAnimDuration: 1000,
+    SkeletonAnimMinOpacity: 0.3,
+  });
+
+  const color = themeContext.resolveThemeColor(props.color, Color.skeleton);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const fadeAnimInstance = useRef<Animated.CompositeAnimation|null>(null);
 
@@ -53,13 +64,13 @@ export function Skeleton(props: SkeletonProps) {
     if (active) {
       fadeAnimInstance.current = Animated.loop(Animated.sequence([
         Animated.timing(fadeAnim, {
-          toValue: 0.3,
-          duration: 1000,
+          toValue: themeVars.SkeletonAnimMinOpacity,
+          duration: themeVars.SkeletonAnimDuration,
           useNativeDriver: true,
         }),
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 1000,
+          duration: themeVars.SkeletonAnimDuration,
           useNativeDriver: true,
         }),
       ]));
@@ -72,7 +83,7 @@ export function Skeleton(props: SkeletonProps) {
         fadeAnimInstance.current = null;
       }
     };
-  }, [ active, fadeAnim ]);
+  }, [ active, fadeAnim, themeVars ]);
 
   return (
     <SkeletonAContext.Provider value={{ fadeAnim, color }}>
@@ -85,6 +96,9 @@ export namespace Skeleton {
 
   type SkeletonItemSize = 'sm'|'md'|'lg';
 
+  /**
+   * Skeleton 基础形状
+   */
   export function BaseBox(props: {
     style: (ViewStyle|undefined)[],
   }) {
@@ -105,20 +119,29 @@ export namespace Skeleton {
    * 头像占位组件
    */
   export function Avatar(props: {
+    /**
+     * 形状预设
+     * @default 'circle'
+     */
     shape?: 'circle'|'square',
+    /**
+     * 大小预设
+     * @default 'md'
+     */
     size?: SkeletonItemSize,
     style?: ViewStyle,
   }) {
+    const themeStyles = useThemeStyles(styles);
     return (
       <BaseBox style={[
         selectStyleType(props.shape, 'circle', {
-          circle: styles.skeletonAvatarCircle,
-          square: styles.skeletonAvatar,
+          circle: themeStyles.skeletonAvatarCircle,
+          square: themeStyles.skeletonAvatar,
         }),
         selectStyleType(props.size, 'md', {
-          sm: styles.skeletonAvatarSm,
-          md: styles.skeletonAvatarMd,
-          lg: styles.skeletonAvatarLg,
+          sm: themeStyles.skeletonAvatarSm,
+          md: themeStyles.skeletonAvatarMd,
+          lg: themeStyles.skeletonAvatarLg,
         }),
         props.style,
       ]}
@@ -128,17 +151,22 @@ export namespace Skeleton {
    * 标题占位组件
    */
   export function Title(props: {
+    /**
+     * 大小预设
+     * @default 'md'
+     */
     size?: SkeletonItemSize,
     style?: ViewStyle,
   }) {
+    const themeStyles = useThemeStyles(styles);
     return <BaseBox
       style={[
         selectStyleType(props.size, 'md', {
-          sm: styles.skeletonTitleSm,
-          md: styles.skeletonTitleMd,
-          lg: styles.skeletonTitleLg,
+          sm: themeStyles.skeletonTitleSm,
+          md: themeStyles.skeletonTitleMd,
+          lg: themeStyles.skeletonTitleLg,
         }),
-        styles.skeletonTitle,
+        themeStyles.skeletonTitle,
         props.style,
       ]}
     />;
@@ -149,9 +177,10 @@ export namespace Skeleton {
   export function Image(props: {
     style?: ViewStyle,
   }) {
+    const themeStyles = useThemeStyles(styles);
     return <BaseBox
       style={[
-        styles.skeletonImage,
+        themeStyles.skeletonImage,
         props.style,
       ]}
     />;
@@ -162,16 +191,18 @@ export namespace Skeleton {
   export function Paragraph(props: {
     /**
      * 设置段落占位图的行数
+     * @default 4
      */
     rows?: number;
     style?: ViewStyle,
   }) {
+    const themeStyles = useThemeStyles(styles);
     const rows = props.rows || 4;
     return <ColumnView>
       { new Array(rows).fill(null).map((_, i) => <BaseBox
         key={i}
         style={[
-          i === rows - 1 ? styles.skeletonParagraphLast : styles.skeletonParagraph,
+          i === rows - 1 ? themeStyles.skeletonParagraphLast : themeStyles.skeletonParagraph,
           props.style,
         ]}
       />) }
@@ -183,9 +214,10 @@ export namespace Skeleton {
   export function Button(props: {
     style?: ViewStyle,
   }) {
+    const themeStyles = useThemeStyles(styles);
     return <BaseBox
       style={[
-        styles.skeletonButton,
+        themeStyles.skeletonButton,
         props.style,
       ]}
     />;
@@ -194,54 +226,54 @@ export namespace Skeleton {
 
 const styles = StyleSheet.create({
   skeletonAvatar: {
-    borderRadius: 5,
+    borderRadius: DynamicVar('SkeletonAvatarRadius', 5),
   },
   skeletonAvatarCircle: {
-    borderRadius: 500,
+    borderRadius: DynamicVar('SkeletonAvatarCircleRadius', 500),
   },
   skeletonAvatarSm: {
-    width: rpx(50),
-    height: rpx(50),
+    width: DynamicVar('SkeletonAvatarSmWidth', rpx(50)),
+    height: DynamicVar('SkeletonAvatarSmHeight', rpx(50)),
   },
   skeletonAvatarMd: {
-    width: rpx(80),
-    height: rpx(80),
+    width: DynamicVar('SkeletonAvatarMdWidth', rpx(80)),
+    height: DynamicVar('SkeletonAvatarMdHeight', rpx(80)),
   },
   skeletonAvatarLg: {
-    width: rpx(150),
-    height: rpx(150),
+    width: DynamicVar('SkeletonAvatarLgWidth', rpx(150)),
+    height: DynamicVar('SkeletonAvatarLgHeight', rpx(150)),
   },
   skeletonTitle: {
-    borderRadius: 5,
-    width: '100%',
+    borderRadius: DynamicVar('SkeletonTitleRadius', 5),
+    width: DynamicVar('SkeletonTitleWidth', '100%'),
   },
   skeletonTitleSm: {
-    height: rpx(50),
+    height: DynamicVar('SkeletonTitleSmHeight', rpx(50)),
   },
   skeletonTitleMd: {
-    height: rpx(70),
+    height: DynamicVar('SkeletonTitleMdHeight', rpx(70)),
   },
   skeletonTitleLg: {
-    height: rpx(130),
+    height: DynamicVar('SkeletonTitleLgHeight', rpx(130)),
   },
   skeletonImage: {
-    borderRadius: 5,
+    borderRadius: DynamicVar('SkeletonImageRadius', 5),
   },
   skeletonParagraph: {
-    borderRadius: 5,
-    width: '100%',
-    height: rpx(32),
-    marginBottom: rpx(20),
+    borderRadius: DynamicVar('SkeletonParagraphBorderRadius', 5),
+    width: DynamicVar('SkeletonParagraphWidth', '100%'),
+    height: DynamicVar('SkeletonParagraphHeight', rpx(32)),
+    marginBottom: DynamicVar('SkeletonParagraphMarginBottom', rpx(20)),
   },
   skeletonParagraphLast: {
-    borderRadius: 5,
-    width: '60%',
-    height: rpx(32),
-    marginBottom: 0,
+    borderRadius: DynamicVar('SkeletonParagraphLastBorderRadius', 5),
+    width: DynamicVar('SkeletonParagraphLastWidth', '60%'),
+    height: DynamicVar('SkeletonParagraphLastHeight', rpx(32)),
+    marginBottom: DynamicVar('SkeletonParagraphMarginBottom', 0),
   },
   skeletonButton: {
-    borderRadius: 5,
-    width: rpx(155),
-    height: rpx(82),
+    borderRadius: DynamicVar('SkeletonButtonBorderRadius', 5),
+    width: DynamicVar('SkeletonButtonWidth', rpx(155)),
+    height: DynamicVar('SkeletonButtonHeight', rpx(82)),
   },
 });

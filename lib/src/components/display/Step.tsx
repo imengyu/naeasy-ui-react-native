@@ -1,34 +1,47 @@
 import React, { useEffect, useRef } from "react";
 import { ScrollView, StyleSheet, View, ViewStyle, Text, TextStyle } from "react-native";
-import { Color, ThemeColor, ThemeSelector } from "../../styles";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 import { rpx } from "../../utils";
 import { Icon, IconProp } from "../basic/Icon";
 
 export interface StepProps {
   /**
    * 步骤条的方向
+   * @default 'horizontal'
    */
   direction?: 'vertical'|'horizontal',
   /**
-   * 激活时的颜色，默认 Color.primary
+   * 激活时的颜色
+   * @default Color.primary
    */
   activeColor?: ThemeColor,
   /**
-   * 未激活时的颜色，默认 Color.grey
+   * 未激活时的颜色
+   * @default Color.grey
    */
   inactiveColor?: ThemeColor,
   /**
-   * 文字颜色，默认 Color.text
+   * 文字颜色
+   * @default Color.text
    */
   textColor?: ThemeColor,
   /**
-   * 当为水平模式时，条目的宽度，默认是 rpx(150)
+   * 当为水平模式时，条目的宽度
+   * @default rpx(150)
    */
   lineItemWidth?: number,
   /**
    * 当为水平模式时，分隔线的边距偏移
+   * @default 10
    */
   lineOffset?: number,
+  /**
+   * 线段粗细
+   * @default 1
+   */
+  lineWidth?: number;
   /**
    * 当前激活的步骤
    */
@@ -38,13 +51,9 @@ export interface StepProps {
    */
   onActiveIndexChange: (index: number) => void;
   /**
-   * 步骤子组件，请使用 StepItem
+   * 步骤子组件，子请使用 StepItem
    */
   children?: JSX.Element[]|JSX.Element;
-  /**
-   * 线段粗细，默认是 1
-   */
-  lineWidth?: number;
 
   /**
    * 同 StepItemProps.activeIcon 此项用于所有子条目的设置
@@ -76,17 +85,18 @@ export interface StepItemProps {
    */
   activeIcon?: string,
   /**
-   * 自定义未激活状态图标, 横向默认是 __default_number，竖向默认是 __default_dot
-   * * 有一个特殊值 `__default_number` 表示一个圆圈中间一个当前步骤的序号。
-   * * 有一个特殊值 `__default_dot` 表示一个圆圈。
+   * 自定义未激活状态图标。有2个特殊值 `__default_number` 表示一个圆圈中间一个当前步骤的序号；`__default_dot` 表示一个圆圈。
+   * @default 横向默认是 '__default_number'，竖向默认是 '__default_dot'
    */
   inactiveIcon?: string,
   /**
-   * 自定义已完成步骤对应的底部图标，优先级高于 `inactiveIcon`，默认是 success-filling
+   * 自定义已完成步骤对应的底部图标，优先级高于 `inactiveIcon`
+   * @default 'success-filling'
    */
   finishIcon?: string,
   /**
    * 图标的附加属性
+   * @default { size: 24 }
    */
   iconProps?: IconProp;
   /**
@@ -106,7 +116,6 @@ export interface StepItemProps {
    */
   renderItem?: (props: StepItemProps, state: StepItemState) => JSX.Element;
 }
-
 
 const styles = StyleSheet.create({
   stepVertical: {
@@ -129,7 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    marginVertical: 5,
+    marginVertical: DynamicVar('StepItemMarginVertical', 5),
   },
   itemHorizontal: {
     flex: 1,
@@ -139,10 +148,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 13,
+    fontSize: DynamicVar('StepItemTextFontSize', 13),
   },
   content: {
-    marginTop: 3,
+    fontSize: DynamicVar('StepItemContentFontSize', 13),
+    marginTop: DynamicVar('StepItemContentMarginTop', 3),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'flex-start',
@@ -181,18 +191,21 @@ function StepItemInternalDotIcon(props: { color: string, size: number }) {
 }
 //默认的圆点数字图标显示组件
 function StepItemInternalDotNumberIcon(props: { color: string, size: number, index: number }) {
+  const themeContext = useThemeContext();
+  const borderWidth = themeContext.getThemeVar('StepItemDotNumberIconBorderWidth', 1.5);
+
   return (
     <View style={{
       width: props.size - 2,
       height: props.size - 2,
       borderRadius: props.size,
       borderColor: props.color,
-      borderWidth: 1.5,
+      borderWidth: borderWidth,
     }} >
       <Text style={{
         color: props.color,
         fontSize: props.size - 11,
-        lineHeight: props.size - 3 - 2,
+        lineHeight: props.size - borderWidth * 2 - 2,
         textAlign: 'center',
       }}>{props.index}</Text>
     </View>
@@ -201,13 +214,21 @@ function StepItemInternalDotNumberIcon(props: { color: string, size: number, ind
 //步骤条渲染组件
 function StepItemInternal(props: StepItemInternalProps) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     state, style, direction, index, isLast,
-    iconProps = { size: 24 },
+    iconProps = { size: themeContext.getThemeVar('StepItemIconDefaultSize', 24) },
     lineWidth,
-    activeColor, inactiveColor, textColor, text, textStyle, extra,
-    activeIcon,
-    finishIcon = 'success-filling',
+    activeColor,
+    inactiveColor,
+    textColor,
+    text,
+    textStyle,
+    extra,
+    activeIcon = themeContext.getThemeVar('StepItemActiveIcon', undefined),
+    finishIcon = themeContext.getThemeVar('StepItemFinishIcon', 'success-filling'),
     inactiveIcon = direction === 'horizontal' ? '__default_number' : '__default_dot',
     renderItem,
   } = props;
@@ -243,19 +264,18 @@ function StepItemInternal(props: StepItemInternalProps) {
     />);
   }
 
-
   return (
     renderItem ? renderItem(props, state) :
-    <View style={[ style, direction === 'vertical' ? styles.itemVertical : styles.itemHorizontal ]}>
-      <View style={[ styles.iconContainer, { width: iconConSize, height: iconSize }]}>{renderIcon()}</View>
+    <View style={[ style, direction === 'vertical' ? themeStyles.itemVertical : themeStyles.itemHorizontal ]}>
+      <View style={[ themeStyles.iconContainer, { width: iconConSize, height: iconSize }]}>{renderIcon()}</View>
 
-      <View style={styles.content}>
-        <Text style={[ { color: textColor }, styles.text, textStyle ]}>{text}</Text>
+      <View style={themeStyles.content}>
+        <Text style={[ { color: textColor }, themeStyles.text, textStyle ]}>{text}</Text>
         {
           typeof extra === 'string' ?
             <Text style={[
               { color: textColor },
-              styles.text,
+              themeStyles.text,
               textStyle,
             ]}>{extra}</Text> :
             extra
@@ -278,19 +298,22 @@ export function StepItem(_props: StepItemProps) {
  * 步骤条组件
  */
 export function Step(props: StepProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     children,
     activeIndex,
     direction = 'horizontal',
-    lineItemWidth = rpx(150),
-    lineOffset = 10,
-    lineWidth = 1,
+    lineItemWidth = themeContext.getThemeVar('StepLineItemWidth', rpx(150)),
+    lineOffset = themeContext.getThemeVar('StepLineOffset', 10),
+    lineWidth = themeContext.getThemeVar('StepLineWidth', 1),
+    activeColor = themeContext.getThemeVar('StepActiveColor', Color.primary),
+    inactiveColor = themeContext.getThemeVar('StepInactiveColor', Color.grey),
+    textColor = themeContext.getThemeVar('StepTextColor', Color.text),
     onActiveIndexChange,
   } = props;
-
-  const activeColor = ThemeSelector.colorNoNull(props.activeColor, Color.primary);
-  const inactiveColor = ThemeSelector.colorNoNull(props.inactiveColor, Color.grey);
-  const textColor = ThemeSelector.colorNoNull(props.textColor, Color.text);
 
   useEffect(() => {
     if (direction === 'horizontal') {
@@ -307,7 +330,7 @@ export function Step(props: StepProps) {
         position: 'absolute',
         left: ((index + 1) * lineItemWidth - lineItemWidth / 4),
         top: lineOffset,
-        backgroundColor: activeIndex > index ? activeColor : inactiveColor,
+        backgroundColor: themeContext.resolveThemeColor(activeIndex > index ? activeColor : inactiveColor),
         height: lineWidth,
         width: lineItemWidth / 2 ,
       }}
@@ -333,7 +356,10 @@ export function Step(props: StepProps) {
         style: {
           width: direction === 'horizontal' ? lineItemWidth : undefined,
         },
-        direction, activeColor, inactiveColor, textColor,
+        direction,
+        activeColor: themeContext.resolveThemeColor(activeColor),
+        inactiveColor: themeContext.resolveThemeColor(inactiveColor),
+        textColor: themeContext.resolveThemeColor(textColor),
         onPress: () => {
           onActiveIndexChange(index);
         },
@@ -361,11 +387,11 @@ export function Step(props: StepProps) {
       <ScrollView
         ref={scrollRef}
         horizontal
-        style={styles.scrollHorizontal}
+        style={themeStyles.scrollHorizontal}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.stepHorizontal}
+        contentContainerStyle={themeStyles.stepHorizontal}
       >{ renderChildren() }</ScrollView> :
-      <View style={styles.stepVertical}>
+      <View style={themeStyles.stepVertical}>
        { renderChildren() }
       </View>
   );

@@ -5,6 +5,7 @@ export * from './PlatformTools';
 export * from './StyleConsts';
 export * from './StyleTools';
 export * from './TimeUtils';
+export * from './ColorUtils';
 
 
 

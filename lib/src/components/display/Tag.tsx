@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color, FonstSizes, ThemeColor, ThemeSelector } from '../../styles';
-import { border, paddingVH, selectStyleType } from '../../utils/StyleTools';
+import { Color, FonstSizes } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { selectStyleType } from '../../utils/StyleTools';
 import { Icon } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
-import { ThemeWrapper } from '../../theme/Theme';
 
 type TagTypes = 'default'|'primary'|'success'|'warning'|'danger';
 
@@ -17,29 +18,39 @@ interface TagProp {
    */
   text?: string,
   /**
-   * 支持 default、primary、success、warning、danger 五种内置颜色类型，默认为 default
+   * 支持 default、primary、success、warning、danger 五种内置颜色类型
+   * @default 'default'
    */
   type?: TagTypes,
   /**
    * 设置 plain 属性设置为空心样式。
+   * @default false
    */
   plain?: boolean,
   /**
    * 形状 通过 square 设置方形，通过 round 设置圆形, mark设置标记样式(半圆角)。
+   * @default 'round'
    */
   shape?: 'square'|'round'|'mark',
   /**
    * 是否可以被关闭
+   * @default false
    */
   closeable?: boolean,
   /**
-   * 尺寸. 支持 large、medium、small 三种尺寸，默认为 medium。
+   * 尺寸. 支持 large、medium、small 三种尺寸。
+   * @default 'medium'
    */
   size?: TagSizes,
   /**
    * 自定义文字的颜色。
    */
   textColor?: ThemeColor;
+  /**
+   * 圆角大小，仅在 shape=round 或者 shape=mark 时有效。
+   * @default 10
+   */
+  borderRadius?: number;
   /**
    * 自定义颜色。
    */
@@ -65,104 +76,135 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 12,
+    fontSize: DynamicVar('TagFontSize', 12),
+  },
+  plainTagDefault: {
+    borderWidth: DynamicVar('TagBorderWidth', 1),
+    borderColor: DynamicColorVar('TagPlainDefaultBorderColor', Color.border),
+    color: DynamicColorVar('TagPlainDefaultColor', Color.text),
+  },
+  plainTagPrimary: {
+    borderWidth: DynamicVar('TagBorderWidth', 1),
+    borderColor: DynamicColorVar('TagPlainPrimaryBorderColor', Color.primary),
+    color: DynamicColorVar('TagPlainPrimaryColor', Color.primary),
+  },
+  plainTagSuccess: {
+    borderWidth: DynamicVar('TagBorderWidth', 1),
+    borderColor: DynamicColorVar('TagPlainSuccessBorderColor', Color.success),
+    color: DynamicColorVar('TagPlainSuccessColor', Color.success),
+  },
+  plainTagWarning: {
+    borderWidth: DynamicVar('TagBorderWidth', 1),
+    borderColor: DynamicColorVar('TagPlainWarningBorderColor', Color.warning),
+    color: DynamicColorVar('TagPlainWarningColor', Color.warning),
+  },
+  plainTagDanger: {
+    borderWidth: DynamicVar('TagBorderWidth', 1),
+    borderColor: DynamicColorVar('TagPlainDangerBorderColor', Color.danger),
+    color: DynamicColorVar('TagPlainDangerColor', Color.danger),
+  },
+  tagPrimary: {
+    backgroundColor: DynamicColorVar('TagPrimaryBackgroundColor', Color.primary),
+    color: DynamicColorVar('TagPrimaryColor', Color.white),
+  },
+  tagSuccess: {
+    backgroundColor: DynamicColorVar('TagSuccessBackgroundColor', Color.success),
+    color: DynamicColorVar('TagSuccessColor', Color.white),
+  },
+  tagWarning: {
+    backgroundColor: DynamicColorVar('TagWarningBackgroundColor', Color.warning),
+    color: DynamicColorVar('TagWarningColor', Color.white),
+  },
+  tagDanger: {
+    backgroundColor: DynamicColorVar('TagDangerBackgroundColor', Color.danger),
+    color: DynamicColorVar('TagDangerColor', Color.white),
+  },
+  tagSizeLarge: {
+    paddingVertical: DynamicVar('TagSizeLargePaddingVertical', 5),
+    paddingHorizontal: DynamicVar('TagSizeLargePaddingHorizontal', 10),
+  },
+  tagSizeMedium: {
+    paddingVertical: DynamicVar('TagSizeMediumPaddingVertical', 2),
+    paddingHorizontal: DynamicVar('TagSizeMediumPaddingHorizontal', 5),
+  },
+  tagSizeSmall: {
+    paddingVertical: DynamicVar('TagSizeSmallPaddingVertical', 1),
+    paddingHorizontal: DynamicVar('TagSizeSmallPaddingHorizontal', 2),
   },
 });
 
 /**
  * 标记组件。用于标记关键词和概括主要内容。
  */
-export const Tag = ThemeWrapper(function (props: TagProp) {
-  function getStyle() {
+export function Tag(props: TagProp) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    shape = 'round',
+    type = themeContext.getThemeVar('TagType', 'default'),
+    plain = themeContext.getThemeVar('TagPlain', false),
+    size = themeContext.getThemeVar('TagSize', 'medium'),
+    borderRadius = themeContext.getThemeVar('TagBorderRadius', 10),
+    textColor = themeContext.getThemeVar('TagTextColor', undefined),
+  } = props;
+
+  const style = useMemo(() => {
     return {
-      ...selectStyleType(props.shape, 'round', {
-        round: {
-          borderRadius: 10,
-        },
-        square: {
-          borderRadius: 0,
-        },
+      ...selectStyleType(shape, 'round', {
+        round: { borderRadius: borderRadius },
+        square: { borderRadius: borderRadius },
         mark: {
-          borderTopRightRadius: 10,
-          borderBottomRightRadius: 10,
+          borderTopRightRadius: borderRadius,
+          borderBottomRightRadius: borderRadius,
         },
       }),
-      ...selectStyleType<ViewStyle|TextStyle, TagTypes>(props.type, 'default', props.plain ? {
-        default: {
-          ...border(1, 'solid', ThemeSelector.color(Color.border)),
-          color: ThemeSelector.color(Color.text),
-        },
-        primary: {
-          ...border(1, 'solid', ThemeSelector.color(Color.primary)),
-          color: ThemeSelector.color(Color.primary),
-        },
-        success: {
-          ...border(1, 'solid', ThemeSelector.color(Color.success)),
-          color: ThemeSelector.color(Color.success),
-        },
-        warning: {
-          ...border(1, 'solid', ThemeSelector.color(Color.warning)),
-          color: ThemeSelector.color(Color.warning),
-        },
-        danger: {
-          ...border(1, 'solid', ThemeSelector.color(Color.danger)),
-          color: ThemeSelector.color(Color.danger),
-        },
+      ...selectStyleType<ViewStyle|TextStyle, TagTypes>(type, 'default', plain ? {
+        default: styles.plainTagDefault,
+        primary: styles.plainTagPrimary,
+        success: styles.plainTagSuccess,
+        warning: styles.plainTagWarning,
+        danger: styles.plainTagDanger,
       } : {
-        default: {
-          ...border(1, 'solid', ThemeSelector.color(Color.border)),
-          color: ThemeSelector.color(Color.text),
-        },
-        primary: {
-          backgroundColor: ThemeSelector.color(Color.primary),
-          color: ThemeSelector.color(Color.white),
-        },
-        success: {
-          backgroundColor: ThemeSelector.color(Color.success),
-          color: ThemeSelector.color(Color.white),
-        },
-        warning: {
-          backgroundColor: ThemeSelector.color(Color.warning),
-          color: ThemeSelector.color(Color.white),
-        },
-        danger: {
-          backgroundColor: ThemeSelector.color(Color.danger),
-          color: ThemeSelector.color(Color.white),
-        },
+        default: styles.plainTagDefault,
+        primary: styles.tagPrimary,
+        success: styles.tagSuccess,
+        warning: styles.tagWarning,
+        danger: styles.tagDanger,
       }),
-      ...selectStyleType<ViewStyle, TagSizes>(props.size, 'medium', {
-        large: {
-          ...paddingVH(5, 10),
-        },
-        medium: {
-          ...paddingVH(2, 5),
-        },
-        small: {
-          ...paddingVH(1, 2),
-        },
+      ...selectStyleType<ViewStyle, TagSizes>(size, 'medium', {
+        small: styles.tagSizeSmall,
+        medium: styles.tagSizeMedium,
+        large: styles.tagSizeLarge,
       }),
     } as ViewStyle|TextStyle;
-  }
+  }, [ borderRadius, plain, shape, size, type ]);
 
-  const speicalStyle = getStyle();
   return (
     <RowView center style={[
-      styles.view,
-      speicalStyle,
+      themeStyles.view,
+      style,
       props.style as ViewStyle,
     ]}>
       <Text style={[
-        styles.title,
+        themeStyles.title,
         {
-          color: ThemeSelector.color(props.textColor) || (speicalStyle as TextStyle).color,
-          fontSize: selectStyleType(props.size, 'medium', FonstSizes) - 2,
+          color: themeContext.resolveThemeColor(textColor) || (style as TextStyle).color,
+          fontSize: selectStyleType(size, 'medium', FonstSizes) - 2,
         },
       ]}>{props.text}</Text>
       {
         props.closeable ?
-          <TouchableOpacity onPress={props.onClose}><Icon icon="close" size={15} color={props.textColor || (speicalStyle as TextStyle).color as string} /></TouchableOpacity>
+          <TouchableOpacity onPress={props.onClose}>
+            <Icon
+              icon="close"
+              size={themeContext.getThemeVar('TagCloseIconSize', 15)}
+              color={props.textColor || (style as TextStyle).color as string}
+            />
+          </TouchableOpacity>
           : <></>
       }
     </RowView>
   );
-});
+}
