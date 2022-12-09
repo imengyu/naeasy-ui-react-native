@@ -1,5 +1,5 @@
 import React, { createRef } from 'react';
-import Portal from '../../portal';
+import { Portal } from '../../portal';
 import { TextStyle, ViewStyle } from 'react-native';
 import { IconProp } from '../basic/Icon';
 import { ToastContainer, IToastPosition } from './ToastContainer';

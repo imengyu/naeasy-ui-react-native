@@ -2,6 +2,8 @@ import React from 'react';
 import { ActivityIndicator, Animated, StyleSheet, Text, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Color } from '../../styles';
+import { ThemeContext } from '../../theme/Theme';
+import { DynamicVar, transformThemeStyles } from '../../theme/ThemeStyleSheet';
 import { rpx } from '../../utils/StyleConsts';
 import { selectStyleType } from '../../utils/StyleTools';
 import { Icon } from '../basic/Icon';
@@ -21,35 +23,36 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 109,
+    zIndex:  DynamicVar('ToastZIndex', 109),
   },
   innerWrap: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    minWidth: 100,
-    zIndex: 120,
+    backgroundColor:  DynamicVar('ToastBackgroundColor', 'rgba(0,0,0,0.6)'),
+    minWidth: DynamicVar('ToastMinWidth', 100),
+    zIndex: DynamicVar('ToastInnerZIndex', 120),
   },
   iconToast: {
-    borderRadius: 10,
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    borderRadius: DynamicVar('ToastWhenIconBorderRadius', 10),
+    paddingVertical: DynamicVar('ToastWhenIconPaddingVertical', 20),
+    paddingHorizontal: DynamicVar('ToastWhenIconPaddingHorizontal', 15),
   },
   textToast: {
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    borderRadius: DynamicVar('ToastWhenTextBorderRadius', 10),
+    paddingVertical: DynamicVar('ToastWhenTextPaddingVertical', 10),
+    paddingHorizontal: DynamicVar('ToastWhenTextPaddingHorizontal', 15),
   },
   content: {
-    color: Color.white.light,
-    fontSize: 14,
+    color: DynamicVar('ToastContentColor', Color.white.light),
+    fontSize: DynamicVar('ToastContentFontSize', 14),
   },
   image: {
-    marginBottom: 6,
+    marginBottom: DynamicVar('ToastIconMarginBottom', 6),
   },
   centering: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 0,
+    padding: DynamicVar('ToastLoadingPadding', 0),
+    marginBottom: DynamicVar('ToastLoadingMarginBottom', 10),
   },
 });
 
@@ -61,6 +64,9 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
   fadeAnim: Animated.Value,
 }> {
 
+  static contextType = ThemeContext;
+
+  context!: React.ContextType<typeof ThemeContext>;
   anim: Animated.CompositeAnimation | null = null;
   noEndNext = false;
 
@@ -152,23 +158,23 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
       maskStyle,
       onAnimationEnd,
     } = this.state.toast;
+
     const iconType: {
       [key: string]: string
     } = {
-      success: 'success',
-      fail: 'error',
-      offline: 'cry',
+      success: this.context.getThemeVar('ToastIconSuccess', 'success'),
+      fail: this.context.getThemeVar('ToastIconError', 'error'),
+      offline: this.context.getThemeVar('ToastIconOffline', 'cry'),
+      info: this.context.getThemeVar('ToastIconInfo', 'prompt'),
     };
+    const themeStyles = transformThemeStyles(styles, this.context);
 
     let iconDom: React.ReactElement<any> | null = null;
     if (type === 'loading') {
       iconDom = (
         <ActivityIndicator
           animating
-          style={{
-            ...styles.centering,
-            marginBottom: 10,
-          }}
+          style={themeStyles.centering}
           color={ textStyle?.color as string || '#fff'}
           size="large"
         />
@@ -179,7 +185,7 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
       iconDom = (
         <Icon
           icon={icon ||  iconType[type]}
-          style={styles.image}
+          style={themeStyles.image}
           color={ textStyle?.color as string || '#fff'}
           size={36}
           { ...iconProps }
@@ -187,21 +193,22 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
       );
     }
 
+
     return (
       <Animated.View
         style={[
-          styles.container,
+          themeStyles.container,
           selectStyleType<ViewStyle, IToastPosition>(position, 'center', {
             center: {
               justifyContent: 'center',
-            },
+             },
             top: {
               justifyContent: 'flex-start',
-              paddingTop: rpx(200),
+              paddingTop: this.context.getThemeVar('ToastMarginWhenTop', rpx(200)),
             },
             bottom: {
               justifyContent: 'flex-end',
-              paddingBottom: rpx(200),
+              paddingBottom: this.context.getThemeVar('ToastMarginWhenBottom', rpx(200)),
             },
           }),
           maskStyle,
@@ -212,15 +219,15 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
           <TouchableOpacity
             onPress={onAnimationEnd}
             style={[
-              styles.innerWrap,
+              themeStyles.innerWrap,
               toastStyle,
-              iconDom ? styles.iconToast : styles.textToast,
+              iconDom ? themeStyles.iconToast : themeStyles.textToast,
             ]}>
             { iconDom }
             { React.isValidElement(content) ? (
               content
             ) : (
-              <Text style={[ styles.content, textStyle]}>{'' + content}</Text>
+              <Text style={[ themeStyles.content, textStyle]}>{'' + content}</Text>
             )}
           </TouchableOpacity>
         </Animated.View>

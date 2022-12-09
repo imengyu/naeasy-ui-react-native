@@ -1,9 +1,8 @@
 import ArrayUtils from '../../utils/ArrayUtils';
 import React from 'react';
 import { FlexAlignType, TouchableHighlight, View, ViewProps, ViewStyle, TouchableOpacity, StyleSheet } from 'react-native';
-import { ThemeColor, ThemeSelector } from '../../styles';
 import { styleConfigMargin, styleConfigPadding } from '../../utils';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 export interface FlexViewProp extends ViewProps {
 
@@ -28,10 +27,12 @@ export interface FlexViewProp extends ViewProps {
   align?: FlexAlignType | undefined;
   /**
    * 主轴与交叉轴是否居中
+   * @default false
    */
   center?: boolean;
   /**
    * 弹性布局是否换行
+   * @default false
    */
   wrap?: boolean;
   /**
@@ -70,6 +71,7 @@ export interface FlexViewProp extends ViewProps {
   left?: number|undefined,
   /**
    * 是否可以点击
+   * @default false
    */
   touchable?: boolean;
   /**
@@ -115,81 +117,72 @@ const styles = StyleSheet.create({
 /**
  * Flex组件，用于一些布局中快速写容器
  */
-export class FlexViewComponent extends React.PureComponent<FlexViewProp> {
-  render(): React.ReactNode {
+export function FlexView(props: FlexViewProp) {
 
-    const style = {
-      flexDirection: this.props.direction,
-      flex: this.props.flex,
-      flexGrow: this.props.flexGrow,
-      flexShrink: this.props.flexShrink,
-      justifyContent: this.props.center ? 'center' : this.props.justify,
-      alignItems: this.props.center ? 'center' : this.props.align,
-      position: this.props.position,
-      alignSelf: this.props.alignSelf,
-      flexWrap: this.props.wrap ? 'wrap' : 'nowrap',
-      backgroundColor: ThemeSelector.color(this.props.backgroundColor),
-      width: this.props.width,
-      height: this.props.height,
-      ...(this.props.style && !(this.props.style instanceof Array) ? this.props.style : {}),
-    } as ViewStyle;
+  const themeContext = useThemeContext();
+
+  const style = {
+    flexDirection: props.direction,
+    flex: props.flex,
+    flexGrow: props.flexGrow,
+    flexShrink: props.flexShrink,
+    justifyContent: props.center ? 'center' : props.justify,
+    alignItems: props.center ? 'center' : props.align,
+    position: props.position,
+    alignSelf: props.alignSelf,
+    flexWrap: props.wrap ? 'wrap' : 'nowrap',
+    backgroundColor: themeContext.resolveThemeColor(props.backgroundColor),
+    width: props.width,
+    height: props.height,
+    ...(props.style && !(props.style instanceof Array) ? props.style : {}),
+  } as ViewStyle;
 
 
-    //内边距样式
-    styleConfigPadding(style, this.props.padding);
-    //外边距样式
-    styleConfigMargin(style, this.props.margin);
+  //内边距样式
+  styleConfigPadding(style, props.padding);
+  //外边距样式
+  styleConfigMargin(style, props.margin);
 
-    //绝对距样式
-    if (typeof this.props.left === 'number')
-      style.left = this.props.left;
-    if (typeof this.props.right === 'number')
-      style.right = this.props.right;
-    if (typeof this.props.top === 'number')
-      style.top = this.props.top;
-    if (typeof this.props.bottom === 'number')
-      style.bottom = this.props.bottom;
+  //绝对距样式
+  if (typeof props.left === 'number')
+    style.left = props.left;
+  if (typeof props.right === 'number')
+    style.right = props.right;
+  if (typeof props.top === 'number')
+    style.top = props.top;
+  if (typeof props.bottom === 'number')
+    style.bottom = props.bottom;
 
-    //需要筛选一下不需要的属性，防止直接设置到子view上面报错
-    const viewProps = {} as ViewProps;
-    for (const key in this.props) {
-      if (!ArrayUtils.contains(muteProps, key)) {
-        (viewProps as { [index: string]: unknown })[key] = (this.props as { [index: string]: unknown })[key];
-      }
+  //需要筛选一下不需要的属性，防止直接设置到子view上面报错
+  const viewProps = {} as ViewProps;
+  for (const key in props) {
+    if (!ArrayUtils.contains(muteProps, key)) {
+      (viewProps as { [index: string]: unknown })[key] = (props as { [index: string]: unknown })[key];
     }
-    /*
-    const propsFromOutside = (this.props as { [index: string]: unknown });
-    for (const muteKey of muteProps) {
-      if (typeof propsFromOutside[muteKey] !== 'undefined')
-        propsFromOutside[muteKey] = undefined;
-    }
-    */
-
-    //处理传入style是数组的情况
-    const finalStyle = this.props.style instanceof Array ? [ style ].concat(this.props.style) : style;
-
-    return (
-      this.props.touchable ?
-        (
-          this.props.pressedColor ?
-          <TouchableHighlight
-            underlayColor={ThemeSelector.color(this.props.pressedColor)}
-            style={[ { position: 'relative' }, style ]}
-            onPress={this.props.onPress}
-          >
-            <View {...viewProps} style={styles.ghostView}  />
-          </TouchableHighlight> :
-          <TouchableOpacity
-            style={finalStyle}
-            onPress={this.props.onPress}
-            activeOpacity={this.props.activeOpacity}
-          >
-            { this.props.children }
-          </TouchableOpacity>
-        ) :
-        <View {...viewProps} style={finalStyle}  />
-    );
   }
-}
 
-export const FlexView = ThemeWrapper(FlexViewComponent);
+  //处理传入style是数组的情况
+  const finalStyle = props.style instanceof Array ? [ style ].concat(props.style) : style;
+
+  return (
+    props.touchable ?
+      (
+        props.pressedColor ?
+        <TouchableHighlight
+          underlayColor={themeContext.resolveThemeColor(props.pressedColor)}
+          style={[ { position: 'relative' }, style ]}
+          onPress={props.onPress}
+        >
+          <View {...viewProps} style={styles.ghostView}  />
+        </TouchableHighlight> :
+        <TouchableOpacity
+          style={finalStyle}
+          onPress={props.onPress}
+          activeOpacity={props.activeOpacity}
+        >
+          { props.children }
+        </TouchableOpacity>
+      ) :
+      <View {...viewProps} style={finalStyle}  />
+  );
+}

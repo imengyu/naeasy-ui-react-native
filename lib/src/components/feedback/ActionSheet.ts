@@ -1,5 +1,5 @@
 import { ActionSheetIOS, ActionSheetIOSOptions } from "react-native";
-import { isAndroid } from "../../utils/PlatformTools";
+import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { NativeModules } from 'react-native';
 
 interface ActionSheetOptions extends ActionSheetIOSOptions {
@@ -25,12 +25,13 @@ export const ActionSheetNative = {
         else callback(clickIndex);
       });
     }
-    else {
+    else if (isIOS) {
       if (options.showCancel) {
         options.options.push('取消');
         options.cancelButtonIndex = options.options.length - 1;
       }
       ActionSheetIOS.showActionSheetWithOptions(options, callback);
-    }
+    } else
+      throw new Error("Not support");
   },
 };

@@ -1,10 +1,10 @@
-import Portal from "../../portal";
 import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect, useCallback } from "react";
 import PagerView from "react-native-pager-view";
 import { ActivityIndicator, Animated, BackHandler, GestureResponderEvent, PanResponder, PanResponderGestureState, Text, View, StyleSheet } from "react-native";
 import { Color } from "../../styles/ColorStyles";
 import { deviceWidth } from "../../utils";
 import { LongPressGestureHandler, TapGestureHandler } from "react-native-gesture-handler";
+import { Portal } from "../../portal";
 
 const styles = StyleSheet.create({
   container: {

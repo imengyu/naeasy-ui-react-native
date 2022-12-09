@@ -1,14 +1,13 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
 import ObjectUtils from '../../utils/ObjectUtils';
-import { borderTop } from '../../utils/StyleTools';
 import { ImageSourcePropType, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 import { Color, PressedColor } from '../../styles';
 import { Icon, IconProp } from '../basic/Icon';
 import { FlexView } from './FlexView';
 import { RowView } from './RowView';
-import { ThemeColor, ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor } from '../../theme/Theme';
 import { DynamicColor } from '../../theme/ThemeStyleSheet';
 
 interface GridProp {
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
 /**
  * 网格块按钮。包含一个图标和文字。
  */
-export const GridItem = ThemeWrapper(function (props: GridItemProp) {
+export function GridItem(props: GridItemProp) {
 
   const {
     icon,
@@ -193,12 +192,12 @@ export const GridItem = ThemeWrapper(function (props: GridItemProp) {
       </FlexView>
     </TouchableHighlight>
   );
-});
+}
 
 /**
  * 宫格可以在水平方向上把页面分隔成等宽度的区块, 主要使用场景如：热门内容等。
  */
-export const Grid = ThemeWrapper(function (props: GridProp) {
+export function Grid(props: GridProp) {
 
   const {
     columnNum = 4,
@@ -269,4 +268,4 @@ export const Grid = ThemeWrapper(function (props: GridProp) {
   };
 
   return (<RowView wrap style={hostStyle}>{renderChildren()}</RowView>);
-});
+}

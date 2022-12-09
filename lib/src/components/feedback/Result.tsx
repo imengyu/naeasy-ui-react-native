@@ -1,5 +1,6 @@
 import React, { } from 'react';
 import { Color } from '../../styles';
+import { useThemeContext } from '../../theme/Theme';
 import { Icon } from '../basic/Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { WhiteSpace } from '../space/WhiteSpace';
@@ -28,6 +29,8 @@ export interface ResultProps {
  * Result 结果显示组件。对前一步操作的结果进行反馈。
  */
 export function Result(props: ResultProps) {
+
+  const themeContext = useThemeContext();
   const {
     status = 'info',
     title,
@@ -38,34 +41,56 @@ export function Result(props: ResultProps) {
   function getDefaultIconByStatus() {
     switch (status) {
       default:
-      case 'info': return 'prompt-filling';
-      case 'success': return 'success-filling';
-      case 'error': return 'delete-filling';
-      case 'waiting': return 'clock-filling';
-      case 'warning': return 'warning-filling';
+      case 'info': return themeContext.getThemeVar('ResultIconInfo', 'prompt-filling');
+      case 'success': return themeContext.getThemeVar('ResultIconSuccess', 'success-filling');
+      case 'error': return themeContext.getThemeVar('ResultIconError', 'delete-filling');
+      case 'waiting': return themeContext.getThemeVar('ResultIconWaiting', 'clock-filling');
+      case 'warning': return themeContext.getThemeVar('ResultIconWarning', 'warning-filling');
     }
   }
   function getDefaultIconColor() {
     switch (status) {
       default:
-      case 'info': return Color.primary;
-      case 'success': return Color.success;
-      case 'error': return Color.danger;
-      case 'waiting': return Color.primary;
-      case 'warning': return Color.warning;
+      case 'info': return themeContext.getThemeVar('ResultColorInfo', Color.primary);
+      case 'success': return themeContext.getThemeVar('ResultColorSuccess', Color.success);
+      case 'error': return themeContext.getThemeVar('ResultColorError', Color.danger);
+      case 'waiting': return themeContext.getThemeVar('ResultColorWaiting', Color.primary);
+      case 'warning': return themeContext.getThemeVar('ResultColorWarning', Color.warning);
     }
   }
+
+  const themeVars = themeContext.getThemeVars({
+    ResultIconSize: 55,
+    ResultTitleFontSize: 20,
+    ResultTitleColor: Color.black,
+    ResultTitleBold: true,
+    ResultTitleMarginTop: 15,
+    ResultDescriptionFontSize: 14,
+    ResultDescriptionColor: Color.black,
+    ResultDescriptionBold: true,
+    ResultDescriptionMarginTop: 5,
+  });
 
   return (
     <ColumnView center>
       {
         icon && typeof icon === 'string' ?
-          <Icon size={55} icon={icon} /> :
-          (icon ? icon : <Icon size={55} icon={getDefaultIconByStatus()} color={getDefaultIconColor()} />) }
-      <WhiteSpace size={15} />
-      <Text size={20} color={Color.black} bold align="center">{title}</Text>
-      <WhiteSpace size={5} />
-      <Text size={14} color={Color.textSecond} align="center">{description}</Text>
+          <Icon size={themeVars.ResultIconSize as number} icon={icon} /> :
+          (icon ? icon : <Icon size={themeVars.ResultIconSize as number} icon={getDefaultIconByStatus()} color={getDefaultIconColor()} />) }
+      <WhiteSpace size={themeVars.ResultTitleMarginTop} />
+      <Text
+        size={themeVars.ResultTitleFontSize}
+        color={themeVars.ResultTitleColor}
+        bold={themeVars.ResultTitleBold}
+        align="center"
+      >{title}</Text>
+      <WhiteSpace size={themeVars.ResultDescriptionMarginTop} />
+      <Text
+        size={themeVars.ResultDescriptionFontSize}
+        color={themeVars.ResultDescriptionColor}
+        bold={themeVars.ResultDescriptionBold}
+        align="center"
+      >{description}</Text>
     </ColumnView>
   );
 }

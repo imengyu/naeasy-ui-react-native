@@ -1,14 +1,15 @@
 import React, { createRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import Portal from '../../portal';
 import CheckTools from '../../utils/CheckTools';
-import { ActivityIndicator, Animated, ListRenderItemInfo, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { Portal } from '../../portal';
+import { ActivityIndicator, Animated, ListRenderItemInfo, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { deviceHeight, selectStyleType } from '../../utils';
 import { Icon, IconProp } from '../basic/Icon';
 import { Button } from '../button/Button';
-import { Color, DynamicColor, StyleSheet, ThemeSelector } from '../../styles';
+import { Color } from '../../styles';
 import { useDidMountEffect } from '../../hooks/CommonHooks';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ThemeRender, ThemeWrapper } from '../../theme/Theme';
+import { ThemeRender, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 //#region 创建容器与删除
 
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    maxHeight: deviceHeight * 0.3,
+    maxHeight: DynamicVar('NotifyContainerMaxHeight', deviceHeight * 0.3),
     backgroundColor: 'transparent',
   },
   containerInner:  {
@@ -102,32 +103,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: DynamicVar('NotifyClickablePaddingVertical', 15),
+    paddingHorizontal: DynamicVar('NotifyClickablePaddingHorizontal', 20),
   },
   notify: {
-    marginTop: 10,
-    marginHorizontal: 20,
-    backgroundColor: DynamicColor(Color.light),
-    borderRadius: 25,
-    elevation: 5,
-    shadowColor: DynamicColor(Color.black),
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 2 },
+    marginTop: DynamicVar('NotifyMarginTop', 10),
+    marginHorizontal: DynamicVar('NotifyMarginHorizontal', 20),
+    backgroundColor: DynamicColorVar('NotifyBackgroundColor', Color.light),
+    borderRadius: DynamicVar('NotifyBorderRadius', 25),
+    elevation: DynamicVar('NotifyElevation', 5),
+    shadowColor: DynamicColorVar('NotifyShadowColor', Color.black),
+    shadowOpacity: DynamicVar('NotifyShadowOpacity', 0.15),
+    shadowOffset: DynamicVar('NotifyShadowOffset', { width: 0, height: 2 }),
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   notifyText: {
-    marginHorizontal: 5,
-    fontSize: 14,
-    color: DynamicColor(Color.black),
+    marginHorizontal: DynamicVar('NotifyTextMarginHorizontal', 5),
+    fontSize: DynamicVar('NotifyTextFontSize', 14),
+    color: DynamicColorVar('NotifyTextColor', Color.black),
   },
-  messageItemStyle: { backgroundColor: DynamicColor(Color.notify) },
-  loadingItemStyle: { backgroundColor: DynamicColor(Color.notify) },
-  errorItemStyle: { backgroundColor: DynamicColor(Color.danger) },
-  successItemStyle: { backgroundColor: DynamicColor(Color.success) },
-  waringItemStyle: { backgroundColor: DynamicColor(Color.warning) },
+  messageItemStyle: { backgroundColor: DynamicColorVar('NotifyMessageBackgroundColor', Color.notify) },
+  loadingItemStyle: { backgroundColor: DynamicColorVar('NotifyLoadingBackgroundColor', Color.notify) },
+  errorItemStyle: { backgroundColor: DynamicColorVar('NotifyErrorBackgroundColor', Color.danger) },
+  successItemStyle: { backgroundColor: DynamicColorVar('NotifySuccessBackgroundColor', Color.success) },
+  waringItemStyle: { backgroundColor: DynamicColorVar('NotifyWaringBackgroundColor', Color.warning) },
 });
 
 export interface NotifyInstance {
@@ -158,7 +159,7 @@ interface NotifyContainerProps {
 }
 
 //条目组件
-const NotifyItemControl = ThemeWrapper(function (props: {
+function NotifyItemControl(props: {
   item: NotifyItem,
   first: boolean,
   removeFlag: boolean,
@@ -167,30 +168,38 @@ const NotifyItemControl = ThemeWrapper(function (props: {
 }) {
   const { item, first, removeFlag, canRemove, onRemoveAnimFinish } = props;
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+  const themeVars = themeContext.getThemeVars({
+    NotifySideAnimDuration: 500,
+    NotifyFadeAnimDuration: 300,
+  });
+
   let icon = item.icon || selectStyleType(item.type, 'message', {
-    message: '',
-    error: 'delete-filling',
-    waring: 'warning-filling',
-    success: 'success-filling',
-    loading: 'loading',
+    message: themeContext.getThemeVar('NotifyMessageIcon', ''),
+    error: themeContext.getThemeVar('NotifyErrorIcon', 'delete-filling'),
+    waring: themeContext.getThemeVar('NotifyWaringIcon', 'warning-filling'),
+    success: themeContext.getThemeVar('NotifySuccessIcon', 'success-filling'),
+    loading: themeContext.getThemeVar('NotifyLoadingIcon', 'loading'),
   });
 
   const animSideValue = useRef(new Animated.Value(first ? 0 : -deviceHeight));
   const animOpacityValue = useRef(new Animated.Value(first ? 1 : 0));
 
+
   const colorStyle = selectStyleType(item.type, 'message', {
-    message: styles.messageItemStyle,
-    loading: styles.loadingItemStyle,
-    error:  styles.errorItemStyle,
-    success: styles.successItemStyle,
-    waring: styles.waringItemStyle,
+    message: themeStyles.messageItemStyle,
+    loading: themeStyles.loadingItemStyle,
+    error:  themeStyles.errorItemStyle,
+    success: themeStyles.successItemStyle,
+    waring: themeStyles.waringItemStyle,
   });
-  const textColor = ThemeSelector.color(selectStyleType(item.type, 'message', {
-    message: Color.text,
-    loading: Color.text,
-    error: Color.white.light,
-    success: Color.white.light,
-    waring: Color.white.light,
+  const textColor = themeContext.resolveThemeColor(selectStyleType(item.type, 'message', {
+    message: themeContext.getThemeVar('NotifyMessageTextColor', Color.text),
+    loading: themeContext.getThemeVar('NotifyLoadingTextColor', Color.text),
+    error: themeContext.getThemeVar('NotifyErrorTextColor', Color.white.light),
+    success: themeContext.getThemeVar('NotifySuccessTextColor', Color.white.light),
+    waring: themeContext.getThemeVar('NotifyWaringTextColor', Color.white.light),
   }) || Color.primary);
 
   useDidMountEffect(() => {
@@ -198,12 +207,12 @@ const NotifyItemControl = ThemeWrapper(function (props: {
       Animated.parallel([
         Animated.timing(animSideValue.current, {
           toValue: 0,
-          duration: 500,
+          duration: themeVars.NotifySideAnimDuration,
           useNativeDriver: true,
         }),
         Animated.timing(animOpacityValue.current, {
           toValue: 1,
-          duration: 300,
+          duration: themeVars.NotifyFadeAnimDuration,
           useNativeDriver: true,
         }),
       ]).start();
@@ -214,21 +223,21 @@ const NotifyItemControl = ThemeWrapper(function (props: {
       Animated.parallel([
         Animated.timing(animOpacityValue.current, {
           toValue: 0,
-          duration: 200,
+          duration: themeVars.NotifyFadeAnimDuration,
           useNativeDriver: true,
         }),
       ]).start(() => {
         onRemoveAnimFinish();
       });
     }
-  }, [ removeFlag, onRemoveAnimFinish ]);
+  }, [ themeVars, removeFlag, onRemoveAnimFinish ]);
 
   //执行移除动画
   function removeByUser() {
     Animated.parallel([
       Animated.timing(animOpacityValue.current, {
         toValue: 0,
-        duration: 200,
+        duration: themeVars.NotifyFadeAnimDuration,
         useNativeDriver: true,
       }),
     ]).start(() => {
@@ -246,11 +255,11 @@ const NotifyItemControl = ThemeWrapper(function (props: {
   }
 
   return (
-    <Animated.View style={[ styles.notify, colorStyle, item.style, {
+    <Animated.View style={[ themeStyles.notify, colorStyle, item.style, {
       transform: [{ translateY: animSideValue.current }],
       opacity: animOpacityValue.current,
     }]}>
-      <TouchableOpacity style={styles.notifyClickable} activeOpacity={0.8} onPress={canRemove ? onClick : undefined}>
+      <TouchableOpacity style={themeStyles.notifyClickable} activeOpacity={0.8} onPress={canRemove ? onClick : undefined}>
         {
           //加载中提示
           (item.showIcon && icon !== '') ?
@@ -262,7 +271,7 @@ const NotifyItemControl = ThemeWrapper(function (props: {
         {
           //主内容
           typeof item.content === 'string' ?
-            <Text style={[ styles.notifyText, { color: textColor }, item.textStyle ]}>{item.content}</Text> :
+            <Text style={[ themeStyles.notifyText, { color: textColor }, item.textStyle ]}>{item.content}</Text> :
             item.content
         }
         {
@@ -273,7 +282,7 @@ const NotifyItemControl = ThemeWrapper(function (props: {
       </TouchableOpacity>
     </Animated.View>
   );
-});
+}
 //条目容器组件
 const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps>((props, ref) => {
 

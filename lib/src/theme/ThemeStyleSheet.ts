@@ -28,7 +28,7 @@ const DYNAMIC_PROPTYPE_COLOR_VAR = 'ColorVar';
  * @param themeData useThemeContext 返回的样式数据
  * @returns 对应样式组
  */
-export function transformThemeStyles<T>(sourceStyle: NamedStyles<T>, themeData: ThemeContextData) {
+export function transformThemeStyles<T extends NamedStyles<T> | NamedStyles<any>>(sourceStyle: T | NamedStyles<T>, themeData: ThemeContextData) : T {
   const resultObjects = {} as NamedStyles<T>;
   for (const key in sourceStyle)
     resultObjects[key] = transformThemeStyle(sourceStyle[key], themeData);

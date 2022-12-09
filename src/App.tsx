@@ -40,34 +40,34 @@ function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        {/* 弹出框等等组件使用了 Portal，需要引入 PortalHost */}
-        <PortalHost>
-          {/* 主题支持 */}
-          <ThemeProvider theme={theme}>
+        {/* 主题支持 */}
+        <ThemeProvider theme={theme}>
+          {/* 弹出框等等组件使用了 Portal，需要引入 PortalHost */}
+          <PortalHost>
             {/* 用于在主题更改时为 react-navigation 和 StatusBar 更换颜色 */}
             <ThemeRender>
               {(themeNow, context) => <NavigationContainer theme={{
                 //React react-navigation 的样式特殊处理
                 dark: themeNow === 'dark',
                 colors: {
-                  primary: context.getThemeColor(Color.primary),
-                  background: context.getThemeColor(Color.background),
-                  card: context.getThemeColor(Color.light),
-                  text: context.getThemeColor(Color.text),
-                  border: context.getThemeColor(Color.border),
-                  notification: context.getThemeColor(Color.warning),
+                  primary: context.resolveThemeColor(Color.primary),
+                  background: context.resolveThemeColor(Color.background),
+                  card: context.resolveThemeColor(Color.light),
+                  text: context.resolveThemeColor(Color.text),
+                  border: context.resolveThemeColor(Color.border),
+                  notification: context.resolveThemeColor(Color.warning),
                 },
               }}>
                 {/* 状态栏的样式处理 */}
                 <StatusBar
                   barStyle={themeNow === 'dark' ? 'light-content' : 'dark-content'}
-                  backgroundColor={context.getThemeColor(Color.background)}
+                  backgroundColor={context.resolveThemeColor(Color.background)}
                 />
                 <TestAppNav />
               </NavigationContainer>}
             </ThemeRender>
-          </ThemeProvider>
-        </PortalHost>
+          </PortalHost>
+        </ThemeProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

@@ -2,8 +2,9 @@
 import React from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { Color } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 export interface LoadingPageProps {
   /**
@@ -16,6 +17,7 @@ export interface LoadingPageProps {
   loadingTextStyle?: TextStyle,
   /**
    * 加载器颜色
+   * @default Color.primary
    */
   indicatorColor?: ThemeColor,
   /**
@@ -42,27 +44,47 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   loadingText: {
-    marginVertical: 10,
-    fontSize: 15,
+    marginVertical: DynamicVar('LoadingPageTextMarginVertical', 10),
+    fontSize: DynamicVar('LoadingPageTextFontSize', 15),
+    color: DynamicVar('LoadingPageTextColor', Color.text),
   },
 });
 
 /**
  * 一个加载中视图，显示加载中状态
  */
-export const LoadingPage = ThemeWrapper(function (props: LoadingPageProps) {
+export function LoadingPage(props: LoadingPageProps) {
 
-  const { style, children, indicatorColor, indicatorStyle, loadingText, loadingTextStyle } = props;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    style,
+    children,
+    indicatorColor = themeContext.getThemeColorVar('LoadingPageIndicatorColor', Color.primary),
+    indicatorStyle,
+    loadingText,
+    loadingTextStyle,
+  } = props;
+
   return (
-    <View style={{ ...styles.loadingView, ...style }}>
-      <ActivityIndicator color={ThemeSelector.color(indicatorColor || Color.primary)} size="large" style={indicatorStyle} />
-      <Text style={{
-        ...styles.loadingText,
-        display: CheckTools.isNullOrEmpty(loadingText) ? 'none' : 'flex',
-        color: ThemeSelector.color(indicatorColor || Color.primary),
-        ...loadingTextStyle,
-      }}>{loadingText}</Text>
+    <View style={[ themeStyles.loadingView, style ]}>
+      <ActivityIndicator
+        color={themeContext.resolveThemeColor(indicatorColor)}
+        size="large"
+        style={indicatorStyle}
+      />
+      <Text
+        style={[
+          themeStyles.loadingText,
+          {
+            display: CheckTools.isNullOrEmpty(loadingText) ? 'none' : 'flex',
+            color: themeContext.resolveThemeColor(indicatorColor),
+          },
+          loadingTextStyle,
+        ]}
+      >{loadingText}</Text>
       { children }
     </View>
   );
-});
+}

@@ -5,7 +5,7 @@ import { Color } from '../../styles/ColorStyles';
 import { rpx } from '../../utils/StyleConsts';
 import { ColumnView } from '../layout/ColumnView';
 import { selectStyleType } from '../../utils/StyleTools';
-import { DynamicColor, useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { useThemeContext } from '../../theme/Theme';
 
 type EmptyImageType = 'default'|'error'|'network'|'search';
@@ -13,14 +13,17 @@ type EmptyImageType = 'default'|'error'|'network'|'search';
 export interface EmptyProp {
   /**
    * 图片下方的描述文字
+   * @default ''
    */
   description?: string,
   /**
    * 图片类型，可选值为 `error` `network` `search`，支持传入图片
+   * @default 'default'
    */
   image?: EmptyImageType|ImageSourcePropType,
   /**
    * 	图片大小
+   * @default 100
    */
   imageSize?: number,
   /**
@@ -39,13 +42,13 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: rpx(20),
+    padding: DynamicVar('EmptyPadding', rpx(20)),
     flex: 1,
   },
   descriptionStyle: {
-    paddingVertical: rpx(8),
-    fontSize: 14,
-    color: DynamicColor(Color.textSecond),
+    paddingVertical: DynamicVar('EmptyDescriptionPaddingVertical', rpx(8)),
+    fontSize: DynamicVar('EmptyDescriptionFontSize', 14),
+    color: DynamicColorVar('EmptyDescriptionColor', Color.textSecond),
     textAlign: 'center',
   },
 });
@@ -62,7 +65,7 @@ export function Empty(props: EmptyProp) {
 
   const {
     imageSize = themeContext.getThemeVar('EmptyImageSize', 100),
-    image,
+    image = themeContext.getThemeVar('EmptyImage', 'default'),
     description = '',
     children,
   } = props;
