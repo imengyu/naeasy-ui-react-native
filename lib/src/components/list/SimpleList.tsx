@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
-import { View, ViewStyle, TextStyle, StyleSheet, FlatList, Text, TouchableHighlight, FlatListProps } from 'react-native';
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeSelector } from '../../styles';
+import { View, ViewStyle, TextStyle, FlatList, Text, TouchableHighlight, FlatListProps, StyleSheet } from 'react-native';
+import { Color, PressedColor } from '../../styles';
 import { CheckBoxDefaultButton, CheckBoxDefaultButtonProps } from '../form/CheckBox';
-import { ThemeRender } from '../../theme/Theme';
+import { ThemeRender, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 const styles = StyleSheet.create({
   item: {
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: DynamicColor(Color.border),
-    backgroundColor: DynamicColor(Color.white),
+    paddingHorizontal: DynamicVar('SimpleListItemPaddingHorizontal', 20),
+    fontSize: DynamicVar('SimpleListItemFontSize', 14),
+    borderTopWidth: DynamicVar('SimpleListItemBorderTopWidth', 0),
+    borderBottomWidth: DynamicVar('SimpleListItemBorderBottomWidth', StyleSheet.hairlineWidth),
+    borderColor: DynamicColorVar('SimpleListItemBorderColor', Color.border),
+    color: DynamicColorVar('SimpleListItemColor', Color.text),
+    backgroundColor: DynamicColorVar('SimpleListItemBackgroundColor', Color.white),
     flexDirection: 'row',
   },
   itemText: {
-    fontSize: 14,
     flex: 1,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('SimpleListItemTextFontSize', 14),
+    fontWeight: DynamicVar('SimpleListItemTextFontWeight', 'normal'),
+    color: DynamicColorVar('SimpleListItemTextColor', Color.text),
   },
   itemTextChecked: {
-    fontWeight: 'bold',
-    color: DynamicColor(Color.primary),
+    fontSize: DynamicVar('SimpleListItemCheckedTextFontSize', 14),
+    fontWeight: DynamicVar('SimpleListItemCheckedTextFontWeight', 'bold'),
+    color: DynamicColorVar('SimpleListItemCheckedTextColor', Color.primary),
   },
 });
 
@@ -46,7 +51,7 @@ export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"rende
    */
   data: T[],
   /**
-   * 显示数据的prop
+   * 显示数据的prop，如果为空，则尝试直接把数据当 string 显示。
    */
   dataDisplayProp?: string,
   /**
@@ -55,14 +60,25 @@ export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"rende
    * * select 点击选择模式
    * * single-check 单选选择模式，条目右边有选择框
    * * mulit-check 多选选择模式，条目右边有选择框
+   * @default 'select'
    */
   mode?: 'select'|'single-check'|'mulit-check',
   /**
    * 当列表显示选择框时，选择框的自定义属性
+   * @default {
+   *   borderColor: Color.border,
+   *   checkColor: Color.white,
+   *   color: Color.primary,
+   *   size: 20,
+   *   iconSize: mode === 'single-check' ? 10 : 16,
+   *   type: mode === 'single-check' ? 'radio' : 'icon',
+   *   disabled: false,
+   * }
    */
   checkProps?: CheckBoxDefaultButtonProps,
   /**
    * 当用使用选择框模式时，默认选中条目
+   * @default []
    */
   defaultSelect?: T[],
   /**
@@ -91,6 +107,9 @@ export interface SimpleListProps<T> extends Omit<FlatListProps<T>, "data"|"rende
  * 简单条目列表
  */
 export function SimpleList<T>(props: SimpleListProps<T>) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const data = props.data;
   const dataDisplayProp = props.dataDisplayProp;
@@ -121,20 +140,20 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
   }
 
   const itemStyle = {
-    ...styles.item,
+    ...themeStyles.item,
     ...props.itemStyle,
   } as ViewStyle;
   const textStyle = {
-    ...styles.itemText,
+    ...themeStyles.itemText,
     ...props.textStyle,
   } as ViewStyle;
   const checkedItemStyle = {
-    ...styles.item,
+    ...themeStyles.item,
     ...props.checkedItemStyle,
   } as ViewStyle;
   const checkedTextStyle = {
-    ...styles.itemText,
-    ...styles.itemTextChecked,
+    ...themeStyles.itemText,
+    ...themeStyles.itemTextChecked,
     ...props.checkedTextStyle,
   } as ViewStyle;
   const checkProps = {
@@ -158,7 +177,7 @@ export function SimpleList<T>(props: SimpleListProps<T>) {
             const checked = checkedList.indexOf(item) >= 0;
             return (props.renderItem ? props.renderItem(item, index) :
               <TouchableHighlight
-                underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+                underlayColor={themeContext.resolveThemeColor(PressedColor(Color.white))}
                 onPress={() => onItemPress(item as T, index)}
               >
                 <View style={checked ? checkedItemStyle : itemStyle}>

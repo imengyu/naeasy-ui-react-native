@@ -1,26 +1,29 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IndexBar, IndexBarInstance } from './IndexBar';
-import { ViewStyle, TextStyle, StyleSheet, FlatList, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableHighlight, FlatListProps } from 'react-native';
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeSelector } from '../../styles';
-import { ThemeRender } from '../../theme/Theme';
+import { ViewStyle, TextStyle, FlatList, Text, NativeSyntheticEvent, NativeScrollEvent, TouchableHighlight, FlatListProps, StyleSheet } from 'react-native';
+import { Color, PressedColor } from '../../styles';
+import { ThemeRender, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 const styles = StyleSheet.create({
   list: {
-    backgroundColor: DynamicColor(Color.white),
+    backgroundColor: DynamicColorVar('IndexedListBackgroundColor', Color.white),
   },
   header: {
-    backgroundColor: DynamicColor(Color.background),
-    paddingHorizontal: 20,
-    fontSize: 12,
-    color: DynamicColor(Color.textSecond),
+    backgroundColor: DynamicColorVar('IndexedListHeaderBackgroundColor', Color.background),
+    paddingHorizontal: DynamicVar('IndexedListHeaderPaddingHorizontal', 20),
+    paddingVertical: DynamicVar('IndexedListHeaderPaddingVertical', 0),
+    fontSize: DynamicVar('IndexedListHeaderFontSize', 12),
+    color: DynamicColorVar('IndexedListHeaderColor', Color.textSecond),
   },
   item: {
-    paddingHorizontal: 20,
-    fontSize: 14,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: DynamicColor(Color.border),
-    color: DynamicColor(Color.text),
-    backgroundColor: DynamicColor(Color.white),
+    paddingHorizontal: DynamicVar('IndexedListItemPaddingHorizontal', 20),
+    fontSize: DynamicVar('IndexedListItemFontSize', 14),
+    borderTopWidth: DynamicVar('IndexedListItemBorderTopWidth', 0),
+    borderBottomWidth: DynamicVar('IndexedListItemBorderBottomWidth', StyleSheet.hairlineWidth),
+    borderColor: DynamicColorVar('IndexedListItemBorderColor', Color.border),
+    color: DynamicColorVar('IndexedListItemColor', Color.text),
+    backgroundColor: DynamicColorVar('IndexedListItemBackgroundColor', Color.white),
   },
 });
 
@@ -36,6 +39,7 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
   itemStyle?: ViewStyle;
   /**
    * 条目的高度
+   * @default 50
    */
   itemHeight?: number;
   /**
@@ -44,6 +48,7 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
   groupStyle?: ViewStyle;
   /**
    * 组的头部高度
+   * @default 35
    */
   groupHeight?: number;
   /**
@@ -51,7 +56,8 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
    */
   data: T[],
   /**
-   * 显示数据的prop
+   * 显示数据的prop，如果为空，则尝试直接把数据当 string 显示。
+   * @default null
    */
   dataDisplayProp?: string,
   /**
@@ -87,6 +93,9 @@ export interface IndexedListProps<T> extends Omit<FlatListProps<T>, "data"|"rend
  */
 export function IndexedList<T>(props: IndexedListProps<T>) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const { data: dataSource, groupDataBy, dataDisplayProp, keyExtractor, sortGroup } = props;
   const onItemPress = props.onItemPress || (() => {});
 
@@ -94,17 +103,17 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
   const itemHeight = props.itemHeight || 50;
 
   const groupStyle = {
-    ...styles.header,
+    ...themeStyles.header,
     ...props.groupStyle,
     height: groupHeight,
     lineHeight: groupHeight,
   } as TextStyle;
   const itemStyle = {
-    ...styles.item,
+    ...themeStyles.item,
     ...props.itemStyle,
     height: itemHeight,
     lineHeight: itemHeight,
-  } as ViewStyle;
+  } as TextStyle;
 
   const [ data, setData ] = useState<IndexedListGrouperedData<T>[]>([]);
   const [ dataIndex, setDataIndex ] = useState<string[]>([]);
@@ -220,7 +229,7 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
       />
       <ThemeRender>
         {() => <FlatList<IndexedListGrouperedData<T>>
-          style={styles.list}
+          style={themeStyles.list}
           { ...props }
           ref={refList}
           data={data}
@@ -236,7 +245,7 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
             (props.renderItem ? props.renderItem(item.data, index, item.isTitle === true) : (item.isTitle ?
               <Text style={groupStyle}>{item.data as string}</Text> :
               <TouchableHighlight
-                underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+                underlayColor={themeContext.resolveThemeColor(PressedColor(Color.white))}
                 onPress={() => onItemPress(item.data as T)}
               >
                 <Text style={itemStyle}>{dataDisplayProp ? (item.data as unknown as Record<string, string>)[dataDisplayProp] : (item.data as unknown as string) }</Text>

@@ -1,9 +1,10 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../display/Badge";
-import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicColorVar, DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 //公共的SideBarItem
 //==================================
@@ -11,6 +12,7 @@ import { ThemeWrapper } from "../../theme/Theme";
 export interface SideBarItemProps {
   /**
    * 标签名称，必填, 请保证不重复
+   * @required true
    */
   name: string|number;
   /**
@@ -18,7 +20,8 @@ export interface SideBarItemProps {
     */
   text?: string;
   /**
-   * 是否可以点击，默认：是
+   * 是否可以点击
+   * @default true
    */
   touchable?: boolean;
   /**
@@ -65,19 +68,28 @@ interface InternalSideBarItemProps extends SideBarItemProps {
   onPress: () => void;
 }
 function InternalSideBarItem(props: InternalSideBarItemProps) {
-  const active = props.active === true;
-  const color = props.active ? ThemeSelector.color(props.activeColor || Color.primary) : ThemeSelector.color(props.inactiveColor || Color.textSecond);
-  const touchable = props.touchable !== false;
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    activeColor = Color.primary,
+    inactiveColor = Color.textSecond,
+    active = false,
+    touchable = true,
+  } = props;
+
+  const color = props.active ? themeContext.resolveThemeColor(activeColor) : themeContext.resolveThemeColor(inactiveColor);
   const textProps = {
     style: {
-      ...styles.sideText,
+      ...themeStyles.sideText,
       color: color,
       ...props.textStyle,
     },
   };
   return (
-    <TouchableOpacity activeOpacity={touchable ? 0.8 : 0.4} style={[styles.sideItem, props.style, active ? props.activeStyle : props.inactiveStyle, touchable ? {} : { opacity: 0.4 } ]} onPress={touchable ? props.onPress : undefined}>
-      { active ? <View style={[ styles.sideActiveBadge, props.activeBadgeStyle ]} /> : <></> }
+    <TouchableOpacity activeOpacity={touchable ? 0.8 : 0.4} style={[themeStyles.sideItem, props.style, active ? props.activeStyle : props.inactiveStyle, touchable ? {} : { opacity: 0.4 } ]} onPress={touchable ? props.onPress : undefined}>
+      { active ? <View style={[ themeStyles.sideActiveBadge, props.activeBadgeStyle ]} /> : <></> }
       <Badge content={props.badge === -1 ? '' : ((typeof props.badge === 'undefined' || props.badge === 0) ? 0 : props.badge)} offset={{ x: 3, y: 3 }} {...props.badgeProps}>
         {
           CheckTools.isNullOrEmpty(props.text) ?
@@ -96,6 +108,7 @@ export interface SideBarProps {
   style?: ViewStyle;
   /**
     * 选中文字颜色
+    * @default Color.primary
     */
   activeColor?: ThemeColor;
   /**
@@ -108,6 +121,7 @@ export interface SideBarProps {
   activeBadgeStyle?: ViewStyle;
   /**
     * 未选中文字颜色
+    * @default Color.textSecond
     */
   inactiveColor?: ThemeColor;
   /**
@@ -124,6 +138,7 @@ export interface SideBarProps {
   children: JSX.Element[];
   /**
     * 选中的条目，这是一个受控属性，请与 onSelectItem 配合。
+    * @default ''
     */
   selectedItemName?: string|number,
   /**
@@ -145,11 +160,13 @@ export interface SideBarProps {
  * 介绍：
  * 垂直展示的导航栏，用于在不同的内容区域之间进行切换。
  */
-export const SideBar = ThemeWrapper(function (props: SideBarProps) {
+export function SideBar(props: SideBarProps) {
+
+  const themeStyles = useThemeStyles(styles);
 
   const selectedItemName = CheckTools.returnDefinedValueOrdefault(props.selectedItemName, '');
-  const activeStyle = props.activeStyle || styles.activeStyle;
-  const inactiveStyle = props.inactiveStyle || styles.inactiveStyle;
+  const activeStyle = props.activeStyle || themeStyles.activeStyle;
+  const inactiveStyle = props.inactiveStyle || themeStyles.inactiveStyle;
 
   function renderItems() {
     const arr = [] as JSX.Element[];
@@ -182,12 +199,12 @@ export const SideBar = ThemeWrapper(function (props: SideBarProps) {
   }
 
   return (
-    <View style={[ styles.container, props.style ]}>
+    <View style={[ themeStyles.container, props.style ]}>
       { props.renderBackground && props.renderBackground() }
       { renderItems() }
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -198,25 +215,27 @@ const styles = StyleSheet.create({
   },
   sideItem: {
     position: 'relative',
-    paddingVertical: 18,
-    paddingHorizontal: 15,
+    paddingVertical: DynamicVar('SideBarItemPaddingVertical', 18),
+    paddingHorizontal: DynamicVar('SideBarItemPaddingHorizontal', 15),
     alignSelf: 'stretch',
   },
   sideActiveBadge: {
-    backgroundColor: DynamicColor(Color.primary),
+    backgroundColor: DynamicColorVar('SideBarItemActiveBadgeBackgroundColor', Color.primary),
     position: 'absolute',
-    left: 0,
-    top: '100%',
-    height: 15,
-    width: 4,
+    left: DynamicVar('SideBarItemActiveBadgeLeft', 0),
+    top: DynamicVar('SideBarItemActiveBadgeTop', '100%'),
+    right: DynamicVar('SideBarItemActiveBadgeRight', undefined),
+    bottom: DynamicVar('SideBarItemActiveBadgeBottom', undefined),
+    height: DynamicVar('SideBarItemActiveBadgeHeight', 15),
+    width: DynamicVar('SideBarItemActiveBadgeWidth', 4),
   },
   sideText: {
-    fontSize: 14,
+    fontSize: DynamicVar('SideBarItemTextFontSize', 14),
   },
   activeStyle: {
-    backgroundColor: DynamicColor(Color.white),
+    backgroundColor: DynamicColorVar('SideBarItemActiveBackgroundColor', Color.white),
   },
   inactiveStyle: {
-    backgroundColor: DynamicColor(Color.light),
+    backgroundColor: DynamicColorVar('SideBarItemInactiveBackgroundColor', Color.light),
   },
 });

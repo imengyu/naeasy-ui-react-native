@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { TouchableHighlight } from 'react-native';
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, PressedColor } from '../../styles';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { RowView } from "../layout/RowView";
-import { ThemeWrapper } from '../../theme/Theme';
 
 interface PaginationProps {
   /**
@@ -62,6 +63,11 @@ interface PaginationProps {
    * 按钮为非当前页码下文字颜色
    */
   deactiveTextColor?: ThemeColor;
+
+  //FIXME: 支持自定义渲染
+  renderItem?: (index: number, active: boolean, text: string) => JSX.Element;
+  
+  renderNext?: () => JSX.Element;
 }
 interface PaginationItemProps {
   text?: string;
@@ -72,27 +78,25 @@ interface PaginationItemProps {
 
 const styles = StyleSheet.create({
   simpleText: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: DynamicVar('PaginationSimpleTextPaddingHorizontal', 10),
+    paddingVertical: DynamicVar('PaginationSimpleTextPaddingVertical', 5),
     flexGrow: 1,
     justifyContent: 'center',
     alignContent: 'center',
     textAlign: 'center',
   },
   itemButton: {
-    backgroundColor: DynamicColor(Color.white),
     flexGrow: 1,
     alignSelf: 'auto',
     justifyContent: 'center',
     alignContent: 'center',
-    paddingHorizontal: 4,
-    paddingVertical: 8,
+    paddingHorizontal: DynamicVar('PaginationItemPaddingHorizontal', 4),
+    paddingVertical: DynamicVar('PaginationItemPaddingVertical', 8),
     textAlign: 'center',
   },
   itemText: {
-    color: DynamicColor(Color.text),
-    fontSize: 13,
-    textAlign: 'center',
+    fontSize: DynamicVar('PaginationItemTextFontSize', 13),
+    textAlign: DynamicVar('PaginationItemTextAlign', 'center'),
   },
 });
 
@@ -101,21 +105,35 @@ const styles = StyleSheet.create({
 /**
  * 分页指示器组件
  */
-export const Pagination = ThemeWrapper(function (props: PaginationProps) {
+export function Pagination(props: PaginationProps) {
 
-  const showNextPrev = props.showNextPrev || true;
-  const nextText = props.nextText || '下一张';
-  const prevText = props.prevText || '上一张';
-  const currentPage = props.currentPage;
-  const canNext = currentPage < props.pageCount - 1;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    showNextPrev = true,
+    nextText = '下一张',
+    prevText = '上一张',
+    currentPage,
+    showPageCount = 5,
+    pageCount,
+    pressedColor = PressedColor(Color.white),
+    pressedTextColor = Color.textSecond,
+    activeColor = Color.primary,
+    deactiveColor = Color.white,
+    activeTextColor = Color.white,
+    deactiveTextColor = Color.text,
+  } = themeContext.resolveThemeProps(props, {
+    pressedColor: 'PaginationPressedColor',
+    pressedTextColor: 'PaginationPressedTextColor',
+    activeColor: 'PaginationActiveColor',
+    deactiveColor: 'PaginationDeactiveColor',
+    activeTextColor: 'PaginationActiveTextColor',
+    deactiveTextColor: 'PaginationDeactiveTextColor',
+  });
+
+  const canNext = currentPage < pageCount - 1;
   const canPrev = currentPage > 0;
-  const showPageCount = props.showPageCount || 5;
-  const pressedColor = ThemeSelector.color(props.pressedColor || PressedColor(Color.white));
-  const pressedTextColor = ThemeSelector.color(props.pressedTextColor || Color.textSecond);
-  const activeColor = ThemeSelector.color(props.activeColor || Color.primary);
-  const deactiveColor = ThemeSelector.color(props.deactiveColor || Color.white);
-  const activeTextColor = ThemeSelector.color(props.activeTextColor || Color.white);
-  const deactiveTextColor = ThemeSelector.color(props.deactiveTextColor || Color.text);
 
   function renderItems() {
     const arr = [] as JSX.Element[];
@@ -156,18 +174,18 @@ export const Pagination = ThemeWrapper(function (props: PaginationProps) {
 
     return (
       <TouchableHighlight
-        underlayColor={pressedColor}
+        underlayColor={themeContext.resolveThemeColor(pressedColor)}
         style={{
-          ...styles.itemButton,
-          backgroundColor: active ? activeColor : (touchable ? deactiveColor : pressedColor),
+          ...themeStyles.itemButton,
+          backgroundColor: themeContext.resolveThemeColor(active ? activeColor : (touchable ? deactiveColor : pressedColor)),
         }}
         onPress={touchable && !active ? thisProps.onPress : undefined}
         onHideUnderlay={() => setPressed(false)}
         onShowUnderlay={() => setPressed(true)}
       >
         <Text style={{
-          ...styles.itemText,
-          color: touchable ? (pressed ? pressedTextColor : (active ? activeTextColor : deactiveTextColor)) : pressedTextColor,
+          ...themeStyles.itemText,
+          color: themeContext.resolveThemeColor(touchable ? (pressed ? pressedTextColor : (active ? activeTextColor : deactiveTextColor)) : pressedTextColor),
         }}>{thisProps.text}</Text>
       </TouchableHighlight>
     );
@@ -176,8 +194,8 @@ export const Pagination = ThemeWrapper(function (props: PaginationProps) {
   return (
     <RowView>
       { showNextPrev ? <PaginationItem text={prevText} touchable={canPrev} onPress={() => emitChange(currentPage - 1)} /> : <></> }
-      { props.simple ? <Text style={styles.simpleText}>{ `${currentPage + 1}/${props.pageCount}` }</Text> : (<>{ renderItems() }</>) }
+      { props.simple ? <Text style={themeStyles.simpleText}>{ `${currentPage + 1}/${props.pageCount}` }</Text> : (<>{ renderItems() }</>) }
       { showNextPrev ? <PaginationItem text={nextText} touchable={canNext} onPress={() => emitChange(currentPage + 1)} /> : <></> }
     </RowView>
   );
-});
+}

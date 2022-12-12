@@ -1,10 +1,11 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { Badge, BadgeProps } from "../display/Badge";
-import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { Color } from "../../styles";
 import { Icon, IconProp } from "../basic/Icon";
-import { ThemeWrapper } from "../../theme/Theme";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicColorVar, DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 //公用的TabBarItem
 //==================================
@@ -12,6 +13,7 @@ import { ThemeWrapper } from "../../theme/Theme";
 export interface TabBarItemProps {
   /**
    * 标签名称，必填
+   * @required true
    */
   name: string;
   /**
@@ -23,7 +25,8 @@ export interface TabBarItemProps {
    */
   iconProps?: IconProp;
   /**
-   * 标签图标大小。默认：23
+   * 标签图标大小
+   * @default 23
    */
   iconSize?: number;
   /**
@@ -40,6 +43,7 @@ export interface TabBarItemProps {
   badge?: number;
   /**
    * 指定当前标签是否凸起。凸起状态下可以使用 renderIcon 回调渲染自定义图片，图片不会把Tabbar撑开而是会溢出，可以实现凸起按钮的效果。
+   * @default false
    */
   hump?: boolean;
   /**
@@ -52,6 +56,7 @@ export interface TabBarItemProps {
   badgeProps?: BadgeProps;
   /**
    * 是否懒加载当前标签，仅在标签模式中有效
+   * @default false
    */
   lazy?: boolean;
   /**
@@ -82,17 +87,28 @@ interface InternalTabBarItemProps extends TabBarItemProps {
   onPress?: () => void;
 }
 function InternalTabBarItem(props: InternalTabBarItemProps) {
-  const color = props.active ? ThemeSelector.color(props.activeColor || Color.primary) : ThemeSelector.color(props.inactiveColor || Color.textSecond);
-  const iconSize = props.iconSize || 23;
-  const humpHeight = props.humpHeight || [ iconSize, iconSize ];
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    activeColor = Color.primary,
+    inactiveColor = Color.textSecond,
+    active = false,
+    icon,
+    iconSize = 23,
+    humpHeight = [ iconSize, iconSize ],
+  } = props;
+
+  const color = themeContext.resolveThemeColor(active ? activeColor : inactiveColor);
   const iconProps = {
     ...props.iconProps,
-    icon: props.icon,
+    icon: icon,
     size: iconSize,
     color: color,
   };
   return (
-    <TouchableOpacity activeOpacity={0.9} style={[styles.tabItem, props.style ]} onPress={props.onPress}>
+    <TouchableOpacity activeOpacity={0.9} style={[themeStyles.tabItem, props.style ]} onPress={props.onPress}>
       <Badge containerStyle={{
         height: props.hump ? iconProps.size : undefined,
         position: props.hump ? 'absolute' : undefined,
@@ -100,7 +116,7 @@ function InternalTabBarItem(props: InternalTabBarItemProps) {
       }} content={props.badge === -1 ? '' : ((typeof props.badge === 'undefined' || props.badge === 0) ? 0 : props.badge)} offset={{ x: 3, y: 0 }} {...props.badgeProps}>
         { props.renderIcon ? props.renderIcon(props.active === true, iconProps) : <Icon { ...iconProps } /> }
       </Badge>
-      { CheckTools.isNullOrEmpty(props.text) ? <></> : <Text style={[ styles.tabText, { color: color }, props.textStyle ]}>{props.text}</Text> }
+      { CheckTools.isNullOrEmpty(props.text) ? <></> : <Text style={[ themeStyles.tabText, { color: color }, props.textStyle ]}>{props.text}</Text> }
     </TouchableOpacity>
   );
 }
@@ -131,6 +147,7 @@ export interface TabBarProps {
   children: JSX.Element[];
   /**
    * 选中的，这是一个受控属性，请与 onSelectTab 配合。
+   * @default ''
    */
   selectedTabName?: string,
   /**
@@ -149,9 +166,10 @@ export interface TabBarProps {
 /**
  * 底部导航栏组件，用于在不同页面之间进行切换。
  */
-export const TabBar = ThemeWrapper(function (props: TabBarProps) {
+export function TabBar(props: TabBarProps) {
 
   const selectedTabName = props.selectedTabName || '';
+  const themeStyles = useThemeStyles(styles);
 
   function renderItems() {
     const arr = [] as JSX.Element[];
@@ -186,20 +204,21 @@ export const TabBar = ThemeWrapper(function (props: TabBarProps) {
   }
 
   return (
-    <View style={[ styles.tabBar, props.style ]}>
+    <View style={[ themeStyles.tabBar, props.style ]}>
       { props.renderBackground && props.renderBackground() }
       { renderItems() }
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   tabBar: {
     position: 'relative',
-    backgroundColor: DynamicColor(Color.white),
-    borderTopWidth: 1,
-    borderTopColor: DynamicColor(Color.border),
-    paddingVertical: 10,
+    backgroundColor: DynamicColorVar('TabBarBackgroundColor', Color.white),
+    borderTopWidth: DynamicVar('TabBarBorderTopWidth', 1),
+    borderTopColor: DynamicColorVar('TabBarBorderTopColor', Color.border),
+    paddingVertical: DynamicVar('TabBarPaddingVertical', 10),
+    paddingHorizontal: DynamicVar('TabBarPaddingHorizontal', 0),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
@@ -210,8 +229,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabText: {
-    fontSize: 13,
-    marginTop: 5,
+    fontSize: DynamicVar('TabBarItemTextFontSize', 13),
+    marginTop: DynamicVar('TabBarItemTextMarginTop', 5),
   },
 });
 

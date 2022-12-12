@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated } from "react-native";
-import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated, StyleSheet } from "react-native";
+import { Color } from "../../styles";
 import { FeedbackNative } from "../tools/Feedback";
-import { ThemeWrapper } from "../../theme/Theme";
 import { Switch as NativeSwitch } from 'react-native';
+import { ThemeColor } from "../../theme/Theme";
 
 export interface SwitchProps {
   /**
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 /**
  * 开关组件。用于在打开和关闭状态之间进行切换。
  */
-export const Switch = ThemeWrapper(function (props: SwitchProps) {
+export function Switch(props: SwitchProps) {
 
   const size = props.size || 30;
   const color = props.color || Color.primary;
@@ -180,4 +180,4 @@ export const Switch = ThemeWrapper(function (props: SwitchProps) {
         </View>
       </TouchableWithoutFeedback>
   );
-});
+}
