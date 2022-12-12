@@ -2,12 +2,12 @@ import React, { createRef } from "react";
 import { LoadingPage, LoadingPageProps } from "../loading/LoadingPage";
 import { SmartRefreshControl, SmartRefreshControlProps } from "../refresh/android-smart-refresh/SmartRefreshControl";
 import { WhiteSpace } from "../space/WhiteSpace";
-import { ActivityIndicator, FlatList, FlatListProps, ImageSourcePropType, ListRenderItemInfo, RefreshControl, RefreshControlProps, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, FlatList, FlatListProps, ImageSourcePropType, ListRenderItemInfo, RefreshControl, RefreshControlProps, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button } from "../button/Button";
 import { XBarSpace } from "../space/XBarSpace";
 import { Empty } from "../feedback/Empty";
-import { Color, DynamicColor, StyleSheet, ThemeSelector } from "../../styles";
+import { Color } from "../../styles";
 import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { rpx } from "../../utils/StyleConsts";
 import { SmartRefreshControlClassicsHeader } from "../refresh/android-smart-refresh/ClassicsHeader";
@@ -15,6 +15,8 @@ import { ColumnView } from "../layout/ColumnView";
 import CheckTools from "../../utils/CheckTools";
 import ArrayUtils from "../../utils/ArrayUtils";
 import TimeUtils from "../../utils/TimeUtils";
+import { useThemeContext } from "../../theme/Theme";
+import { DynamicColor, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface FlatListWapperListItem {
   /**
@@ -592,16 +594,19 @@ export interface FlatListLoaderProps {
  * 列表组件的底部加载器
  */
 export function FlatListLoader(props: FlatListLoaderProps) {
-  return (<View style={styles.loaderView}>
-    { props.loading ? <ActivityIndicator color={ThemeSelector.color(Color.primary)} size={20} /> : <></> }
-    <Text style={styles.loaderText}>{
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  return (<View style={themeStyles.loaderView}>
+    { props.loading ? <ActivityIndicator color={themeContext.resolveThemeColor(Color.primary)} size={20} /> : <></> }
+    <Text style={themeStyles.loaderText}>{
       (props.loading) ?
         props.loadingText :
           (props.loadError ? props.loadErrorText :
             (props.empty ? props.loadFinishNoneText : props.loadFinishText))
       }</Text>
-    { props.loadError ? <TouchableOpacity style={styles.loaderRetry} onPress={props.onRetry}>
-      <Text style={styles.loaderRetryText}>{ props.retryText || '重试'}</Text>
+    { props.loadError ? <TouchableOpacity style={themeStyles.loaderRetry} onPress={props.onRetry}>
+      <Text style={themeStyles.loaderRetryText}>{ props.retryText || '重试'}</Text>
     </TouchableOpacity> : <></> }
   </View>);
 }

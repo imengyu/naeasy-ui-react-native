@@ -3,15 +3,17 @@ import React from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { IconButton } from "../button/IconButton";
 import { HorizontalScrollText } from "../typography/HorizontalScrollText";
-import { Color, ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
+import { Color } from "../../styles";
 import { IconProp } from "../basic/Icon";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export type NavBarButtonTypes = 'back'|'menu'|'search'|'setting';
 
 export interface NavBarProps {
   /**
-   * 标题栏高度，默认是 40dp
+   * 标题栏高度
+   * @default 40
    */
   height?: number;
   /**
@@ -23,7 +25,8 @@ export interface NavBarProps {
    */
   title?: string|JSX.Element,
   /**
-   * 标题对齐，默认 center
+   * 标题对齐
+   * @default 'center'
    */
   align?: 'center'|'left',
   /**
@@ -60,6 +63,7 @@ export interface NavBarProps {
   backgroundColor?: ThemeColor;
   /**
    * 自定义文字颜色
+   * @default Color.black
    */
   textColor?: ThemeColor;
   /**
@@ -71,7 +75,8 @@ export interface NavBarProps {
    */
   titleStyle?: TextStyle;
   /**
-   * 标题文字超出时，是否自动滚动，默认 true
+   * 标题文字超出时，是否自动滚动
+   * @default true
    */
   titleScroll?: boolean;
   /**
@@ -87,7 +92,6 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#0f0',
   },
   buttonWrapper: {
     flexDirection: 'row',
@@ -100,8 +104,8 @@ const style = StyleSheet.create({
     height:  '100%',
   },
   titleText: {
-    fontSize: 18,
-    paddingHorizontal: 15,
+    fontSize: DynamicVar('NavBarTitleFontSize', 18),
+    paddingHorizontal: DynamicVar('NavBarTitlePaddingHorizontal', 15),
   },
 });
 
@@ -110,15 +114,33 @@ const style = StyleSheet.create({
  *
  * 为页面提供导航功能，常用于页面顶部。
  */
-export const NavBar = ThemeWrapper(function (props: NavBarProps) {
-  const titleScroll = props.titleScroll !== false;
-  const align = props.align || 'center';
-  const showLeftButton = props.showLeftButton !== false;
-  const showRightButton = props.showRightButton !== false;
+export function NavBar(props: NavBarProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(style);
+
+  const {
+    titleScroll = true,
+    align = 'center',
+    height = 40,
+    showLeftButton = true,
+    showRightButton = true,
+    textColor = Color.black,
+    leftButton,
+    rightButton,
+    renderLeft,
+    renderRight,
+    onLeftButtonPressed,
+    onRightButtonPressed,
+  } = themeContext.resolveThemeProps(props, {
+    align: 'NavBarAlign',
+    height: 'NavBarHeight',
+    textColor: 'NavBarTitleColor',
+  });
 
   function renderButtons(left: boolean) {
-    const renderCustom = left ? props.renderLeft : props.renderRight;
-    let button : string = (left ? props.leftButton : props.rightButton) || '';
+    const renderCustom = left ? renderLeft : renderRight;
+    let button : string = (left ? leftButton : rightButton) || '';
     switch (button) {
       case 'back': button = 'arrow-left-bold'; break;
       case 'menu': button = 'elipsis'; break;
@@ -141,7 +163,7 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
           key={button}
           icon={button}
           {...props.iconProps}
-          onPress={left ? props.onLeftButtonPressed : props.onRightButtonPressed}
+          onPress={left ? onLeftButtonPressed : onRightButtonPressed}
           shape="square-full"
         />
       );
@@ -165,14 +187,14 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
 
   return (
     <View style={[
-      style.title,
+      themeStyles.title,
       {
-        backgroundColor: ThemeSelector.color(props.backgroundColor),
-        height: props.height || 40,
+        backgroundColor: themeContext.resolveThemeColor(props.backgroundColor),
+        height: height,
         ...props.style,
       },
     ]}>
-      { showLeftButton ? <View style={style.buttonWrapper}>{ renderButtons(true) }</View> : <></> }
+      { showLeftButton ? <View style={themeStyles.buttonWrapper}>{ renderButtons(true) }</View> : <></> }
       {
         props.title && (typeof props.title === 'string' ?
           (
@@ -182,19 +204,19 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
                   flex: 1,
                 }}
                 textStyle={{
-                  ...style.titleText,
+                  ...themeStyles.titleText,
                   ...props.titleStyle,
                   paddingHorizontal: 0,
-                  color: ThemeSelector.color(props.textColor || Color.black),
+                  color: themeContext.resolveThemeColor(textColor),
                 }}
                 scrollDuration={20000}
               >{props.title}</HorizontalScrollText> :
               <Text
                 style={[
-                  style.titleText,
+                  themeStyles.titleText,
                   props.titleStyle,
                   {
-                    color: ThemeSelector.color(props.textColor || Color.black),
+                    color: themeContext.resolveThemeColor(textColor),
                     textAlign: align,
                     flex: 1,
                   },
@@ -203,7 +225,7 @@ export const NavBar = ThemeWrapper(function (props: NavBarProps) {
           ) :
           props.title)
       }
-      { showRightButton ? <View style={style.buttonWrapperEnd}>{ renderButtons(false) }</View> : <></> }
+      { showRightButton ? <View style={themeStyles.buttonWrapperEnd}>{ renderButtons(false) }</View> : <></> }
     </View>
   );
-});
+}

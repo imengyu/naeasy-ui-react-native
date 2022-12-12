@@ -36,13 +36,25 @@ export function ThemeProvider(props: ThemeProviderProps) {
     themeData,
     setTheme: (t) => onThemeChange?.(t),
     resolveThemeColor,
+    resolveThemeProps,
     getThemeColorVar,
     getThemeColorVars,
     getThemeVar,
     getThemeVars,
   };
 
-  function resolveThemeColor(srcColor: ThemeColor, defaultValue?: ThemeColor) {
+  function resolveThemeProps<T, K extends string>(srcProps: T, themeKeys: { [P in K]: string }) {
+    const propsObj = {
+      ...srcProps,
+    } as {
+      [index: string]: unknown
+    };
+    for (const key in themeKeys)
+      propsObj[key] = getThemeVar(themeKeys[key], propsObj[key]);
+
+    return propsObj as unknown as T;
+  }
+  function resolveThemeColor(srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) {
     return ThemeSelector.colorNoNull(theme, srcColor, defaultValue);
   }
   function getThemeColorVar(key: string, defaultValue: ThemeColor|undefined) {

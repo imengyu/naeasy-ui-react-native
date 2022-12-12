@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MeasureText from '../../utils/MeasureText';
 import { Animated, Easing, LayoutChangeEvent, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { isIOS } from '../../utils';
-import { ThemeWrapper } from '../../theme/Theme';
 
 export interface HorizontalScrollTextProps {
   children?: string;
@@ -15,11 +14,13 @@ export interface HorizontalScrollTextProps {
    */
   textStyle?: TextStyle;
   /**
-   * 是否滚动播放，默认是。
+   * 是否滚动播放
+   * @default true
    */
   scroll?: boolean;
   /**
-   * 滚动动画时长（毫秒），默认10000毫秒
+   * 滚动动画时长（毫秒）
+   * @default 10000
    */
   scrollDuration?: number;
 }
@@ -38,9 +39,9 @@ const styles = StyleSheet.create({
 });
 
 /**
- * 可以滚动的文字组件。
+ * 可以水平滚动的文字组件。
  */
-export const HorizontalScrollText = ThemeWrapper(function (props: HorizontalScrollTextProps) {
+export function HorizontalScrollText(props: HorizontalScrollTextProps) {
 
   const [ mesuredTextWidth, setMesuredTextWidth ] = useState(300);
   const [ scrollParentWidth, setScrollParentWidth ] = useState(0);
@@ -49,7 +50,6 @@ export const HorizontalScrollText = ThemeWrapper(function (props: HorizontalScro
   const scrollState = useRef(false);
 
   const scrollParentHeight = useRef(0);
-
 
   const stopScroll = useCallback(() => {
     scrollState.current = false;
@@ -132,4 +132,4 @@ export const HorizontalScrollText = ThemeWrapper(function (props: HorizontalScro
       ]}>{props.children}</Animated.Text>
     </View>
   );
-});
+}

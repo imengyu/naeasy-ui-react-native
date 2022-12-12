@@ -30,6 +30,13 @@ export interface ThemeContextData {
    */
   resolveThemeColor: (srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) => string;
   /**
+   * 对于主题组件，可用此函数转换他的 props 默认值，以从主题数据中获取属性默认值。
+   * 未提供主题键的属性，将不会发生改动。
+   * @param srcProps 源属性
+   * @param keyAndDefaults 主题键与默认值
+   */
+  resolveThemeProps: <T, K extends string>(srcProps: T, themeKeys: { [P in K]: string }) => T;
+  /**
    * 获取主题数据
    * @param key 主题属性的名称
    * @param srcColor 默认值

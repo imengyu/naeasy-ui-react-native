@@ -1,4 +1,4 @@
-export * from './ActionSheet';
+export * from './ActionSheetNative';
 export * from './Alert';
 export * from './Empty';
 export * from './Notify';

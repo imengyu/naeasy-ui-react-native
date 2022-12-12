@@ -1,7 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { GestureResponderEvent, Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, DynamicColor, StyleSheet, ThemeUtils } from "../../styles";
-import { ThemeRender } from "../../theme/Theme";
+import { GestureResponderEvent, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Color, ThemeUtils } from "../../styles";
+import { useThemeContext } from "../../theme/Theme";
+import { DynamicColorVar, DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface IndexBarProps {
   /**
@@ -9,11 +10,13 @@ export interface IndexBarProps {
    */
   data: string[],
   /**
-   * 每个条目的大小，默认是20dp
+   * 每个条目的大小
+   * @default 20
    */
   itemSize?: number,
   /**
-   * 每个条目的间距，默认是5dp
+   * 每个条目的间距
+   * @default 5
    */
   itemSpace?: number,
   /**
@@ -48,16 +51,20 @@ export interface IndexBarInstance {
 const styles = StyleSheet.create({
   bar: {
     position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
+    left: DynamicVar('IndexBarLeft', undefined),
+    right: DynamicVar('IndexBarRight', 0),
+    top: DynamicVar('IndexBarTop', 0),
+    bottom: DynamicVar('IndexBarBottom', 0),
+    zIndex: DynamicVar('IndexBarZIndex', 5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 5,
   },
   barInner: {
-    paddingRight: 10,
+    paddingRight: DynamicVar('IndexBarPaddingRight', 10),
+    paddingLeft: DynamicVar('IndexBarPaddingLeft', 0),
+    paddingTop: DynamicVar('IndexBarPaddingTop', 0),
+    paddingBottom: DynamicVar('IndexBarPaddingBottom:', 0),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -66,37 +73,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    backgroundColor: DynamicColorVar('IndexBarItemBackgroundColor', 'transparent'),
+    borderRadius: DynamicVar('IndexBarItemBorderRadius', 20),
   },
   barItemActive: {
-    backgroundColor: DynamicColor(Color.primary),
-    borderRadius: 20,
+    backgroundColor: DynamicColorVar('IndexBarItemActiveBackgroundColor', Color.primary),
+    borderRadius: DynamicVar('IndexBarItemBorderRadius', 20),
   },
   barItemTextActive: {
-    color: DynamicColor(Color.white),
+    color: DynamicColorVar('IndexBarItemActiveTextColor', Color.white),
   },
   barItemText: {
-    color: DynamicColor(Color.text),
-    fontSize: 12,
+    color: DynamicColorVar('IndexBarItemTextColor', Color.text),
+    fontSize: DynamicVar('IndexBarItemTextFontSize', 12),
   },
   indicator: {
     position: 'absolute',
-    width: 50,
-    height: 50,
-    backgroundColor: ThemeUtils.makeAplhaColor('#000000', 0.5),
-    borderRadius: 50,
+    width: DynamicVar('IndexBarIndicatorWidth', 50),
+    height: DynamicVar('IndexBarIndicatorHeight', 50),
+    backgroundColor: DynamicVar('IndexBarIndicatorBackgroundColor', ThemeUtils.makeAplhaColor('#000000', 0.5)),
+    borderRadius: DynamicVar('IndexBarIndicatorBorderRadius', 50),
     overflow: 'hidden',
-    top: '35%',
-    left: '50%',
-    marginLeft: -25,
-    zIndex: 10,
+    top: DynamicVar('IndexBarIndicatorTop', '35%'),
+    left: DynamicVar('IndexBarIndicatorLeft', '50%'),
+    marginLeft: DynamicVar('IndexBarIndicatorMarginLeft', -25),
+    zIndex: DynamicVar('IndexBarIndicatorZIndex', 10),
     justifyContent: 'center',
     alignItems: 'center',
   },
   indicatorText: {
-    color: 'white',
-    fontSize: 30,
-    fontWeight: 'bold',
+    color: DynamicVar('IndexBarIndicatorTextColor', 'white'),
+    fontSize: DynamicVar('IndexBarIndicatorTextFontSize', 30),
+    fontWeight: DynamicVar('IndexBarIndicatorTextFontWeight', 'bold'),
   },
 });
 
@@ -104,8 +112,12 @@ const styles = StyleSheet.create({
  * 索引栏 用于列表的索引分类显示和快速定位。
  */
 export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref) => {
-  const itemSize = props.itemSize || 20;
-  const itemSpace = props.itemSpace || 5;
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const itemSize = props.itemSize || themeContext.getThemeVar('IndexBarItemSize', 20);
+  const itemSpace = props.itemSpace || themeContext.getThemeVar('IndexBarItemSpace', 5);
   const data = props.data;
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -135,41 +147,39 @@ export const IndexBar = forwardRef<IndexBarInstance, IndexBarProps>((props, ref)
   } as ViewStyle;
 
   return (
-    <ThemeRender>
-      {() => <View
-        style={styles.bar}
-        pointerEvents="box-none"
+    <View
+      style={themeStyles.bar}
+      pointerEvents="box-none"
+    >
+      <View
+        style={themeStyles.barInner}
+        pointerEvents="box-only"
+        onResponderMove={onResponderMove}
+        onResponderRelease={onResponderMove}
+        onStartShouldSetResponder={() => true}
+        onStartShouldSetResponderCapture={() => true}
+        onMoveShouldSetResponder={() => true}
+        onMoveShouldSetResponderCapture={() => true}
       >
-        <View
-          style={styles.barInner}
-          pointerEvents="box-only"
-          onResponderMove={onResponderMove}
-          onResponderRelease={onResponderMove}
-          onStartShouldSetResponder={() => true}
-          onStartShouldSetResponderCapture={() => true}
-          onMoveShouldSetResponder={() => true}
-          onMoveShouldSetResponderCapture={() => true}
-        >
-          {
-            data.map((key, i) => (
-              <View style={[
-                styles.barItem,
-                activeIndex === i ? styles.barItemActive : {},
-                props.itemStyle,
-                activeIndex === i ? props.activeItemStyle : {},
-                sizeStyle,
-              ]} key={i}>
-                <Text style={[
-                  styles.barItemText,
-                  activeIndex === i ? styles.barItemTextActive : {},
-                  props.itemTextStyle,
-                  activeIndex === i ? props.activeItemTextStyle : {},
-                ]}>{key}</Text>
-              </View>
-            ))
-          }
-        </View>
-      </View>}
-    </ThemeRender>
+        {
+          data.map((key, i) => (
+            <View style={[
+              themeStyles.barItem,
+              activeIndex === i ? themeStyles.barItemActive : {},
+              props.itemStyle,
+              activeIndex === i ? props.activeItemStyle : {},
+              sizeStyle,
+            ]} key={i}>
+              <Text style={[
+                themeStyles.barItemText,
+                activeIndex === i ? themeStyles.barItemTextActive : {},
+                props.itemTextStyle,
+                activeIndex === i ? props.activeItemTextStyle : {},
+              ]}>{key}</Text>
+            </View>
+          ))
+        }
+      </View>
+    </View>
   );
 });

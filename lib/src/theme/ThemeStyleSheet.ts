@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ColorValue, ImageStyle, TextStyle, ViewStyle } from "react-native";
 import { ColorInfoItem } from "../styles";
-import { ThemeContextData, useThemeContext } from "./Theme";
+import { ThemeColor, ThemeContextData, useThemeContext } from "./Theme";
 
 type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
 
@@ -140,7 +140,7 @@ export function DynamicColor(src: ColorInfoItem) : ColorValue {
 /**
  * 标记这是一个动态主题颜色变量属性，请与 useThemeStyle 搭配使用。
  */
-export function DynamicColorVar(propKey: string, defaultValue: ColorInfoItem) : ColorValue {
+export function DynamicColorVar(propKey: string, defaultValue: ThemeColor) : ColorValue {
   return {
     __isDaymicThemeProp__: true,
     __daymicThemePropKey__: propKey,

@@ -1,14 +1,13 @@
 import React from "react";
 import { Text as ReactNativeText, TextProps as ReactNativeTextProps, TextStyle } from "react-native";
-import { Color, ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
-import { solveSize } from "../../utils/StyleTools";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
 
 export interface TextProps extends ReactNativeTextProps {
   /**
-   * 字号，支持rpx
+   * 字号
    */
-  size?: number|string;
+  size?: number;
   /**
    * 背景颜色
    */
@@ -80,7 +79,9 @@ export interface TextProps extends ReactNativeTextProps {
 /**
  * 对Text组件做了一个封装。提供了一些方便开发的属性。
  */
-export const Text = ThemeWrapper(function (props: TextProps) {
+export function Text(props: TextProps) {
+
+  const themeContext = useThemeContext();
 
   function getAutoSize() {
     //自动缩放大小，文字越长，字号越小
@@ -88,11 +89,11 @@ export const Text = ThemeWrapper(function (props: TextProps) {
     if (autoSizeOption) {
       const text = '' + props.children;
       if (text.length < autoSizeOption.minLen)
-        return solveSize(props.size);
+        return props.size;
       return (1 - (text.length - autoSizeOption.minLen) / (autoSizeOption.maxLen - autoSizeOption.minLen))
         * (autoSizeOption.maxSize - autoSizeOption.minSize) + autoSizeOption.minSize;
     }
-    return solveSize(props.size);
+    return props.size;
   }
 
   let textDecorationLine = 'none';
@@ -105,9 +106,9 @@ export const Text = ThemeWrapper(function (props: TextProps) {
 
   const styleMaker = {
     textAlign: props.align,
-    backgroundColor: ThemeSelector.color(props.backgroundColor),
-    color: ThemeSelector.color(props.color || Color.text),
-    fontSize: props.autoSize === true ? getAutoSize() : solveSize(props.size),
+    backgroundColor: themeContext.resolveThemeColor(props.backgroundColor),
+    color: themeContext.resolveThemeColor(props.color || Color.text),
+    fontSize: props.autoSize === true ? getAutoSize() : props.size,
     fontStyle: props.italic ? 'italic' : 'normal',
     fontWeight: props.bold ? 'bold' : props.weight,
     width: props.width,
@@ -115,4 +116,4 @@ export const Text = ThemeWrapper(function (props: TextProps) {
   } as TextStyle;
 
   return (<ReactNativeText {...props} style={[ styleMaker, props.style ]} />);
-});
+}

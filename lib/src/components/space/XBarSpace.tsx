@@ -1,27 +1,33 @@
 import React from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
-import { solveSize } from "../../utils";
 
 /**
  * 底栏高度占位组件
  */
-export const XBarSpace = ThemeWrapper(function (props: {
+export function XBarSpace(props: {
   /**
    * 背景颜色
    */
-  backgroundColor?: ThemeColor,
+  backgroundColor?: string,
   /**
    * 占位组件的宽度
    */
   width?: number|string,
+  /**
+   * 自定义渲染
+   * @param height 底栏高度
+   */
+  render?: (height: number) => JSX.Element;
 }) {
   const insets = useSafeAreaInsets();
-  return <View style={{
-    height: insets.bottom,
-    width: solveSize(props.width),
-    backgroundColor: ThemeSelector.color(props.backgroundColor),
-  }}/>;
-});
+
+  return (props.render ?
+    props.render(insets.bottom) :
+    <View style={{
+      height: insets.bottom,
+      width: props.width,
+      backgroundColor: props.backgroundColor,
+    }}/>
+  );
+}

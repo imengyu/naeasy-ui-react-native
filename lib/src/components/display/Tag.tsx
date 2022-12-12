@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { Color, FonstSizes } from '../../styles';
+import { Color } from '../../styles';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 import { selectStyleType } from '../../utils/StyleTools';
@@ -149,6 +149,12 @@ export function Tag(props: TagProp) {
     borderRadius = themeContext.getThemeVar('TagBorderRadius', 10),
     textColor = themeContext.getThemeVar('TagTextColor', undefined),
   } = props;
+
+  const FonstSizes = {
+    small: themeContext.getThemeVar('TagSmallFonstSize', 11),
+    medium: themeContext.getThemeVar('TagMediumFonstSize', 14),
+    large: themeContext.getThemeVar('TagLargeFonstSize', 18),
+  };
 
   const style = useMemo(() => {
     return {

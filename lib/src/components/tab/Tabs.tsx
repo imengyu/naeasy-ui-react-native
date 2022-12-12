@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } f
 import { ScrollView, StyleSheet, Text, TextStyle, Animated, ViewStyle, View, Easing} from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
-import { Color, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, PressedColor } from '../../styles';
 import { deviceWidth, rpx } from '../../utils';
 import { Swiper, SwiperItem, SwiperProps } from '../basic/Swiper';
 import { Badge, BadgeProps } from '../display';
+import { ThemeColor } from '@imengyu/naeasy-ui-react-native/dist/styles';
+import { useThemeStyles } from '../../theme/ThemeStyleSheet';
+import { useThemeContext } from '../../theme/Theme';
 
 //标签头组件
 //==============================================================
@@ -17,6 +20,7 @@ export interface TabsItemData {
   text: string|JSX.Element,
   /**
    * 是否禁用选择。
+   * @default false
    */
   disabled?: boolean,
   /**
@@ -24,11 +28,11 @@ export interface TabsItemData {
    */
   badgeProps?: BadgeProps,
   /**
-   * 标签宽度。此设置优先级最高。
+   * 标签宽度。此设置优先级最高, 会覆盖 Tabs 组件的设置。
    */
   width?: number,
   /**
-   * 指示器宽度
+   * 指示器宽度，默认值从 Tabs 组件继承。
    */
   indicatorWidth?: number,
 }
@@ -43,34 +47,41 @@ export interface TabsProps {
   currentIndex: number;
   /**
    * 整个组件的高度
+   * @default rpx(90)
    */
   height?: number,
   /**
    * 整个组件的宽度
+   * @default deviceWidth
    */
   width?: number,
   /**
-   * 是否自动根据容器宽度调整标签宽度。默认 true
+   * 是否自动根据容器宽度调整标签宽度
+   * @default true
    */
   autoItemWidth?: boolean,
   /**
-   * 指示器切换标签时是否有动画效果。默认 true
+   * 指示器切换标签时是否有动画效果
+   * @default true
    */
   indicatorAnim?: boolean,
   /**
-   * 指示器
+   * 指示器动画偏移。通常用于 PagerView 的左右滚动时指示器联动动画。
    */
   indicatorOffsetAnim?: Animated.ValueXY,
   /**
-   * 是否在用户切换标签后自动滚动至当前选中的条目。默认 true
+   * 是否在用户切换标签后自动滚动至当前选中的条目
+   * @default true
    */
   autoScroll?: boolean,
   /**
    * 标签宽度，在 autoItemWidth 为 false 时有效
+   * @default rpx(100)
    */
   defaultItemWidth?: number,
   /**
    * 默认的指示器宽度。
+   * @default itemWidth / 4
    */
   defaultIndicatorWidth?: number,
   /**
@@ -78,11 +89,13 @@ export interface TabsProps {
    */
   itemStyle?: ViewStyle,
   /**
-   * 标签正常状态的文字颜色。默认 Color.text
+   * 标签正常状态的文字颜色
+   * @default Color.text
    */
   textColor?: ThemeColor,
   /**
-   * 标签禁用状态的文字颜色。默认 Color.grey
+   * 标签禁用状态的文字颜色
+   * @default Color.grey
    */
   disableTextColor?: ThemeColor,
   /**
@@ -90,7 +103,8 @@ export interface TabsProps {
    */
   textStyle?: TextStyle,
   /**
-   * 标签激活状态的文字颜色。默认 Color.primary
+   * 标签激活状态的文字颜色
+   * @default Color.primary
    */
   activeTextColor?: ThemeColor,
   /**
@@ -98,7 +112,8 @@ export interface TabsProps {
    */
   activeTextStyle?: TextStyle,
   /**
-   * 标签按下颜色。默认 Color.white.pressed
+   * 标签按下颜色
+   * @default PressedColor(Color.white）
    */
   underlayColor?: ThemeColor,
   /**
@@ -120,6 +135,9 @@ export interface TabsProps {
  */
 export function Tabs(props: TabsProps) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     tabs,
     width = deviceWidth,
@@ -138,20 +156,30 @@ export function Tabs(props: TabsProps) {
     disableTextColor = Color.grey,
     textColor = Color.text,
     textStyle,
-    indicatorStyle = { backgroundColor: ThemeSelector.color(Color.primary) },
+    indicatorStyle = { backgroundColor: themeContext.resolveThemeColor(Color.primary) },
     renderTab,
     onChange,
-  } = props;
+  } = themeContext.resolveThemeProps(props, {
+    width: 'TabsDefaultWidth',
+    height: 'TabsDefaultHeight',
+    defaultIndicatorWidth: 'TabsDefaultIndicatorWidth',
+    defaultItemWidth: 'TabsDefaultItemWidth',
+    underlayColor: 'TabsUnderlayColor',
+    activeTextColor: 'TabsActiveTextColor',
+    disableTextColor: 'TabsDisableTextColor',
+    textColor: 'TabsTextColor',
+  });
+
   const scrollRef = useRef<ScrollView>(null);
 
   function onTabClick(index: number) {
     onChange?.(index, tabs[index]);
   }
 
-  const themedUnderlayColor = ThemeSelector.color(underlayColor);
-  const themedActiveTextColor = ThemeSelector.color(activeTextColor);
-  const themedTextColor = ThemeSelector.color(textColor);
-  const themedDisableTextColor = ThemeSelector.color(disableTextColor);
+  const themedUnderlayColor = themeContext.resolveThemeColor(underlayColor);
+  const themedActiveTextColor = themeContext.resolveThemeColor(activeTextColor);
+  const themedTextColor = themeContext.resolveThemeColor(textColor);
+  const themedDisableTextColor = themeContext.resolveThemeColor(disableTextColor);
 
   const indicatorPos = useRef(new Animated.Value(0));
   const indicatorWidth = useRef(new Animated.Value(0));
@@ -249,7 +277,7 @@ export function Tabs(props: TabsProps) {
         <TouchableHighlight
           underlayColor={themedUnderlayColor}
           style={[
-            styles.tabItem,
+            themeStyles.tabItem,
             itemStyle,
             { width: itemWidth, height },
           ]}
@@ -259,7 +287,7 @@ export function Tabs(props: TabsProps) {
           <Badge content={tabData.badgeProps ? undefined : 0} { ...tabData.badgeProps }>
             { typeof tabData.text === 'string' ? <Text
               style={[
-                styles.tabItemText,
+                themeStyles.tabItemText,
                 { color: disabled ? themedDisableTextColor : (active ? themedActiveTextColor : themedTextColor) },
                 active ? activeTextStyle : textStyle,
               ]}
@@ -273,7 +301,7 @@ export function Tabs(props: TabsProps) {
     return (
       <Animated.View
         style={[
-          styles.tabIndicator,
+          themeStyles.tabIndicator,
           indicatorStyle,
           {
             width: indicatorWidth.current,
@@ -292,10 +320,10 @@ export function Tabs(props: TabsProps) {
     <ScrollView
       ref={scrollRef}
       horizontal
-      contentContainerStyle={styles.tab}
+      contentContainerStyle={themeStyles.tab}
       showsHorizontalScrollIndicator={false}
       style={[
-        styles.tab,
+        themeStyles.tab,
         { width, height },
       ]}
     >

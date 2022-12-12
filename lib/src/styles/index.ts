@@ -1,10 +1,6 @@
 import { parseColor, strinifyColor } from '../utils';
 import { Color, ColorInfo, ColorInfoItem } from './ColorStyles';
-import { SpaceDefines } from './SizeStyles';
-import { FonstSizes } from './TextStyles';
 
-export * from './TextStyles';
-export * from './SizeStyles';
 export * from './CommonStyles';
 export * from './ColorStyles';
 
@@ -43,24 +39,6 @@ export const ThemeUtils = {
       const newObj = colors[key];
       for (const key2 in newObj)
         oldObj[key2] = newObj[key2];
-    }
-  },
-  /**
-   * 配置默认的FonstSizes数据。请在组件初始化之前配置。
-   * @param sizes 大小，可以设置多个
-   */
-  configFonstSizes(sizes: Record<string, number>) {
-    for (const key in sizes) {
-      (FonstSizes as Record<string, number>)[key] = sizes[key];
-    }
-  },
-  /**
-   * 配置默认的SpaceDefines数据。请在组件初始化之前配置。
-   * @param sizes 大小，可以设置多个
-   */
-  configSpaceDefines(sizes: Record<string, number>) {
-    for (const key in sizes) {
-      (SpaceDefines as Record<string, number>)[key] = sizes[key];
     }
   },
 };

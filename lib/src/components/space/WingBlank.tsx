@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { SpaceDefines } from '../../styles/SizeStyles';
-import { ThemeWrapper } from '../../theme/Theme';
+import { useThemeContext } from '../../theme/Theme';
 
 export interface WingBlankProps {
   children?: JSX.Element|JSX.Element[],
@@ -10,20 +9,39 @@ export interface WingBlankProps {
    */
   style?: StyleProp<ViewStyle>;
   /**
-   * 大小，支持 'sm'、'md'、'lg' 三种预设大小，或者是数字大小
+   * 大小，支持 'small'、'medium'、'large' 三种预设大小，或者是数字大小
+   * @defalut 'medium'
    */
-  size?: 'sm' | 'md' | 'lg' | number;
+  size?: 'small' | 'medium' | 'large' | number;
 }
 
 /**
  * 两翼留白组件
  */
-export const WingBlank  = ThemeWrapper(function (props: WingBlankProps) {
-  const { size, style, children } = props;
-  const margin = typeof size === 'number' ? size : SpaceDefines[size || 'md'];
+export function WingBlank(props: WingBlankProps) {
+  const {
+    size = 'medium',
+    style,
+    children,
+  } = props;
+
+  const themeContext = useThemeContext();
+  const themeData = themeContext.getThemeVars({
+    WingBlankSizeSmall: 5,
+    WingBlankSizeMedium: 10,
+    WingBlankSizeLarge: 20,
+  });
+
+  let margin = typeof size === 'number' ? size : 0;
+  switch (size) {
+    case 'large': margin = themeData.WingBlankSizeLarge; break;
+    case 'medium': margin = themeData.WingBlankSizeMedium; break;
+    case 'small': margin = themeData.WingBlankSizeSmall; break;
+  }
+
   return (
     <View style={[{ marginLeft: margin, marginRight: margin }, style]}>
       {children}
     </View>
   );
-});
+}

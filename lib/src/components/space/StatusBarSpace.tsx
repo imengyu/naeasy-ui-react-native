@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { isAndroid, isIOS } from "../../utils/PlatformTools";
 import { NativeModules, StatusBar, StyleSheet, View } from "react-native";
-import { ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
 
 const { StatusBarManager } = NativeModules;
 
@@ -13,18 +12,30 @@ interface StatusBarSpaceProps {
   backgroundColor?: ThemeColor;
   /**
    * 上方额外的背景颜色区域高度（dp），通常用于scrollview弹性下拉
+   * @default 0
    */
   extendsBackgroundColorHeight?: number;
   /**
-   * 是否包括状态栏高度，默认是
+   * 自定义渲染
+   */
+  render?: JSX.Element;
+  /**
+   * 自定义渲染上方额外的背景颜色区域高度
+   */
+  renderExtendsBackground?: JSX.Element;
+  /**
+   * 是否包括状态栏高度
+   * @default true
    */
   includeStatus?: boolean;
   /**
-   * 是否包括标题栏高度，默认否
+   * 是否包括标题栏高度
+   * @default false
    */
   includeHeader?: boolean;
   /**
    * 自定义标题栏高度
+   * @default 0
    */
   headerHeight?: number;
 }
@@ -41,7 +52,9 @@ const style = StyleSheet.create({
 /**
  * 状态栏和标题栏高度占位组件
  */
-export const StatusBarSpace = ThemeWrapper(function (props: StatusBarSpaceProps) {
+export function StatusBarSpace(props: StatusBarSpaceProps) {
+
+  const themeContext = useThemeContext();
   const [ iOSStatusBarHeight, setIOSStatusBarHeight ] = useState(-1);
 
   let height = 0;
@@ -69,20 +82,24 @@ export const StatusBarSpace = ThemeWrapper(function (props: StatusBarSpaceProps)
 
   const extendsBackgroundColorHeight = props.extendsBackgroundColorHeight || 0;
 
-  return (
+  return (props.render ?
+    props.render :
     <View style={{
       height,
       width: '100%',
-      backgroundColor: ThemeSelector.color(props.backgroundColor),
+      backgroundColor: themeContext.resolveThemeColor(props.backgroundColor),
     }}>
-      { extendsBackgroundColorHeight > 0 ? <View style={[
-        style.extendView,
-        {
-          top: -extendsBackgroundColorHeight,
-          height: extendsBackgroundColorHeight,
-          backgroundColor: ThemeSelector.color(props.backgroundColor),
-        },
-      ]} /> : <></>  }
+      { extendsBackgroundColorHeight > 0 ? (props.renderExtendsBackground ?
+        props.renderExtendsBackground :
+        <View style={[
+          style.extendView,
+          {
+            top: -extendsBackgroundColorHeight,
+            height: extendsBackgroundColorHeight,
+            backgroundColor: themeContext.resolveThemeColor(props.backgroundColor),
+          },
+        ]} />
+      ) : <></>  }
     </View>
   );
-});
+}

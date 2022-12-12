@@ -8,11 +8,13 @@ export interface VerticalScrollOneTextProps extends Omit<TextProps, 'children'> 
    */
   oneStr: string;
   /**
-   * 动画时长。默认：230
+   * 动画时长
+   * @default 230
    */
   animDuration?: number,
   /**
-   * 动画方向。默认 auto
+   * 动画方向
+   * @default 'auto'
    */
   animDirection?: 'down'|'up'|'auto';
 }
@@ -23,6 +25,7 @@ export interface VerticalScrollTextProps extends Omit<VerticalScrollOneTextProps
   numberString: string;
   /**
    * 居中
+   * @default false
    */
   center?: boolean,
 }
@@ -33,6 +36,7 @@ export interface VerticalScrollTextsProps extends Omit<VerticalScrollOneTextProp
   texts: string[];
   /**
    * 切换延时
+   * @default 2000
    */
   interval: number;
 }
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
 });
 
 /**
- * 垂直滚动切换动画单个文字
+ * 垂直滚动切换动画单个文字。默认是在 oneStr 更换时触发动画。
  */
 export function VerticalScrollOneText(props: VerticalScrollOneTextProps) {
 
@@ -195,7 +199,7 @@ export function VerticalScrollOneText(props: VerticalScrollOneTextProps) {
 }
 
 /**
- * 垂直滚动切换动画文字
+ * 垂直滚动切换动画文字。默认是在 numberString 更换时触发动画。
  */
 export function VerticalScrollText(props: VerticalScrollTextProps) {
   return (
@@ -210,7 +214,7 @@ export function VerticalScrollText(props: VerticalScrollTextProps) {
  */
 export function VerticalScrollTexts(props: VerticalScrollTextsProps) {
   const {
-    interval,
+    interval = 2000,
     texts,
   } = props;
 

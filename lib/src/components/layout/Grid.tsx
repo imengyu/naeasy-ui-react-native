@@ -7,32 +7,38 @@ import { Color, PressedColor } from '../../styles';
 import { Icon, IconProp } from '../basic/Icon';
 import { FlexView } from './FlexView';
 import { RowView } from './RowView';
-import { ThemeColor } from '../../theme/Theme';
-import { DynamicColor } from '../../theme/ThemeStyleSheet';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 interface GridProp {
   /**
-   * 自定义列数。默认一行展示四个格子。
+   * 自定义列数
+   * @default 4
    */
   columnNum?: number;
   /**
    * 设置 square 属性后，格子的高度会和宽度保持一致。
+   * @default false
    */
   square?: boolean;
   /**
    * 格子内容排列的方向，可选值为 horizontal
+   * @default 'vetical'
    */
   direction?: 'vetical'|'horizontal',
   /**
    * 是否显示边框
+   * @default true
    */
   border?: boolean;
   /**
-   * 边框的宽度，默认是 StyleSheet.hairlineWidth
+   * 边框的宽度
+   * @default StyleSheet.hairlineWidth
    */
   borderWidth?: number;
   /**
    * 边框颜色
+   * @default Color.border
    */
   borderColor?: ThemeColor;
   /**
@@ -49,6 +55,7 @@ interface GridItemProp {
   title?: string,
   /**
    * 文字颜色
+   * @default Color.black
    */
   titleColor?: ThemeColor,
   /**
@@ -57,10 +64,12 @@ interface GridItemProp {
   titleStyle?: TextStyle,
   /**
    * 背景颜色
+   * @default Color.white
    */
   backgroundColor?: ThemeColor,
   /**
    * 点击高亮颜色
+   * @default PressedColor(Color.white)
    */
   highlightColor?: ThemeColor,
   /**
@@ -73,6 +82,7 @@ interface GridItemProp {
   iconSize?: number,
   /**
    * 图标颜色
+   * @default Color.text
    */
   iconColor?: ThemeColor,
   /**
@@ -85,6 +95,7 @@ interface GridItemProp {
   imageAsTtile?: string;
   /**
    * 图片位置显示文字的颜色。
+   * @default Color.text
    */
   imageAsTtileColor?: ThemeColor;
   /**
@@ -93,6 +104,7 @@ interface GridItemProp {
   imageAsTtileStyle?: TextStyle;
   /**
    * 格子内容排列的方向，可选值为 horizontal
+   * @default 'vetical'
    */
   direction?: 'vetical'|'horizontal',
   /**
@@ -109,18 +121,18 @@ interface GridItemProp {
 
 const styles = StyleSheet.create({
   itemView: {
-    padding: 8,
+    paddingVertical: DynamicVar('GridItemPaddingVertical', 8),
+    paddingHorizontal: DynamicVar('GridItemPaddingHorizontal', 8),
   },
   title: {
-    fontSize: 14,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('GridItemTitleFontSize', 14),
   },
   titleImage: {
-    fontSize: 18,
-    color: DynamicColor(Color.text),
+    fontSize: DynamicVar('GridItemImageAsTtileFontSize', 18),
   },
   icon: {
-    marginHorizontal: 6,
+    marginHorizontal: DynamicVar('GridItemIconMarginHorizontal', 6),
+    marginVertical: DynamicVar('GridItemIconMarginVertical', 0),
   },
 });
 
@@ -129,20 +141,23 @@ const styles = StyleSheet.create({
  */
 export function GridItem(props: GridItemProp) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     icon,
-    highlightColor,
-    backgroundColor,
-    iconColor,
-    iconSize = 22,
+    highlightColor = themeContext.getThemeVar('GridItemHighlightColor', PressedColor(Color.white)),
+    backgroundColor = themeContext.getThemeVar('GridItemBackgroundColor', Color.white),
+    iconColor = themeContext.getThemeVar('GridItemIconColor', Color.text),
+    iconSize = themeContext.getThemeVar('GridItemIconSize', 22),
     iconProps,
-    imageAsTtile,
-    imageAsTtileColor,
+    imageAsTtile = themeContext.getThemeVar('GridItemImageAsTtile', false),
+    imageAsTtileColor = themeContext.getThemeVar('GridItemImageAsTtileColor', Color.text),
     imageAsTtileStyle,
     title,
-    titleColor,
+    titleColor = themeContext.getThemeVar('GridItemTitleColor', Color.black),
     titleStyle,
-    direction,
+    direction = themeContext.getThemeVar('GridItemDirection', 'vetical'),
     children,
     style,
     onPress,
@@ -151,7 +166,7 @@ export function GridItem(props: GridItemProp) {
   function renderIcon() {
     return <Icon key="icon"
       icon={icon}
-      style={styles.icon}
+      style={themeStyles.icon}
       color={iconColor}
       size={iconSize}
       {...iconProps}
@@ -160,20 +175,20 @@ export function GridItem(props: GridItemProp) {
 
   return (
     <TouchableHighlight
-      underlayColor={ThemeSelector.color(highlightColor || PressedColor(Color.white))}
+      underlayColor={themeContext.resolveThemeColor(highlightColor)}
       onPress={onPress}
       style={[
-        styles.itemView,
+        themeStyles.itemView,
         style,
-        { backgroundColor: ThemeSelector.color(backgroundColor) },
+        { backgroundColor: themeContext.resolveThemeColor(backgroundColor) },
       ]}
     >
-      <FlexView style={styles.itemView} center flex={1} direction={direction === 'horizontal' ? 'row' : 'column'}>
+      <FlexView style={themeStyles.itemView} center flex={1} direction={direction === 'horizontal' ? 'row' : 'column'}>
         {
           !CheckTools.isNullOrEmpty(imageAsTtile) ?
             <Text style={[
-              styles.titleImage,
-              { color: ThemeSelector.color(imageAsTtileColor, Color.text) },
+              themeStyles.titleImage,
+              { color: themeContext.resolveThemeColor(imageAsTtileColor) },
               imageAsTtileStyle,
             ]} >{imageAsTtile}</Text> :
             (icon ? renderIcon() : <></>)
@@ -181,8 +196,8 @@ export function GridItem(props: GridItemProp) {
         {
           !CheckTools.isNullOrEmpty(title) ?
             <Text style={[
-              styles.title,
-              { color: ThemeSelector.color(titleColor, Color.text) },
+              themeStyles.title,
+              { color: themeContext.resolveThemeColor(titleColor) },
               direction === 'vetical' ? { marginTop: 6 } : {},
               titleStyle,
             ]} >{title}</Text> :
@@ -199,17 +214,20 @@ export function GridItem(props: GridItemProp) {
  */
 export function Grid(props: GridProp) {
 
+  const themeContext = useThemeContext();
+
   const {
-    columnNum = 4,
-    square = false,
-    border = true,
-    borderWidth = StyleSheet.hairlineWidth,
-    direction = 'vetical',
+    columnNum = themeContext.getThemeVar('GridColumnNum', 4),
+    square = themeContext.getThemeVar('GridSquare', false),
+    border = themeContext.getThemeVar('GridBorder', true),
+    borderColor = themeContext.getThemeVar('GridBorderColor', Color.border),
+    borderWidth = themeContext.getThemeVar('GridBorderWidth', StyleSheet.hairlineWidth),
+    direction = themeContext.getThemeVar('GridDirection', 'vetical'),
     children,
     itemProps,
   } = props;
 
-  const borderColor = ThemeSelector.color(props.borderColor || Color.border);
+  const borderColorValue = themeContext.resolveThemeColor(borderColor);
 
   function renderChildren() {
 
@@ -240,10 +258,10 @@ export function Grid(props: GridProp) {
           }
           if (border) {
             if ((index + 1) % columnNum !== 0) {
-              style.borderRightColor = borderColor;
+              style.borderRightColor = borderColorValue;
               style.borderRightWidth = borderWidth;
             }
-            style.borderBottomColor = borderColor;
+            style.borderBottomColor = borderColorValue;
             style.borderBottomWidth = borderWidth;
           }
 
@@ -264,8 +282,9 @@ export function Grid(props: GridProp) {
   }
 
   const hostStyle = {
-    ...(border ? borderTop(borderWidth, 'solid', borderColor) : {}),
-  };
+    borderTopWidth: border ? borderWidth : 0,
+    borderColor: borderColorValue,
+  } as ViewStyle;
 
   return (<RowView wrap style={hostStyle}>{renderChildren()}</RowView>);
 }

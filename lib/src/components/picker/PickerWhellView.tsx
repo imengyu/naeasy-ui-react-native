@@ -1,6 +1,7 @@
 import React, { createRef } from 'react';
 import { findNodeHandle, HostComponent, NativeSyntheticEvent, requireNativeComponent, StyleSheet, UIManager, View, ViewStyle } from 'react-native';
-import { Color, ThemeColor, ThemeSelector } from '../../styles';
+import { Color } from '../../styles';
+import { ThemeColor, ThemeContext } from '../../theme/Theme';
 import { isAndroid, isIOS } from '../../utils/PlatformTools';
 
 interface PickerWhellViewSelectEvent {
@@ -182,6 +183,10 @@ interface State {}
  */
 export class PickerWhellView extends React.Component<PickerWhellViewProps, State> {
 
+  static contextType = ThemeContext;
+
+  context!: React.ContextType<typeof ThemeContext>;
+
   constructor(props: PickerWhellViewProps) {
     super(props);
     if (!PickerWhellViewAndroid && isAndroid)
@@ -308,8 +313,8 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
       arr.push(
         PickerWhellViewAndroid ? <PickerWhellViewAndroid
           { ...this.props.androidProps }
-          textColorCenter={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.black)}
-          textColorOut={ThemeSelector.color(this.props.androidProps?.textColorCenter, Color.text)}
+          textColorCenter={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.black)}
+          textColorOut={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.text)}
           key={'PickerWhellView' + i}
           style={{ ...styles.item, width: width }}
           options={data[i] as string[]}

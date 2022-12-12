@@ -1,17 +1,19 @@
 import CheckTools from '../../utils/CheckTools';
 import React, { forwardRef, useImperativeHandle, useState} from 'react';
-import { Text, TextStyle, TouchableHighlight, View, ViewStyle} from 'react-native';
+import { StyleSheet, Text, TextStyle, TouchableHighlight, View, ViewStyle} from 'react-native';
 import { RowView } from '../layout/RowView';
 import { Popup } from '../basic/Popup';
 import { WhiteSpace } from '../space/WhiteSpace';
 import { Button } from '../button/Button';
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
+import { Color, PressedColor } from '../../styles';
 import { FeedbackNative } from '../tools/Feedback';
 import { Icon } from '../basic/Icon';
 import { rpx } from '../../utils';
 import { Radio, RadioGroup } from '../form/Radio';
 import { Toast } from '../feedback/Toast';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor } from '@imengyu/naeasy-ui-react-native';
+import { useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 export interface PlateKeyBoardProps extends PlateKeyBoardInnerProps {
   /**
@@ -32,22 +34,27 @@ export interface PlateKeyBoardInnerProps {
   title?: string;
   /**
    * 是否显示完成按钮
+   * @default true
    */
   showFinishButton?: boolean;
   /**
    * 是否显示删除按钮
+   * @default true
    */
   showDeleteButton?: boolean;
   /**
    * 完成按钮文字
+   * @default '完成'
    */
   finishButtonText?: string;
   /**
    * 删除按钮文字
+   * @default '删除'
    */
   deleteButtonText?: string;
   /**
-   * 按键高度，默认50
+   * 按键高度
+   * @default 50
    */
   keyHeight?: number;
   /**
@@ -59,32 +66,24 @@ export interface PlateKeyBoardInnerProps {
    */
   keyTextStyle?: TextStyle;
   /**
-   * 按键的背景颜色。默认白色
+   * 按键的背景颜色。
+   * @default Color.white
    */
   keyColor?: ThemeColor;
   /**
-   * 完成按键的文字颜色。默认black
+   * 完成按键的文字颜色。
+   * @default Color.black
    */
   keyTextColor?: ThemeColor;
   /**
-   * 完成按键的背景颜色。默认primary
-   */
-  keyFinishColor?: ThemeColor;
-  /**
-   * 完成按键的文字颜色。默认white
-   */
-  keyFinishTextColor?: ThemeColor;
-  /**
-   * 完成按键的按下时的颜色
-   */
-  keyFinishPressedColor?: ThemeColor;
-  /**
    * 自定义按键按下时的颜色
+   * @default PressedColor(Color.white)
    */
   keyPressedColor?: ThemeColor;
   /**
    * 按键按下时是否有触感反馈，默认是
    * @platform iOS
+   * @default true
    */
   keyPressedImpactFeedback?: boolean;
   /**
@@ -173,13 +172,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   keyPad: {
-    backgroundColor: DynamicColor(Color.light),
+    backgroundColor: DynamicColorVar('PlateKeyBoardKeyPadBackgroundColor', Color.light),
     position: 'relative',
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: '100%',
-    paddingLeft: 10,
-    paddingVertical: 10,
+    paddingLeft: DynamicVar('PlateKeyBoardKeyMargin', 10),
+    paddingVertical: DynamicVar('PlateKeyBoardKeyMargin', 10),
   },
   key: {
     flexBasis: '13%',
@@ -188,75 +187,81 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: DynamicColor(Color.border),
-    borderRadius: 5,
-    margin: rpx(5),
+    borderWidth: DynamicVar('PlateKeyBoardKeyBorderWidth', 1),
+    borderColor: DynamicColorVar('PlateKeyBoardKeyBorderColor', Color.border),
+    borderRadius: DynamicVar('PlateKeyBoardKeyBorderRadius', 5),
+    margin: DynamicVar('PlateKeyBoardKeyMargin', rpx(5)),
   },
   title: {
-    color: DynamicColor(Color.black),
-    fontSize: 16,
+    color: DynamicColorVar('PlateKeyBoardTitleColor', Color.black),
+    fontSize: DynamicVar('PlateKeyBoardTitleFontSize', 16),
   },
   keyText: {
-    fontSize: 17,
+    fontSize: DynamicVar('PlateKeyBoardKeyFontSize', 17),
   },
   inputBox: {
-    height: rpx(90),
+    height: DynamicVar('PlateKeyBoardInputBoxHeight', rpx(90)),
     flex: 1,
-    borderWidth: 2,
-    borderColor: DynamicColor(Color.light),
-    borderRadius: 5,
-    margin: rpx(5),
+    borderWidth: DynamicVar('PlateKeyBoardInputBoxBorderWidth', 2),
+    borderColor: DynamicColorVar('PlateKeyBoardInputBoxBorderColor', Color.light),
+    borderRadius: DynamicVar('PlateKeyBoardInputBoxBorderRadius', 5),
+    margin: DynamicVar('PlateKeyBoardInputBoxMargin', rpx(5)),
     justifyContent: 'center',
     alignItems: 'center',
   },
   inputBoxText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: DynamicColor(Color.black),
+    fontSize: DynamicVar('PlateKeyBoardInputBoxFontSize', 16),
+    fontWeight: DynamicVar('PlateKeyBoardInputBoxFontWeight', 'bold'),
+    color: DynamicColorVar('PlateKeyBoardInputBoxColor', Color.black),
   },
   inputBoxActive: {
-    borderColor: DynamicColor(Color.primary),
+    borderColor: DynamicColorVar('PlateKeyBoardInputBoxActiveColor', Color.primary),
   },
   dot: {
-    margin: rpx(10),
-    width: rpx(10),
-    height: rpx(10),
-    backgroundColor: DynamicColor(Color.textSecond),
-    borderRadius: rpx(10),
+    margin: DynamicVar('PlateKeyBoardDotMargin', rpx(10)),
+    width: DynamicVar('PlateKeyBoardDotWidth', rpx(10)),
+    height: DynamicVar('PlateKeyBoardDotHeight', rpx(10)),
+    backgroundColor: DynamicColorVar('PlateKeyBoardDotBackgroundColor', Color.textSecond),
+    borderRadius: DynamicVar('PlateKeyBoardDotBorderRadius', rpx(10)),
   },
 });
 
 /**
  * 虚拟车牌号输入键盘的键盘内容组件，可单独嵌入其他对话框或者页面中。
  */
-export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) => {
+export function PlateKeyBoardInner(props: PlateKeyBoardInnerProps) {
 
   const [ currentText, setCurrentText ] = useState('');
   const [ isNewPlate, setIsNewPlate ] = useState(false);
 
-  const keyFinishColor = props.keyFinishColor || Color.primary;
-  const keyFinishPressedColor = props.keyFinishPressedColor || PressedColor(Color.primary);
-  const keyColor = props.keyColor || Color.white;
-  const keyPressedColor = props.keyPressedColor || PressedColor(Color.white);
-  const keyFinishTextColor = props.keyFinishTextColor || Color.white;
-  const keyTextColor = props.keyTextColor || Color.black;
-  const keyHeight = props.keyHeight || 40;
-  const finishButtonText = props.finishButtonText || '完成';
-  const deleteButtonText = props.deleteButtonText || '删除';
-  const keyPressedImpactFeedback = props.keyPressedImpactFeedback !== false;
-  const showDeleteButton = props.showDeleteButton !== false;
-  const showFinishButton = props.showFinishButton !== false;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    keyColor = Color.white,
+    keyPressedColor = PressedColor(Color.white),
+    keyTextColor = Color.black,
+    keyHeight = 40,
+    finishButtonText = '完成',
+    deleteButtonText = '删除',
+    keyPressedImpactFeedback = true,
+    showDeleteButton = true,
+    showFinishButton = true,
+  } = themeContext.resolveThemeProps(props, {
+    keyColor: 'PlateKeyBoardKeyColor',
+    keyPressedColor: 'PlateKeyBoardKeyPressedColor',
+    keyTextColor: 'PlateKeyBoardKeyTextColor',
+    keyHeight: 'PlateKeyBoardKeyHeight',
+    showDeleteButton: 'PlateKeyBoardShowDeleteButton',
+    showFinishButton: 'PlateKeyBoardShowFinishButton',
+  });
+
+  const keyMargin = themeContext.getThemeVar('PlateKeyBoardKeyMargin', 10);
+
   const keyTextStyle = {
-    ...styles.keyText,
+    ...themeStyles.keyText,
     ...props.keyTextStyle,
-    color: ThemeSelector.color(keyTextColor),
-  };
-  const keyTextStyleFinish = {
-    ...styles.keyText,
-    fontSize: 20,
-    ...props.keyTextStyle,
-    color: ThemeSelector.color(keyFinishTextColor),
+    color: themeContext.resolveThemeColor(keyTextColor),
   };
 
   function onFinish(text?: string) {
@@ -276,14 +281,14 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
   }
 
   const heightStyle = {
-    height: keyHeight * 7 + 10,
+    height: keyHeight * 7 + keyMargin,
   };
 
   function renderKey(text: string, icon: boolean, action = '', width = 0, height = 1) {
 
     const keyStyle = {
-      ...styles.key,
-      backgroundColor: ThemeSelector.color(action === 'finish' ? keyFinishColor : keyColor),
+      ...themeStyles.key,
+      backgroundColor: themeContext.resolveThemeColor(keyColor),
       flexBasis: `${width === 0 ? (100 / 8) : width}%`,
       width: `${width === 0 ? (100 / 8) : width}%`,
       height: keyHeight * height,
@@ -301,32 +306,25 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
         <TouchableHighlight
           key={text + action}
           style={keyStyle}
-          underlayColor={ThemeSelector.color(action === 'finish' ? keyFinishPressedColor : keyPressedColor)}
+          underlayColor={themeContext.resolveThemeColor(keyPressedColor)}
           onPress={() => {
             if (keyPressedImpactFeedback)
               FeedbackNative.impactSelectionFeedbackGenerator();
-            //键盘点击事件
-            if (action === 'delete')
-              onDelete();
-            else if (action === 'finish')
-              onFinish();
-            else {
-              props.onInput && props.onInput(text);
-              setCurrentText((prev) => {
-                const newText = prev + text;
-                if (newText.length === (isNewPlate ? 8 : 7)) {
-                  setTimeout(() => onFinish(newText), 400);
-                }
-                return newText;
-              });
-            }
+            props.onInput && props.onInput(text);
+            setCurrentText((prev) => {
+              const newText = prev + text;
+              if (newText.length === (isNewPlate ? 8 : 7)) {
+                setTimeout(() => onFinish(newText), 400);
+              }
+              return newText;
+            });
           }}
         >
           <View>
             {
               icon ?
                 <Icon icon={text} style={keyTextStyle} /> :
-                <Text style={action === 'finish' ? keyTextStyleFinish : keyTextStyle}>{text}</Text>
+                <Text style={keyTextStyle}>{text}</Text>
             }
           </View>
         </TouchableHighlight>
@@ -340,19 +338,19 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
   }) {
     const { text, selfIndex, activeIndex } = inputBoxProps;
     return (
-      <View style={[ styles.inputBox, selfIndex === activeIndex ? styles.inputBoxActive : styles.inputBox ]}>
-        <Text style={styles.inputBoxText}>{selfIndex < text.length ? text[selfIndex] : ''}</Text>
+      <View style={[ themeStyles.inputBox, selfIndex === activeIndex ? themeStyles.inputBoxActive : themeStyles.inputBox ]}>
+        <Text style={themeStyles.inputBoxText}>{selfIndex < text.length ? text[selfIndex] : ''}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={themeStyles.container}>
       { /* 标题 */ }
       {
         !CheckTools.isNullOrEmpty(props.title) ?
           <RowView padding={[ 4, 0 ]} justify="space-between" align="center">
-            <Text style={styles.title}>{props.title}</Text>
+            <Text style={themeStyles.title}>{props.title}</Text>
           </RowView> :
           <RowView justify="center" padding={[ 3, 6 ]}>
             <Button type="text" style={{ width: '100%' }} pressedColor={keyPressedColor} onPress={onCancel} icon="arrow-down" />
@@ -376,7 +374,7 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
       <RowView center padding={10}>
         <InputBox text={currentText} selfIndex={0} activeIndex={currentText.length} />
         <InputBox text={currentText} selfIndex={1} activeIndex={currentText.length} />
-        <View style={styles.dot} />
+        <View style={themeStyles.dot} />
         <InputBox text={currentText} selfIndex={2} activeIndex={currentText.length} />
         <InputBox text={currentText} selfIndex={3} activeIndex={currentText.length} />
         <InputBox text={currentText} selfIndex={4} activeIndex={currentText.length} />
@@ -387,26 +385,26 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
       { /* 键盘区域 */ }
       {
         currentText.length === 0 ?
-        <View style={[ styles.keyPad, heightStyle]}>
+        <View style={[ themeStyles.keyPad, heightStyle]}>
           { keysProvinceText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length === 1 ?
-        <View style={[ styles.keyPad, heightStyle]}>
+        <View style={[ themeStyles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length > 1 && currentText.length < (isNewPlate ? 7 : 6) ?
-        <View style={[ styles.keyPad, heightStyle]}>
+        <View style={[ themeStyles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           { keysNumberText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
       {
         currentText.length >= (isNewPlate ? 7 : 6) ?
-        <View style={[ styles.keyPad, heightStyle]}>
+        <View style={[ themeStyles.keyPad, heightStyle]}>
           { keysWordText.map((key) => renderKey(key, false, '')) }
           { keysNumberText.map((key) => renderKey(key, false, '')) }
           { keysLastWordText.map((key) => renderKey(key, false, '')) }
@@ -415,7 +413,7 @@ export const PlateKeyBoardInner = ThemeWrapper((props: PlateKeyBoardInnerProps) 
       <WhiteSpace size="sm" />
     </View>
   );
-});
+}
 
 /**
  * 中国车牌号输入键盘，可以配合输入框组件或自定义的输入框组件使用。

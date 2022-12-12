@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, ColorValue, ImageSourcePropType, StyleSheet, Text, TextStyle, TouchableHighlight, ViewProps, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../../styles';
-import { FonstSizes } from '../../styles/TextStyles';
 import { selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
@@ -78,8 +77,8 @@ export interface ButtonProp {
    */
   radius?: number,
   /**
-   * 按钮尺寸. 支持 large、normal、small、mini 四种尺寸。
-   * @default normal
+   * 按钮尺寸. 支持 large、medium、small、mini 四种尺寸。
+   * @default 'medium'
    */
   size?: ButtomSizeType,
   /**
@@ -248,6 +247,14 @@ export function Button(props: ButtonProp) {
     onPress,
   } = props;
 
+  const FonstSizes = {
+    mini: themeContext.getThemeVar('ButtonMiniFonstSize', 11),
+    small: themeContext.getThemeVar('ButtonSmallFonstSize', 13),
+    medium: themeContext.getThemeVar('ButtonMediumFonstSize', 18),
+    large: themeContext.getThemeVar('ButtonLargeFonstSize', 24),
+    larger: themeContext.getThemeVar('ButtonLargerFonstSize', 28),
+  };
+
   //按钮样式生成
   const getStyle = useCallback(() => {
     const colorStyle = selectStyleType<ViewStyle|TextStyle, ButtomType>(type, 'default', plain ? {
@@ -336,7 +343,7 @@ export function Button(props: ButtonProp) {
       style={{
         marginRight: left ? (CheckTools.isNullOrEmpty(currentText) ? undefined : 5) : undefined,
         marginLeft: left ? undefined : (CheckTools.isNullOrEmpty(currentText) ? undefined : 5),
-        fontSize: selectStyleType(size, 'medium', FonstSizes) + 2,
+        fontSize: selectStyleType(size, 'medium', FonstSizes),
       }}
       color={nowColor as string}
       {...(left ? iconProps : rightIconProps)}
