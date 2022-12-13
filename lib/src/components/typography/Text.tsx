@@ -3,7 +3,7 @@ import { Text as ReactNativeText, TextProps as ReactNativeTextProps, TextStyle }
 import { Color } from "../../styles";
 import { ThemeColor, useThemeContext } from "../../theme/Theme";
 
-export interface TextProps extends ReactNativeTextProps {
+export interface TextProps extends Omit<ReactNativeTextProps, 'color'> {
   /**
    * 字号
    */

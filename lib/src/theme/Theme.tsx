@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ColorInfoItem } from '../styles';
 
 export interface ThemeContextData {
@@ -67,7 +67,7 @@ export const ThemeContext = React.createContext<ThemeContextData>({} as ThemeCon
 /**
  * useContext(ThemeContext) 的简写
  */
-export const useThemeContext = () => useContext(ThemeContext);
+export const useThemeContext = () => React.useContext(ThemeContext);
 
 
 //组件

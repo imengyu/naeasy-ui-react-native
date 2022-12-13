@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { TestAppNav } from './TestAppNav';
 import { DeviceEventEmitter, StatusBar } from 'react-native';
+import { ErrorBoundary } from '../lib/src/components/error';
 
 function App() {
 
@@ -63,7 +64,9 @@ function App() {
                   barStyle={themeNow === 'dark' ? 'light-content' : 'dark-content'}
                   backgroundColor={context.resolveThemeColor(Color.background)}
                 />
-                <TestAppNav />
+                <ErrorBoundary>
+                  <TestAppNav />
+                </ErrorBoundary>
               </NavigationContainer>}
             </ThemeRender>
           </PortalHost>

@@ -11,8 +11,7 @@ import { Icon } from '../basic/Icon';
 import { rpx } from '../../utils';
 import { Radio, RadioGroup } from '../form/Radio';
 import { Toast } from '../feedback/Toast';
-import { ThemeColor } from '@imengyu/naeasy-ui-react-native';
-import { useThemeContext } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 export interface PlateKeyBoardProps extends PlateKeyBoardInnerProps {

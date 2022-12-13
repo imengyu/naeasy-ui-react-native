@@ -6,9 +6,8 @@ import { Color, PressedColor } from '../../styles';
 import { deviceWidth, rpx } from '../../utils';
 import { Swiper, SwiperItem, SwiperProps } from '../basic/Swiper';
 import { Badge, BadgeProps } from '../display';
-import { ThemeColor } from '@imengyu/naeasy-ui-react-native/dist/styles';
 import { useThemeStyles } from '../../theme/ThemeStyleSheet';
-import { useThemeContext } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 
 //标签头组件
 //==============================================================

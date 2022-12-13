@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import { Color } from '../../styles';
-import { useThemeContext } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { Icon } from '../basic/Icon';
 import { ColumnView } from '../layout/ColumnView';
 import { WhiteSpace } from '../space/WhiteSpace';
@@ -77,18 +77,18 @@ export function Result(props: ResultProps) {
         icon && typeof icon === 'string' ?
           <Icon size={themeVars.ResultIconSize as number} icon={icon} /> :
           (icon ? icon : <Icon size={themeVars.ResultIconSize as number} icon={getDefaultIconByStatus()} color={getDefaultIconColor()} />) }
-      <WhiteSpace size={themeVars.ResultTitleMarginTop} />
+      <WhiteSpace size={themeVars.ResultTitleMarginTop as number} />
       <Text
-        size={themeVars.ResultTitleFontSize}
-        color={themeVars.ResultTitleColor}
-        bold={themeVars.ResultTitleBold}
+        size={themeVars.ResultTitleFontSize as number}
+        color={themeVars.ResultTitleColor as ThemeColor}
+        bold={themeVars.ResultTitleBold as boolean}
         align="center"
       >{title}</Text>
-      <WhiteSpace size={themeVars.ResultDescriptionMarginTop} />
+      <WhiteSpace size={themeVars.ResultDescriptionMarginTop as number} />
       <Text
-        size={themeVars.ResultDescriptionFontSize}
-        color={themeVars.ResultDescriptionColor}
-        bold={themeVars.ResultDescriptionBold}
+        size={themeVars.ResultDescriptionFontSize as number}
+        color={themeVars.ResultDescriptionColor as ThemeColor}
+        bold={themeVars.ResultDescriptionBold as boolean}
         align="center"
       >{description}</Text>
     </ColumnView>
