@@ -1,4 +1,6 @@
 import React from "react";
+import { useContext } from "react";
+import { createContext } from "react";
 import { ColorInfoItem } from '../styles';
 
 export interface ThemeContextData {
@@ -62,12 +64,12 @@ export type ThemeType = 'light'|'dark'|string;
 /**
  * 全局的主题上下文
  */
-export const ThemeContext = React.createContext<ThemeContextData>({} as ThemeContextData);
+export const ThemeContext = createContext<ThemeContextData>({} as ThemeContextData);
 
 /**
  * useContext(ThemeContext) 的简写
  */
-export const useThemeContext = () => React.useContext(ThemeContext);
+export const useThemeContext = () => useContext(ThemeContext);
 
 
 //组件

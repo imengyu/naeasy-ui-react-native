@@ -1,7 +1,8 @@
+import { useContext } from "react";
 import { useMemo } from "react";
 import { ColorValue, ImageStyle, TextStyle, ViewStyle } from "react-native";
 import { ColorInfoItem } from "../styles";
-import { ThemeColor, ThemeContextData, useThemeContext } from "./Theme";
+import { ThemeColor, ThemeContext, ThemeContextData } from "./Theme";
 
 type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle };
 
@@ -105,7 +106,7 @@ export function transformThemeStyle(sourceStyle: ViewStyle | TextStyle | ImageSt
  * @param sourceStyle 源样式
  */
 export function useThemeStyles<T>(sourceStyle: NamedStyles<T>) {
-  const themeData = useThemeContext();
+  const themeData =  useContext(ThemeContext);
   return useMemo(() => transformThemeStyles(sourceStyle, themeData), [ sourceStyle, themeData ]) as NamedStyles<T>;
 }
 /**
@@ -113,7 +114,7 @@ export function useThemeStyles<T>(sourceStyle: NamedStyles<T>) {
  * @param sourceStyle 源样式
  */
 export function useThemeStyle<T extends ViewStyle | TextStyle | ImageStyle>(sourceStyle: T) {
-  const themeData = useThemeContext();
+  const themeData =  useContext(ThemeContext);
   return useMemo(() => transformThemeStyle(sourceStyle, themeData), [ sourceStyle, themeData ]) as T;
 }
 

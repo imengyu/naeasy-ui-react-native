@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ThemeColor, ThemeContext, ThemeContextData, ThemeSelector, ThemeType } from '../theme/Theme';
 
 export interface ThemeProviderProps {
@@ -31,50 +31,54 @@ export function ThemeProvider(props: ThemeProviderProps) {
   } = props;
 
   //传递数据
-  const themeContextData: ThemeContextData = {
-    theme,
-    themeData,
-    setTheme: (t) => onThemeChange?.(t),
-    resolveThemeColor,
-    resolveThemeProps,
-    getThemeColorVar,
-    getThemeColorVars,
-    getThemeVar,
-    getThemeVars,
-  };
+  const themeContextData = useMemo<ThemeContextData>(() => {
+    function resolveThemeProps<T, K extends string>(srcProps: T, themeKeys: { [P in K]: string }) {
+      const propsObj = {
+        ...srcProps,
+      } as {
+        [index: string]: unknown
+      };
+      for (const key in themeKeys)
+        propsObj[key] = getThemeVar(themeKeys[key], propsObj[key]);
 
-  function resolveThemeProps<T, K extends string>(srcProps: T, themeKeys: { [P in K]: string }) {
-    const propsObj = {
-      ...srcProps,
-    } as {
-      [index: string]: unknown
+      return propsObj as unknown as T;
+    }
+    function resolveThemeColor(srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) {
+      return ThemeSelector.color(theme, srcColor, defaultValue) as string;
+    }
+    function getThemeColorVar(key: string, defaultValue: ThemeColor|undefined) {
+      return ThemeSelector.color(theme, themeData[key] as ThemeColor, defaultValue) as string;
+    }
+    function getThemeColorVars<K extends string>(keyAndDefaults: { [P in K]: ThemeColor; }) {
+      const result = {} as { [P in K]: string; };
+      for (const key in keyAndDefaults)
+        result[key] = getThemeColorVar(key, keyAndDefaults[key]);
+      return result;
+    }
+    function getThemeVars<T, K extends string>(keyAndDefaults: { [P in K]: T; }) {
+      const result = {} as { [P in K]: T; };
+      for (const key in keyAndDefaults)
+        result[key] = themeData[key] as T || keyAndDefaults[key];
+      return result;
+    }
+    function getThemeVar<T>(key: string, defaultValue: T) {
+      return themeData[key] as T || defaultValue;
+    }
+
+    return {
+      theme,
+      themeData,
+      setTheme: (t) => onThemeChange?.(t),
+      resolveThemeColor,
+      resolveThemeProps,
+      getThemeColorVar,
+      getThemeColorVars,
+      getThemeVar,
+      getThemeVars,
     };
-    for (const key in themeKeys)
-      propsObj[key] = getThemeVar(themeKeys[key], propsObj[key]);
-
-    return propsObj as unknown as T;
-  }
-  function resolveThemeColor(srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) {
-    return ThemeSelector.color(theme, srcColor, defaultValue) as string;
-  }
-  function getThemeColorVar(key: string, defaultValue: ThemeColor|undefined) {
-    return ThemeSelector.color(theme, themeData[key] as ThemeColor, defaultValue) as string;
-  }
-  function getThemeColorVars<K extends string>(keyAndDefaults: { [P in K]: ThemeColor; }) {
-    const result = {} as { [P in K]: string; };
-    for (const key in keyAndDefaults)
-      result[key] = getThemeColorVar(key, keyAndDefaults[key]);
-    return result;
-  }
-  function getThemeVars<T, K extends string>(keyAndDefaults: { [P in K]: T; }) {
-    const result = {} as { [P in K]: T; };
-    for (const key in keyAndDefaults)
-      result[key] = themeData[key] as T || keyAndDefaults[key];
-    return result;
-  }
-  function getThemeVar<T>(key: string, defaultValue: T) {
-    return themeData[key] as T || defaultValue;
-  }
+  }, [
+    onThemeChange, theme, themeData,
+  ]);
 
   return (
     <ThemeContext.Provider value={themeContextData}>

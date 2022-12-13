@@ -241,32 +241,32 @@ export function Cell(props: CellProp) {
 
     switch (size) {
       case 'large':
-        style.minHeight = themeVars.CellHeightLarge as number;
-        style.paddingVertical = themeVars.CellPaddingLarge as number;
+        styleObj.minHeight = themeVars.CellHeightLarge as number;
+        styleObj.paddingVertical = themeVars.CellPaddingLarge as number;
         break;
       default:
       case 'medium':
-        style.minHeight = themeVars.CellHeightMedium as number;
-        style.paddingVertical = themeVars.CellPaddingMedium as number;
+        styleObj.minHeight = themeVars.CellHeightMedium as number;
+        styleObj.paddingVertical = themeVars.CellPaddingMedium as number;
         break;
       case 'small':
-        style.minHeight = themeVars.CellHeightSmall as number;
-        style.paddingVertical = themeVars.CellPaddingSmall as number;
+        styleObj.minHeight = themeVars.CellHeightSmall as number;
+        styleObj.paddingVertical = themeVars.CellPaddingSmall as number;
     }
 
     //内边距样式的强制设置
-    styleConfigPadding(style, padding);
+    styleConfigPadding(styleObj, padding);
 
     //边框设置
     if (topBorder) {
-      style.borderTopWidth = themeVars.CellBorderWidth;
-      style.borderTopColor = themeColorVars.CellBorderColor;
-      style.borderStyle = 'solid';
+      styleObj.borderTopWidth = themeVars.CellBorderWidth;
+      styleObj.borderTopColor = themeColorVars.CellBorderColor;
+      styleObj.borderStyle = 'solid';
     }
     if (bottomBorder) {
-      style.borderBottomWidth = themeVars.CellBorderWidth;
-      style.borderBottomColor = themeColorVars.CellBorderColor;
-      style.borderStyle = 'solid';
+      styleObj.borderBottomWidth = themeVars.CellBorderWidth;
+      styleObj.borderBottomColor = themeColorVars.CellBorderColor;
+      styleObj.borderStyle = 'solid';
     }
 
     return styleObj;
