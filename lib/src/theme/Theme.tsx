@@ -114,7 +114,7 @@ export class ThemeSelector {
     * @param object 类型预定义
     */
   public static colorNoNull(theme: ThemeType, object: ThemeColor|undefined, defaultValue?: ThemeColor|string) {
-    return ThemeSelector.color(theme, object, defaultValue) as string;
+    return themeContext.resolveThemeColor(theme, object, defaultValue) as string;
   }
   /**
    * 根据当前主题选择不同的变量

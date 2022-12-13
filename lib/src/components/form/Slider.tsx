@@ -1,16 +1,19 @@
 import CheckTools from "../../utils/CheckTools";
 import React, { useRef } from "react";
-import { GestureResponderEvent, LayoutChangeEvent, PanResponder, View, ViewStyle } from "react-native";
-import { Color, DynamicColor, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
-import { ThemeWrapper } from "../../theme/Theme";
+import { GestureResponderEvent, LayoutChangeEvent, PanResponder, StyleSheet, View, ViewStyle } from "react-native";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicColorVar, DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface SliderProps {
   /**
    * 当前数值
+   * @default 0
    */
   value?: number;
   /**
-   * 步长，默认：1
+   * 步长
+   * @default 1
    */
   step?: number;
   /**
@@ -22,27 +25,33 @@ export interface SliderProps {
    */
   onEndChange?: (value: number) => void;
   /**
-   * 最大值，默认：100
+   * 最大值
+   * @default 100
    */
   maxValue?: number;
   /**
-   * 最小值，默认：0
+   * 最小值
+   * @default 0
    */
   minValue?: number;
   /**
-   * 进度条高度，默认：5
+   * 进度条高度
+   * @default 5
    */
   barHeight?: number;
   /**
-   * 滑块按钮大小，默认：20
+   * 滑块按钮大小
+   * @default 20
    */
   buttonSize?: number;
   /**
-   * 进度条激活态颜色，默认：primary
+   * 进度条激活态颜色
+   * @default Color.primary
    */
   activeColor?: ThemeColor;
   /**
-   * 进度条非激活态颜色，默认：grey
+   * 进度条非激活态颜色
+   * @default Color.grey
    */
   inactiveColor?: ThemeColor;
   /**
@@ -54,11 +63,13 @@ export interface SliderProps {
    */
   style?: ViewStyle;
   /**
-   * 是否可以滑动，否则无法修改滑块的值，默认：true
+   * 是否可以滑动，否则无法修改滑块的值
+   * @default true
    */
   touchable?: boolean;
   /**
-   * 是否垂直展示，默认：false
+   * 是否垂直展示
+   * @default false
    */
   vertical?: boolean;
   /**
@@ -77,38 +88,54 @@ const styles = StyleSheet.create({
   },
   bar: {
     position: 'relative',
-    borderRadius: 2,
+    borderRadius: DynamicVar('SliderBarBorderRadius', 2),
   },
   barActive: {
     position: 'absolute',
-    borderRadius: 2,
+    borderRadius: DynamicVar('SliderBarBorderRadius', 2),
   },
   track: {
     position: 'absolute',
-    elevation: 2,
-    shadowColor: DynamicColor(Color.black),
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
+    elevation: DynamicVar('SliderTrackElevation', 2),
+    shadowColor: DynamicColorVar('SliderTrackShadowColor', Color.black),
+    shadowOpacity: DynamicVar('SliderTrackShadowOpacity', 0.1),
+    shadowOffset: DynamicVar('SliderTrackShadowOffset', { width: 0, height: 2 }),
   },
 });
 
-export const Slider = ThemeWrapper(function (props: SliderProps) {
+export function Slider(props: SliderProps) {
 
-  const vertical = props.vertical === true;
-  const barHeight = props.barHeight || 5;
-  const buttonSize = props.buttonSize || 20;
-  const inactiveColor = props.inactiveColor || Color.grey;
-  const activeColor = props.activeColor || Color.primary;
-  const maxValue = props.maxValue || 100;
-  const minValue = props.minValue || 0;
-  const step = props.step || 1;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    vertical = false,
+    barHeight = 5,
+    buttonSize = 20,
+    inactiveColor = Color.grey,
+    activeColor = Color.primary,
+    maxValue = 100,
+    minValue = 0,
+    step = 1,
+    touchable = true,
+  } = themeContext.resolveThemeProps(props, {
+    barHeight: 'SliderBarHeight',
+    buttonSize: 'SliderTrackSize',
+    inactiveColor: 'SliderInactiveColor',
+    activeColor: 'SliderActiveColor',
+  });
+
+  const themeVars = themeContext.getThemeVars({
+    SliderDisabledOpactity: 0.5,
+    SliderTrackBackgroundColor: '#fff',
+    SliderTrackDisabledBackgroundColor: '#eaeaea',
+  });
+
   const value = Math.min(Math.max(minValue, CheckTools.returnDefinedValueOrdefault(props.value, 50)), maxValue);
-
   const conRef = useRef<View>(null);
 
   const barWidth = useRef(0);
   const barTop = useRef(0);
-  const touch = props.touchable !== false;
   const valuePos = Math.floor(((value - minValue) / (maxValue - minValue)) * 100);
 
   function onResponderMove(e: GestureResponderEvent) {
@@ -133,16 +160,16 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
   const panResponder = React.useRef(
     PanResponder.create({
       // Ask to be the responder:
-      onStartShouldSetPanResponder: () => touch,
+      onStartShouldSetPanResponder: () => touchable,
       onStartShouldSetPanResponderCapture: () => {
         //rn 的 locationY 似乎返回有点不对，只能通过触摸pageY-元素pageY，才能获取正确的位置
         conRef.current?.measure((frameX, frameY, frameWidth, frameHeight, pageX, pageY) => {
           barTop.current = pageY;
         });
-        return touch;
+        return touchable;
       },
-      onMoveShouldSetPanResponder: () => touch,
-      onMoveShouldSetPanResponderCapture: () => touch,
+      onMoveShouldSetPanResponder: () => touchable,
+      onMoveShouldSetPanResponderCapture: () => touchable,
       onPanResponderMove: (evt) => onResponderMove(evt),
       onPanResponderTerminationRequest: () => true,
       onPanResponderRelease: (evt) => {
@@ -158,7 +185,7 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
     <View
       ref={conRef}
       style={[
-        styles.barContainer,
+        themeStyles.barContainer,
         {
           minHeight: vertical ? 100 : undefined,
           height: vertical ? undefined : Math.max(barHeight, buttonSize),
@@ -172,28 +199,31 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
       collapsable={false}
     >
       <View style={[
-        styles.bar,
+        themeStyles.bar,
         {
-          opacity: touch ? 1 : 0.5,
+          opacity: touchable ? 1 : themeVars.SliderDisabledOpactity as number,
           width: vertical ? barHeight : '100%',
           height: vertical ? '100%' : barHeight,
-          backgroundColor: ThemeSelector.color(inactiveColor),
+          backgroundColor: themeContext.resolveThemeColor(inactiveColor),
         },
       ]}>
         <View style={[
-          styles.barActive,
+          themeStyles.barActive,
           {
-            opacity: touch ? 1 : 0.5,
+            opacity: touchable ? 1 : themeVars.SliderDisabledOpactity as number,
             width: vertical ? barHeight : `${valuePos}%`,
             height: vertical ? `${valuePos}%` : barHeight,
-            backgroundColor: ThemeSelector.color(activeColor),
+            backgroundColor: themeContext.resolveThemeColor(activeColor),
           },
         ]} />
       </View>
       { props.renderButton ? props.renderButton(valuePos) : <View style={[
-        styles.track,
+        themeStyles.track,
         {
-          backgroundColor: touch ? '#fff' : '#eaeaea',
+          backgroundColor: themeContext.resolveThemeColor((touchable ?
+            themeVars.SliderTrackBackgroundColor :
+            themeVars.SliderTrackDisabledBackgroundColor
+          ) as string),
           left: vertical ? 0 : `${valuePos}%`,
           top: vertical ? `${valuePos}%` : 0,
           marginLeft: vertical ? 0 : (-buttonSize / 2) * (valuePos / 100),
@@ -206,4 +236,4 @@ export const Slider = ThemeWrapper(function (props: SliderProps) {
       ]} /> }
     </View>
   );
-});
+}

@@ -436,7 +436,7 @@ export class Field extends React.Component<FieldProps, State> {
                     {
                       width: labelWidth,
                       textAlign: labelAlign || 'center',
-                      color: ThemeSelector.color(disabled ? labelDisableColor : labelColor),
+                      color: themeContext.resolveThemeColor(disabled ? labelDisableColor : labelColor),
                     },
                     labelStyle,
                   ]}>{ label + (colon ? ': ' : '') }</Text>
@@ -465,11 +465,11 @@ export class Field extends React.Component<FieldProps, State> {
                         inputStyle,
                         (this.state.focused ? activeInputStyle : {}),
                         {
-                          color: ThemeSelector.color(disabled ? inputDisableColor : (error ? Color.danger : inputColor)),
+                          color: themeContext.resolveThemeColor(disabled ? inputDisableColor : (error ? Color.danger : inputColor)),
                           textAlign: inputAlign,
                         },
                       ]}
-                      placeholderTextColor={error ? ThemeSelector.color(Color.danger) : (this.props.placeholderTextColor || ThemeSelector.color(Color.textSecond) )}
+                      placeholderTextColor={error ? themeContext.resolveThemeColor(Color.danger) : (this.props.placeholderTextColor || themeContext.resolveThemeColor(Color.textSecond) )}
                       keyboardType={selectStyleType(type, 'text', {
                         text: 'default',
                         password: 'default',

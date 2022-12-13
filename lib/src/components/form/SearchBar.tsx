@@ -176,7 +176,7 @@ export const SearchBar = ThemeWrapper(function (props: SearchBarProp) {
           style={[ styles.inputInner, props.inputStyle ]}
           value={value}
           placeholder={props.placeholder}
-          placeholderTextColor={ThemeSelector.color(props.placeholderTextColor, Color.textSecond)}
+          placeholderTextColor={themeContext.resolveThemeColor(props.placeholderTextColor, Color.textSecond)}
           onChangeText={(v) => {
             setValue(v);
             props.onValueChange && props.onValueChange(v);
@@ -198,7 +198,7 @@ export const SearchBar = ThemeWrapper(function (props: SearchBarProp) {
         (cancelState === 'show' || (inputFocus && cancelState === 'show-active') || (value !== '' && cancelState === 'show-no-empty')) ?
           (props.renderCancelButton ? props.renderCancelButton() : <TouchableOpacity onPress={onCancel} style={[ styles.cancel, props.cancelStyle ]}>
             <Text style={[
-              { color: ThemeSelector.color(Color.primary) },
+              { color: themeContext.resolveThemeColor(Color.primary) },
               props.cancelTextStyle,
             ]}>{props.cancelText || '取消'}</Text>
           </TouchableOpacity>)

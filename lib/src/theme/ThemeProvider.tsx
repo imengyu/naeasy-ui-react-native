@@ -55,10 +55,10 @@ export function ThemeProvider(props: ThemeProviderProps) {
     return propsObj as unknown as T;
   }
   function resolveThemeColor(srcColor: ThemeColor|undefined, defaultValue?: ThemeColor) {
-    return ThemeSelector.colorNoNull(theme, srcColor, defaultValue);
+    return themeContext.resolveThemeColorNoNull(theme, srcColor, defaultValue);
   }
   function getThemeColorVar(key: string, defaultValue: ThemeColor|undefined) {
-    return ThemeSelector.colorNoNull(theme, themeData[key] as ThemeColor, defaultValue);
+    return themeContext.resolveThemeColorNoNull(theme, themeData[key] as ThemeColor, defaultValue);
   }
   function getThemeColorVars<K extends string>(keyAndDefaults: { [P in K]: ThemeColor; }) {
     const result = {} as { [P in K]: string; };

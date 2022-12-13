@@ -109,8 +109,8 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
         disabled={disabled}
         shape={shape}
         checkedBorderColor="transparent"
-        checkedBackgroundColor={ThemeSelector.color(color)}
-        disableBorderColor={ThemeSelector.color(disabledColor)}
+        checkedBackgroundColor={themeContext.resolveThemeColor(color)}
+        disableBorderColor={themeContext.resolveThemeColor(disabledColor)}
         iconSize={10}
         type="radio"
       />;
@@ -148,7 +148,7 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
           styles.radioText,
           props.textStyle,
           {
-            color: ThemeSelector.color(disabled ? Color.grey : (textColor)),
+            color: themeContext.resolveThemeColor(disabled ? Color.grey : (textColor)),
             display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
           },
         ]}>{text}</Text>

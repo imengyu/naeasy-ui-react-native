@@ -285,7 +285,7 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
             finalBoxStyle,
             boxStyle,
           ]}
-          underlayColor={ThemeSelector.color(PressedColor(Color.white))}
+          underlayColor={themeContext.resolveThemeColor(PressedColor(Color.white))}
           onPress={disableKeyPad ? undefined : () => onBoxClicked(i)}
         >
           <View>

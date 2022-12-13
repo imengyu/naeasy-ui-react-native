@@ -3,11 +3,13 @@ import { ActivityIndicator, TouchableWithoutFeedback, View, ViewStyle, Animated,
 import { Color } from "../../styles";
 import { FeedbackNative } from "../tools/Feedback";
 import { Switch as NativeSwitch } from 'react-native';
-import { ThemeColor } from "../../theme/Theme";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicColorVar, DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface SwitchProps {
   /**
    * 开关是否开启
+   * @default false
    */
   value?: boolean;
   /**
@@ -17,35 +19,43 @@ export interface SwitchProps {
 
   /**
    * 是否使用 RN 原生 Switch 组件
+   * @default false
    */
   native?: boolean;
   /**
-   * 开关的颜色
+   * 开关的主颜色
+   * @default Color.primary
    */
   color?: ThemeColor;
   /**
    * 开关的反色
+   * @default Color.switch
    */
   inverseColor?: ThemeColor;
   /**
    * 开关点的颜色
+   * @default Color.white.light
    */
   dotColor?: string;
   /**
    * 开关是否是加载中状态
+   * @default false
    */
   loading?: boolean;
   /**
    * 开关是否禁用
+   * @default false
    */
   disabled?: boolean;
   /**
-   * 是否有触感反馈，默认是
+   * 是否有触感反馈
    * @platform iOS
+   * @default true
    */
   impactFeedback?: boolean;
   /**
    * 开关大小
+   * @default 30
    */
   size?: number;
 }
@@ -76,10 +86,10 @@ const styles = StyleSheet.create({
   toggleDotInner: {
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 4,
-    shadowColor: DynamicColor(Color.black),
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
+    elevation: DynamicVar('SwitchDotElevation', 4),
+    shadowColor: DynamicColorVar('SwitchDotShadowColor', Color.black),
+    shadowOffset: DynamicVar('SwitchDotShadowOffset', { width: 0, height: 1 }),
+    shadowOpacity: DynamicVar('SwitchDotShadowOpacity', 0.3),
   },
 });
 
@@ -88,13 +98,30 @@ const styles = StyleSheet.create({
  */
 export function Switch(props: SwitchProps) {
 
-  const size = props.size || 30;
-  const color = props.color || Color.primary;
-  const inverseColor = props.inverseColor || Color.switch;
-  const dotColor = props.dotColor || Color.white.light;
-  const impactFeedback = props.impactFeedback !== true;
-  const disabled = props.disabled === true;
-  const dotPadding = 2;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
+  const {
+    size = 30,
+    color = Color.primary,
+    inverseColor = Color.switch,
+    dotColor = Color.white.light,
+    impactFeedback = true,
+    disabled = false,
+    loading = false,
+    value = false,
+    native = false,
+    onValueChange,
+  } = themeContext.resolveThemeProps(props, {
+    size: 'SwitchSize',
+    color: 'SwitchColor',
+    inverseColor: 'SwitchInverseColor',
+    dotColor: 'SwitchDotColor',
+    impactFeedback: 'SwitchImpactFeedback',
+  });
+
+  const dotPadding = themeContext.getThemeVar('SwitchDotPadding', 2);
+  const animDuration = themeContext.getThemeVar('SwitchAnimDuration', 200);
 
   const [ opacityAnim ] = useState(new Animated.Value(0));
   const [ translateXAnim ] = useState(new Animated.Value(0));
@@ -102,22 +129,22 @@ export function Switch(props: SwitchProps) {
   useEffect(() => {
     Animated.timing(opacityAnim, {
       useNativeDriver: true,
-      toValue: props.value ? 1 : 0,
-      duration: 100,
+      toValue: value ? 1 : 0,
+      duration: animDuration,
     }).start();
     Animated.timing(translateXAnim, {
       useNativeDriver: true,
-      toValue: props.value ? ((size * 1.8) - size) : 0,
-      duration: 200,
+      toValue: value ? ((size * 1.8) - size) : 0,
+      duration: animDuration,
     }).start();
-  }, [ size, opacityAnim, translateXAnim, props.value ]);
+  }, [ animDuration, size, opacityAnim, translateXAnim, value ]);
 
   function change() {
-    if (disabled === true || props.loading === true)
+    if (disabled === true || loading)
       return;
     if (impactFeedback)
       FeedbackNative.impactSelectionFeedbackGenerator();
-    props.onValueChange && props.onValueChange(!props.value);
+    onValueChange && onValueChange(!value);
   }
 
   const style = {
@@ -127,33 +154,33 @@ export function Switch(props: SwitchProps) {
   } as ViewStyle;
 
   return (
-    props.native ?
+    native ?
       <NativeSwitch {...props} /> :
       <TouchableWithoutFeedback
         style={{
-          ...styles.toggleOut,
+          ...themeStyles.toggleOut,
           ...style,
         }}
         onPress={change}
       >
         <View style={[
           {
-            backgroundColor: ThemeSelector.color(inverseColor),
-            opacity: props.disabled ? 0.8 : 1,
+            backgroundColor: themeContext.resolveThemeColor(inverseColor),
+            opacity: disabled ? 0.8 : 1,
           },
-          styles.toggleOutView,
+          themeStyles.toggleOutView,
           style,
         ]}>
           <Animated.View
             style={[
-              { backgroundColor: ThemeSelector.color(color) },
-              styles.toggleActiveColor,
+              { backgroundColor: themeContext.resolveThemeColor(color) },
+              themeStyles.toggleActiveColor,
               { opacity: opacityAnim },
             ]}
           />
           <Animated.View
             style={[
-              styles.toggleDot,
+              themeStyles.toggleDot,
               {
                 width: size,
                 height: size,
@@ -166,15 +193,15 @@ export function Switch(props: SwitchProps) {
             ]}
           >
             <View style={[
-              styles.toggleDotInner,
+              themeStyles.toggleDotInner,
               {
-                backgroundColor: ThemeSelector.color(dotColor),
+                backgroundColor: themeContext.resolveThemeColor(dotColor),
                 borderRadius: size / 2,
                 width: size - dotPadding * 2,
                 height: size - dotPadding * 2,
               },
             ]}>
-              { props.loading ? <ActivityIndicator color={ThemeSelector.color(props.value ? color : inverseColor)} /> : <></> }
+              { loading ? <ActivityIndicator color={themeContext.resolveThemeColor(value ? color : inverseColor)} /> : <></> }
             </View>
           </Animated.View>
         </View>

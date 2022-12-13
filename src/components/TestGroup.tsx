@@ -20,7 +20,7 @@ interface TestGroupProps extends ViewProps {
 export function TestGroup(props: TestGroupProps) {
   return <View {...props} style={[
     props.noHorizontalPadding ? styles.groupFull : styles.group,
-    { backgroundColor: props.white ? ThemeSelector.color(Color.white) : undefined },
+    { backgroundColor: props.white ? themeContext.resolveThemeColor(Color.white) : undefined },
   ]} />;
 }
 

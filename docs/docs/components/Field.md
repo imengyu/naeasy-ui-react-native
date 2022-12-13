@@ -69,11 +69,11 @@ export function TestFieldScreen(props) {
   <Field placeholder="自定义样式1" fieldStyle={{
     paddingVertical: rpx(10),
     paddingHorizontal: rpx(20),
-    borderBottomColor: ThemeSelector.color(Color.border),
+    borderBottomColor: themeContext.resolveThemeColor(Color.border),
     borderBottomWidth: rpx(2),
-    backgroundColor: ThemeSelector.color(Color.white),
+    backgroundColor: themeContext.resolveThemeColor(Color.white),
   }} activeFieldStyle={{
-    borderBottomColor: ThemeSelector.color(Color.primary),
+    borderBottomColor: themeContext.resolveThemeColor(Color.primary),
   }} value={value12} onChangeText={setValue12} />
   <WhiteSpace size="sm" />
   <Field placeholder="自定义样式2" fieldStyle={{
@@ -81,16 +81,16 @@ export function TestFieldScreen(props) {
     paddingHorizontal: rpx(20),
     borderRadius: 5,
     borderWidth: rpx(2),
-    borderColor: ThemeSelector.color(Color.border),
+    borderColor: themeContext.resolveThemeColor(Color.border),
   }} activeFieldStyle={{
-    borderColor: ThemeSelector.color(Color.primary),
+    borderColor: themeContext.resolveThemeColor(Color.primary),
   }} value={value12} onChangeText={setValue12} />
   <WhiteSpace size="sm" />
   <Field placeholder="自定义样式3" fieldStyle={{
     paddingVertical: rpx(10),
     paddingHorizontal: rpx(20),
     borderRadius: 5,
-    backgroundColor: ThemeSelector.color(Color.grey),
+    backgroundColor: themeContext.resolveThemeColor(Color.grey),
   }}value={value12} onChangeText={setValue12} />
 </ColumnView>
 ```

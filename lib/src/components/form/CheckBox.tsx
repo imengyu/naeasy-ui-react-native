@@ -114,10 +114,10 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
           disabled={disabled}
           shape={shape}
           size={checkSize}
-          checkedBackgroundColor={ThemeSelector.color(color)}
-          checkedBorderColor={ThemeSelector.color(color)}
-          borderColor={ThemeSelector.color(borderColor)}
-          checkColor={ThemeSelector.color(checkColor)}
+          checkedBackgroundColor={themeContext.resolveThemeColor(color)}
+          checkedBorderColor={themeContext.resolveThemeColor(color)}
+          borderColor={themeContext.resolveThemeColor(borderColor)}
+          checkColor={themeContext.resolveThemeColor(checkColor)}
           icon={props.icon} />
       );
   }
@@ -163,7 +163,7 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
                 styles.checkText,
                 props.textStyle,
                 {
-                  color: ThemeSelector.color(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
+                  color: themeContext.resolveThemeColor(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
                   display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
                 },
               ]}>{text}</Text>) :
@@ -397,11 +397,11 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
         width: size,
         height: size,
         borderWidth: borderWidth,
-        borderColor: ThemeSelector.color(disabled ?
+        borderColor: themeContext.resolveThemeColor(disabled ?
           (on ? disableCheckedBorderColor : disableBorderColor) :
           (on ? checkedBorderColor : borderColor)
         ),
-        backgroundColor: ThemeSelector.color(disabled ?
+        backgroundColor: themeContext.resolveThemeColor(disabled ?
           (on ? disableCheckedBackgroundColor : disableBackgroundColor) :
           (on ? checkedBackgroundColor : backgroundColor)
         ),
@@ -415,7 +415,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
             <View style={{
               borderRadius: iconSize,
               width: iconSize, height: iconSize,
-              backgroundColor: ThemeSelector.color(disabled ? disableCheckColor : checkColor),
+              backgroundColor: themeContext.resolveThemeColor(disabled ? disableCheckColor : checkColor),
             }} />
         ) : <></>
       }
