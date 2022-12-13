@@ -126,18 +126,11 @@ const styles = StyleSheet.create({
   inputInner: {
     flex: 1,
     paddingHorizontal: DynamicVar('SearchBarCancelPaddingHorizontal', 10),
-    paddingVertical: DynamicVar('SearchBarCancelPaddingVertical', 0),
-    ...Platform.select({
-      ios: {
-        paddingVertical: 8,
-      },
-      web: {
-        paddingVertical: 8,
-      },
-      android: {
-        paddingVertical: 2,
-      },
-    }),
+    paddingVertical: DynamicVar('SearchBarCancelPaddingVertical', Platform.select({
+      ios: 8,
+      web: 8,
+      android: 2,
+    })),
   },
   cancel: {
     paddingVertical: DynamicVar('SearchBarCancelPaddingVertical', 0),

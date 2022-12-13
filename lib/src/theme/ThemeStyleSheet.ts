@@ -92,8 +92,7 @@ export function transformThemeStyle(sourceStyle: ViewStyle | TextStyle | ImageSt
       hasDynamicProp = true;
     } else {
       //不是动态主题属性，原样返回
-      if (typeof styleValue !== 'undefined')
-        finalStyleObject[key2] = styleValue;
+      finalStyleObject[key2] = styleValue;
     }
   }
 
@@ -154,10 +153,10 @@ export function DynamicColorVar(propKey: string, defaultValue: ThemeColor) : Col
  */
 export function DynamicVar<T>(propKey: string, defaultValue: T) : T {
   return {
+    __isDaymicThemeProp__: true,
     __daymicThemePropKey__: propKey,
     __daymicThemePropType__: DYNAMIC_PROPTYPE_VAR,
     __daymicThemePropDefaultValue__: defaultValue,
-    __isDaymicThemeProp__: true,
   } as unknown as T;
 }
 
