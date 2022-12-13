@@ -22,17 +22,17 @@ export class TestAvatarScreen extends React.PureComponent<Props> {
         <TestGroup>
           <RowView>
             <Avatar text="张三" size={40} background={Color.danger} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Avatar text="李四" size={40} background={Color.success} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Avatar text="王五" size={40} background={Color.primary} />
           </RowView>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <RowView>
             <Avatar text="张" size={30} background={Color.success} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Avatar text="李" size={30} background={Color.danger} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Avatar text="王" size={30} background={Color.primary} />
           </RowView>
         </TestGroup>

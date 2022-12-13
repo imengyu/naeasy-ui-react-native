@@ -57,15 +57,15 @@ export class TestWhiteSpaceScreen extends React.PureComponent<Props> {
             <View style={styles.box}>
               <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec blandit iaculis velit, vitae euismod urna facilisis et. Ut orci justo, euismod at orci in,.</Text>
             </View>
-            <WhiteSpace size="lg" style={styles.box2} />
+            <WhiteSpace size="large" style={styles.box2} />
             <View style={styles.box}>
               <Text>Maximus a justo. Praesent ac neque commodo enim convallis auctor. Duis volutpat ultricies placerat. Morbi non placerat nulla, nec finibus urna. </Text>
             </View>
-            <WhiteSpace size="md" style={styles.box2} />
+            <WhiteSpace size="medium" style={styles.box2} />
             <View style={styles.box}>
               <Text>Maecenas pharetra vel sem vel ultrices. Nulla consequat, diam ac tristique dictum, massa orci convallis libero, vitae volutpat nulla massa quis arcu. </Text>
             </View>
-            <WhiteSpace size="sm" style={styles.box2} />
+            <WhiteSpace size="small" style={styles.box2} />
             <View style={styles.box}>
               <Text>In turpis leo, placerat eget metus a, mattis elementum diam. Suspendisse auctor ipsum sed mauris aliquet semper.</Text>
             </View>
@@ -77,11 +77,11 @@ export class TestWhiteSpaceScreen extends React.PureComponent<Props> {
             <View style={styles.box3} />
             <WhiteSpace size={10} style={styles.box5} />
             <View style={styles.box4} />
-            <WhiteSpace size="lg" style={styles.box5} />
+            <WhiteSpace size="large" style={styles.box5} />
             <View style={styles.box3} />
-            <WhiteSpace size="md" style={styles.box5} />
+            <WhiteSpace size="medium" style={styles.box5} />
             <View style={styles.box4} />
-            <WhiteSpace size="sm" style={styles.box5} />
+            <WhiteSpace size="small" style={styles.box5} />
             <View style={styles.box3} />
           </RowView>
         </TestGroup>

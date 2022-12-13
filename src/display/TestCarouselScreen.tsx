@@ -34,7 +34,7 @@ export class TestCarouselScreen extends React.PureComponent<Props, TopViewState>
           <ColumnView center style={{ padding: 10 }}>
             <DotIndicator size={10} count={this.state.topCarouselItems.length} currentIndex={this.state.topCarouselCurrentIndex} />
 
-            <WhiteSpace size="lg" />
+            <WhiteSpace size="large" />
 
           </ColumnView>
         </ScrollView>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { WhiteSpace, DynamicColor, StyleSheet, RowView, Color, Button } from '../lib';
-import { ScrollView, View } from 'react-native';
+import { WhiteSpace, DynamicColor, RowView, Color, Button, useThemeStyles } from '../lib';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Badge } from '../../lib/src/components/display/Badge';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
 
 export function TestBadgeScreen(props: Props) {
 
+  const themeStyles = useThemeStyles(styles);
+
   const [ count, setCount ] = useState(1);
   const [ show, setShow ] = useState(true);
 
@@ -34,19 +36,19 @@ export function TestBadgeScreen(props: Props) {
       <TestGroup>
         <RowView center>
           <Badge>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge content="1">
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge content="new">
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge content="新信息" border>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge content={1000} maxCount={99} border>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
         </RowView>
       </TestGroup>
@@ -54,21 +56,21 @@ export function TestBadgeScreen(props: Props) {
       <TestGroup>
         <RowView center>
           <Badge show={show} anim>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge show={show} anim content={count}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge show={show} anim content={count} maxCount={99}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
         </RowView>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
         <RowView center>
           <Button onPress={() => setShow((p) => !p)}>显示/隐藏</Button>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Button onPress={() => setCount((c) => c - 1)}>数量-1</Button>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Button onPress={() => setCount((c) => c + 1)}>数量+1</Button>
         </RowView>
       </TestGroup>
@@ -76,16 +78,16 @@ export function TestBadgeScreen(props: Props) {
       <TestGroup>
         <RowView center>
           <Badge>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge color={Color.primary}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge color={Color.success}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge color={Color.warning}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
         </RowView>
       </TestGroup>
@@ -93,16 +95,16 @@ export function TestBadgeScreen(props: Props) {
       <TestGroup>
         <RowView center>
           <Badge>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge position="bottomLeft" color={Color.primary}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge position="topLeft" color={Color.success}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
           <Badge position="bottomRight" color={Color.warning}>
-            <View style={styles.box} />
+            <View style={themeStyles.box} />
           </Badge>
         </RowView>
       </TestGroup>

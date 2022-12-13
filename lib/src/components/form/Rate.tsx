@@ -1,12 +1,14 @@
 import React from "react";
 import { StyleSheet, View, TextStyle, GestureResponderEvent } from "react-native";
-import { Color, ThemeColor } from "../../styles";
+import { Color } from "../../styles";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { useThemeStyles } from "../../theme/ThemeStyleSheet";
 import { Icon, IconProp } from "../basic/Icon";
-import { ThemeWrapper } from "../../theme/Theme";
 
 export interface RateProps {
   /**
-   * 评星组件是否开启
+   * 评星组件参数值
+   * @default 0
    */
   value?: number;
   /**
@@ -16,6 +18,7 @@ export interface RateProps {
 
   /**
    * 星星的数量
+   * @default 5
    */
   count?: number;
   /**
@@ -28,39 +31,53 @@ export interface RateProps {
   starActiveStyle?: IconProp;
   /**
    * 星星激活的颜色
+   * @default Color.warning
    */
   starActiveColor?: ThemeColor;
   /**
    * 星星未激活的颜色
+   * @default Color.grey
    */
   starColor?: ThemeColor;
   /**
+   * 星星禁用的颜色
+   * @default Color.grey
+   */
+  starDisableColor?: ThemeColor;
+  /**
    * 选中时的图标
+   * @default 'favorite-filling'
    */
   icon?: string;
   /**
    * 未选中时的图标
+   * @default 'favorite'
    */
   voidIcon?: string;
   /**
-   * 星星之间的间距，默认3
+   * 星星之间的间距
+   * @default 3
    */
   space?: number;
   /**
    * 用户是否可以选择出半星
+   * @default false
    */
   half?: boolean;
 
   /**
    * 是否只读
+   * @default false
    */
   readonly?: boolean;
   /**
    * 评星组件是否禁用
+   * @default false
    */
   disabled?: boolean;
   /**
    * 评星组件大小
+   * @default 24
    */
   size?: number;
 }
@@ -77,19 +94,33 @@ const styles = StyleSheet.create({
 /**
  * 评星组件组件。用于对事物进行评级操作。
  */
-export const Rate = ThemeWrapper(function (props: RateProps) {
+export function Rate(props: RateProps) {
 
-  const size = props.size || 24;
-  const value = props.value || 0;
-  const count = props.count || 5;
-  const space = props.space || 3;
-  const disabled = props.disabled === true;
-  const half = props.half === true;
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
-  const icon = props.icon || 'favorite-filling';
-  const voidIcon = props.voidIcon || 'favorite';
-  const starActiveColor = props.starActiveColor || Color.warning;
-  const starColor = props.starColor || Color.grey;
+  const {
+    size = 24,
+    value = 0,
+    count = 5,
+    space = 3,
+    disabled = false,
+    half = false,
+    icon = 'favorite-filling',
+    voidIcon = 'favorite',
+    starColor = Color.grey,
+    starActiveColor = Color.warning,
+    starDisableColor = Color.grey,
+  } = themeContext.resolveThemeProps(props, {
+    size: 'RateSize',
+    icon: 'RateIcon',
+    space: 'RateSpace',
+    voidIcon: 'RateVoidIcon',
+    starColor: 'RateColor',
+    starActiveColor: 'RateActiveColor',
+    starDisableColor: 'RateDisableColor',
+  });
+
   const starActiveStyle = {
     marginRight: space,
     ...props.starActiveStyle,
@@ -134,17 +165,17 @@ export const Rate = ThemeWrapper(function (props: RateProps) {
 
     for (let i = 0; i < count; i++) {
       if (i === Math.floor(value) && i < Math.ceil(value)) {
-        arr.push(<View style={styles.activeHalf} key={i}>
+        arr.push(<View style={themeStyles.activeHalf} key={i}>
           <View style={starActiveHalfStyle}>
-            <Icon icon={icon} {...props.starActiveStyle} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />
+            <Icon icon={icon} {...props.starActiveStyle} color={disabled ? starDisableColor : starActiveColor} size={size} style={starActiveStyle} />
           </View>
-          <Icon icon={voidIcon} {...props.starStyle} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />
+          <Icon icon={voidIcon} {...props.starStyle} color={disabled ? starDisableColor : starColor} size={size} style={starDeactiveStyle} />
         </View>);
       }
       else if (i < value)
-        arr.push(<Icon key={i} icon={icon} {...props.starActiveStyle} color={disabled ? Color.grey : starActiveColor} size={size} style={starActiveStyle} />);
+        arr.push(<Icon key={i} icon={icon} {...props.starActiveStyle} color={disabled ? starDisableColor : starActiveColor} size={size} style={starActiveStyle} />);
       else if (i >= value)
-        arr.push(<Icon key={i} icon={voidIcon} {...props.starStyle} color={disabled ? Color.grey : starColor} size={size} style={starDeactiveStyle} />);
+        arr.push(<Icon key={i} icon={voidIcon} {...props.starStyle} color={disabled ? starDisableColor : starColor} size={size} style={starDeactiveStyle} />);
     }
 
     return arr;
@@ -153,7 +184,7 @@ export const Rate = ThemeWrapper(function (props: RateProps) {
   const touch = (!disabled && !props.readonly);
 
   return (
-    <View style={styles.view}
+    <View style={themeStyles.view}
       pointerEvents="box-only"
       onResponderMove={onResponderMove}
       onResponderRelease={onResponderMove}
@@ -164,4 +195,4 @@ export const Rate = ThemeWrapper(function (props: RateProps) {
       { renderStars() }
     </View>
   );
-});
+}

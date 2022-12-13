@@ -1,11 +1,12 @@
 import React, { createRef, useEffect, useState, useRef } from 'react';
 import CheckTools from '../../utils/CheckTools';
-import { Color, DynamicColor, StyleSheet, PressedColor, ThemeColor, ThemeSelector } from '../../styles';
-import { border, borderBottom, selectStyleType } from '../../utils/StyleTools';
-import { Text, TextStyle, TouchableHighlight, View, ViewStyle, TextInput, Animated } from 'react-native';
+import { Color, PressedColor } from '../../styles';
+import { selectStyleType } from '../../utils/StyleTools';
+import { Text, TextStyle, TouchableHighlight, View, ViewStyle, TextInput, Animated, StyleSheet } from 'react-native';
 import { ColumnView } from '../layout/ColumnView';
 import { NumberKeyBoard } from '../keyboard/NumberKeyBoard';
-import { ThemeWrapper } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
+import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 export type NumberInputBorderType = 'underline'|'box';
 export interface NumberInputProps {
@@ -34,19 +35,23 @@ export interface NumberInputProps {
    */
   errorMessage?: string;
   /**
-   * 数字位数，默认6位
+   * 数字位数
+   * @default 6
    */
   numberCount?: number;
   /**
-   * 是否是密码，默认否
+   * 是否是密码
+   * @default false
    */
   isPassword?: boolean;
   /**
-   * 是否在组件初始化时激活键盘，默认否
+   * 是否在组件初始化时激活键盘
+   * @default false
    */
   startFocus?: boolean;
   /**
-   * 使用系统输入键盘，否则使用 NumberKeyBoard ，默认是
+   * 使用系统输入键盘，否则使用 NumberKeyBoard 作为输入键盘，默认是
+   * @default true
    */
   useSystemInput?: boolean;
   /**
@@ -54,27 +59,33 @@ export interface NumberInputProps {
    */
   info?: string;
   /**
-   * 输入框格子之间的间距，默认0
+   * 输入框格子之间的间距
+   * @default 0
    */
   gutter?: number;
   /**
-   * 是否自动调整宽度，默认否
+   * 是否自动调整宽度
+   * @default false
    */
   autoSize?: boolean;
   /**
    * 格子的边框，默认box
+   * @default 'box'
    */
   borderType?: NumberInputBorderType;
   /**
    * 格子的边框颜色
+   * @default Color.border
    */
   borderColor?: ThemeColor;
   /**
    * 格子的边框宽度
+   * @default 1.5
    */
   borderWidth?: number;
   /**
-   * 已输入格子的边框颜色，仅在underline模式下有效
+   * 已输入格子的边框颜色
+   * @default Color.primary
    */
   activeBorderColor?: ThemeColor;
   /**
@@ -82,15 +93,18 @@ export interface NumberInputProps {
    */
   boxStyle?: ViewStyle;
   /**
-   * 是否禁用点击打开键盘，默认否
+   * 是否禁用点击打开键盘
+   * @default false
    */
   disableKeyPad?: boolean;
   /**
-   * 是显示输入闪烁光标，默认是
+   * 是显示输入闪烁光标
+   * @default true
    */
   showCursur?: boolean;
   /**
-   * 是否在输入完成后自动收起键盘，默认是
+   * 是否在输入完成后自动收起键盘
+   * @default true
    */
   finishHideKeyPad?: boolean;
   /**
@@ -113,28 +127,28 @@ const styles = StyleSheet.create({
   },
   box: {
     position: 'relative',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingVertical: DynamicVar('NumberInputBoxPaddingVertical', 10),
+    paddingHorizontal: DynamicVar('NumberInputBoxPaddingHorizontal', 12),
+    borderRadius: DynamicVar('NumberInputBoxBorderRadius', 10),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
   },
   text: {
-    fontSize: 18,
-    width: 18,
+    fontSize: DynamicVar('NumberInputTextFontSize', 18),
+    width: DynamicVar('NumberInputTextWidth', 20),
     textAlign: 'center',
-    color: DynamicColor(Color.text),
+    color: DynamicColorVar('NumberInputTextColor', Color.text),
   },
   info: {
-    marginTop: 5,
+    marginTop: DynamicVar('NumberInputInfoMarginTop', 5),
     textAlign: 'center',
-    color: DynamicColor(Color.textSecond),
+    color: DynamicColorVar('NumberInputInfoColor', Color.textSecond),
   },
   errorMessage: {
-    marginTop: 5,
+    marginTop: DynamicVar('NumberInputErrorMessageMarginTop', 5),
     textAlign: 'center',
-    color: DynamicColor(Color.danger),
+    color: DynamicColorVar('NumberInputErrorMessageColor', Color.danger),
   },
   invisibleInput: {
     opacity: 0,
@@ -144,20 +158,23 @@ const styles = StyleSheet.create({
   },
   inputCursor: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -9,
-    width: 1.5,
-    marginLeft: -0.75,
-    height: 18,
-    backgroundColor: DynamicColor(Color.text),
+    top: DynamicVar('NumberInputCursorLeft', '50%'),
+    left: DynamicVar('NumberInputCursorLeft', '50%'),
+    marginTop: DynamicVar('NumberInputCursorMarginTop', -9),
+    width: DynamicVar('NumberInputCursorWidth', 1.5),
+    marginLeft: DynamicVar('NumberInputCursorMarginLeft', -0.75),
+    height: DynamicVar('NumberInputCursorHeight', 18),
+    backgroundColor: DynamicColorVar('NumberInputCursorBackgroundColor', Color.text),
   },
 });
 
 /**
  * 一个数字输入框
  */
-export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
+export function NumberInput(props: NumberInputProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const {
     useSystemInput = true,
@@ -168,27 +185,34 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
     startFocus = false,
     finishHideKeyPad = true,
     showCursur = true,
-    borderType = 'box',
-    borderWidth = 1.5,
-    gutter = 2,
-    borderColor = Color.border,
-    activeBorderColor = Color.primary,
+    borderType = themeContext.getThemeVar('NumberInputBorderType', 'box'),
+    borderWidth = themeContext.getThemeVar('NumberInputBorderWidth', 1.5),
+    gutter = themeContext.getThemeVar('NumberInputGutter', 2),
+    borderColor = themeContext.getThemeVar('NumberInputBorderColor', Color.border),
+    activeBorderColor = themeContext.getThemeVar('NumberInputActiveBorderColor', Color.primary),
     value,
     boxStyle,
     textStyle,
+    info,
+    errorMessage,
   } = props;
+
+  const themeVars = themeContext.getThemeVars({
+    NumberInputCursorShowAnimDuration: 400,
+    NumberInputCursorHideAnimDuration: 400,
+  });
 
   const valueArr = value.split('');
   const inputCursorFadeAnimValue = useRef(new Animated.Value(0)).current;
   const inputCursorFadeAnim = useRef(Animated.loop(Animated.sequence([
     Animated.timing(inputCursorFadeAnimValue, {
       toValue: 1,
-      duration: 400,
+      duration: themeVars.NumberInputCursorShowAnimDuration,
       useNativeDriver: true,
     }),
     Animated.timing(inputCursorFadeAnimValue, {
       toValue: 0,
-      duration: 600,
+      duration: themeVars.NumberInputCursorHideAnimDuration,
       useNativeDriver: true,
     }),
   ]))).current;
@@ -265,10 +289,12 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
 
       const finalBoxStyle = selectStyleType<ViewStyle, NumberInputBorderType>(borderType, 'box', {
         box: {
-          ...border(borderWidth, 'solid', active ? activeBorderColor : borderColor),
+          borderWidth,
+          borderColor: themeContext.resolveThemeColor(active ? activeBorderColor : borderColor),
         },
         underline: {
-          ...borderBottom(borderWidth, 'solid', active ? activeBorderColor : borderColor),
+          borderWidth,
+          borderBottomColor: themeContext.resolveThemeColor(active ? activeBorderColor : borderColor),
           borderRadius: 0,
         },
       }) as ViewStyle;
@@ -277,7 +303,7 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
         <TouchableHighlight
           key={i}
           style={[
-            styles.box,
+            themeStyles.box,
             {
               marginHorizontal: gutter,
               flex: autoSize ? 1 : undefined,
@@ -290,14 +316,14 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
         >
           <View>
             <Text style={[
-              styles.text,
+              themeStyles.text,
               textStyle,
             ]}>{ valueThis ? (isPassword ? '●' : valueThis) : ' '}</Text>
             {
               !valueThis && activeCurrent && showCursur ?
                 <Animated.View
                   style={[
-                    styles.inputCursor,
+                    themeStyles.inputCursor,
                     { opacity: inputCursorFadeAnimValue },
                   ]}
                 /> :
@@ -320,22 +346,22 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
   return (
     <ColumnView>
       <View style={[
-        styles.view,
+        themeStyles.view,
         props.style,
       ]}>
         {renderBoxs()}
       </View>
       <TextInput
-        style={styles.invisibleInput}
+        style={themeStyles.invisibleInput}
         ref={inputRef}
-        value={props.value}
+        value={value}
         secureTextEntry={isPassword}
         keyboardType="number-pad"
         onChangeText={onInputChangeText}
         onBlur={onBlurInput}
       />
-      { CheckTools.isNullOrEmpty(props.info) ? <></> : <Text style={styles.info}>{props.info}</Text> }
-      { CheckTools.isNullOrEmpty(props.errorMessage) ? <></> : <Text style={styles.errorMessage}>{props.errorMessage}</Text> }
+      { CheckTools.isNullOrEmpty(info) ? <></> : <Text style={themeStyles.info}>{info}</Text> }
+      { CheckTools.isNullOrEmpty(errorMessage) ? <></> : <Text style={themeStyles.errorMessage}>{errorMessage}</Text> }
 
       <NumberKeyBoard
         show={showInput}
@@ -345,4 +371,4 @@ export const NumberInput = ThemeWrapper(function (props: NumberInputProps) {
       />
     </ColumnView>
   );
-});
+}

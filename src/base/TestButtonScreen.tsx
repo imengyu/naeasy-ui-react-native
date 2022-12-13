@@ -21,13 +21,13 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         <TestGroup>
           <ColumnView>
             <Button text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} />
           </ColumnView>
         </TestGroup>
@@ -35,13 +35,13 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         <TestGroup>
           <ColumnView>
             <Button plain text="default" type="default" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button plain text="primary" type="primary" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button plain text="success" type="success" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button plain text="danger" type="danger" onPress={()=>showTestMessage('点击了！')} />
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button plain text="warning" type="warning" onPress={()=>showTestMessage('点击了！')} />
           </ColumnView>
         </TestGroup>

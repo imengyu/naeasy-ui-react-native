@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, ThemeSelector, rpx, Toast } from '../lib';
+import { CellGroup, Button, ColumnView, WhiteSpace, Text, Color, Icon, rpx, Toast, useThemeContext } from '../lib';
 import { ScrollView, KeyboardAvoidingView } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { Field } from '../../lib/src/components/form';
@@ -26,6 +26,8 @@ export function TestFieldScreen(props: Props) {
   const [ value16, setValue16] = useState('');
   const [ value17, setValue17] = useState('');
   const [ value18, setValue18] = useState('我是文字，点击按钮清除');
+
+  const themeContext = useThemeContext();
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={60}>
@@ -71,7 +73,7 @@ export function TestFieldScreen(props: Props) {
               }} activeFieldStyle={{
                 borderBottomColor: themeContext.resolveThemeColor(Color.primary),
               }} value={value12} onChangeText={setValue12} />
-              <WhiteSpace size="sm" />
+              <WhiteSpace size="small" />
               <Field placeholder="自定义样式2" fieldStyle={{
                 paddingVertical: rpx(10),
                 paddingHorizontal: rpx(20),
@@ -81,7 +83,7 @@ export function TestFieldScreen(props: Props) {
               }} activeFieldStyle={{
                 borderColor: themeContext.resolveThemeColor(Color.primary),
               }} value={value12} onChangeText={setValue12} />
-              <WhiteSpace size="sm" />
+              <WhiteSpace size="small" />
               <Field placeholder="自定义样式3" fieldStyle={{
                 paddingVertical: rpx(10),
                 paddingHorizontal: rpx(20),

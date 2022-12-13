@@ -82,17 +82,17 @@ export function TestThemeScreen(props: Props) {
         </RowView>
         <ColumnView wrap padding={20}>
           <Button type="primary" onPress={() => showTestMessage('我是按钮')}>我是按钮</Button>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <CheckBox value={checkValue}>我是复选框</CheckBox>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Radio value={checkValue}>我是单选框</Radio>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Switch value={checkValue} onValueChange={setCheckValue} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Progress value={siderValue} showProgressText />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Slider value={siderValue} onValueChange={setSiderValue} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Tag text="我是标记" type="primary" />
         </ColumnView>
 

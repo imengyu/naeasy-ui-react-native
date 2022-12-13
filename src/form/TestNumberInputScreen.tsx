@@ -54,7 +54,7 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
         </TestGroup>
         <TestHeader>下划线边框</TestHeader>
         <TestGroup>
-          <WingBlank size="sm">
+          <WingBlank size="small">
             <NumberInput
               value={this.state.value4}
               onChangeText={(v) => this.setState({ value4: v })}

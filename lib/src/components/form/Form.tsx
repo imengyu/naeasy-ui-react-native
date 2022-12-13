@@ -1,10 +1,10 @@
 import React from "react";
-import { ViewStyle } from "react-native";
-import { ColumnView } from "../layout/ColumnView";
+import ArrayUtils from "../../utils/ArrayUtils";
 import Schema, { Rule, Rules } from "async-validator";
 import CheckTools from "../../utils/CheckTools";
-import { Field, FieldProps } from "./Field";
-import ArrayUtils from "../../utils/ArrayUtils";
+import { ViewStyle } from "react-native";
+import { ColumnView } from "../layout/ColumnView";
+import { FieldInstance, FieldProps } from "./Field";
 
 export type FormValueType = number|string|boolean|number[]|string[]|boolean[];
 
@@ -49,14 +49,17 @@ export interface FormProps {
   validateTrigger?: 'onBlur'|'onValueChange'|'onSubmit';
   /**
    * 是否只读
+   * @default false
    */
   readonly?: boolean;
   /**
    * 组件是否禁用
+   * @default false
    */
   disabled?: boolean;
   /**
-   * 是否在文本框激活时清除之前错误的验证结果，默认否
+   * 是否在文本框激活时清除之前错误的验证结果
+   * @default false
    */
   clearValidFocus?: boolean;
   /**
@@ -68,7 +71,8 @@ export interface FormProps {
    */
   fieldProps?: FieldProps;
   /**
-   * 是否自动根据表单校验规则为 Field 设置必填星号，默认是
+   * 是否自动根据表单校验规则为 Field 设置必填星号
+   * @default true
    */
   addRequireMark?: boolean;
 
@@ -87,7 +91,7 @@ export interface FormProps {
 export class Form extends React.Component<FormProps, FormState> {
 
   state: Readonly<FormState> = {};
-  currentFocusField : null|Field = null;
+  currentFocusField : null|FieldInstance = null;
 
   componentDidMount() {
     this.reset();
@@ -296,12 +300,12 @@ export class Form extends React.Component<FormProps, FormState> {
               else if (validState)
                 this.resetValidation(name);
             },
-            onFocusValid: (instance: Field) => {
+            onFocusValid: (instance: FieldInstance) => {
               this.currentFocusField = instance;
               if (this.props.clearValidFocus && validState)
                 this.resetValidation(name);
             },
-            onBlurValid: (instance: Field) => {
+            onBlurValid: (instance: FieldInstance) => {
               if (rule && validTrigger === 'onBlur')
                 this.validate(name).catch(() => {});
               if (this.currentFocusField === instance)
@@ -328,4 +332,26 @@ export class Form extends React.Component<FormProps, FormState> {
       <ColumnView style={this.props.style}>{ this.renderItems() }</ColumnView>
     );
   }
+}
+
+/**
+ * 用于表单项的统一接口。表单的一级子组件请实现此接口，否则无法响应表单相关功能。
+ */
+export interface FormItemFieldProps {
+  /**
+   * 当前输入的值
+   */
+  value?: unknown;
+  /**
+   * 用于表单，更改时验证回调
+   */
+  onValueChange?: (value: unknown) => void;
+  /**
+   * 用于表单，获得点时验证回调
+   */
+  onFocusValid?: (instance: FieldInstance) => void;
+  /**
+   * 用于表单，失去焦点时验证回调
+   */
+  onBlurValid?: (value: unknown) => void;
 }

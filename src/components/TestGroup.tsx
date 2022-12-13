@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ViewProps, Platform } from 'react-native';
-import { AlertNative, Color, ThemeSelector } from '../lib';
+import { AlertNative, Color, useThemeContext } from '../lib';
 
 const styles = StyleSheet.create({
   group: {
@@ -18,6 +18,7 @@ interface TestGroupProps extends ViewProps {
 }
 
 export function TestGroup(props: TestGroupProps) {
+  const themeContext = useThemeContext();
   return <View {...props} style={[
     props.noHorizontalPadding ? styles.groupFull : styles.group,
     { backgroundColor: props.white ? themeContext.resolveThemeColor(Color.white) : undefined },

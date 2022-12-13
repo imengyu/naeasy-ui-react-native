@@ -463,7 +463,7 @@ export function NumberKeyBoardInner(props: NumberKeyBoardInnerProps) {
             <></>
         }
       </View>
-      <WhiteSpace size="sm" />
+      <WhiteSpace size="small" />
     </View>
   );
 }

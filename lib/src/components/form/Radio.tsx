@@ -1,14 +1,16 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
-import { Text, TextStyle, ViewStyle } from "react-native";
-import { Color, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
+import { StyleSheet, Text, TextStyle, ViewStyle } from "react-native";
+import { Color } from "../../styles";
 import { RowView } from "../layout/RowView";
-import { ThemeWrapper } from "../../theme/Theme";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
 import { CheckBoxDefaultButton } from "./CheckBox";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface RadioProps {
   /**
    * 是否选中 单选框
+   * @default false
    */
   value?: boolean;
   /**
@@ -25,24 +27,29 @@ export interface RadioProps {
   children?: string;
   /**
    * 是否禁用单选框
+   * @default false
    */
   disabled?: boolean;
   /**
    * 单选框的形状
+   * @default 'round'
    */
-  shape?:"square"|"round";
+  shape?: "square"|"round";
   /**
-   * 复选框占满整个父元素，默认否
+   * 复选框占满整个父元素
+   * @default false
    */
   block?: boolean,
   /**
-   * 复选框按钮位置，默认在左
+   * 复选框按钮位置
+   * @default 'left'
    */
-  checkPosition?:"left"|"right";
+  checkPosition?: "left"|"right";
   /**
    * 单选框内部形状
    * * color 一个纯色形状
    * * check 一个图标
+   * @default 'color'
    */
   checkType?: 'color'|'check';
   /**
@@ -50,13 +57,25 @@ export interface RadioProps {
    */
   checkIconName?: string;
   /**
-   * 单选框的颜色，默认是 primary
+   * 按下时透明度
+   * @default 0.75
+   */
+  activeOpacity?: number,
+  /**
+   * 单选框的颜色
+   * @default Color.primary
    */
   color?: ThemeColor;
   /**
-   * 禁用时的颜色，默认是 grey
+   * 禁用时的颜色
+   * @default Color.grey
    */
   disabledColor?: ThemeColor|undefined;
+  /**
+   * 禁用时的文字颜色
+   * @default Color.grey
+   */
+  disabledTextColor?: ThemeColor|undefined;
   /**
    * 文字颜色
    */
@@ -79,12 +98,13 @@ export interface RadioProps {
   renderButton?: (on: boolean) => JSX.Element;
 }
 
-
 /**
  * 单选框
  */
-export const Radio = ThemeWrapper(function (props: RadioProps) {
+export function Radio(props: RadioProps) {
 
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const text = props.children || props.text;
   const {
@@ -95,11 +115,20 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
     block = false,
     textColor = Color.text,
     disabledColor = Color.grey,
-    color,
-    shape,
+    color = Color.primary,
+    disabledTextColor = Color.grey,
+    activeOpacity = 0.75,
+    shape = 'round',
     style = {},
     onValueChange,
-  } = props;
+  } = themeContext.resolveThemeProps(props, {
+    textColor: 'RadioTextColor',
+    disabledColor: 'RadioDisabledColor',
+    disabledTextColor: 'RadioDisabledTextColor',
+    activeOpacity: 'RadioActiveOpacity',
+    color: 'RadioColor',
+    shape: 'RadioShape',
+  });
 
   function renderButtonStub(value: boolean) {
     return props.renderButton ?
@@ -121,7 +150,7 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
 
     if (context) {
       if (!name) {
-        console.log('Radio in RadioGroup need name prop!');
+        console.warn('Radio in RadioGroup need a name prop!');
         return;
       }
       //Set value from parent
@@ -138,17 +167,17 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
     return (
       <RowView
         touchable
-        activeOpacity={0.75}
+        activeOpacity={activeOpacity}
         align="center"
         onPress={disabled ? undefined : switchOn}
-        style={[ block ? styles.radioBoxFull : styles.radioBox, style ]}
+        style={[ block ? themeStyles.radioBoxFull : themeStyles.radioBox, style ]}
       >
         { checkPosition === 'left' ? renderButtonStub(value) : <></> }
         <Text style={[
-          styles.radioText,
+          themeStyles.radioText,
           props.textStyle,
           {
-            color: themeContext.resolveThemeColor(disabled ? Color.grey : (textColor)),
+            color: themeContext.resolveThemeColor(disabled ? disabledTextColor : textColor),
             display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
           },
         ]}>{text}</Text>
@@ -156,7 +185,7 @@ export const Radio = ThemeWrapper(function (props: RadioProps) {
       </RowView>
     );
   }}</RadioGroupContext.Consumer>;
-});
+}
 
 export interface RadioGroupContextInfo {
   value: string,
@@ -170,6 +199,7 @@ export interface RadioGroupProps {
   value?: string|number;
   /**
    * 是否禁用整组单选框，设置后会禁用全部单选框。
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -210,16 +240,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   radioBox: {
-    marginHorizontal: 4,
+    marginHorizontal: DynamicVar('RadioMarginHorizontal', 4),
   },
   radioBoxFull: {
     alignSelf: 'stretch',
-    width: '100%',
+    width: DynamicVar('RadioBlockWidth', '100%'),
     justifyContent: 'space-between',
-    marginHorizontal: 0,
+    marginHorizontal:  DynamicVar('RadioBlockMarginHorizontal', 0),
   },
   radioText: {
-    fontSize: 14,
+    fontSize:  DynamicVar('RadioTextFontSize', 14),
   },
 });
 

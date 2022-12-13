@@ -106,7 +106,7 @@ export function TestIndexedBar() {
   return (
     <ColumnView padding={10} flex={1}>
       <Text>IndexBar 是 IndexedList 的侧边滑动组件，你也可以单独进行使用，将他用于你自己的 IndexedList 组件中。</Text>
-      <WhiteSpace size="md" />
+      <WhiteSpace size="medium" />
       <Text size={20}>当前选中索引 {index}</Text>
       <IndexBar
         data={dataIndex}

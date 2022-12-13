@@ -51,9 +51,9 @@ export class TestCountDownScreen extends React.PureComponent<Props> {
           <WhiteSpace />
           <RowView>
             <Button onPress={() => this.countdownRef.current?.start()}>开始</Button>
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button onPress={() => this.countdownRef.current?.stop()} type="default">暂停</Button>
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button onPress={() => this.countdownRef.current?.reset()} type="default">重置</Button>
           </RowView>
         </TestGroup>

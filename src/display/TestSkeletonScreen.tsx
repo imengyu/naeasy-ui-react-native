@@ -32,32 +32,32 @@ export function TestSkeletonScreen(props: Props) {
       <TestGroup>
         <RowView align="center">
           <Switch value={display1} onValueChange={setDisplay1} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>显示加载内容</Text>
         </RowView>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton placeholder={<Skeleton.Avatar />} loading={display1}>
           <Avatar background="blue" style={{ marginBottom: 10 }} text="U" />
         </Skeleton>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton placeholder={<Skeleton.Image style={{ width: 200, height: 150 }} />} loading={display1}>
           <Image
             source={{ uri: 'https://imengyu.top/assets/images/test/2.jpg' }}
             style={{ width: 200, height: 150 }}
           />
         </Skeleton>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton
           placeholder={<Skeleton.Title style={{ width: 80, marginBottom: 10 }} />}
           loading={display1}
         >
           <H4 style={{ marginBottom: 0 }}>Semi UI</H4>
         </Skeleton>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton placeholder={<Skeleton.Paragraph rows={2} style={{ width: 240 }} />} loading={display1}>
           <P style={{ width: 240 }}>精心打磨每一个组件的用户体验，从用户的角度考虑每个组件的使用场景。</P>
         </Skeleton>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton placeholder={<Skeleton.Button />} loading={display1}>
           <RowView>
             <Button>Button</Button>
@@ -68,10 +68,10 @@ export function TestSkeletonScreen(props: Props) {
       <TestGroup>
         <RowView align="center">
           <Switch value={display2} onValueChange={setDisplay2} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>显示加载内容</Text>
         </RowView>
-        <WhiteSpace size="sm" />
+        <WhiteSpace size="small" />
         <Skeleton placeholder={
           <RowView style={styles.test1}>
             <Skeleton.Avatar style={{ marginRight: 12 }} />

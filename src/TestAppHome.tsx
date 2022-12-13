@@ -25,7 +25,7 @@ export class TestAppHome extends React.Component<Props> {
             <ColumnView padding={10}>
               <RowView align="baseline">
                 <Text size={30} weight="bold">NaEasy UI</Text>
-                <WhiteSpace size="sm" />
+                <WhiteSpace size="small" />
                 <Tag text="React Native" type="primary" />
               </RowView>
               <Text>一款简单的移动端 UI 组件库</Text>

@@ -64,7 +64,7 @@ export class TestProgressScreen extends React.PureComponent<Props, State> {
           <WhiteSpace />
           <RowView>
             <Button onPress={() => this.setState((state) => ({ progress: state.progress - 10 }))}>- 减少</Button>
-            <WhiteSpace size="sm" />
+            <WhiteSpace size="small" />
             <Button onPress={() => this.setState((state) => ({ progress: state.progress + 10 }))}>+ 增加</Button>
           </RowView>
         </TestGroup>

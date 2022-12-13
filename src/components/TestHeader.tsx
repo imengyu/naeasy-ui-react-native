@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet, DynamicColor, Color, ThemeRender, ColumnView, useDidMountEffect } from '../lib';
-import { View } from 'react-native';
+import { Text, DynamicColor, Color, ThemeRender, ColumnView, useDidMountEffect, useThemeStyles } from '../lib';
+import { View, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation';
 
@@ -43,15 +43,18 @@ export function TestHeader(props: {
   desc?: string,
   bar?: boolean,
 }) {
+
+  const themeStyles = useThemeStyles(styles);
+
   return (
     <ThemeRender>{
-      () => <ColumnView style={styles.headerOut}>
-      <ColumnView justify="center" style={styles.header}>
+      () => <ColumnView style={themeStyles.headerOut}>
+      <ColumnView justify="center" style={themeStyles.header}>
         <Text size={16} color={Color.black}>{props.children}</Text>
-        { props.bar !== false ? <View style={styles.titleLine} /> : <></> }
-        { props.bar !== false ?  <View style={styles.titleLine2} /> : <></> }
+        { props.bar !== false ? <View style={themeStyles.titleLine} /> : <></> }
+        { props.bar !== false ?  <View style={themeStyles.titleLine2} /> : <></> }
       </ColumnView>
-      { props.desc ? <Text size={14} color={Color.textSecond} style={styles.desc}>{props.desc}</Text> : <></> }
+      { props.desc ? <Text size={14} color={Color.textSecond} style={themeStyles.desc}>{props.desc}</Text> : <></> }
     </ColumnView>}</ThemeRender>
   );
 }
@@ -61,6 +64,8 @@ export function TestPageHeader(props: {
   desc: string|JSX.Element,
   navigation: StackNavigationProp<RootStackParamList>,
 }) {
+  const themeStyles = useThemeStyles(styles);
+
   useDidMountEffect(() => {
     props.navigation.setOptions({
       title: '',//props.title,
@@ -68,7 +73,7 @@ export function TestPageHeader(props: {
   });
 
   return (
-    <ColumnView style={styles.header}>
+    <ColumnView style={themeStyles.header}>
       <Text size={20} weight="bold" color={Color.primary}>{props.title}</Text>
       { typeof props.desc === 'string' ? <Text size={14} color={Color.textSecond}>{props.desc}</Text> : props.desc }
     </ColumnView>

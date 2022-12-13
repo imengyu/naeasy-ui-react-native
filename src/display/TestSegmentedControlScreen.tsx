@@ -38,35 +38,35 @@ export class TestSegmentedControlScreen extends React.PureComponent<Props, State
         />
         <TestGroup>
           <Text>分段选择器组件。</Text>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
 
           <SegmentedControl values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page} onChange={(v) => this.setState({ page: v })} />
 
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>自定义颜色。</Text>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
 
           <SegmentedControl tintColor={Color.success} values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page2} onChange={(v) => this.setState({ page2: v })} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <SegmentedControl tintColor={Color.warning} values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page3} onChange={(v) => this.setState({ page3: v })} />
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <SegmentedControl tintColor={Color.danger} values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page4} onChange={(v) => this.setState({ page4: v })} />
 
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>自定义圆角</Text>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
 
           <SegmentedControl tintColor={Color.success} values={[ '选项1', '选项2', '选项3' ]} radius={30} selectedIndex={this.state.page5} onChange={(v) => this.setState({ page5: v })} />
 
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>禁用，用户不能点击更改。</Text>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
 
           <SegmentedControl touchable={false} values={[ '选项1', '选项2', '选项3' ]} selectedIndex={this.state.page6} onChange={(v) => this.setState({ page6: v })} />
 
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
           <Text>部分条目禁用。</Text>
-          <WhiteSpace size="sm" />
+          <WhiteSpace size="small" />
 
           <SegmentedControl tintColor={Color.success} values={[
             { label: '选项1' },

@@ -1,16 +1,18 @@
 import React from "react";
 import CheckTools from "../../utils/CheckTools";
 import ArrayUtils from "../../utils/ArrayUtils";
-import { Text, TextStyle, View, ViewStyle } from "react-native";
-import { Color, StyleSheet, ThemeColor, ThemeSelector } from "../../styles";
-import { border, selectStyleType } from "../../utils/StyleTools";
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import { Color } from "../../styles";
+import { selectStyleType } from "../../utils/StyleTools";
 import { RowView } from "../layout/RowView";
 import { Icon } from "../basic/Icon";
-import { ThemeWrapper } from "../../theme/Theme";
+import { ThemeColor, useThemeContext } from "../../theme/Theme";
+import { DynamicVar, useThemeStyles } from "../../theme/ThemeStyleSheet";
 
 export interface CheckBoxProps {
   /**
    * 是否选中复选框
+   * @default false
    */
   value?: boolean;
   /**
@@ -27,44 +29,64 @@ export interface CheckBoxProps {
   children?: string|JSX.Element;
   /**
    * 复选框的形状
+   * @default 'round'
    */
-  shape?:"square"|"round";
+  shape?: "square"|"round";
   /**
    * 复选框占满整个父元素，默认否
+   * @default false
    */
   block?: boolean,
   /**
    * 复选框按钮位置，默认在左
+   * @default 'left'
    */
-  checkPosition?:"left"|"right";
+  checkPosition?: "left"|"right";
   /**
    * 复选框未选择时的边框颜色
+   * @default Color.border
    */
   borderColor?: ThemeColor|undefined;
   /**
-   * 复选框选中时的颜色，默认是 primary
+   * 复选框选中时的颜色
+   * @default Color.primary
    */
   checkColor?: ThemeColor|undefined;
   /**
    * 复选框按钮大小，默认是 20dp
+   * @default 20
    */
   checkSize?: number|undefined;
   /**
+   * 按下时透明度
+   * @default 0.75
+   */
+  activeOpacity?: number,
+  /**
    * 复选框的颜色，默认是 primary
+   * @default Color.primary
    */
   color?: ThemeColor|undefined;
   /**
    * 是否禁用复选框
+   * @default false
    */
   disabled?: boolean;
   /**
    * 选择勾的图标
+   * @default 'check-mark'
    */
   icon?: string;
   /**
    * 文字颜色
+   * @default Color.text
    */
   textColor?: ThemeColor;
+  /**
+   * 禁用状态下文字颜色
+   * @default Color.textSecond
+   */
+  disabledTextColor?: ThemeColor;
   /**
    * 自定义文字样式
    */
@@ -86,7 +108,10 @@ export interface CheckBoxProps {
 /**
  * 复选框
  */
-export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
+export function CheckBox(props: CheckBoxProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
 
   const text = props.children || props.text;
   const {
@@ -94,6 +119,9 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     disabled = false,
     borderColor,
     checkColor,
+    textColor = Color.text,
+    disabledTextColor = Color.textSecond,
+    activeOpacity = 0.75,
     name,
     value: valueProp = false,
     block = false,
@@ -102,7 +130,17 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
     checkSize,
     style = {},
     onValueChange,
-  } = props;
+  } = themeContext.resolveThemeProps(props, {
+    borderColor: 'CheckBoxBorderColor',
+    checkColor: 'CheckBoxCheckColor',
+    checkSize: 'CheckBoxCheckSize',
+    textColor: 'CheckBoxTextColor',
+    disabledColor: 'CheckBoxDisabledColor',
+    disabledTextColor: 'CheckBoxDisabledTextColor',
+    activeOpacity: 'CheckBoxActiveOpacity',
+    color: 'CheckBoxColor',
+    shape: 'CheckBoxShape',
+  });
 
 
   function renderButtonStub(value: boolean) {
@@ -129,7 +167,7 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
 
       if (context) {
         if (!name) {
-          console.log('CheckBox in CheckBoxGroup need name prop!');
+          console.warn('CheckBox in CheckBoxGroup need a name prop!');
           return;
         }
         //Set value from parent
@@ -151,19 +189,19 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
       return (
         <RowView
           touchable
-          activeOpacity={0.75}
+          activeOpacity={activeOpacity}
           onPress={disabled ? undefined : switchOn}
-          style={[ block ? styles.checkBoxFull : styles.checkBox, style ]}
+          style={[ block ? themeStyles.checkBoxFull : themeStyles.checkBox, style ]}
           center
         >
           { checkPosition === 'left' ? renderButtonStub(value) : <></> }
           {
             (typeof text === 'string' && text) ?
               (<Text style={[
-                styles.checkText,
+                themeStyles.checkText,
                 props.textStyle,
                 {
-                  color: themeContext.resolveThemeColor(props.disabled === true ? Color.textSecond : (props.textColor || Color.text)),
+                  color: themeContext.resolveThemeColor(props.disabled === true ? disabledTextColor : textColor),
                   display: CheckTools.isNullOrEmpty(text) ? 'none' : 'flex',
                 },
               ]}>{text}</Text>) :
@@ -174,7 +212,7 @@ export const CheckBox = ThemeWrapper(function (props: CheckBoxProps) {
       );
     }}</CheckBoxGroupContext.Consumer>
   );
-});
+}
 
 export interface CheckBoxGroupProps {
   /**
@@ -183,6 +221,7 @@ export interface CheckBoxGroupProps {
   value?: string[];
   /**
    * 是否禁用整组复选框，设置后会禁用全部复选框。
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -195,10 +234,12 @@ export interface CheckBoxGroupProps {
 export interface CheckBoxGroupToggleOptions {
   /**
    * 是否是选中
+   * @required true
    */
   checked: boolean,
   /**
    * 是否跳过禁用的复选框
+   * @required true
    */
   skipDisabled: boolean,
 }
@@ -279,66 +320,82 @@ export class CheckBoxGroup extends React.PureComponent<CheckBoxGroupProps> {
 export interface CheckBoxDefaultButtonProps {
   /**
    * 是否处于激活状态
+   * @default false
    */
   on?: boolean;
   /**
-   * 未选中状态下边框颜色。默认：
+   * 未选中状态下边框颜色。
+   * @default Color.border
    */
   borderColor?: string|undefined;
   /**
-   * 选中状态下边框颜色。默认：
+   * 选中状态下边框颜色。
+   * @default Color.primary
    */
   checkedBorderColor?: string|undefined;
   /**
-   * 禁用并且未选中状态下边框颜色。默认：
+   * 禁用并且未选中状态下边框颜色。
+   * @default Color.grey
    */
   disableBorderColor?: string|undefined;
   /**
-   * 禁用并且选中状态下边框颜色。默认：
+   * 禁用并且选中状态下边框颜色。
+   * @default Color.grey
    */
   disableCheckedBorderColor?: string|undefined;
   /**
-   * 图标颜色。默认：
+   * 图标颜色。
+   * @default Color.white
    */
   checkColor?: string|undefined;
   /**
-   * 禁用状态下图标颜色。默认：
+   * 禁用状态下图标颜色。
+   * @default Color.grey
    */
   disableCheckColor?: string|undefined;
   /**
-   * 未选中状态下按钮背景颜色。默认：
+   * 未选中状态下按钮背景颜色。
+   * @default Color.white
    */
   backgroundColor?: string|undefined;
   /**
-   * 且选中状态下按钮背景颜色。默认：
+   * 且选中状态下按钮背景颜色。
+   * @default Color.primary
    */
   checkedBackgroundColor?: string|undefined;
   /**
-   * 禁用并且未选中状态下按钮背景颜色。默认：
+   * 禁用并且未选中状态下按钮背景颜色。
+   * @default Color.background
    */
   disableBackgroundColor?: string|undefined;
   /**
-   * 禁用并且选中状态下按钮背景颜色。默认：
+   * 禁用并且选中状态下按钮背景颜色。
+   * @default Color.background
    */
   disableCheckedBackgroundColor?: string|undefined;
   /**
-   * 按钮大小。默认：18
+   * 按钮大小。
+   * @default 18
    */
   size?: number|undefined;
   /**
-   * 图标大小。默认：15
+   * 图标大小。
+   * @default 15
    */
   iconSize?: number|undefined;
   /**
-   * 边框粗细。默认：1
+   * 边框粗细。
+   * @default 1
    */
   borderWidth?: number|undefined;
   /**
-   * 图标。默认：check-mark
+   * 图标。
+   * @default 'check-mark'
    */
   icon?: string;
   /**
-   * 是否处于禁用状态。默认：false
+   * 是否处于禁用状态。
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -346,15 +403,17 @@ export interface CheckBoxDefaultButtonProps {
    */
   style?: ViewStyle,
   /**
-   * 这个按钮的形状。默认：round
+   * 这个按钮的形状。
    * * square：正方形
    * * round：圆形
+   * @default 'round'
    */
   shape?: "square"|"round";
   /**
-   * 这个按钮的显示模式。默认：icon
+   * 这个按钮的显示模式。
    * * icon：多选按钮显示的图标
    * * radio：单选按钮显示的圆形
+   * @default 'icon'
    */
   type?: "icon"|"radio";
 }
@@ -362,7 +421,11 @@ export interface CheckBoxDefaultButtonProps {
 /**
  * 默认的复选框按钮样式
  */
-export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefaultButtonProps) {
+export function CheckBoxDefaultButton(props: CheckBoxDefaultButtonProps) {
+
+  const themeContext = useThemeContext();
+  const themeStyles = useThemeStyles(styles);
+
   const {
     size = 18,
     iconSize = 15,
@@ -388,7 +451,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
 
   return (
     <View style={[
-      styles.checkButtonOutView,
+      themeStyles.checkButtonOutView,
       selectStyleType(shape, 'round', {
         round: { borderRadius: size },
         square: { borderRadius: 0 },
@@ -421,7 +484,7 @@ export const CheckBoxDefaultButton = ThemeWrapper(function (props: CheckBoxDefau
       }
     </View>
   );
-});
+}
 
 const styles = StyleSheet.create({
   checkBox: {
@@ -432,15 +495,14 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     width: '100%',
     justifyContent: 'space-between',
-    marginHorizontal: 0,
+    marginHorizontal: DynamicVar('CheckBoxMarginHorizontal', 4),
   },
   checkButtonOutView: {
     overflow: 'hidden',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 4,
-    ...border(1, 'solid', Color.primary, true),
+    marginRight: DynamicVar('CheckBoxButtonMarginRight', 4),
   },
   check: {
     alignSelf: 'flex-start',
@@ -448,7 +510,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   checkText: {
-    fontSize: 14,
+    fontSize: DynamicVar('CheckBoxTextFontSize', 14),
   },
 });
 

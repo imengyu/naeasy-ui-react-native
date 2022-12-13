@@ -410,7 +410,7 @@ export function PlateKeyBoardInner(props: PlateKeyBoardInnerProps) {
           { keysLastWordText.map((key) => renderKey(key, false, '')) }
           </View> : <></>
       }
-      <WhiteSpace size="sm" />
+      <WhiteSpace size="small" />
     </View>
   );
 }
