@@ -86,7 +86,7 @@ export function Empty(props: EmptyProp) {
         }) :
         (typeof image !== 'undefined' ? <Image source={image as ImageSourcePropType} style={imageStyle} /> : <></>)
       }
-      { CheckTools.isNullOrEmpty(description) ? <></> : <Text style={styles.descriptionStyle}>{description}</Text> }
+      { CheckTools.isNullOrEmpty(description) ? <></> : <Text style={themeStyles.descriptionStyle}>{description}</Text> }
       { children as JSX.Element }
     </ColumnView>
   );

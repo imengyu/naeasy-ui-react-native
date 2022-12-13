@@ -229,7 +229,7 @@ export function NoticeBar(props: NoticeBarProps) {
 
   return (
     <RowView touchable style={[
-      styles.view,
+      themeStyles.view,
       {
         backgroundColor: themeContext.resolveThemeColor(backgroundColor),
       },
