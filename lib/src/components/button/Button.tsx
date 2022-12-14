@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import CheckTools from '../../utils/CheckTools';
 import { ActivityIndicator, ColorValue, ImageSourcePropType, StyleSheet, Text, TextStyle, TouchableHighlight, ViewProps, ViewStyle } from 'react-native';
 import { Color, PressedColor } from '../../styles';
 import { selectObjectByType, selectStyleType, styleConfigPadding } from '../../utils/StyleTools';
 import { Icon, IconProp } from '../basic/Icon';
 import { RowView } from '../layout/RowView';
-import { ThemeColor, ThemeRender, useThemeContext } from '../../theme/Theme';
+import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
 
 type ButtomType = 'default'|'primary'|'success'|'warning'|'danger'|'custom'|'text';
@@ -68,7 +68,7 @@ export interface ButtonProp {
   rightIconProps?: IconProp;
   /**
    * 是否可以点击
-   * @default false
+   * @default true
    */
   touchable?: boolean,
   /**
@@ -82,15 +82,18 @@ export interface ButtonProp {
    */
   size?: ButtomSizeType,
   /**
-   * 通过 color 属性可以自定义按钮的背景颜色。
+   * 通过 color 属性可以自定义按钮的背景颜色，仅在 type 为 `custom` 时有效
    * @default Color.grey
    */
   color?: ThemeColor;
   /**
    * 按钮文字的颜色。
-   * @default Color.text
    */
   textColor?: ThemeColor;
+  /**
+   * 按下时按钮文字的颜色。
+   */
+  pressedTextColor?: ThemeColor;
   /**
    * 按钮文字的样式。
    */
@@ -140,27 +143,27 @@ const styles = StyleSheet.create({
     width: 'auto',
   },
   plainButtonDefault: {
-    borderWidth: DynamicVar('ButtonBorderWidth', 1),
+    borderWidth: DynamicVar('ButtonBorderWidth', 1.5),
     borderColor: DynamicColorVar('ButtonPlainDefaultBorderColor', Color.border),
     color: DynamicColorVar('ButtonPlainDefaultColor', Color.text),
   },
   plainButtonPrimary: {
-    borderWidth: DynamicVar('ButtonBorderWidth', 1),
+    borderWidth: DynamicVar('ButtonBorderWidth', 1.5),
     borderColor: DynamicColorVar('ButtonPlainPrimaryBorderColor', Color.primary),
     color: DynamicColorVar('ButtonPlainPrimaryColor', Color.primary),
   },
   plainButtonSuccess: {
-    borderWidth: DynamicVar('ButtonBorderWidth', 1),
+    borderWidth: DynamicVar('ButtonBorderWidth', 1.5),
     borderColor: DynamicColorVar('ButtonPlainSuccessBorderColor', Color.success),
     color: DynamicColorVar('ButtonPlainSuccessColor', Color.success),
   },
   plainButtonWarning: {
-    borderWidth: DynamicVar('ButtonBorderWidth', 1),
+    borderWidth: DynamicVar('ButtonBorderWidth', 1.5),
     borderColor: DynamicColorVar('ButtonPlainWarningBorderColor', Color.warning),
     color: DynamicColorVar('ButtonPlainWarningColor', Color.warning),
   },
   plainButtonDanger: {
-    borderWidth: DynamicVar('ButtonBorderWidth', 1),
+    borderWidth: DynamicVar('ButtonBorderWidth', 1.5),
     borderColor: DynamicColorVar('ButtonPlainDangerBorderColor', Color.danger),
     color: DynamicColorVar('ButtonPlainDangerColor', Color.danger),
   },
@@ -222,12 +225,13 @@ export function Button(props: ButtonProp) {
     loading = false,
     loadingText,
     children,
-    touchable = false,
+    touchable = true,
     text,
-    textColor = Color.white,
+    textColor,
+    pressedTextColor,
     color = Color.primary,
     pressedColor = PressedColor(Color.primary),
-    loadingColor = Color.primary,
+    loadingColor = undefined,
     disabledColor = Color.grey,
     plain = false,
     type = 'default',
@@ -248,15 +252,22 @@ export function Button(props: ButtonProp) {
   } = props;
 
   const FonstSizes = {
-    mini: themeContext.getThemeVar('ButtonMiniFonstSize', 11),
-    small: themeContext.getThemeVar('ButtonSmallFonstSize', 13),
-    medium: themeContext.getThemeVar('ButtonMediumFonstSize', 18),
-    large: themeContext.getThemeVar('ButtonLargeFonstSize', 24),
+    mini: themeContext.getThemeVar('ButtonMiniFonstSize', 10.5),
+    small: themeContext.getThemeVar('ButtonSmallFonstSize', 12),
+    medium: themeContext.getThemeVar('ButtonMediumFonstSize', 14),
+    large: themeContext.getThemeVar('ButtonLargeFonstSize', 20),
     larger: themeContext.getThemeVar('ButtonLargerFonstSize', 28),
   };
 
+  const themeVars = themeContext.getThemeVars({
+    ButtonBorderWidth: 1.5,
+    ButtonDisableOpacity: 0.5,
+  });
+
+  const [ pressed, setPressed ] = useState(true);
+
   //按钮样式生成
-  const getStyle = useCallback(() => {
+  const currentStyle = useMemo(() => {
     const colorStyle = selectStyleType<ViewStyle|TextStyle, ButtomType>(type, 'default', plain ? {
       default: themeStyles.plainButtonDefault,
       primary: themeStyles.plainButtonPrimary,
@@ -264,7 +275,7 @@ export function Button(props: ButtonProp) {
       warning: themeStyles.plainButtonWarning,
       danger: themeStyles.plainButtonDanger,
       custom: {
-        borderWidth: DynamicVar('ButtonBorderWidth', 1),
+        borderWidth: themeVars.ButtonBorderWidth,
         borderColor: themeContext.resolveThemeColor(color),
         color: themeContext.resolveThemeColor(color),
       },
@@ -278,7 +289,7 @@ export function Button(props: ButtonProp) {
       warning: themeStyles.buttonWarning,
       danger: themeStyles.buttonDanger,
       custom: {
-        backgroundColor: themeContext.resolveThemeColor(touchable ? disabledColor : color),
+        backgroundColor: themeContext.resolveThemeColor(touchable ? color : disabledColor),
         color: themeContext.resolveThemeColor(textColor),
       },
       text: {
@@ -299,11 +310,12 @@ export function Button(props: ButtonProp) {
     ] as ViewStyle[];
 
     const speicalStyle = {
-      opacity: touchable === false ? 0.5 : 1,
+      opacity: touchable ? 1 : themeVars.ButtonDisableOpacity,
       borderRadius: shape === 'round' ? radius : 0,
     } as ViewStyle;
 
-    if (disabledColor && touchable === false && type !== 'custom' && plain !== true)
+    //自定义状态下的禁用颜色
+    if (disabledColor && !touchable && type === 'custom')
       speicalStyle.backgroundColor = themeContext.resolveThemeColor(disabledColor);
 
     //内边距样式的强制设置
@@ -318,10 +330,9 @@ export function Button(props: ButtonProp) {
   }, [
     block, color, disabledColor, padding, plain,
     radius, shape, size, textColor, touchable, type,
-    themeContext, themeStyles,
+    themeContext, themeStyles, themeVars,
   ]);
 
-  const currentText = loading ? (loadingText || children || text) : children || text;
 
   //渲染样式
   function doRenderIcon(left: boolean, nowColor: ColorValue|undefined) {
@@ -332,7 +343,7 @@ export function Button(props: ButtonProp) {
     if (left && loading)
       return <ActivityIndicator
         size="small"
-        color={themeContext.resolveThemeColor(loadingColor) || currentStyleObj.color}
+        color={themeContext.resolveThemeColor(loadingColor) || currentStyle.color}
         style={{
           marginRight: CheckTools.isNullOrEmpty(currentText) ? undefined : 5,
         }}
@@ -350,47 +361,49 @@ export function Button(props: ButtonProp) {
     /> : <></>;
   }
 
-  //当对应参数更改时，重新生成样式对象
-  const currentStyleObj = useMemo(() => getStyle(), [ getStyle ]);
+  const currentText = loading ? (loadingText || children || text) : children || text;
+  const textColorFinal = (
+    pressed ?
+      themeContext.resolveThemeColor(pressedTextColor) :
+      themeContext.resolveThemeColor(textColor)
+  ) || currentStyle.color;
 
   return (
-    <ThemeRender>
-      {() => (
-        <TouchableHighlight
-          onPress={(touchable === false || loading === true) ? undefined : onPress}
-          underlayColor={pressedColor || type === 'custom' ? themeContext.resolveThemeColor(pressedColor) :
-            themeContext.resolveThemeColor((plain || type === 'text') ?
-              PressedColor(Color.notice) :
-              PressedColor(selectObjectByType(type, 'notice', Color)))
-          }
-          style={[
-            themeStyles.view,
-            currentStyleObj.style,
-            style,
-          ]}
-          { ...viewProps }
-        >
-          <RowView center>
-            {
-              //左图标
-              doRenderIcon(true, currentStyleObj.color)
-            }
-            {/* 文本 */}
-            <Text style={[
-              {
-                color: themeContext.resolveThemeColor(textColor) || currentStyleObj.color,
-                fontSize: selectStyleType(size, 'medium', FonstSizes),
-              },
-              type === 'text' ? { fontWeight: 'bold' } : {},
-              textStyle,
-            ]}>{ currentText }</Text>
-            {
-              //右图标
-              doRenderIcon(false, currentStyleObj.color)
-            }
-          </RowView>
-        </TouchableHighlight>
-      )}
-    </ThemeRender>
+    <TouchableHighlight
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onPress={(touchable === false || loading === true) ? undefined : onPress}
+      underlayColor={type === 'custom' ? themeContext.resolveThemeColor(pressedColor) :
+        themeContext.resolveThemeColor((plain || type === 'text') ?
+          PressedColor(Color.notice) :
+          PressedColor(selectObjectByType(type, 'notice', Color)))
+      }
+      style={[
+        themeStyles.view,
+        currentStyle.style,
+        style,
+      ]}
+      { ...viewProps }
+    >
+      <RowView center>
+        {
+          //左图标
+          doRenderIcon(true, currentStyle.color)
+        }
+        {/* 文本 */}
+        <Text style={[
+          {
+            color: textColorFinal,
+            fontSize: selectStyleType(size, 'medium', FonstSizes),
+          },
+          type === 'text' ? { fontWeight: 'bold' } : {},
+          textStyle,
+        ]}>{ currentText }</Text>
+        {
+          //右图标
+          doRenderIcon(false, currentStyle.color)
+        }
+      </RowView>
+    </TouchableHighlight>
   );
 }

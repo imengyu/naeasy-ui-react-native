@@ -185,7 +185,7 @@ export function Tag(props: TagProp) {
         large: themeStyles.tagSizeLarge,
       }),
     } as ViewStyle|TextStyle;
-  }, [ borderRadius, plain, shape, size, type ]);
+  }, [ borderRadius, plain, shape, size, type, themeStyles ]);
 
   return (
     <RowView center style={[

@@ -137,7 +137,7 @@ export function Divider(props: DividerProps) {
         marginTop: size / 2  - width / 2,
         marginBottom: size / 2  - width / 2,
         borderBottomWidth: width,
-        borderColor: color,
+        borderColor: themeContext.resolveThemeColor(color),
         borderStyle,
       },
     ] as ViewStyle[];

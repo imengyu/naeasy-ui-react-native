@@ -6,9 +6,9 @@ export interface ColorItem {
 }
 export function strinifyColor(color: ColorItem) : string {
   if (color.a >= 1)
-    return `rgb(${color.r},${color.g},${color.b}}`;
+    return `rgb(${color.r},${color.g},${color.b})`;
   else
-    return `rgba(${color.r},${color.g},${color.b},${color.a}`;
+    return `rgba(${color.r},${color.g},${color.b},${color.a})`;
 }
 export function parseColor(colorString: string) : ColorItem {
   if (colorString.startsWith('rgb(')) {
@@ -36,28 +36,28 @@ export function parseColor(colorString: string) : ColorItem {
       //#f3f
       const colorChar = colorString.split('');
       return {
-        r: parseInt(colorChar[0] + colorChar[0], 16),
-        g: parseInt(colorChar[1] + colorChar[1], 16),
-        b: parseInt(colorChar[2] + colorChar[2], 16),
+        r: parseInt(colorChar[1] + colorChar[1], 16),
+        g: parseInt(colorChar[2] + colorChar[2], 16),
+        b: parseInt(colorChar[3] + colorChar[3], 16),
         a: 1,
       };
     } else if (colorString.length === 7) {
       //#ff0055
       const colorChar = colorString.split('');
       return {
-        r: parseInt(colorChar[0] + colorChar[1], 16),
-        g: parseInt(colorChar[2] + colorChar[3], 16),
-        b: parseInt(colorChar[4] + colorChar[5], 16),
+        r: parseInt(colorChar[1] + colorChar[2], 16),
+        g: parseInt(colorChar[3] + colorChar[4], 16),
+        b: parseInt(colorChar[5] + colorChar[6], 16),
         a: 1,
       };
     } else if (colorString.length === 9) {
       //#ff990035
       const colorChar = colorString.split('');
       return {
-        r: parseInt(colorChar[0] + colorChar[1], 16),
-        g: parseInt(colorChar[2] + colorChar[3], 16),
-        b: parseInt(colorChar[4] + colorChar[5], 16),
-        a: parseInt(colorChar[6] + colorChar[7], 16) / 255,
+        r: parseInt(colorChar[1] + colorChar[2], 16),
+        g: parseInt(colorChar[3] + colorChar[4], 16),
+        b: parseInt(colorChar[5] + colorChar[6], 16),
+        a: parseInt(colorChar[7] + colorChar[8], 16) / 255,
       };
     }
   }

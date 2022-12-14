@@ -47,6 +47,7 @@ export class TestAvatarScreen extends React.PureComponent<Props> {
           <Avatar url="https://imengyu.top/assets/images/test/2.jpg" round={false} size={50} />
         </TestGroup>
 
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

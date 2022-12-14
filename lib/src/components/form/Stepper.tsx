@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CheckTools from "../../utils/CheckTools";
-import { NativeSyntheticEvent, StyleSheet, Text, TextInput, TextInputFocusEventData, View } from "react-native";
+import { NativeSyntheticEvent, StyleSheet, TextInput, TextInputFocusEventData } from "react-native";
 import { Color } from "../../styles";
 import { IconButton } from "../button/IconButton";
 import { RowView } from "../layout/RowView";
@@ -103,8 +103,8 @@ export interface StepperProps {
 const styles = StyleSheet.create({
   button: {
     borderRadius: DynamicVar('StepperButtonBorderRadius', 0),
-    paddingVertical: DynamicVar('StepperButtonPaddingVertical', 0),
-    paddingHorizontal: DynamicVar('StepperButtonPaddingHorizontal', 0),
+    paddingVertical: DynamicVar('StepperButtonPaddingVertical', 4),
+    paddingHorizontal: DynamicVar('StepperButtonPaddingHorizontal', 4),
     backgroundColor: DynamicColorVar('StepperButtonBackgroundColor', Color.light),
   },
   input: {
@@ -115,10 +115,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     backgroundColor: DynamicColorVar('StepperInputBackgroundColor', Color.light),
-    color: DynamicColorVar('StepperInputTextColor', Color.text),
-  },
-  inputText: {
-    textAlign: 'center',
     color: DynamicColorVar('StepperInputTextColor', Color.text),
   },
 });
@@ -135,7 +131,7 @@ export function Stepper(props: StepperProps) {
     value = 0,
     disabled = false,
     integer = false,
-    decimalLength = 10,
+    decimalLength = 0,
     defaultValue = 0,
     minValue = 1,
     maxValue = undefined,
@@ -224,26 +220,17 @@ export function Stepper(props: StepperProps) {
           onBlur: onTextBlur,
           editable: !disabled,
         }) : (
-          disableInput ?
-            <View
-              style={{
-                ...themeStyles.input,
-                width: inputWidth,
-              }}
-            >
-              <Text style={themeStyles.inputText}>{stringValue}</Text>
-            </View> :
-            <TextInput
-              style={{
-                ...themeStyles.input,
-                width: inputWidth,
-              }}
-              value={stringValue}
-              onChangeText={setStringValue}
-              onBlur={onTextBlur}
-              editable={!disabled}
-              keyboardType={integer ? "number-pad" : "decimal-pad"}
-            />
+          <TextInput
+            style={{
+              ...themeStyles.input,
+              width: inputWidth,
+            }}
+            value={stringValue}
+            onChangeText={setStringValue}
+            onBlur={onTextBlur}
+            editable={!disabled && !disableInput}
+            keyboardType={integer ? "number-pad" : "decimal-pad"}
+          />
         )
       }
       {

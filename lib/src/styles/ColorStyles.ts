@@ -67,12 +67,16 @@ export const Color = {
     light: '#ffffff',
     dark: '#222222',
   },
+  cellBorder: {
+    light: '#efefef',
+    dark: '#212121',
+  },
   divider: {
     light: '#dfdfdf',
     dark: '#444444',
   },
   border: {
-    light: '#efefef',
+    light: '#eee',
     dark: '#212121',
   },
   mask: {

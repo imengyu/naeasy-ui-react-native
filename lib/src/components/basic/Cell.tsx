@@ -199,7 +199,7 @@ export function Cell(props: CellProp) {
     CellPaddingSmall: rpx(7),
   });
   const themeColorVars = themeContext.getThemeColorVars({
-    CellBorderColor: Color.boder,
+    CellBorderColor: Color.cellBorder,
   });
 
   const {
@@ -208,7 +208,7 @@ export function Cell(props: CellProp) {
     padding = themeContext.getThemeVar('CellPadding', []),
     pressedColor = themeContext.getThemeVar('CellPressedColor', PressedColor(Color.white)),
     bottomBorder = themeContext.getThemeVar('CellBottomBorder', true),
-    topBorder = themeContext.getThemeVar('CellTopBorder', true),
+    topBorder = themeContext.getThemeVar('CellTopBorder', false),
     center = true,
     title,
     label,

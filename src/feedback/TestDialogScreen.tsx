@@ -1,7 +1,7 @@
 import React, { createRef, forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, Image, StyleSheet } from 'react-native';
-import { Cell, Toast, Dialog, CellGroup, ColumnView, Color, Text, Button, rpx } from '../lib';
+import { Cell, Toast, Dialog, CellGroup, ColumnView, Color, Text, Button, rpx, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { Field, Rate } from '../../lib/src/components/form';
 import { SimpleList } from '../../lib/src/components/list';
@@ -86,6 +86,7 @@ export function TestDialogScreen(props: Props) {
           onClose={() => setShow5(false)}
           showCancel
           closeable
+          width={rpx(400)}
           title="确认执行操作? "
           content="返回一个 Promise 可以异步关闭对话框"
           onConfirm={() => new Promise<void>((resolve) => {
@@ -137,19 +138,18 @@ export function TestDialogScreen(props: Props) {
         </CellGroup>
         <CellGroup title="自定义" inset>
           <Cell title="自定义对话框内容" showArrow onPress={() => setShow4(true)} />
-          <Cell title="示例：输入对话框" showArrow onPress={() => {
+          <Cell title="自定义对话框示例：输入对话框" showArrow onPress={() => {
             const ref = createRef<InputDialogContentRef>();
             Dialog.show({
               title: '拒绝理由',
               content: <InputDialogContent ref={ref} />,
               showCancel: true,
-              width: rpx(650),
               onConfirm() {
                 Toast.info('拒绝理由输入内容：' + ref.current?.getText());
               },
             });
           }} />
-          <Cell title="示例：选择对话框" showArrow onPress={() => {
+          <Cell title="自定义对话框示例：选择对话框" showArrow onPress={() => {
             //这里给出了一个选择对话框示例，你可根据这个示例进一步封装做一个自己的选择对话框
             const ref = createRef<ChooseDialogContentRef>();
             Dialog.show({
@@ -162,13 +162,12 @@ export function TestDialogScreen(props: Props) {
               </ColumnView>),
               content: <ChooseDialogContent ref={ref} />,
               showCancel: true,
-              width: rpx(650),
               onConfirm() {
                 Toast.info('选择：' + JSON.stringify(ref.current?.getValue()));
               },
             });
           }} />
-          <Cell title="示例：评价对话框" showArrow onPress={() => {
+          <Cell title="自定义对话框示例：评价对话框" showArrow onPress={() => {
             const ref = createRef<RateDialogContentRef>();
             Dialog.show({
               title: '请为我们的服务评价',
@@ -182,7 +181,7 @@ export function TestDialogScreen(props: Props) {
           }} />
         </CellGroup>
         <CellGroup title="指令式对话框" inset>
-          <Text style={{ padding: 10 }}>可以通过指令式的方式使用 Dialog：</Text>
+          <Text style={{ padding: 10 }}>可以通过指令式的方式使用 Dialog，用法与组件式完全一致：</Text>
           <Cell title="指令式对话框" showArrow onPress={() => {
             Dialog.show({
               title: '提示',
@@ -212,6 +211,7 @@ export function TestDialogScreen(props: Props) {
             });
           }} />
         </CellGroup>
+        <WhiteSpace size={100} />
       </ColumnView>
     </ScrollView>
   );
@@ -230,9 +230,18 @@ const InputDialogContent = forwardRef<InputDialogContentRef, {}>((props, ref) =>
     getText: () => text,
   }));
 
-  return <ColumnView center>
-    <Field value={text} onChangeText={setText} placeholder="请输入" inputStyle={styles.myInput} />
-  </ColumnView>;
+  return (
+    <Field
+      value={text}
+      onChangeText={setText}
+      type="text"
+      multiline
+      maxLength={200}
+      showWordLimit
+      placeholder="请输入"
+      fieldStyle={styles.myInput}
+    />
+  );
 });
 
 //自定义对话框内容：评价框
@@ -252,7 +261,8 @@ const RateDialogContent = forwardRef<RateDialogContentRef, {}>((props, ref) => {
 
   return <ColumnView center flex={1}>
     <Rate value={value} onValueChange={setValue} size={30} />
-    <Field value={text} onChangeText={setText} placeholder="输入您的评价吧" inputStyle={styles.myInput} />
+    <WhiteSpace size="small" />
+    <Field value={text} onChangeText={setText} placeholder="输入您的评价吧" fieldStyle={styles.myInput} />
   </ColumnView>;
 });
 
@@ -300,8 +310,10 @@ const styles = StyleSheet.create({
     borderColor: '#efefef',
     borderWidth: 1,
     borderRadius: 5,
+    width: rpx(500),
   },
   myList: {
+    width: rpx(600),
     height: rpx(500),
   },
 });

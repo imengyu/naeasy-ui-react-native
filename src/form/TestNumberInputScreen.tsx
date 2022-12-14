@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Color, WingBlank } from '../lib';
+import { Color, WhiteSpace, WingBlank } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { ScrollView } from 'react-native';
 import { NumberInput } from '../../lib/src/components/form';
@@ -71,6 +71,7 @@ export class TestNumberInputScreen extends React.PureComponent<Props, State> {
         <TestGroup>
           <NumberInput value={this.state.value5} onChangeText={(v) => this.setState({ value5: v })} isPassword info="密码为 6 位数字" />
         </TestGroup>
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

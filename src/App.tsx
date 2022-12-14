@@ -14,8 +14,8 @@ function App() {
   const folowSystem = useRef(false);
 
   useEffect(() => {
-    const event1 = DeviceEventEmitter.addListener('switchDarkTheme', (value: boolean) => {
-      setTheme(value ? 'dark' : 'light');
+    const event1 = DeviceEventEmitter.addListener('switchTheme', (value: string) => {
+      setTheme(value);
     });
     const event2 = DeviceEventEmitter.addListener('switchDarkThemeFlowSystem', (value: boolean) => {
       folowSystem.current = value;

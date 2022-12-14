@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, StyleSheet } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native';
-import { Button, XBarSpace, ColumnView, WhiteSpace, DynamicColor, Color } from '../lib';
+import { Button, XBarSpace, ColumnView, WhiteSpace, DynamicColor, Color, useThemeStyles } from '../lib';
 import {
   Form, Field, Switch, CheckBox, CheckBoxGroup,
   Rate, Radio, RadioGroup, Stepper, Slider,
@@ -27,6 +27,8 @@ export function TestFormScreen(props: Props) {
   const formRef1 = useRef<Form>(null);
   const formRef2 = useRef<Form>(null);
   const formRef3 = useRef<Form>(null);
+
+  const themeStyles = useThemeStyles(styles);
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100}>
@@ -63,7 +65,7 @@ export function TestFormScreen(props: Props) {
             fieldProps={{
               labelFlex: 1,
               inputFlex: 4,
-              fieldStyle: styles.StyleWhiteItemField,
+              fieldStyle: themeStyles.StyleWhiteItemField,
             }}
             onSubmit={(values) => {
               Dialog.alert({
@@ -88,7 +90,7 @@ export function TestFormScreen(props: Props) {
             ref={formRef2}
             fieldProps={{
               labelFlex: 1,
-              fieldStyle: styles.StyleWhiteItemField,
+              fieldStyle: themeStyles.StyleWhiteItemField,
             }}
             rules={{
               pattern: { required: true, pattern: /\d/, message: '请输入数字' },
@@ -126,7 +128,7 @@ export function TestFormScreen(props: Props) {
             ref={formRef3}
             fieldProps={{
               labelFlex: 2,
-              fieldStyle: styles.StyleWhiteItemField,
+              fieldStyle: themeStyles.StyleWhiteItemField,
             }}
             intitalValue={{
               text: '',

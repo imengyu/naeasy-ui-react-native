@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
   },
   titleView: {
     paddingVertical: DynamicVar('ActionSheetTitlePaddingVertical', 8),
+    paddingHorizontal: DynamicVar('ActionSheetTitlePaddingHorizontal', 10),
   },
   titleViewBorder: {
     borderBottomColor: DynamicColorVar('ActionSheetTitleBorderBottomColor', Color.border),

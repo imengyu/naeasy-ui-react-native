@@ -252,6 +252,7 @@ export function IndexedList<T>(props: IndexedListProps<T>) {
               </TouchableHighlight>))
           )}
           onScroll={onScroll}
+          scrollEventThrottle={20}
           onScrollBeginDrag={onScrollStartDrag}
           onScrollEndDrag={onScrollEndDrag}
           onScrollToIndexFailed={(e) => {

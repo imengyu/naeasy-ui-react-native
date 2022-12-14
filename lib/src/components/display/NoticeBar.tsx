@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import MeasureText from '../../utils/MeasureText';
-import { Animated, Easing, ImageSourcePropType, ImageStyle, LayoutChangeEvent, StyleSheet, Text, TextStyle, View } from 'react-native';
+import React from 'react';
+import { ImageSourcePropType, ImageStyle, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { Icon, IconProp } from '../basic/Icon';
 import { Color, ThemeUtils } from '../../styles';
 import { RowView } from '../layout';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
 import { DynamicVar, useThemeStyles } from '../../theme/ThemeStyleSheet';
-import { useRef } from 'react';
-import { useCallback } from 'react';
+import { HorizontalScrollText } from '../typography';
 
 export interface NoticeBarProps {
   /**
@@ -109,7 +107,7 @@ export function NoticeBar(props: NoticeBarProps) {
     content = '',
     icon = 'notification',
     iconProps,
-    scroll = false,
+    scroll = true,
     closeable = false,
     wrap = false,
     scrollDuration = themeContext.getThemeVar('NoticeBarScrollDuration', 10000),
@@ -121,64 +119,6 @@ export function NoticeBar(props: NoticeBarProps) {
     onClose,
     onPress,
   } = props;
-
-  const [ mesuredTextWidth, setMesuredTextWidth ] = useState(0);
-  const scrollParentWidth = useRef(0);
-  const scrollParentHeight = useRef(0);
-
-  const scrollAnimValue = useRef(new Animated.Value(0));
-  const scrollAnim = useRef<Animated.CompositeAnimation|null>(null);
-
-  const startScroll = useCallback(() => {
-
-    //计算文字的宽度
-    MeasureText.measureText({
-      fontSize: textStyle.fontSize,
-      text: content,
-      height: scrollParentHeight.current,
-    }).then((textWidth) => {
-
-      //开始播放动画，从屏幕右边滚动至 -textWidth 位置。
-      scrollAnimValue.current.setValue(scrollParentWidth.current);
-      scrollAnim.current = Animated.timing(scrollAnimValue.current, {
-        toValue: -textWidth,
-        duration: scrollDuration,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      });
-      const startAnim = () => {
-        if (scrollAnim.current) {
-          scrollAnim.current.start(() => {
-            //动画结束后立即重新开始
-            scrollAnimValue.current.setValue(scrollParentWidth.current);
-            startAnim();
-          });
-        }
-      };
-      startAnim();
-      setMesuredTextWidth(textWidth);
-    });
-  }, [ content, scrollDuration, textStyle ]);
-  const stopScroll = useCallback(() => {
-    if (scrollAnim.current) {
-      scrollAnim.current.stop();
-      scrollAnim.current = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (scroll)
-      startScroll();
-    return () => {
-      stopScroll();
-    };
-  }, [ scroll, startScroll, stopScroll ]);
-
-  function onScrollParentLayout(e: LayoutChangeEvent) {
-    //容器宽度获取
-    scrollParentWidth.current = e.nativeEvent.layout.width;
-    scrollParentHeight.current = e.nativeEvent.layout.height;
-  }
 
   function renderLeftIcon() {
     if (typeof renderLeft === 'function')
@@ -198,31 +138,26 @@ export function NoticeBar(props: NoticeBarProps) {
         </TouchableOpacity> : <></>
     );
   }
+
+  const textStyleFinal = {
+    width: 'auto',
+    flex: 1,
+    color: themeContext.resolveThemeColor(textColor),
+    alignSelf: 'auto',
+    ...textStyle,
+  } as TextStyle;
+
   //渲染不会滚动的文字
   function renderText() {
     return (
-      <Text numberOfLines={wrap ? undefined : 1} style={{
-        width: 'auto',
-        flex: 1,
-        color: themeContext.resolveThemeColor(textColor),
-        alignSelf: 'auto',
-      }}>{content}</Text>
+      <Text numberOfLines={wrap ? undefined : 1} style={textStyleFinal}>{content}</Text>
     );
   }
   //渲染会滚动的文字
   function renderScrollText() {
     return (
-      <View onLayout={onScrollParentLayout} style={themeStyles.contentView}>
-        <Text style={textStyle} />
-        <Animated.Text style={{
-          ...textStyle,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: mesuredTextWidth + 20,
-          color: themeContext.resolveThemeColor(textColor),
-          transform: [{ translateX: scrollAnimValue.current }],
-        }}>{content}</Animated.Text>
+      <View style={themeStyles.contentView}>
+        <HorizontalScrollText textStyle={textStyleFinal} scrollDuration={scrollDuration}>{content}</HorizontalScrollText>
       </View>
     );
   }

@@ -290,6 +290,8 @@ const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps
 
   const animSideValue = useRef(new Animated.Value(-deviceHeight));
 
+  const themeStyles = useThemeStyles(styles);
+
   const insets = useSafeAreaInsets();
 
   function doCloseContainer() {
@@ -383,13 +385,13 @@ const NotifyContainer = forwardRef<NotifyContainerInstance, NotifyContainerProps
   return (
     <Animated.FlatList
       style={[
-        styles.container,
+        themeStyles.container,
         {
           transform: [{ translateY: animSideValue.current }],
           marginTop: insets.top,
         },
       ]}
-      contentContainerStyle={styles.containerInner}
+      contentContainerStyle={themeStyles.containerInner}
       pointerEvents="box-none"
       data={notifys}
       renderItem={renderNotifyItem}

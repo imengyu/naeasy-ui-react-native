@@ -28,7 +28,7 @@ export function TestThemeScreen(props: Props) {
 
   useEffect(() => {
     //通知 App.js 修改主题
-    DeviceEventEmitter.emit('switchDarkTheme', isDark);
+    DeviceEventEmitter.emit('switchTheme', isDark ? 'dark' : 'light');
   }, [ isDark ]);
   useEffect(() => {
     //通知 App.js 修改主题
@@ -57,6 +57,11 @@ export function TestThemeScreen(props: Props) {
         pressed_dark: ThemeUtils.makeAplhaColor(color, 0.6),
       },
     });
+    //更换主题色后需要重新更新主题，以使组件立即应用颜色更改
+    DeviceEventEmitter.emit('switchTheme', '');
+    setTimeout(() => {
+      DeviceEventEmitter.emit('switchTheme', isDark ? 'dark' : 'light');
+    }, 50);
   }
 
   const [ siderValue, setSiderValue ] = useState(50);

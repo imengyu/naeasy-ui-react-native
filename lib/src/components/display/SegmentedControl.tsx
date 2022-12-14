@@ -111,7 +111,7 @@ export function SegmentedControl(props: SegmentedControlProps) {
             themeStyles.item,
             {
               borderWidth: themeVars.SegmentedControlBorderWidth,
-              borderColor: activeTextColorV,
+              borderColor: activeColorV,
             },
           ];
 
@@ -122,7 +122,7 @@ export function SegmentedControl(props: SegmentedControlProps) {
             <SegmentedControlItem
               key={i}
               index={i}
-              maxLen={maxLen}
+              maxLen={maxLen - 1}
               radius={radius}
               activeColor={activeColorV}
               activeTextColor={activeTextColorV}

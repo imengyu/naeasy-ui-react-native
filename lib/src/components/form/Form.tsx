@@ -1,6 +1,6 @@
 import React from "react";
 import ArrayUtils from "../../utils/ArrayUtils";
-import Schema, { Rule, Rules } from "async-validator";
+import Schema, { Rule, Rules, ValidateError } from "async-validator";
 import CheckTools from "../../utils/CheckTools";
 import { ViewStyle } from "react-native";
 import { ColumnView } from "../layout/ColumnView";
@@ -37,9 +37,13 @@ export interface FormProps {
    */
   onReset?: () => void;
   /**
-   * 表单提交回调
+   * 调用 formApi.submit()，数据验证成功后的回调函数
    */
   onSubmit?: (value: FormValues) => void;
+  /**
+   * 调用 formApi.submit()，数据验证失败后的回调函数
+   */
+  onSubmitFail?: (error: ValidateError[]) => void;
   /**
    * 设置字段校验的时机
    * * onBlur 文本框失去焦点时校验
@@ -201,13 +205,13 @@ export class Form extends React.Component<FormProps, FormState> {
     if (valid) {
       //验证
       this.validate().then(() => {
-        this.props.onSubmit && this.props.onSubmit(this.getValues());
+        this.props.onSubmit?.(this.getValues());
       }).catch((e) => {
-        console.warn('submit validate failed: ', e);
+        this.props.onSubmitFail?.(e);
       });
     } else {
       //提交
-      this.props.onSubmit && this.props.onSubmit(this.getValues());
+      this.props.onSubmit?.(this.getValues());
     }
   }
   /**

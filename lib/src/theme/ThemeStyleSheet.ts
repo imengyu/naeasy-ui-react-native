@@ -106,6 +106,9 @@ export function transformThemeStyle(sourceStyle: ViewStyle | TextStyle | ImageSt
  */
 export function useThemeStyles<T>(sourceStyle: NamedStyles<T>) {
   const themeData =  useContext(ThemeContext);
+  if (!themeData) {
+    console.warn('Not found ThemeContext, Did you add ThemeProvider in your Root?');
+  }
   return useMemo(() => transformThemeStyles(sourceStyle, themeData), [ sourceStyle, themeData ]) as NamedStyles<T>;
 }
 /**
@@ -114,6 +117,9 @@ export function useThemeStyles<T>(sourceStyle: NamedStyles<T>) {
  */
 export function useThemeStyle<T extends ViewStyle | TextStyle | ImageStyle>(sourceStyle: T) {
   const themeData =  useContext(ThemeContext);
+  if (!themeData) {
+    console.warn('Not found ThemeContext, Did you add ThemeProvider in your Root?');
+  }
   return useMemo(() => transformThemeStyle(sourceStyle, themeData), [ sourceStyle, themeData ]) as T;
 }
 

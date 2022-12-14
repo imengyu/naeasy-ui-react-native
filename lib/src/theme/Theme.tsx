@@ -69,7 +69,13 @@ export const ThemeContext = createContext<ThemeContextData>({} as ThemeContextDa
 /**
  * useContext(ThemeContext) 的简写
  */
-export const useThemeContext = () => useContext(ThemeContext);
+export const useThemeContext = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    console.warn('Not found ThemeContext, Did you add ThemeProvider in your Root?');
+  }
+  return context;
+};
 
 
 //组件

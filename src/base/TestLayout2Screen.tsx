@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import { Color, Col, Row } from '../lib';
+import { Color, Col, Row, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestGroup } from '../components/TestGroup';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
@@ -78,6 +78,7 @@ export class TestLayout2Screen extends React.PureComponent<Props> {
             <Col span={6}><Text style={styles.box}>span: 6</Text></Col>
           </Row>
         </TestGroup>
+        <WhiteSpace size="larger" />
       </ScrollView>
     );
   }

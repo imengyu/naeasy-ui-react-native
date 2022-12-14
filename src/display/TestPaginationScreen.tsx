@@ -5,6 +5,7 @@ import { RootStackParamList } from '../navigation';
 import { Pagination } from '../../lib/src/components/nav';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
+import { IconButton } from '../lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPagination', 'RootStack'>;
 interface State {
@@ -33,8 +34,27 @@ export class TestPaginationScreen extends React.PureComponent<Props, State> {
         <TestGroup>
           <Pagination simple pageCount={10} currentPage={this.state.page} onCurrentPageChange={(page) => this.setState({ page: page })} />
         </TestGroup>
-        <TestHeader desc="说明">自定义按钮</TestHeader>
+        <TestHeader desc="可设置条目的自定义样式">自定义样式</TestHeader>
         <TestGroup>
+          <Pagination
+            buttonStyle={{
+              borderRadius: 30,
+              marginHorizontal: 2,
+            }}
+            pageCount={10}
+            currentPage={this.state.page}
+            onCurrentPageChange={(page) => this.setState({ page: page })}
+          />
+        </TestGroup>
+        <TestHeader desc="允许自定义渲染按钮">自定义渲染</TestHeader>
+        <TestGroup>
+          <Pagination
+            pageCount={10}
+            currentPage={this.state.page}
+            onCurrentPageChange={(page) => this.setState({ page: page })}
+            renderPrev={(props) => <IconButton icon="direction-left" {...props} />}
+            renderNext={(props) => <IconButton icon="direction-right" {...props}  />}
+          />
         </TestGroup>
       </ScrollView>
     );

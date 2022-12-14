@@ -4,7 +4,7 @@ import { Grid, GridItem, Color, rpx } from '../lib';
 import { ScrollView, Image } from 'react-native';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
-import { TestGroup } from '../components/TestGroup';
+import { showTestMessage, TestGroup } from '../components/TestGroup';
 
 type Props = StackScreenProps<RootStackParamList, 'TestGrid'>;
 
@@ -20,7 +20,7 @@ export class TestGridScreen extends React.PureComponent<Props> {
         <TestHeader desc="通过 icon 属性设置格子内的图标，title 属性设置文字内容。">基础用法</TestHeader>
         <TestGroup noHorizontalPadding>
           <Grid>
-            <GridItem title="图标" icon="picture-filling" onPress={() => console.log('test')} />
+            <GridItem title="可点击" icon="picture-filling" onPress={() => showTestMessage('点击')} />
             <GridItem title="本地图片" icon={require('../images/defaultAvatar.png')} iconSize={20} />
             <GridItem title="URL图片" icon="https://imengyu.top/assets/images/test/icon.png"  />
             <GridItem title="颜色" icon="picture-filling" iconColor={Color.primary} titleColor={Color.primary} />

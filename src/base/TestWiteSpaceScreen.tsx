@@ -85,6 +85,7 @@ export class TestWhiteSpaceScreen extends React.PureComponent<Props> {
             <View style={styles.box3} />
           </RowView>
         </TestGroup>
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }

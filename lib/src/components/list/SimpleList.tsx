@@ -8,6 +8,7 @@ import { DynamicColorVar, DynamicVar, useThemeStyles } from '../../theme/ThemeSt
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: DynamicVar('SimpleListItemPaddingHorizontal', 20),
+    paddingVertical: DynamicVar('SimpleListItemPaddingVertical', 15),
     fontSize: DynamicVar('SimpleListItemFontSize', 14),
     borderTopWidth: DynamicVar('SimpleListItemBorderTopWidth', 0),
     borderBottomWidth: DynamicVar('SimpleListItemBorderBottomWidth', StyleSheet.hairlineWidth),

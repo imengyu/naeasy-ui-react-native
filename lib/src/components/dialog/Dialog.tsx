@@ -131,12 +131,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: DynamicVar('DialogButtonHeight', 45),
     borderTopWidth: DynamicVar('DialogButtonBorderTopWidth', 1),
-    borderBottomWidth: DynamicVar('DialogButtonBorderBottomWidth', 1),
     borderTopColor: DynamicColorVar('DialogButtonBorderTopColor', Color.border),
-    borderBottomColor: DynamicColorVar('DialogButtonBorderBottomColor', Color.border),
+    borderRightWidth: DynamicVar('DialogButtonBorderTopWidth', 1),
+    borderRightColor: DynamicColorVar('DialogButtonBorderTopColor', Color.border),
   },
   dialogButtonHorz: {
     flex: 1,
+    borderBottomWidth: DynamicVar('DialogButtonBorderBottomWidth', 1),
+    borderBottomColor: DynamicColorVar('DialogButtonBorderBottomColor', Color.border),
   },
   buttonText: {
     fontSize: DynamicVar('DialogButtonTextFontSize', 16),

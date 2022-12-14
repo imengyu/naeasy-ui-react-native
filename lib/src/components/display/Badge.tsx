@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewStyle, Animated, Easing } from "react-native";
 import { Color } from "../../styles/ColorStyles";
 import { selectStyleType } from '../../utils/StyleTools';
@@ -140,7 +140,7 @@ export function Badge(props: BadgeProps) {
     border = themeContext.getThemeVar('BadgeBorder', false),
     borderWidth = themeContext.getThemeVar('BadgeBorderWidth', 2),
     borderColor = themeContext.getThemeVar('BadgeBorderColor', Color.white),
-    position = themeContext.getThemeVar('BadgePosition', 'topLeft'),
+    position = themeContext.getThemeVar('BadgePosition', 'topRight'),
     badgeStyle,
     containerStyle,
     textStyle,
@@ -151,52 +151,54 @@ export function Badge(props: BadgeProps) {
     paddingVertical = themeContext.getThemeVar('BadgePaddingVertical', 1),
     paddingHorizontal = themeContext.getThemeVar('BadgePaddingHorizontal', 3),
     hiddenIfZero = true,
+    maxCount,
   } = props;
 
-  const [ currentStyle, setCurrentStyle ] = useState<ViewStyle[]>([ themeStyles.badge ]);
-  const [ currentTextStyle, setCurrentTextStyle ] = useState<TextStyle[]>([ themeStyles.badgeText ]);
+  const [ currentTextWidth, setCurrentTextWidth ] = useState(0);
 
   //文字处理
   let contentString : string|undefined;
   if (typeof content !== 'undefined') {
     if (typeof content === 'number')
-      contentString = (props.maxCount && content > props.maxCount) ? `${props.maxCount}+` : content.toString();
+      contentString = (maxCount && content > maxCount) ? `${maxCount}+` : content.toString();
     else
       contentString = content;
   }
 
-  //样式生成
-  const doGenStyle = useCallback(() => {
-
-    //计算文字的宽度
+  //计算文字的宽度
+  useEffect(() => {
     if (contentString) {
       MeasureText.measureText({
         fontSize: fontSize,
         text: contentString,
         height: badgeSize,
       }).then((textWidth) => {
-        genOffset(textWidth);
+        setCurrentTextWidth(textWidth);
       });
     } else {
-      genOffset();
+      setCurrentTextWidth(0);
+    }
+  }, [ contentString, fontSize, badgeSize ]);
+
+
+  //样式生成
+  const currentStyle = useMemo(() => {
+    //偏移计算
+    let offsetY = currentTextWidth ? (fontSize + paddingVertical + (border ? borderWidth : 0)) / 2 : 0;
+    let offsetX = currentTextWidth ? (currentTextWidth + paddingHorizontal + (border ? borderWidth : 0)) / 2 : 0;
+    if (offset) {
+      offsetX += offset.x;
+      offsetY += offset.y;
     }
 
-    function genOffset(textWidth?: number) {
-      //偏移计算
-      let offsetY = textWidth ? (fontSize + paddingVertical + (border ? borderWidth : 0)) / 2 : 0;
-      let offsetX = textWidth ? (textWidth + paddingHorizontal + (border ? borderWidth : 0)) / 2 : 0;
-      if (offset) {
-        offsetX += offset.x;
-        offsetY += offset.y;
-      }
-
-      setCurrentStyle([
+    return ([
+      [
         themeStyles.badge,
         badgeStyle as TextStyle,
         {
           backgroundColor: themeContext.resolveThemeColor(color),
           borderRadius: radius,
-          borderWidth,
+          borderWidth: border ? borderWidth : 0,
           borderColor: themeContext.resolveThemeColor(borderColor),
         },
         selectStyleType<TextStyle, BadgePositionTypes>(position, 'topRight', {
@@ -220,41 +222,36 @@ export function Badge(props: BadgeProps) {
         (contentString ? {
           paddingHorizontal: paddingHorizontal,
           paddingVertical: paddingVertical,
-          width: textWidth ? (textWidth + 6 + paddingHorizontal * 2 + (border ? borderWidth * 2 : 0)) : undefined,
-          aspectRatio: textWidth && contentString.length === 1 ? 1 : undefined,
+          width: currentTextWidth ? (currentTextWidth + 6 + paddingHorizontal * 2 + (border ? borderWidth * 2 : 0)) : undefined,
+          aspectRatio: currentTextWidth && contentString.length === 1 ? 1 : undefined,
         } : {
           height: badgeSize,
           width: badgeSize,
         }),
-      ]);
-
-      setCurrentTextStyle([
+      ],
+      [
         { fontSize },
         themeStyles.badgeText,
         textStyle as TextStyle,
-      ]);
-    }
+      ],
+    ]);
   }, [
     themeStyles, themeContext,
     textStyle, badgeSize, badgeStyle, color,
     border, borderWidth, borderColor, radius,
     contentString, fontSize, offset, position,
-    paddingHorizontal, paddingVertical,
+    paddingHorizontal, paddingVertical, currentTextWidth,
   ]);
-
-  useEffect(() => {
-    doGenStyle();
-  }, [ doGenStyle ]);
 
   const showBadge = show && (!hiddenIfZero || (hiddenIfZero && content !== 0 && content !== '0'));
 
   return (
     children ?
       (<View style={[ themeStyles.view, containerStyle ]}>
-        <BadgeInner show={showBadge} anim={anim} content={contentString} textStyle={currentTextStyle} currentStyle={currentStyle} />
+        <BadgeInner show={showBadge} anim={anim} content={contentString} textStyle={currentStyle[1]} currentStyle={currentStyle[0]} />
         { children }
       </View>) :
-      <BadgeInner relative={true} show={showBadge} anim={anim} content={contentString} textStyle={currentTextStyle} currentStyle={currentStyle} />
+      <BadgeInner relative={true} show={showBadge} anim={anim} content={contentString} textStyle={currentStyle[1]} currentStyle={currentStyle[0]} />
   );
 }
 

@@ -63,11 +63,13 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         </TestGroup>
         <TestHeader>自定义颜色</TestHeader>
         <TestGroup>
-          <RowView wrap>
+          <ColumnView>
             <Button text="自定义颜色" type="custom" color="#f00" pressedColor="#a00" textColor="#fff" onPress={()=>showTestMessage('点击了！')} />
+            <WhiteSpace size="small" />
             <Button text="自定义颜色" type="custom" color="#0d0" pressedColor="#060" textColor="#fff" onPress={()=>showTestMessage('点击了！')} />
-            <Button text="自定义颜色" type="custom" color="#18f" pressedColor="#10f" textColor="#fff" onPress={()=>showTestMessage('点击了！')} />
-          </RowView>
+            <WhiteSpace size="small" />
+            <Button text="自定义颜色" plain type="custom" color="#060" pressedColor="#050" textColor="#060" pressedTextColor="#fff" onPress={()=>showTestMessage('点击了！')} />
+          </ColumnView>
         </TestGroup>
         <TestHeader>加载状态</TestHeader>
         <TestGroup>
@@ -86,13 +88,17 @@ export class TestButtonScreen extends React.PureComponent<Props> {
         </TestGroup>
         <TestHeader desc="支持 large、normal、small、mini 四种尺寸，默认为 normal。">按扭尺寸</TestHeader>
         <TestGroup>
-          <RowView wrap align="center">
+          <ColumnView align="flex-start">
             <Button text="大号按钮" type="primary" size="large" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
+            <WhiteSpace size="small" />
             <Button text="普通按钮" type="primary" size="medium" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
+            <WhiteSpace size="small" />
             <Button text="小型按钮" type="primary" size="small" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
+            <WhiteSpace size="small" />
             <Button text="迷你按钮" type="primary" size="mini" onPress={()=>showTestMessage('点击了！')} style={{ marginRight: 5 }} />
-          </RowView>
+          </ColumnView>
         </TestGroup>
+        <WhiteSpace size="large" />
       </ScrollView>
     );
   }

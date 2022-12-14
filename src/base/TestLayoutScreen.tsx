@@ -145,7 +145,7 @@ export class TestLayoutScreen extends React.PureComponent<Props> {
                 <Text>1234567890@qq.com</Text>
               </ColumnView>
             </RowView>
-            <Button type="text">详情</Button>
+            <Button type="text" size="small" onPress={() => showTestMessage('点击详情')}>详情</Button>
           </RowView>
         </TestGroup>
         <WhiteSpace size={100} />

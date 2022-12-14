@@ -293,7 +293,8 @@ export function NumberInput(props: NumberInputProps) {
           borderColor: themeContext.resolveThemeColor(active ? activeBorderColor : borderColor),
         },
         underline: {
-          borderWidth,
+          borderBottomWidth: borderWidth,
+          borderColor: 'transparent',
           borderBottomColor: themeContext.resolveThemeColor(active ? activeBorderColor : borderColor),
           borderRadius: 0,
         },

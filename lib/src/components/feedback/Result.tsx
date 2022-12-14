@@ -66,8 +66,8 @@ export function Result(props: ResultProps) {
     ResultTitleBold: true,
     ResultTitleMarginTop: 15,
     ResultDescriptionFontSize: 14,
-    ResultDescriptionColor: Color.black,
-    ResultDescriptionBold: true,
+    ResultDescriptionColor: Color.textSecond,
+    ResultDescriptionBold: false,
     ResultDescriptionMarginTop: 5,
   });
 

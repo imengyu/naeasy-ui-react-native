@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 import { Color, PressedColor } from '../../styles';
 import { ThemeColor, useThemeContext } from '../../theme/Theme';
@@ -63,11 +63,49 @@ interface PaginationProps {
    * 按钮为非当前页码下文字颜色
    */
   deactiveTextColor?: ThemeColor;
+  /**
+   * 自定义按钮样式
+   */
+  buttonStyle?: ViewStyle;
+  /**
+   * 自定义文字样式
+   */
+  textStyle?: TextStyle;
+  /**
+   * 自定义渲染条目
+   * @param index 当前条目索引
+   * @param active 当前条目是否选中
+   * @param text 当前条目文字
+   */
+  renderItem?: (props: {
+    key: number,
+    index: number,
+    active: boolean,
+    text: string,
+    onPress: () => void,
+  }) => JSX.Element;
+  /**
+   * 渲染下一页按钮
+   */
+  renderNext?: (rops: {
+    touchable: boolean,
+    onPress: () => void,
+  }) => JSX.Element;
+  /**
+   * 渲染上一页按钮
+   */
+  renderPrev?: (props: {
+    touchable: boolean,
+    onPress: () => void,
+  }) => JSX.Element;
+  /**
+   * 简单模式下渲染中心文字
+   */
+  renderSimpleText?: (props: {
+    text: string,
+  }) => JSX.Element;
 
-  //FIXME: 支持自定义渲染
-  renderItem?: (index: number, active: boolean, text: string) => JSX.Element;
-  
-  renderNext?: () => JSX.Element;
+
 }
 interface PaginationItemProps {
   text?: string;
@@ -123,6 +161,13 @@ export function Pagination(props: PaginationProps) {
     deactiveColor = Color.white,
     activeTextColor = Color.white,
     deactiveTextColor = Color.text,
+    simple = false,
+    buttonStyle,
+    textStyle,
+    renderItem,
+    renderNext,
+    renderSimpleText,
+    renderPrev,
   } = themeContext.resolveThemeProps(props, {
     pressedColor: 'PaginationPressedColor',
     pressedTextColor: 'PaginationPressedTextColor',
@@ -153,16 +198,25 @@ export function Pagination(props: PaginationProps) {
 
     for (let index = start; index < end; index++) {
       arr.push(
-        <PaginationItem
-          key={index}
-          text={(index + 1).toString()}
-          active={index === currentPage}
-          onPress={() => emitChange(index)} />
+        renderItem ?
+          renderItem({
+            key: index,
+            index: index,
+            text: (index + 1).toString(),
+            active:index === currentPage,
+            onPress: () => emitChange(index),
+          }) :
+          <PaginationItem
+            key={index}
+            text={(index + 1).toString()}
+            active={index === currentPage}
+            onPress={() => emitChange(index)} />
       );
     }
     return arr;
   }
   function emitChange(num: number) {
+    num = Math.min(pageCount - 1, Math.max(num, 0));
     if (typeof props.onCurrentPageChange === 'function')
       props.onCurrentPageChange(num);
   }
@@ -175,27 +229,48 @@ export function Pagination(props: PaginationProps) {
     return (
       <TouchableHighlight
         underlayColor={themeContext.resolveThemeColor(pressedColor)}
-        style={{
-          ...themeStyles.itemButton,
-          backgroundColor: themeContext.resolveThemeColor(active ? activeColor : (touchable ? deactiveColor : pressedColor)),
-        }}
+        style={[
+          themeStyles.itemButton,
+          buttonStyle,
+          { backgroundColor: themeContext.resolveThemeColor(active ? activeColor : (touchable ? deactiveColor : pressedColor)) },
+        ]}
         onPress={touchable && !active ? thisProps.onPress : undefined}
         onHideUnderlay={() => setPressed(false)}
         onShowUnderlay={() => setPressed(true)}
       >
-        <Text style={{
-          ...themeStyles.itemText,
-          color: themeContext.resolveThemeColor(touchable ? (pressed ? pressedTextColor : (active ? activeTextColor : deactiveTextColor)) : pressedTextColor),
-        }}>{thisProps.text}</Text>
+        <Text style={[
+          themeStyles.itemText,
+          textStyle,
+          { color: themeContext.resolveThemeColor(touchable ? (pressed ? pressedTextColor : (active ? activeTextColor : deactiveTextColor)) : pressedTextColor) },
+        ]}>{thisProps.text}</Text>
       </TouchableHighlight>
     );
   }
 
+  const onPrevPress = () => emitChange(currentPage - 1);
+  const onNextPress = () => emitChange(currentPage + 1);
+
   return (
     <RowView>
-      { showNextPrev ? <PaginationItem text={prevText} touchable={canPrev} onPress={() => emitChange(currentPage - 1)} /> : <></> }
-      { props.simple ? <Text style={themeStyles.simpleText}>{ `${currentPage + 1}/${props.pageCount}` }</Text> : (<>{ renderItems() }</>) }
-      { showNextPrev ? <PaginationItem text={nextText} touchable={canNext} onPress={() => emitChange(currentPage + 1)} /> : <></> }
+      {
+        showNextPrev ?
+          (renderPrev ? renderPrev({ onPress: onPrevPress, touchable: canPrev }) : <PaginationItem text={prevText} touchable={canPrev} onPress={onPrevPress} />) :
+          <></>
+      }
+      {
+        simple ?
+          (
+            renderSimpleText ?
+              renderSimpleText({ text: `${currentPage + 1}/${props.pageCount}` }) :
+              <Text style={themeStyles.simpleText}>{ `${currentPage + 1}/${props.pageCount}` }</Text>
+          ) :
+          (<>{ renderItems() }</>)
+      }
+      {
+        showNextPrev ?
+          (renderNext ? renderNext({ onPress: onNextPress, touchable: canNext }) : <PaginationItem text={nextText} touchable={canNext} onPress={onNextPress} />) :
+          <></>
+      }
     </RowView>
   );
 }

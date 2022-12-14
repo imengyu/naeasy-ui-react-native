@@ -84,7 +84,7 @@ export interface FieldProps extends Omit<TextInputProps, 'value'|'placeholderTex
   labelAlign?: 'left'|'center'|'right';
   /**
    * 左侧文本的flex占比
-   * @default 2
+   * @default undefined
    */
   labelFlex?: number;
   /**
@@ -347,7 +347,7 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
     label,
     labelColor = themeContext.getThemeVar('FieldLabelColor', Color.text),
     labelDisableColor = themeContext.getThemeVar('FieldLabelDisableColor', Color.grey),
-    labelFlex = themeContext.getThemeVar('FieldLabelFlex', 2),
+    labelFlex = themeContext.getThemeVar('FieldLabelFlex', undefined),
     inputDisableColor = themeContext.getThemeVar('FieldInputDisableColor', Color.grey),
     inputColor = themeContext.getThemeVar('FieldInputColor', Color.text),
     inputFlex = themeContext.getThemeVar('FieldInputFlex', 5),
@@ -416,8 +416,8 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
   useImperativeHandle(ref, () => instance);
 
   function emitChangeText(text: string) {
-    if (onChangeText)
-      onChangeText(text);
+    if (props.onChangeText)
+      props.onChangeText(text);
     if (onValueChange)
       onValueChange(text);
   }

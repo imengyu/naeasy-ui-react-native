@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, ActionSheetTitle } from '../lib';
+import { CellGroup, Cell, ActionSheet, Toast, Color, ColumnView, ActionSheetTitle, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { SimpleList } from '../../lib/src/components/list';
 import { TestPageHeader } from '../components/TestHeader';
@@ -42,6 +42,7 @@ export function TestActionSheetScreen(props: Props) {
         <ActionSheet
           show={showActionSheet2}
           showCancel
+          description="说明文字"
           actions={[
             { name: '选项1' },
             { name: '选项2' },
@@ -56,7 +57,7 @@ export function TestActionSheetScreen(props: Props) {
         <ActionSheet
           show={showActionSheet3}
           showCancel
-          description="说明文字"
+          description="可自定义每个条目文字颜色"
           actions={[
             { name: '正常选项' },
             { name: '危险选项', color: Color.danger, subname: '删除后无法恢复', bold: true },
@@ -116,13 +117,14 @@ export function TestActionSheetScreen(props: Props) {
               onSelectedItemChanged={(v) => { choosedItem.current = v; }}
               data={[ '选项1', '选项2', '选项3', '选项4' ]}
             />
+            <WhiteSpace size="large" />
           </ColumnView>}
         />
 
         <CellGroup title="基础用法" inset>
           <Cell title="基础用法" showArrow onPress={() => {setShowActionSheet1(true);}} />
-          <Cell title="展示取消按钮" showArrow onPress={() => {setShowActionSheet2(true);}} />
-          <Cell title="展示显示描述和按扭颜色" showArrow onPress={() => {setShowActionSheet3(true);}} />
+          <Cell title="展示取消按钮和描述" showArrow onPress={() => {setShowActionSheet2(true);}} />
+          <Cell title="按扭颜色和描述" showArrow onPress={() => {setShowActionSheet3(true);}} />
           <Cell title="超长自动滚动" showArrow onPress={() => {setShowActionSheet4(true);}} />
           <Cell title="居中 ActionSheet" showArrow onPress={() => {
             ActionSheet.show({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ScrollView } from 'react-native';
-import { AvatarStack } from '../lib';
+import { AvatarStack, WhiteSpace } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
@@ -86,6 +86,7 @@ export class TestAvatarStackScreen extends React.PureComponent<Props> {
           ]} round />
         </TestGroup>
 
+        <WhiteSpace size={100} />
       </ScrollView>
     );
   }
