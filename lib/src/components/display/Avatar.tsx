@@ -72,7 +72,7 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
   const {
     round = true,
     url,
-    defaultAvatar = {},
+    defaultAvatar,
     size = themeContext.getThemeVar('AvatarSize', 40),
     background = themeContext.getThemeVar('AvatarBackground', Color.primary),
     textColor = themeContext.getThemeVar('AvatarTextColor', '#fff'),
