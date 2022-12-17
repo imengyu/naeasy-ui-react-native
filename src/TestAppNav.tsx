@@ -51,7 +51,7 @@ import { TestNumberKeyBoardScreen } from './form/TestNumberKeyBoardScreen';
 import { TestCountDownScreen } from './display/TestCountDownScreen';
 import { TestWingBlankScreen } from './base/TestWingBlankScreen';
 import { TestWhiteSpaceScreen } from './base/TestWiteSpaceScreen';
-import { TestCarouselScreen } from './display/TestCarouselScreen';
+import { TestDropdownMenuScreen } from './display/TestDropdownMenuScreen';
 import { TestLayout2Screen } from './base/TestLayout2Screen';
 import { TestSimpleListScreen } from './list/TestSimpleListScreen';
 import { TestIndexedListScreen } from './list/TestIndexedListScreen';
@@ -67,6 +67,7 @@ import { TestSwiperScreen } from './base/TestSwiperScreen';
 import { TestSkeletonScreen } from './display/TestSkeletonScreen';
 import { TestAvatarScreen } from './display/TestAvatarScreen';
 import { TestMarqueeScreen } from './display/TestMarqueeScreen';
+import { TestUploaderScreen } from './form/TestUploaderScreen';
 
 const Stack = createStackNavigator();
 
@@ -106,7 +107,7 @@ export class TestAppNav extends React.Component {
           component={TestSegmentedControlScreen as any}
         />
         <Stack.Screen name="TestNoticeBar" component={TestNoticeBarScreen as any} />
-        <Stack.Screen name="TestCarousel" component={TestCarouselScreen as any} />
+        <Stack.Screen name="TestDropdownMenu" component={TestDropdownMenuScreen as any} />
         <Stack.Screen name="TestPicker" component={TestPickerScreen as any} />
         <Stack.Screen
           name="TestPickerWhellView"
@@ -172,6 +173,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestSkeleton" component={TestSkeletonScreen as any} />
         <Stack.Screen name="TestAvatar" component={TestAvatarScreen as any} />
         <Stack.Screen name="TestMarquee" component={TestMarqueeScreen as any} />
+        <Stack.Screen name="TestUploader" component={TestUploaderScreen as any} />
       </Stack.Navigator>
     );
   }
