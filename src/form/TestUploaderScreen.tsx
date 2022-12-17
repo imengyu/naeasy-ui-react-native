@@ -5,7 +5,7 @@ import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
 import { Uploader } from '../../lib/src/components/form';
-import { Avatar, Dialog } from '../lib';
+import { Avatar, Dialog, WhiteSpace } from '../lib';
 
 type Props = StackScreenProps<RootStackParamList, 'TestUploader'>;
 
@@ -81,11 +81,13 @@ export function TestUploaderScreen(props: Props) {
               filePath: '1.jpg',
               previewPath: 'https://imengyu.top/assets/images/test/1.jpg',
               state: 'fail',
+              message: '上传失败',
             },
             {
               filePath: '2.jpg',
               previewPath: 'https://imengyu.top/assets/images/test/2.jpg',
               state: 'uploading',
+              message: '正在上传',
             },
             {
               filePath: '2.jpg',
@@ -144,10 +146,16 @@ export function TestUploaderScreen(props: Props) {
           }}
           maxUploadCount={1}
           renderUploader={(uploaderProps) => (
-            <Avatar url={uploaderProps.items[0]?.filePath} onPress={uploaderProps.onPress} />
+            <Avatar
+              size={50}
+              url={uploaderProps.items[0]?.filePath || ''}
+              defaultAvatar={{ uri: 'https://imengyu.top/assets/images/test/icon.png' }}
+              onPress={uploaderProps.onPress}
+            />
           )}
         />
       </TestGroup>
+      <WhiteSpace size={150} />
     </ScrollView>
   );
 }

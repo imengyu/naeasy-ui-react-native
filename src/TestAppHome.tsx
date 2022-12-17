@@ -64,7 +64,7 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Slider 滑块" touchable showArrow onPress={() => this.props.navigation.push('TestSlider')} />
             <Cell title="Stepper 步进器" touchable showArrow onPress={() => this.props.navigation.push('TestStepper')} />
             <Cell title="Switch 开关" touchable showArrow onPress={() => this.props.navigation.push('TestSwitch')} />
-            <Cell title="[未完成] Uploader 上传" touchable showArrow onPress={() => this.props.navigation.push('TestUploader')} />
+            <Cell title="Uploader 上传" touchable showArrow onPress={() => this.props.navigation.push('TestUploader')} />
           </CellGroup>
           <CellGroup inset title="展示组件">
             <Cell title="Avatar 头像" touchable showArrow onPress={() => this.props.navigation.push('TestAvatar')} />

@@ -88,7 +88,7 @@ export const Avatar = forwardRef<Image, AvatarProp>((props, ref) => {
   return (
     <TouchableOpacity activeOpacity={0.86} onPress={onPress}>
       {
-        url ? <Image
+        url || defaultAvatar ? <Image
           ref={ref}
           onError={() => setError(true)}
           source={((error || CheckTools.isNullOrEmpty(url))) ? (defaultAvatar || {}) : { uri: url }}
