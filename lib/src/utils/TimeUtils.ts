@@ -20,6 +20,32 @@ function splitMillSeconds(ms: number) {
   };
 }
 
+/**
+ * 获取某年的某月共多少天
+ * @param year 年
+ * @param month 月
+ * @returns 共多少天
+ */
+function getMonthDays(year: number, month: number) {
+  switch (month + 1) {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+      return 31;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+      return 30;
+    case 2:
+      return (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
+  }
+  return 0;
+}
 
 /**
 * 等待延时
@@ -33,4 +59,5 @@ function waitTimeOut(timeOut: number) {
 export default {
   waitTimeOut,
   splitMillSeconds,
+  getMonthDays,
 };

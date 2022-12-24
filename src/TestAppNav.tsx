@@ -68,6 +68,7 @@ import { TestSkeletonScreen } from './display/TestSkeletonScreen';
 import { TestAvatarScreen } from './display/TestAvatarScreen';
 import { TestMarqueeScreen } from './display/TestMarqueeScreen';
 import { TestUploaderScreen } from './form/TestUploaderScreen';
+import { TestFormPicker } from './form/TestPickerFormScreen';
 
 const Stack = createStackNavigator();
 
@@ -174,6 +175,7 @@ export class TestAppNav extends React.Component {
         <Stack.Screen name="TestAvatar" component={TestAvatarScreen as any} />
         <Stack.Screen name="TestMarquee" component={TestMarqueeScreen as any} />
         <Stack.Screen name="TestUploader" component={TestUploaderScreen as any} />
+        <Stack.Screen name="TestFormPicker" component={TestFormPicker as any} />
       </Stack.Navigator>
     );
   }

@@ -186,8 +186,8 @@ export function Cell(props: CellProp) {
   const themeStyles = useThemeStyles(styles);
   const themeVars = themeContext.getThemeVars({
     CellBorderWidth: 1,
-    CellFontSizeLarge: 15.5,
-    CellFontSizeMedium: 13,
+    CellFontSizeLarge: 17.5,
+    CellFontSizeMedium: 14,
     CellFontSizeSmall: 11.5,
     CellIconSize: 15,
     CellIconWidth: 20,

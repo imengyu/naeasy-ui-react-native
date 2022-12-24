@@ -6,6 +6,7 @@ import android.view.Gravity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.imengyu.RNUiLib.smartrefresh.smartrefreshlayout.ReactSmartRefreshLayout;
 import com.imengyu.RNUiLib.whellview.adapter.ArrayWheelAdapter;
 import com.imengyu.RNUiLib.whellview.view.WheelView;
 import com.facebook.react.bridge.Arguments;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class PickerViewAndroidViewManager extends SimpleViewManager<WheelView> {
   public static final String REACT_CLASS = "RCTPickerWheelView";
 
+  private final int COMMAND_SET_CURRENT_INDEX = 1;
+  
   ReactApplicationContext mCallerContext;
 
   public PickerViewAndroidViewManager(ReactApplicationContext reactContext) {
@@ -47,7 +50,18 @@ public class PickerViewAndroidViewManager extends SimpleViewManager<WheelView> {
   @Nullable
   @Override
   public Map<String, Integer> getCommandsMap() {
-    return super.getCommandsMap();
+    return MapBuilder.of(
+            "setCurrentIndex", COMMAND_SET_CURRENT_INDEX
+    );
+  }
+  
+  @Override
+  public void receiveCommand(@NonNull WheelView root, String commandId, @Nullable ReadableArray args) {
+    if (args != null && commandId.equals(String.valueOf(COMMAND_SET_CURRENT_INDEX))) {
+      int index = args.getInt(0);
+      root.setCurrentItem(index);
+    }
+    super.receiveCommand(root, commandId, args);
   }
 
   @NonNull

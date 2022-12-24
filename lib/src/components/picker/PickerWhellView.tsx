@@ -4,6 +4,9 @@ import { Color } from '../../styles';
 import { ThemeColor, ThemeContext } from '../../theme/Theme';
 import { isAndroid, isIOS } from '../../utils/PlatformTools';
 
+const ComponectIOSName = 'RCTUIPickerView';
+const ComponectAndroidName = 'RCTPickerWheelView';
+
 interface PickerWhellViewSelectEvent {
   /**
    * 选中项的索引
@@ -190,16 +193,16 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
   constructor(props: PickerWhellViewProps) {
     super(props);
     if (!PickerWhellViewAndroid && isAndroid)
-      PickerWhellViewAndroid = requireNativeComponent('RCTPickerWheelView') as HostComponent<PickerWhellViewAndroidProps>;
+      PickerWhellViewAndroid = requireNativeComponent(ComponectAndroidName) as HostComponent<PickerWhellViewAndroidProps>;
     if (!PickerWhellViewIOS && isIOS)
-      PickerWhellViewIOS = requireNativeComponent('RCTUIPickerView') as HostComponent<PickerWhellViewIOSProps>;
+      PickerWhellViewIOS = requireNativeComponent(ComponectIOSName) as HostComponent<PickerWhellViewIOSProps>;
   }
 
   private iosReloadAllComponents() {
     //向native层发送命令
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this.iosViewRef.current),
-      UIManager.getViewManagerConfig('PickerWhellViewIOS').Commands.reloadAllComponents,
+      UIManager.getViewManagerConfig(ComponectIOSName).Commands.reloadAllComponents,
       []
     );
   }
@@ -210,7 +213,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
   }) {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this.iosViewRef.current),
-      UIManager.getViewManagerConfig('PickerWhellViewIOS').Commands.selectRow,
+      UIManager.getViewManagerConfig(ComponectIOSName).Commands.selectRow,
       [ options ]
     );
   }
@@ -220,7 +223,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
   }) {
     UIManager.dispatchViewManagerCommand(
       findNodeHandle(this.iosViewRef.current),
-      UIManager.getViewManagerConfig('PickerWhellViewIOS').Commands.reloadComponent,
+      UIManager.getViewManagerConfig(ComponectIOSName).Commands.reloadComponent,
       [ options ]
     );
   }
@@ -279,14 +282,16 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
       this.iosReloadComponent({ component, data });
   }
   /**
-   * 手动选中指定行（仅iOS支持）
+   * 手动选中指定行
    * @param row 行索引
    * @param component 列索引
-   * @param animated 是否使用动画效果
+   * @param animated 是否使用动画效果 (iOS)
    */
   public selectRow(row: number, component: number, animated?: boolean) {
     if (isIOS) {
       this.iosSelectRow({ row, component, animated: animated === true });
+    } else if (isAndroid) {
+      this.androidSetCurrentIndex(row, component);
     }
   }
 
@@ -296,6 +301,8 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
         this.props.onValueChange(this.selectedIndex);
     }, 20);
   }
+
+  private androidWhellRefs = [] as React.RefObject<HostComponent<PickerWhellViewAndroidProps> | null>[];
 
   private androidRenderWhells() {
     const data = this.props.options;
@@ -309,10 +316,13 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
 
     let xOffsetStart = count >= 2 ? (count / 2) * 20 : 0;
 
+    this.androidWhellRefs.splice(0, this.androidWhellRefs.length);
     for (let i = 0; i < data.length; i++) {
+      this.androidWhellRefs[i] = createRef<typeof PickerWhellViewAndroid>();
       arr.push(
         PickerWhellViewAndroid ? <PickerWhellViewAndroid
           { ...this.props.androidProps }
+          ref={this.androidWhellRefs[i] as any}
           textColorCenter={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.black)}
           textColorOut={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.text)}
           key={'PickerWhellView' + i}
@@ -329,6 +339,16 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
       xOffsetStart -= (i === Math.ceil(count / 2) ? 40 : 20);
     }
     return arr;
+  }
+  private androidSetCurrentIndex(row: number, component: number) {
+    const ref = this.androidWhellRefs[row];
+    if (ref) {
+      UIManager.dispatchViewManagerCommand(
+        findNodeHandle(ref.current),
+        UIManager.getViewManagerConfig(ComponectAndroidName).Commands.selectRow,
+        [ component ]
+      );
+    }
   }
 
   noEmit = false;

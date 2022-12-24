@@ -41,6 +41,7 @@ export type RootStackParamList = {
   TestRate: undefined;
   TestForm: undefined;
   TestRequest: undefined;
+  TestFormPicker: undefined;
   TestAnim: undefined;
   TestLightBox: undefined;
   TestNumberInput: undefined;

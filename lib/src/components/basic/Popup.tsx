@@ -2,6 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { PopupContainer, PopupContainerProps } from './PopupContainer';
 import { Portal } from '../../portal';
+import { ColumnView } from '../layout';
+import { ActionSheetTitle } from '../dialog';
 
 interface PopupState {
   currentShowKey: number|null,
@@ -51,7 +53,7 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
    * 指令式打开弹出框
    * @param showProps 对话框参数, 类型同普通 Popup ，但不支持传入 show 属性。
    */
-  static show(showProps: Omit<PopupContainerProps, 'show'|'onClose'>) : PopupStaticHandle {
+  static show(showProps: PopupShowProps) : PopupStaticHandle {
     //创建PopupContainer
     let refPopupContainer : PopupContainer|null = null;
     let key = Portal.add(
@@ -64,7 +66,10 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
           popupStaticHandle.key = null;
           Portal.remove(key);
         }}
-        onClose={() => popupStaticHandle.close()}
+        onClose={(d) => {
+          popupStaticHandle.close();
+          showProps.onClose?.(d);
+        }}
       />,
     );
     const popupStaticHandle = {
@@ -77,6 +82,30 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
     };
 
     return popupStaticHandle;
+  }
+
+  /**
+   * 对自定义组件进行包装
+   * @param component 组件
+   */
+  static wrapperControl(component: React.FunctionComponent<PopupWrapperControlProps>|React.ComponentClass<PopupWrapperControlProps>, title: string) {
+    return (onClose: (returnData?: unknown) => void) => {
+      let cConfirmReturnData = null as unknown;
+
+      return (<ColumnView>
+        <ActionSheetTitle
+          title={title}
+          cancelText="取消"
+          onCancelPressed={onClose}
+          confirmText="确定"
+          onConfirmPressed={() => onClose(cConfirmReturnData)}
+        />
+        { React.createElement(component as unknown as string, {
+          onChangeConfirmReturnData: (v: unknown) => { cConfirmReturnData = v; },
+          onCancel: () => onClose(),
+        }) }
+      </ColumnView>);
+    };
   }
 
   private refPopupContainer : PopupContainer|null = null;
@@ -134,4 +163,16 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
   render(): React.ReactNode {
     return (<View />);
   }
+}
+
+
+export interface PopupShowProps extends Omit<PopupContainerProps, 'show'|'onClose'> {
+  /**
+   * 弹窗关闭事件
+   */
+  onClose?: (returnData?: unknown) => void;
+}
+export interface PopupWrapperControlProps {
+  onChangeConfirmReturnData: (v: unknown) => void;
+  onCancel: () => void;
 }

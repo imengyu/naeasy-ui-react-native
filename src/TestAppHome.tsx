@@ -29,7 +29,7 @@ export class TestAppHome extends React.Component<Props> {
                 <Tag text="React Native" type="primary" />
               </RowView>
               <Text>一款简单的移动端 UI 组件库</Text>
-              <A href="https://github.com/imengyu/imengyu-ui-lib">https://github.com/imengyu/imengyu-ui-lib</A>
+              <A href="https://github.com/imengyu/naeasy-ui-react-native">https://github.com/imengyu/naeasy-ui-react-native</A>
             </ColumnView>
           </CellGroup>
           <CellGroup inset title="主题">
@@ -55,8 +55,8 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Form 表单" touchable showArrow onPress={() => this.props.navigation.push('TestForm')} />
             <Cell title="NumberInput 数字输入" touchable showArrow onPress={() => this.props.navigation.push('TestNumberInput')} />
             <Cell title="NumberKeyBoard 数字键盘" touchable showArrow onPress={() => this.props.navigation.push('TestNumberKeyBoard')} />
+            <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestFormPicker')} />
             <Cell title="PlateKeyBoard 车牌号键盘" touchable showArrow onPress={() => this.props.navigation.push('TestPlateKeyBoard')} />
-            <Cell title="Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
             <Cell title="PickerWhellView 滚轮选择" touchable showArrow onPress={() => this.props.navigation.push('TestPickerWhellView')} />
             <Cell title="Radio 单选框" touchable showArrow onPress={() => this.props.navigation.push('TestRadio')} />
             <Cell title="Rate 评星" touchable showArrow onPress={() => this.props.navigation.push('TestRate')} />
@@ -96,10 +96,9 @@ export class TestAppHome extends React.Component<Props> {
           </CellGroup>
           <CellGroup inset title="媒体组件">
             <Cell title="ImagePreview 图片预览" touchable showArrow onPress={() => this.props.navigation.push('TestImagePreview')} />
-            <Cell title="ImagePicker 图片选择器" touchable showArrow onPress={() => this.props.navigation.push('TestImagePicker')} />
+            <Cell title="ImagePicker Native 图片选择器" touchable showArrow onPress={() => this.props.navigation.push('TestImagePicker')} />
           </CellGroup>
           <CellGroup inset title="反馈组件">
-            <Cell title="原生 Alert/ActionSheet " touchable showArrow onPress={() => this.props.navigation.push('TestAlert')} />
             <Cell title="ActionSheet 动作面板" touchable showArrow onPress={() => this.props.navigation.push('TestActionSheet')} />
             <Cell title="Dialog 对话框" touchable showArrow onPress={() => this.props.navigation.push('TestDialog')} />
             <Cell title="Empty 空状态" touchable showArrow onPress={() => this.props.navigation.push('TestEmpty')} />
@@ -109,6 +108,10 @@ export class TestAppHome extends React.Component<Props> {
             <Cell title="Popup 弹出层" touchable showArrow onPress={() => this.props.navigation.push('TestPopup')} />
             <Cell title="Result 结果" touchable showArrow onPress={() => this.props.navigation.push('TestResult')} />
             <Cell title="Toast 轻提示" touchable showArrow onPress={() => this.props.navigation.push('TestToast')} />
+          </CellGroup>
+          <CellGroup inset title="Native 组件">
+            <Cell title="Native Picker 选择器" touchable showArrow onPress={() => this.props.navigation.push('TestPicker')} />
+            <Cell title="Native Alert/ActionSheet " touchable showArrow onPress={() => this.props.navigation.push('TestAlert')} />
           </CellGroup>
         </ColumnView>
         <WhiteSpace />

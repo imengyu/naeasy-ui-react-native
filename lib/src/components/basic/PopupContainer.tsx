@@ -33,11 +33,16 @@ export interface PopupContainerProps {
   /**
    * 渲染内容回调
    */
-  renderContent: (close: () => void) => JSX.Element|JSX.Element[],
+  renderContent: (
+    /**
+     * @param returnData 用于返回值，该返回值会传递给 onClose 事件
+     */
+    close: (returnData?: unknown) => void
+  ) => JSX.Element|JSX.Element[],
   /**
    * 弹窗关闭事件
    */
-  onClose: () => void;
+  onClose: (returnData?: unknown) => void;
 
   onCloseAnimFinished?: () => void;
   /**
@@ -209,9 +214,9 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
       this._backHandlerEventSubscription = null;
     }
   }
-  private callUpClose() {
+  private callUpClose(returnData?: unknown) {
     if (this.props.onClose)
-      this.props.onClose();
+      this.props.onClose(returnData);
   }
 
   componentDidMount() {
@@ -433,7 +438,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
                 top={safeArea && (position === 'top' || position === 'left' || position === 'right')}
                 bottom={safeArea && (position === 'bottom' || position === 'left' || position === 'right')}>
                 { position !== 'top' ? this.renderTitle(true) : <></> }
-                { this.props.renderContent(() => this.callUpClose()) as JSX.Element }
+                { this.props.renderContent((r) => this.callUpClose(r)) as JSX.Element }
                 { position === 'top' ? this.renderTitle(false) : <></> }
               </SafeAreaMargin>
             </Animated.View>
