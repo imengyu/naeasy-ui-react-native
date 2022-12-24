@@ -364,7 +364,7 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
     inputStyle = themeContext.getThemeVar('FieldInputStyle', {}),
     activeInputStyle = themeContext.getThemeVar('FieldActiveInputStyle', {}),
     required = false,
-    center = false,
+    center = true,
     showWordLimit,
     clearButton = false,
     clearButtonMode,

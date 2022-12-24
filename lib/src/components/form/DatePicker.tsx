@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from "react";
+import StringTools from "../../utils/StringTools";
 import TimeUtils from "../../utils/TimeUtils";
 import { Popup } from "../basic/Popup";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
@@ -62,7 +63,7 @@ export interface WrapperPickerForFieldProps {
  * @param component 选择器组件
  * @param defaultTitle 默认标题
  */
-export function wrapperPickerForField<T>(component: React.FunctionComponent<T> | React.ComponentClass<T>, defaultTitle: string) {
+export function wrapperPickerForField<T>(component: React.FunctionComponent<T> | React.ComponentClass<T>, defaultTitle: string, display: (props: T, value: unknown) => string) {
   return (props: T) => {
     const formContext = useContext(FieldItemContext);
     formContext.useOnClick(() => {
@@ -75,16 +76,24 @@ export function wrapperPickerForField<T>(component: React.FunctionComponent<T> |
         renderContent: Popup.wrapperSimpleValueControl(component, (props as WrapperPickerForFieldProps).title || defaultTitle, formContext.value, props),
       });
     });
-    return <Text>{ '1' + formContext.value }</Text>;
+    return <Text>{ display(props, formContext.value) }</Text>;
   };
 }
 
 
-export interface DatePickerFieldProps extends DatePickerProps, WrapperPickerForFieldProps {}
+export interface DatePickerFieldProps extends DatePickerProps, WrapperPickerForFieldProps {
+  /**
+   * 显示时的日期格式。
+   * @default 'YYYY-MM-dd'
+   */
+  displayDateFormat?: string;
+}
 /**
  * 日期选择器(表单版)，用于表单的 Field 中
  */
-export const DatePickerField = wrapperPickerForField(DatePicker, '日期选择器');
+export const DatePickerField = wrapperPickerForField<DatePickerFieldProps>(DatePicker, '日期选择器', (p, v) => {
+  return StringTools.formatTime(v as Date, p.displayDateFormat || 'YYYY-MM-dd');
+});
 
 /**
  * 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。

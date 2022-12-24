@@ -31,11 +31,24 @@ export interface OptionsPickerProps {
   pickerWhellViewProps?: Omit<PickerWhellViewProps, 'options'|'selectIndex'>;
 }
 
-export interface OptionsPickerFieldProps extends OptionsPickerProps, WrapperPickerForFieldProps {}
+export interface OptionsPickerFieldProps extends OptionsPickerProps, WrapperPickerForFieldProps {
+  /**
+   * 未选择时的文字
+   * @default '请选择'
+   */
+  placeholder?: string;
+}
 /**
  * 普通条目选择器(表单版)，用于表单的 Field 中
  */
-export const OptionsPickerField = wrapperPickerForField(OptionsPicker, '普通条目选择器');
+export const OptionsPickerField = wrapperPickerForField<OptionsPickerFieldProps>(OptionsPicker, '普通条目选择器', (p, v) => {
+  const {
+    placeholder = '请选择',
+  } = p;
+  if (!p.options)
+    return (v as number[]).join('-');
+  return (v as number[])?.map((k, i) => p.options?.[i].find(j => j.value === k)?.label || placeholder).join(' ') || placeholder;
+});
 
 /**
  * 普通条目选择器，通常与弹出层组件配合使用。
@@ -69,7 +82,7 @@ export function OptionsPicker(props: OptionsPickerProps) {
 
 
   function handleWhellViewChange(valueNow: number[]) {
-    onValueChange?.(valueNow.map((v, i) => options[i][v].value));
+    onValueChange?.(valueNow.map((v, i) => options[i]?.[v]?.value || 0));
   }
 
   return (

@@ -85,7 +85,9 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
   }
 
   /**
-   * 对自定义组件进行包装
+   * 对自定义组件进行包装，附带一个显示了确定、取消的标题，然后下方是自定义弹出框组件内容。
+   * 在自定义组件可以调用 onChangeConfirmReturnData 设置点击确定按钮后对话框返回的数据。
+   * 在 onClose 回调中获取 onChangeConfirmReturnData 设置的数据。
    * @param component 组件
    */
   static wrapperControl(component: React.FunctionComponent<PopupWrapperControlProps>|React.ComponentClass<PopupWrapperControlProps>, title: string) {
@@ -109,6 +111,19 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
   }
   /**
    * 对自定义简单组件（value、onValueChange）进行包装，然后在 onClose 回调中获取当前组件的数据
+   *
+   * 使用案例：
+   * ```
+    Popup.show({
+      position: 'bottom',
+      onClose(returnData) {
+        if (returnData) {
+          Toast.text('选择日期结果：' +  StringTools.formatTime(returnData as Date));
+        }
+      },
+      renderContent: Popup.wrapperSimpleValueControl(DatePicker, '选择日期', new Date()),
+    });
+    ```
    * @param component 组件
    * @param title 标题
    * @param intitalValue 组件初始value

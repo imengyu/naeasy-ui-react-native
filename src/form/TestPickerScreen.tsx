@@ -5,6 +5,7 @@ import { CellGroup, Cell, Toast, ColumnView } from '../lib';
 import { RootStackParamList } from '../navigation';
 import StringTools from '../utils/StringTools';
 import { Picker } from '../../lib/src/components/picker';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestPicker'>;
 
@@ -12,6 +13,11 @@ export class TestPickerScreen extends React.PureComponent<Props> {
   render(): React.ReactNode {
     return (
       <ScrollView>
+        <TestPageHeader
+          title="Native Picker 选择器"
+          desc="原生实现的选择器，仅支持函数调用。"
+          navigation={this.props.navigation}
+        />
         <ColumnView center>
           <CellGroup title="基础用法" inset>
             <Cell title="选择日期" showArrow onPress={() => {

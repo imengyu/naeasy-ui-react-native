@@ -6,6 +6,7 @@ import { CellGroup, Cell, ColumnView, Popup, Toast } from '../lib';
 import { RootStackParamList } from '../navigation';
 import { DatePicker, DateTimePicker, OptionsPicker, TimePicker } from '../../lib/src/components/form';
 import { CascadeOptionsPicker } from '../../lib/src/components/form/CascadeOptionsPicker';
+import { TestPageHeader } from '../components/TestHeader';
 
 type Props = StackScreenProps<RootStackParamList, 'TestFormPicker'>;
 
@@ -14,6 +15,11 @@ export class TestFormPicker extends React.PureComponent<Props> {
     return (
       <ScrollView>
         <ColumnView center>
+          <TestPageHeader
+            title="Picker 选择器"
+            desc="提供多个选项集合供用户选择，支持单列选择、多列选择和联动选择，通常与弹出层组件配合使用。"
+            navigation={this.props.navigation}
+          />
           <CellGroup title="基础用法" inset>
             <Cell title="DatePicker 选择日期" showArrow onPress={() => {
               Popup.show({
@@ -48,7 +54,7 @@ export class TestFormPicker extends React.PureComponent<Props> {
                 renderContent: Popup.wrapperSimpleValueControl(DateTimePicker, '选择时间', new Date()),
               });
             }} />
-            <Cell title="OptionsPicker 选择选项" showArrow onPress={() => {
+            <Cell title="OptionsPicker 选择单列选项" showArrow onPress={() => {
               Popup.show({
                 position: 'bottom',
                 onClose(returnData) {
@@ -64,6 +70,34 @@ export class TestFormPicker extends React.PureComponent<Props> {
                       { label: '橘子', value: '3'},
                       { label: '葡萄', value: '4'},
                       { label: '菠萝', value: '5'},
+                    ],
+                  ],
+                }),
+              });
+            }} />
+            <Cell title="OptionsPicker 选择多列选项" showArrow onPress={() => {
+              Popup.show({
+                position: 'bottom',
+                onClose(returnData) {
+                  if (returnData) {
+                    Toast.text('选择选项结果：' +  returnData);
+                  }
+                },
+                renderContent: Popup.wrapperSimpleValueControl(OptionsPicker, '选择选项', [ 0, 0 ], {
+                  options: [
+                    [
+                      { label: '苹果', value: '1'},
+                      { label: '香蕉', value: '2'},
+                      { label: '橘子', value: '3'},
+                      { label: '葡萄', value: '4'},
+                      { label: '菠萝', value: '5'},
+                    ],
+                    [
+                      { label: '1斤', value: '1'},
+                      { label: '2斤', value: '2'},
+                      { label: '3斤', value: '3'},
+                      { label: '4斤', value: '4'},
+                      { label: '5斤', value: '5'},
                     ],
                   ],
                 }),

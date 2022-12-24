@@ -7,11 +7,24 @@ export interface CascadeOptionsPickerProps extends Omit<CascadePickerWhellViewPr
   onValueChange?: (values: (number|string)[]) => void;
 }
 
-export interface CascadeOptionsPickerFieldProps extends CascadeOptionsPickerProps, WrapperPickerForFieldProps {}
+export interface CascadeOptionsPickerFieldProps extends CascadeOptionsPickerProps, WrapperPickerForFieldProps {
+  /**
+   * 未选择时的文字
+   * @default '请选择'
+   */
+  placeholder?: string;
+}
 /**
  * 普通条目选择器(联动)(表单版)，用于表单的 Field 中
  */
-export const CascadeOptionsPickerField = wrapperPickerForField(CascadeOptionsPicker, '普通条目选择器(联动)');
+export const CascadeOptionsPickerField = wrapperPickerForField<CascadeOptionsPickerFieldProps>(CascadeOptionsPicker, '普通条目选择器(联动)', (p, v) => {
+  const {
+    placeholder = '请选择',
+  } = p;
+  if (!p.options)
+    return (v as number[]).join('-');
+  return (v as number[])?.map((k) => p.options.find(j => j.value === k)?.label || placeholder).join(' ') || placeholder;
+});
 
 
 /**

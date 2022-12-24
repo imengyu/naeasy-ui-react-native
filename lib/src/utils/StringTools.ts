@@ -63,8 +63,35 @@ function pySegSort(arr: string[]) : PySegSortItem[] {
   return segs;
 }
 
+/**
+ * 格式化日期
+ * @param time 日期
+ * @param formatStr YYYY-MM-dd HH:ii:ss
+ * @returns
+ */
+function formatTime(time: Date, formatStr?: string) {
+  if (!(time instanceof Date))
+    return '' + time;
+  let str = formatStr ? formatStr : 'YYYY-MM-dd HH:ii:ss';
+  str = str.replace(/yyyy|YYYY/, '' + time.getFullYear());
+  str = str.replace(/MM/, pad(time.getMonth() + 1, 2));
+  str = str.replace(/M/, '' + time.getMonth() + 1);
+  str = str.replace(/dd|DD/, pad(time.getDate(), 2));
+  str = str.replace(/d/, '' + time.getDate());
+  str = str.replace(/HH/, pad(time.getHours(), 2));
+  str = str.replace(
+    /hh/,
+    pad(time.getHours() > 12 ? time.getHours() - 12 : time.getHours(), 2)
+  );
+  str = str.replace(/mm/, pad(time.getMinutes(), 2));
+  str = str.replace(/ii/, pad(time.getMinutes(), 2));
+  str = str.replace(/ss/, pad(time.getSeconds(), 2));
+  return str;
+}
+
 export default {
   pad,
   numberWithCommas,
   pySegSort,
+  formatTime,
 };

@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import StringTools from "../../utils/StringTools";
 import TimeUtils from "../../utils/TimeUtils";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
 import { wrapperPickerForField, WrapperPickerForFieldProps } from "./DatePicker";
@@ -80,11 +81,19 @@ export interface DateTimePickerProps {
 }
 
 
-export interface DateTimePickerFieldProps extends DateTimePickerProps, WrapperPickerForFieldProps {}
+export interface DateTimePickerFieldProps extends DateTimePickerProps, WrapperPickerForFieldProps {
+  /**
+   * 显示时的日期格式。
+   * @default 'YYYY-MM-dd HH:ii:ss'
+   */
+  displayDateFormat?: string;
+}
 /**
  * 日期选择器(表单版)，用于表单的 Field 中
  */
-export const DateTimePickerField = wrapperPickerForField(DateTimePicker, '日期+时间选择器');
+export const DateTimePickerField = wrapperPickerForField<DateTimePickerFieldProps>(DateTimePicker, '日期+时间选择器', (p, v) => {
+  return StringTools.formatTime(v as Date, p.displayDateFormat || 'YYYY-MM-dd HH:ii:ss');
+});
 
 /**
  * 日期+时间选择器，用于选择年、月、日+时间，通常与弹出层组件配合使用。
@@ -163,7 +172,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = min; i <= max; i++)
       if (!filter || filter('day', i))
         result.push({
-          label: formatter ? formatter('day', i) : (i + 1).toString(),
+          label: formatter ? formatter('day', i) : (i).toString(),
           value: i,
         });
     return result;

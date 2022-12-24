@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import StringTools from "../../utils/StringTools";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
 import { wrapperPickerForField, WrapperPickerForFieldProps } from "./DatePicker";
 
@@ -69,11 +70,22 @@ export interface TimePickerProps {
 }
 
 
-export interface TimePickerFieldProps extends TimePickerProps, WrapperPickerForFieldProps {}
+export interface TimePickerFieldProps extends TimePickerProps, WrapperPickerForFieldProps {
+  /**
+   * 未选择时的文字
+   * @default '请选择'
+   */
+  placeholder?: string;
+}
 /**
  * 时间选择器(表单版)，用于表单的 Field 中
  */
-export const TimePickerField = wrapperPickerForField(TimePicker, '时间选择器');
+export const TimePickerField = wrapperPickerForField<TimePickerFieldProps>(TimePicker, '时间选择器', (p, v) => {
+  const {
+    placeholder = '请选择',
+  } = p;
+  return (v as number[])?.map(t => StringTools.pad(t.toString(), 2))?.join(':') || placeholder;
+});
 
 
 /**
