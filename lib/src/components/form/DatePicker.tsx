@@ -1,6 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import TimeUtils from "../../utils/TimeUtils";
+import { Popup } from "../basic/Popup";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
+import { Text } from "../typography";
+import { FieldItemContext } from "./Field";
 
 export type DatePickerColumnsType = 'year'|'month'|'day';
 
@@ -20,12 +23,12 @@ export interface DatePickerProps {
   columnsType?: DatePickerColumnsType[],
   /**
    * 可选的最小时间，精确到日
-   * @default new Date(1990/01/01)
+   * @default new Date('1990-01-01')
    */
   minDate?: Date,
   /**
    * 可选的最大时间，精确到日
-   * @default new Date('2030/12/31')
+   * @default new Date('2030-12-31')
    */
   maxDate?: Date,
   /**
@@ -48,6 +51,41 @@ export interface DatePickerProps {
   pickerWhellViewProps?: Omit<PickerWhellViewProps, 'options'|'selectIndex'>;
 }
 
+export interface WrapperPickerForFieldProps {
+  /**
+   * 弹出框标题
+   */
+  title?: string,
+}
+/**
+ * 包装选择器以生成用于表单 Field 的组件
+ * @param component 选择器组件
+ * @param defaultTitle 默认标题
+ */
+export function wrapperPickerForField<T>(component: React.FunctionComponent<T> | React.ComponentClass<T>, defaultTitle: string) {
+  return (props: T) => {
+    const formContext = useContext(FieldItemContext);
+    formContext.useOnClick(() => {
+      Popup.show({
+        position: 'bottom',
+        onClose(returnData) {
+          if (returnData)
+            formContext.onValueChange?.(returnData);
+        },
+        renderContent: Popup.wrapperSimpleValueControl(component, (props as WrapperPickerForFieldProps).title || defaultTitle, formContext.value, props),
+      });
+    });
+    return <Text>{ '1' + formContext.value }</Text>;
+  };
+}
+
+
+export interface DatePickerFieldProps extends DatePickerProps, WrapperPickerForFieldProps {}
+/**
+ * 日期选择器(表单版)，用于表单的 Field 中
+ */
+export const DatePickerField = wrapperPickerForField(DatePicker, '日期选择器');
+
 /**
  * 日期选择器，用于选择年、月、日，通常与弹出层组件配合使用。
  */
@@ -56,12 +94,12 @@ export function DatePicker(props: DatePickerProps) {
   const {
     value = new Date(),
     columnsType = [ 'year', 'month', 'day' ],
-    minDate = new Date('1990/01/01'),
-    maxDate = new Date('2030/12/31'),
+    minDate = new Date('1990-01-01'),
+    maxDate = new Date('2030-12-31'),
     filter,
     formatter,
     onValueChange,
-    pickerWhellViewProps = { style: { height: 300 } },
+    pickerWhellViewProps = { style: { height: 200 } },
   } = props;
 
   const currentYear = value.getFullYear();
@@ -69,16 +107,15 @@ export function DatePicker(props: DatePickerProps) {
   const currentDay = value.getDate();
 
   const yearRows = useMemo(() => {
-    const result = [] as {
-      value: number,
-      label: string,
-    }[];
-    for (let i = minDate.getFullYear(); i <= maxDate.getFullYear(); i++)
-      if (!filter || filter('year', i))
+    const result = [] as { value: number, label: string }[];
+    for (let i = minDate.getFullYear(); i <= maxDate.getFullYear(); i++) {
+      if (!filter || filter('year', i)) {
         result.push({
           label: formatter ? formatter('year', i) : `${i}年`,
           value: i,
         });
+      }
+    }
     return result;
   }, [ minDate, maxDate, formatter, filter ]);
   const monthRows = useMemo(() => {
@@ -107,7 +144,7 @@ export function DatePicker(props: DatePickerProps) {
       label: string,
     }[];
 
-    let min = 1, max = TimeUtils.getMonthDays(currentYear, currentMonth + 1);
+    let min = 1, max = TimeUtils.getMonthDays(currentYear, currentMonth);
     if (currentYear === minDate.getFullYear() && currentMonth === minDate.getMonth())
       min = minDate.getDate();
     if (currentYear === maxDate.getFullYear() && currentMonth === maxDate.getMonth())
@@ -116,7 +153,7 @@ export function DatePicker(props: DatePickerProps) {
     for (let i = min; i <= max; i++)
       if (!filter || filter('day', i))
         result.push({
-          label: formatter ? formatter('day', i) : `${i}`,
+          label: formatter ? formatter('day', i) : `${i}日`,
           value: i,
         });
     return result;
@@ -139,7 +176,6 @@ export function DatePicker(props: DatePickerProps) {
         case 'year':
           labels.push(yearRows.map(k => k.label));
           values.push(yearRows.findIndex(k => k.value === currentYear));
-          console.log('yearRows', yearRows);
           break;
       }
     }
@@ -151,8 +187,6 @@ export function DatePicker(props: DatePickerProps) {
 
   function handleWhellViewChange(valueNow: number[]) {
     let y = 0, m = 0, d = 0;
-    console.log('handleWhellViewChange', valueNow);
-    
     for (let i = 0; i < valueNow.length; i++) {
       switch (columnsType[i]) {
         case 'day': d = dayRows[valueNow[i]].value; break;

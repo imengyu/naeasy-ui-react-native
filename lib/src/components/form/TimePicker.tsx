@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
+import { wrapperPickerForField, WrapperPickerForFieldProps } from "./DatePicker";
 
 export type TimePickerColumnsType = 'am-pm'|'hour'|'minute'|'second';
 
@@ -67,6 +68,14 @@ export interface TimePickerProps {
   pickerWhellViewProps?: Omit<PickerWhellViewProps, 'options'|'selectIndex'>;
 }
 
+
+export interface TimePickerFieldProps extends TimePickerProps, WrapperPickerForFieldProps {}
+/**
+ * 时间选择器(表单版)，用于表单的 Field 中
+ */
+export const TimePickerField = wrapperPickerForField(TimePicker, '时间选择器');
+
+
 /**
  * 时间选择器，通常与弹出层组件配合使用。
  */
@@ -84,7 +93,7 @@ export function TimePicker(props: TimePickerProps) {
     filter,
     formatter,
     onValueChange,
-    pickerWhellViewProps,
+    pickerWhellViewProps = { style: { height:200 }},
   } = props;
 
   const hourRows = useMemo(() => {

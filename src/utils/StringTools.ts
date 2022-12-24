@@ -8,7 +8,7 @@ function pad(num: number|string, n: number) : string {
   let str = num.toString();
   let len = str.length;
   while (len < n) {
-    str = "0" + num;
+    str = '0' + num;
     len++;
   }
   return str;
@@ -22,8 +22,9 @@ function pad(num: number|string, n: number) : string {
 function numberWithCommas(x: number|string) {
   x = x.toString();
   const pattern = /(-?\d+)(\d{3})/;
-  while (pattern.test(x))
-    x = x.replace(pattern, "$1,$2");
+  while (pattern.test(x)) {
+    x = x.replace(pattern, '$1,$2');
+  }
   return x;
 }
 
@@ -34,7 +35,9 @@ function numberWithCommas(x: number|string) {
  * @returns
  */
 function formatTime(time: Date, formatStr?: string) {
-  let str = formatStr ? formatStr : "YYYY-MM-dd HH:ii:ss";
+  if (!(time instanceof Date))
+    return '' + time;
+  let str = formatStr ? formatStr : 'YYYY-MM-dd HH:ii:ss';
   str = str.replace(/yyyy|YYYY/, '' + time.getFullYear());
   str = str.replace(/MM/, pad(time.getMonth() + 1, 2));
   str = str.replace(/M/, '' + time.getMonth() + 1);

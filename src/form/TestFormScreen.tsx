@@ -5,12 +5,13 @@ import { KeyboardAvoidingView } from 'react-native';
 import { Button, XBarSpace, ColumnView, WhiteSpace, DynamicColor, Color, useThemeStyles } from '../lib';
 import {
   Form, Field, Switch, CheckBox, CheckBoxGroup,
-  Rate, Radio, RadioGroup, Stepper, Slider,
+  Rate, Radio, RadioGroup, Stepper, Slider, DatePickerField, TimePickerField, DateTimePickerField, OptionsPickerField,
 } from '../../lib/src/components/form';
 import { Dialog } from '../../lib/src/components/dialog';
 import { RootStackParamList } from '../navigation';
 import { TestHeader, TestPageHeader } from '../components/TestHeader';
 import { TestGroup } from '../components/TestGroup';
+import { CascadeOptionsPickerField } from '../../lib/src/components/form/CascadeOptionsPicker';
 
 type Props = StackScreenProps<RootStackParamList, 'TestForm', 'RootStack'>;
 
@@ -138,6 +139,11 @@ export function TestFormScreen(props: Props) {
               radio: 'a',
               stepper: 1,
               rate: 3,
+              date: new Date(),
+              time: [12,30,0],
+              datetime: new Date(),
+              options: [ null ],
+              cascadeoptions: [ null, null ],
             }}
             onSubmit={(values) => {
               Dialog.alert({
@@ -164,6 +170,39 @@ export function TestFormScreen(props: Props) {
             <Field name="stepper" label="步进器" renderInput={() => <Stepper />} />
             <Field name="rate" label="评分" renderInput={() => <Rate />} />
             <Field name="sider" label="滑块" renderInput={() => <Slider />} />
+            <Field name="date" label="选择日期" renderInput={() => <DatePickerField />} />
+            <Field name="time" label="选择时间" renderInput={() => <TimePickerField />} />
+            <Field name="datetime" label="选择日期+时间" renderInput={() => <DateTimePickerField />} />
+            <Field name="options" label="选择选项" renderInput={() => <OptionsPickerField options={[[
+              { label: '苹果', value: '1'},
+              { label: '香蕉', value: '2'},
+              { label: '橘子', value: '3'},
+              { label: '葡萄', value: '4'},
+              { label: '菠萝', value: '5'},
+            ]]} />} />
+            <Field name="cascadeoptions" label="选择联动选项" renderInput={() => <CascadeOptionsPickerField options={[
+              { parentValue: null, label: '水果', value: '1' },
+              { parentValue: null, label: '食品', value: '2' },
+              { parentValue: null, label: '厨具', value: '3' },
+              { parentValue: null, label: '家具', value: '4' },
+              { parentValue: '1', label: '苹果', value: '1-1' },
+              { parentValue: '1', label: '香蕉', value: '1-2' },
+              { parentValue: '1', label: '橘子', value: '1-3' },
+              { parentValue: '1', label: '葡萄', value: '1-4' },
+              { parentValue: '1', label: '菠萝', value: '1-5' },
+              { parentValue: '2', label: '披萨', value: '2-1' },
+              { parentValue: '2', label: '汉堡', value: '2-2' },
+              { parentValue: '2', label: '薯条', value: '2-3' },
+              { parentValue: '2', label: '爆米花', value: '2-4' },
+              { parentValue: '3', label: '炒锅', value: '3-1' },
+              { parentValue: '3', label: '锅铲', value: '3-2' },
+              { parentValue: '3', label: '菜刀', value: '3-3' },
+              { parentValue: '4', label: '沙发', value: '4-1' },
+              { parentValue: '4', label: '椅子', value: '4-2' },
+              { parentValue: '4', label: '衣柜', value: '4-3' },
+              { parentValue: '4', label: '茶几', value: '4-4' },
+              { parentValue: '4', label: '书桌', value: '4-5' },
+            ]} />} />
           </Form>
           <ColumnView padding={20}>
             <Button type="primary" onPress={() => formRef3.current?.submit(true)}>提交</Button>
@@ -176,4 +215,6 @@ export function TestFormScreen(props: Props) {
     </KeyboardAvoidingView>
   );
 }
+
+
 

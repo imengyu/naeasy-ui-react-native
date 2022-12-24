@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import TimeUtils from "../../utils/TimeUtils";
 import { PickerWhellView, PickerWhellViewProps } from "../picker";
+import { wrapperPickerForField, WrapperPickerForFieldProps } from "./DatePicker";
 
 export type DateTimePickerColumnsType = 'year'|'month'|'day'|'hour'|'minute'|'second';
 
@@ -20,12 +21,12 @@ export interface DateTimePickerProps {
   columnsType?: DateTimePickerColumnsType[],
   /**
    * 可选的最小时间，精确到日
-   * @default new Date(2000/01/01)
+   * @default new Date('2000-01-01')
    */
   minDate?: Date,
   /**
    * 可选的最大时间，精确到日
-   * @default new Date()
+   * @default new Date('2030-12-31')
    */
   maxDate?: Date,
   /**
@@ -78,6 +79,13 @@ export interface DateTimePickerProps {
   pickerWhellViewProps?: Omit<PickerWhellViewProps, 'options'|'selectIndex'>;
 }
 
+
+export interface DateTimePickerFieldProps extends DateTimePickerProps, WrapperPickerForFieldProps {}
+/**
+ * 日期选择器(表单版)，用于表单的 Field 中
+ */
+export const DateTimePickerField = wrapperPickerForField(DateTimePicker, '日期+时间选择器');
+
 /**
  * 日期+时间选择器，用于选择年、月、日+时间，通常与弹出层组件配合使用。
  */
@@ -86,8 +94,8 @@ export function DateTimePicker(props: DateTimePickerProps) {
   const {
     value = new Date(),
     columnsType = [ 'year', 'month', 'day', 'hour', 'minute' ],
-    minDate = new Date('2000/01/01'),
-    maxDate = new Date(),
+    minDate = new Date('2000-01-01'),
+    maxDate = new Date('2030-12-31'),
     minHour = 0,
     minMinute = 0,
     minSecond = 0,
@@ -97,7 +105,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     filter,
     formatter,
     onValueChange,
-    pickerWhellViewProps,
+    pickerWhellViewProps = { style: { height:200 }},
   } = props;
 
   const currentYear = value.getFullYear();
@@ -146,7 +154,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
       label: string,
     }[];
 
-    let min = 1, max = TimeUtils.getMonthDays(currentYear, currentMonth + 1);
+    let min = 1, max = TimeUtils.getMonthDays(currentYear, currentMonth);
     if (currentYear === minDate.getFullYear() && currentMonth === minDate.getMonth())
       min = minDate.getDate();
     if (currentYear === maxDate.getFullYear() && currentMonth === maxDate.getMonth())

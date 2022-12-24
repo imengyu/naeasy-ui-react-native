@@ -6,7 +6,7 @@ import { ViewStyle } from "react-native";
 import { ColumnView } from "../layout/ColumnView";
 import { FieldInstance, FieldProps } from "./Field";
 
-export type FormValueType = number|string|boolean|number[]|string[]|boolean[];
+export type FormValueType = Date|null|number|string|boolean|number[]|string[]|boolean[]|null[]|FormValueType[];
 
 export interface FormValues {
   [index: string]: FormValueType;

@@ -291,7 +291,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
     if (isAndroid && this._backHandlerEventSubscription === null) {
       this._backHandlerEventSubscription = BackHandler.addEventListener('hardwareBackPress', () => {
         if (this.props.closeable)
-          this.callUpClose();
+          this.callUpClose(null);
         return true;
       });
     }
@@ -315,7 +315,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
       >
         {
           closeable === true && closeIcon !== false ?
-          <TouchableOpacity onPress={() => this.callUpClose()}>
+          <TouchableOpacity onPress={() => this.callUpClose(null)}>
             <Icon
               icon={closeIcon || this.context.getThemeVar('PopupCloseIconName', 'close')}
               size={this.props.closeIconSize || this.context.getThemeVar('PopupCloseIconSize', 25)}
@@ -381,7 +381,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
               }]}
               onTouchEnd={() => {
                 if (closeable)
-                  this.callUpClose();
+                  this.callUpClose(null);
               }}
             /> : <></> }
             <Animated.View

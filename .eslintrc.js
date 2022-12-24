@@ -10,6 +10,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
+        'curly': 'off',
         'prettier/prettier': 'off',
         '@typescript-eslint/no-shadow': ['error'],
         'react-native/no-inline-styles': 'off',

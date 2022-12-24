@@ -258,10 +258,12 @@ export interface FieldItemContextData {
    * 用于表单，失去焦点时验证回调
    */
   onBlurValid?: (value: unknown) => void;
+  /**
+   * 监听当前表单的点击事件，通常可以用于自定义点击的表单
+   * @param callback 回调
+   */
+  useOnClick: (callback: () => void) => void;
 }
-
-
-//TODO: 优化子组件的表单相关事件
 
 const styles = StyleSheet.create({
   field: {
@@ -473,11 +475,14 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
     setFocused(true);
   }
 
+  const onClickChildCallbac = useRef<(() => void)|null>(null);
+
   const contextData = useMemo<FieldItemContextData>(() => ({
     value: value,
     onValueChange: onValueChange,
     onFocusValid: () => onFocusValid?.(instance),
     onBlurValid: (v: unknown) => onBlurValid?.(instance, v),
+    useOnClick: (callback) => { onClickChildCallbac.current = callback; },
   }), [
     instance,
     value,
@@ -500,10 +505,15 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
     return <></>;
   }
 
+  function handleOnPress() {
+    onClickChildCallbac.current?.();
+    onPress?.();
+  }
+
   return (
     <RowView
-      touchable={typeof onPress === 'function'}
-      onPress={onPress}
+      touchable={typeof onPress === 'function' || typeof onClickChildCallbac.current === 'function'}
+      onPress={handleOnPress}
       style={[ themeStyles.field, fieldStyle, (focused ? activeFieldStyle : {}) ]}
       center={center}
     >
@@ -605,8 +615,4 @@ export const Field = forwardRef<FieldInstance, FieldProps>((props, ref) => {
       }
     </RowView>
   );
-
-
-
 });
-

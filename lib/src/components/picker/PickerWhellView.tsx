@@ -145,6 +145,10 @@ interface PickerWhellViewIOSProps {
 export interface PickerWhellViewProps {
   style?: ViewStyle,
   /**
+   * 指定高度
+   */
+  height?: number,
+  /**
    * 数据
    */
   options?: string[][];
@@ -326,7 +330,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
           textColorCenter={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.black)}
           textColorOut={this.context.resolveThemeColor(this.props.androidProps?.textColorCenter, Color.text)}
           key={'PickerWhellView' + i}
-          style={{ ...styles.item, width: width }}
+          style={{ ...styles.item, ...this.props.androidProps?.style, width: width }}
           options={data[i] as string[]}
           currentItem={this.selectedIndex[i]}
           textXOffset={xOffsetStart}
@@ -358,7 +362,12 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
   }
   render(): React.ReactNode {
     return (
-      isAndroid ? <View style={{ ...styles.host, ...this.props.style }}>{ this.androidRenderWhells() }</View> : (isIOS ? this.iosRenderPicker() : <></>)
+      isAndroid ?
+        <View style={[
+          styles.host,
+          this.props.style,
+        ]}>{ this.androidRenderWhells() }</View> :
+        (isIOS ? this.iosRenderPicker() : <></>)
     );
   }
 }

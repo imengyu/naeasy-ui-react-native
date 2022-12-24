@@ -12,7 +12,7 @@ export interface CascadePickerWhellItem {
   /**
    * 数据数值
    */
-  value?: string|number|undefined;
+  value: string|number;
   /**
    * 父级数值，如果没有父级，可设置 null
    */
@@ -27,7 +27,7 @@ export interface CascadePickerWhellViewProps extends Omit<PickerWhellViewProps, 
   /**
    * 初始选中的项目数值
    */
-  selectValues?: string[];
+  selectValues?: (string|number)[];
   /**
    * 设置滚动数据列数
    */
@@ -58,7 +58,7 @@ export class CascadePickerWhellView extends React.Component<CascadePickerWhellVi
   //用户选中项更改
   private onValueChange = (sel: number[]) => {
     //获取选中索引更改的列
-    let changedIndex = -1;
+    let changedIndex = 0;
     for (let i = 0; i < this.props.numberOfComponents; i++) {
       if (sel[i] !== this.selectedIndexLast[i]) {
         changedIndex = i;
@@ -101,7 +101,6 @@ export class CascadePickerWhellView extends React.Component<CascadePickerWhellVi
     this.setState((prevState) => {
 
       const options = this.props.options;
-      const selectValues = this.props.selectValues || new Array(numberOfComponents).fill(null);
       const selectedIndex = prevState.selectedIndex.concat() || [];
       const data = [] as string[][];
 
@@ -133,13 +132,10 @@ export class CascadePickerWhellView extends React.Component<CascadePickerWhellVi
         }
 
         //计算选中索引
-        const selectValue = selectValues[i];
-        if (selectValue)
-          selectedIndex[i] = options.findIndex((item) => (item.value === selectValue || item.label === selectValue));
-        else if (typeof selectedIndex[i] === 'undefined')
-          selectedIndex[i] = 0;
-        else if (selCurrent)
+        if (selCurrent)
           selectedIndex[i] = selCurrent[i];
+        if (typeof selectedIndex[i] === 'undefined')
+          selectedIndex[i] = 0;
         //防止选项因为级联数据变化而溢出
         if (selectedIndex[i] >= this.dataArray[i].length)
           selectedIndex[i] = this.dataArray[i].length - 1;
@@ -153,8 +149,8 @@ export class CascadePickerWhellView extends React.Component<CascadePickerWhellVi
       //console.log(selectedIndex, data);
 
       return {
-        data,
-        selectedIndex,
+        data: data,
+        selectedIndex: selectedIndex,
       };
     });
   }

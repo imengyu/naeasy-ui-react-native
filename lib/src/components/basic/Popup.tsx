@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { PopupContainer, PopupContainerProps } from './PopupContainer';
 import { Portal } from '../../portal';
@@ -96,7 +96,7 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
         <ActionSheetTitle
           title={title}
           cancelText="取消"
-          onCancelPressed={onClose}
+          onCancelPressed={() => onClose(null)}
           confirmText="确定"
           onConfirmPressed={() => onClose(cConfirmReturnData)}
         />
@@ -106,6 +106,26 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
         }) }
       </ColumnView>);
     };
+  }
+  /**
+   * 对自定义简单组件（value、onValueChange）进行包装，然后在 onClose 回调中获取当前组件的数据
+   * @param component 组件
+   * @param title 标题
+   * @param intitalValue 组件初始value
+   * @param additionalProps 组件附加属性
+   */
+  static wrapperSimpleValueControl<T>(component: React.FunctionComponent<T>|React.ComponentClass<T>, title: string, intitalValue?: unknown, additionalProps?: T) {
+    return Popup.wrapperControl((props) => {
+      const [ value, setVale ] = useState(intitalValue);
+      return React.createElement(component as React.FunctionComponent<any>, {
+        value: value,
+        onValueChange: (v: unknown) => {
+          setVale(v);
+          props.onChangeConfirmReturnData(v);
+        },
+        ...additionalProps,
+      });
+    },  title);
   }
 
   private refPopupContainer : PopupContainer|null = null;
