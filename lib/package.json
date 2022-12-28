@@ -40,7 +40,6 @@
     "@types/react": "^17"
   },
   "files": [
-    "src",
     "dist",
     "RNNaEasyUILib.podspec",
     "ios",

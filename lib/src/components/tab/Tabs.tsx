@@ -335,7 +335,7 @@ export function Tabs(props: TabsProps) {
 //标签页组件
 //==============================================================
 
-interface TabsPageProps {
+export interface TabsPageProps {
   /**
    * 子级，必须是 TabsPageItem
    */
@@ -357,10 +357,10 @@ interface TabsPageProps {
    */
   onPageSelected?: (index: number) => void;
 }
-interface TabsPageItemProps extends TabsItemData {
+export interface TabsPageItemProps extends TabsItemData {
   children: React.ReactNode;
 }
-interface TabsPageInstance {
+export interface TabsPageInstance {
   /**
    * 切换页面
    * @param index 页码

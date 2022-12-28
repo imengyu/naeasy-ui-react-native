@@ -37,8 +37,12 @@ export const ThemeUtils = {
     for (const key in colors) {
       const oldObj = (Color as unknown as ColorInfo)[key];
       const newObj = colors[key];
-      for (const key2 in newObj)
-        oldObj[key2] = newObj[key2];
+      if (oldObj) {
+        for (const key2 in newObj)
+          oldObj[key2] = newObj[key2];
+      } else {
+        (Color as unknown as ColorInfo)[key] = newObj;
+      }
     }
   },
 };
