@@ -140,7 +140,7 @@ export class Popup extends React.Component<PopupContainerProps, PopupState> {
         },
         ...additionalProps,
       });
-    },  title);
+    }, title);
   }
 
   private refPopupContainer : PopupContainer|null = null;

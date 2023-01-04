@@ -108,9 +108,9 @@ export function DateTimePicker(props: DateTimePickerProps) {
     minHour = 0,
     minMinute = 0,
     minSecond = 0,
-    maxHour = 24,
-    maxMinute = 60,
-    maxSecond = 6,
+    maxHour = 23,
+    maxMinute = 59,
+    maxSecond = 59,
     filter,
     formatter,
     onValueChange,
@@ -132,7 +132,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = minDate.getFullYear(); i <= maxDate.getFullYear(); i++)
       if (!filter || filter('year', i))
         result.push({
-          label: formatter ? formatter('year', i) : i.toString(),
+          label: formatter ? formatter('year', i) : `${i}`,
           value: i,
         });
     return result;
@@ -152,7 +152,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = min; i <= max; i++)
       if (!filter || filter('month', i))
         result.push({
-          label: formatter ? formatter('month', i) : (i + 1).toString(),
+          label: formatter ? formatter('month', i) : `${(i + 1)} 月`,
           value: i,
         });
     return result;
@@ -172,7 +172,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = min; i <= max; i++)
       if (!filter || filter('day', i))
         result.push({
-          label: formatter ? formatter('day', i) : (i).toString(),
+          label: formatter ? formatter('day', i) : `${i} 日`,
           value: i,
         });
     return result;
@@ -185,7 +185,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = minHour; i <= maxHour; i++)
       if (!filter || filter('hour', i))
         result.push({
-          label: formatter ? formatter('hour', i) : i.toString(),
+          label: formatter ? formatter('hour', i) : `${i} 时`,
           value: i,
         });
     return result;
@@ -198,7 +198,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = minMinute; i <= maxMinute; i++)
       if (!filter || filter('minute', i))
         result.push({
-          label: formatter ? formatter('minute', i) : i.toString(),
+          label: formatter ? formatter('minute', i) : `${i} 分`,
           value: i,
         });
     return result;
@@ -211,7 +211,7 @@ export function DateTimePicker(props: DateTimePickerProps) {
     for (let i = minSecond; i <= maxSecond; i++)
       if (!filter || filter('second', i))
         result.push({
-          label: formatter ? formatter('second', i) : i.toString(),
+          label: formatter ? formatter('second', i) : `${i} 秒`,
           value: i,
         });
     return result;
