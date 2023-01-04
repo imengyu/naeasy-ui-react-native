@@ -41,8 +41,8 @@ Licensed under the MIT License.
 * ~~Skeleton 组件~~
 * ~~Swipe 组件~~
 * ~~Tabs 组件~~
-* Picker 组件
-* Upload 组件
+* ~~Picker 组件~~
+* ~~Upload 组件~~
 * Cascader 组件
 * DropdownMenu 组件
 * Collapse 组件
