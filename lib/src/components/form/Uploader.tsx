@@ -592,7 +592,7 @@ function UploaderListAddItem(props: UploaderListAddItemProps) {
 class UploaderListItem extends React.Component<UploaderListItemProps> {
 
   static contextType = ThemeContext;
-  context!: React.ContextType<typeof ThemeContext>;
+  declare context: React.ContextType<typeof ThemeContext>;
 
   shouldComponentUpdate(nextProps: Readonly<UploaderListItemProps>): boolean {
     return this.props.item.state !== nextProps.item.state

@@ -142,7 +142,7 @@ export class PopupContainer extends React.PureComponent<PopupContainerProps, Pop
 
   static contextType = ThemeContext;
 
-  context!: React.ContextType<typeof ThemeContext>;
+  declare context: React.ContextType<typeof ThemeContext>;
 
   state: Readonly<PopupContainerState> = {
   };

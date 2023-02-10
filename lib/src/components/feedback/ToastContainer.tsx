@@ -66,7 +66,7 @@ export class ToastContainer extends React.Component<ToastContainerProp, {
 
   static contextType = ThemeContext;
 
-  context!: React.ContextType<typeof ThemeContext>;
+  declare context: React.ContextType<typeof ThemeContext>;
   anim: Animated.CompositeAnimation | null = null;
   noEndNext = false;
 

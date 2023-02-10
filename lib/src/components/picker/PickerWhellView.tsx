@@ -192,7 +192,7 @@ export class PickerWhellView extends React.Component<PickerWhellViewProps, State
 
   static contextType = ThemeContext;
 
-  context!: React.ContextType<typeof ThemeContext>;
+  declare context: React.ContextType<typeof ThemeContext>;
 
   constructor(props: PickerWhellViewProps) {
     super(props);
