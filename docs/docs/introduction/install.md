@@ -1,5 +1,7 @@
 # 安装
 
+推荐使用 TypeScript 以获得更好的开发体验。
+
 ## 依赖准备
 
 本项目依赖以下项目，在安装之前你需要先安装这些依赖：
@@ -68,7 +70,7 @@ Provider 用于为主题、全局配置、弹出框等等提供功能：
 2. 导入你需要的组件，然后在页面中使用：
 
   ```jsx
-  import { Button } from '@imengyu/naeasy-ui-react-native';
+  import { Button } from '@imengyu/naeasy-ui-react-native/dist/components/button'
 
   export class TestButtonScreen extends React.PureComponent {
     render() {

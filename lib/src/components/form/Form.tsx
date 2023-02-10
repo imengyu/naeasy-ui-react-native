@@ -33,15 +33,15 @@ export interface FormProps {
    */
   rules?: Rules;
   /**
-   * 表单重置回调，表单会重置到 intitalValue
+   * 表单重置回调，表单数据会重置到 `intitalValue`
    */
   onReset?: () => void;
   /**
-   * 调用 formApi.submit()，数据验证成功后的回调函数
+   * 调用 `formApi.submit()`，数据验证成功后的回调函数
    */
   onSubmit?: (value: FormValues) => void;
   /**
-   * 调用 formApi.submit()，数据验证失败后的回调函数
+   * 调用 `formApi.submit()`，数据验证失败后的回调函数
    */
   onSubmitFail?: (error: ValidateError[]) => void;
   /**
@@ -82,12 +82,6 @@ export interface FormProps {
 
   children?: JSX.Element|JSX.Element[];
 }
-
-//TODO: 表单项使用 context
-
-/* const styles = StyleSheet.create({
-
-}); */
 
 /**
  * 表单组件。用于数据录入、校验，支持输入框、单选框、复选框、文件上传等类型，需要与 Field 输入框 组件搭配使用。
@@ -235,7 +229,7 @@ export class Form extends React.Component<FormProps, FormState> {
   /**
    * 强制设置指定表单项当前的值
    * @param name 表单项的名称
-   * @param value 表单项的名称
+   * @param value 设置的值
    * @returns 返回之前的值
    */
   setValue(name: string, value: FormValueType): FormValueType {
