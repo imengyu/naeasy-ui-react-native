@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <React/RCTConstants.h>
+#import "RCTConvert.h"
 #import "ToolsManager.h"
 
 @interface ToolsManager ()
@@ -245,7 +246,7 @@ RCT_EXPORT_METHOD(measureText:(NSDictionary *)options
 {
     float height = [RCTConvert float:options[@"height"]];
     CGFloat fontSize = [RCTConvert CGFloat:options[@"fontSize"]];
-    NSString *text = [RCTConvert NSArray:options[@"text"]];
+    NSString *text = [RCTConvert NSString:options[@"text"]];
     NSString *fontFamily = [RCTConvert NSString:options[@"fontFamily"]];
     NSString *fontWeight = [RCTConvert NSString:options[@"fontWeight"]];
     
@@ -271,13 +272,43 @@ RCT_EXPORT_METHOD(measureText:(NSDictionary *)options
     return [layoutManager usedRectForTextContainer:textContainer];
 }
 
+- (UIFontWeight)convertStringToUIFontWeight:(NSString *)string {
+    NSDictionary *weightMapping = @{
+        @"ultraLight" : @(UIFontWeightUltraLight),
+        @"thin" : @(UIFontWeightThin),
+        @"light" : @(UIFontWeightLight),
+        @"regular" : @(UIFontWeightRegular),
+        @"medium" : @(UIFontWeightMedium),
+        @"semibold" : @(UIFontWeightSemibold),
+        @"bold" : @(UIFontWeightBold),
+        @"heavy" : @(UIFontWeightHeavy),
+        @"black" : @(UIFontWeightBlack)
+    };
+    
+    NSNumber *weightNumber = weightMapping[string.lowercaseString];
+    if (weightNumber) {
+        return (UIFontWeight)weightNumber.doubleValue;
+    } else {
+        return UIFontWeightRegular; // 默认返回普通字体权重
+    }
+}
+
 - (UIFont *)getFont:(NSString *)fontFamily size:(CGFloat)fontSize weight:(NSString*)fontWeight {
     if (fontWeight == nil) {
         fontWeight = @"normal";
     };
-    return fontFamily == nil ?
-        [RCTConvert UIFont:@{@"fontWeight": fontWeight, @"fontSize": [NSNumber numberWithFloat:fontSize]}] :
-        [RCTConvert UIFont:@{@"fontFamily": fontFamily, @"fontSize": [NSNumber numberWithFloat:fontSize], @"fontWeight": fontWeight}];
+    
+    UIFontWeight fontWeightFloat = [self convertStringToUIFontWeight:fontWeight];
+    
+    if (fontFamily == nil) {
+        return [UIFont systemFontOfSize:fontSize weight:fontWeightFloat];
+    }
+    UIFont *customFont = [UIFont fontWithName:fontFamily size:fontSize];
+    if (customFont) {
+        return customFont;
+    } else {
+        return [UIFont systemFontOfSize:17];
+    }
 }
 
 @end
